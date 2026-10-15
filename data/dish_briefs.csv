@@ -1,0 +1,301 @@
+id,cuisine,meal_type,diet,brief
+italian-ricotta-lemon-pancakes,italian,breakfast,vegetarian,fluffy ricotta and lemon pancakes with berries
+italian-frittata-courgette,italian,breakfast,gluten_free,courgette and herb frittata baked in one pan
+italian-tomato-bruschetta-eggs,italian,breakfast,vegetarian,toasted bread with crushed tomatoes and a soft egg
+italian-panzanella,italian,lunch,vegan,bread and tomato salad with cucumber; red onion and basil
+italian-minestrone,italian,lunch,vegan,hearty vegetable minestrone with cannellini beans and small pasta
+italian-caprese-salad,italian,lunch,vegetarian,tomato mozzarella and basil salad with balsamic
+italian-tuna-white-bean-salad,italian,lunch,pescatarian,canned tuna and cannellini bean salad with red onion
+italian-pasta-pomodoro,italian,dinner,vegan,quick spaghetti with garlic tomato sauce and basil
+italian-mushroom-risotto,italian,dinner,vegetarian,creamy mushroom risotto with parmesan and thyme
+italian-chicken-cacciatore,italian,dinner,gluten_free,braised chicken thighs with peppers; tomato and olives
+italian-spaghetti-carbonara,italian,dinner,,classic carbonara with bacon; egg and parmesan
+italian-beef-ragu,italian,dinner,,slow cooked beef ragu with red wine over pasta
+italian-pesto-gnocchi-style-potatoes,italian,dinner,vegetarian,crispy potatoes with basil pesto and green beans
+italian-baked-cod-tomatoes,italian,dinner,pescatarian,cod baked with cherry tomatoes; capers and olives
+italian-aubergine-parmigiana,italian,dinner,vegetarian,layered aubergine; tomato and mozzarella bake
+italian-sausage-lentils,italian,dinner,,pork sausages braised with green lentils and rosemary
+italian-pasta-e-ceci,italian,dinner,vegan,thick chickpea and pasta soup with rosemary
+italian-bruschetta-snack,italian,snack,vegan,garlic toast topped with tomato and basil
+italian-affogato-style-ricotta,italian,dessert,vegetarian,whipped ricotta with honey and pistachios
+italian-panna-cotta,italian,dessert,gluten_free,vanilla panna cotta with raspberry sauce
+mexican-huevos-rancheros,mexican,breakfast,vegetarian,fried eggs on corn tortillas with black beans and salsa
+mexican-breakfast-burrito,mexican,breakfast,,scrambled egg; chorizo and potato burrito
+mexican-chia-mango-pot,mexican,breakfast,vegan,chia pudding with mango; lime and coconut
+mexican-black-bean-soup,mexican,lunch,vegan,smoky black bean soup with lime and coriander
+mexican-chicken-tortilla-soup,mexican,lunch,dairy_free,chicken soup with tomato; chilli and crispy tortilla strips
+mexican-elote-salad,mexican,lunch,vegetarian,charred sweetcorn salad with feta; lime and chilli
+mexican-prawn-tacos,mexican,lunch,pescatarian,garlic lime prawn tacos with cabbage slaw
+mexican-chicken-fajitas,mexican,dinner,,chicken fajitas with peppers and onions in flour tortillas
+mexican-beef-chilli,mexican,dinner,gluten_free,beef chilli con carne with kidney beans
+mexican-sweet-potato-black-bean-tacos,mexican,dinner,vegan,roasted sweet potato and black bean tacos with avocado
+mexican-enchiladas-verdes,mexican,dinner,vegetarian,cheese and bean enchiladas baked in green salsa
+mexican-fish-tacos,mexican,dinner,pescatarian,crispy cod tacos with avocado and lime
+mexican-burrito-bowl,mexican,dinner,high_protein,chicken burrito bowl with rice; beans and salsa
+mexican-pork-carnitas,mexican,dinner,dairy_free,slow cooked pulled pork with orange and cumin
+mexican-stuffed-peppers,mexican,dinner,gluten_free,peppers stuffed with turkey mince; rice and beans
+mexican-vegan-chilli,mexican,dinner,vegan,three bean vegan chilli with cocoa and cumin
+mexican-quesadilla,mexican,dinner,vegetarian,cheese; spinach and black bean quesadillas
+mexican-guacamole-snack,mexican,snack,vegan,chunky guacamole with tortilla chips
+mexican-spiced-pumpkin-seeds,mexican,snack,vegan,chilli lime roasted pumpkin seeds
+mexican-churro-oats,mexican,dessert,vegetarian,baked cinnamon sugar churro bites
+indian-masala-omelette,indian,breakfast,gluten_free,spiced omelette with tomato; onion and chilli
+indian-poha-style-rice,indian,breakfast,vegan,turmeric rice flakes style breakfast with peas and peanuts
+indian-spiced-oats,indian,breakfast,vegan,savoury masala oats with vegetables
+indian-dal-tadka,indian,lunch,vegan,red lentil dal with tempered cumin; garlic and chilli
+indian-chana-chaat,indian,lunch,vegan,chickpea salad with tomato; onion; lime and spices
+indian-raita-chicken-wrap,indian,lunch,,tandoori chicken wrap with cucumber raita
+indian-aloo-gobi,indian,lunch,vegan,dry spiced potato and cauliflower curry
+indian-chana-masala,indian,dinner,vegan,chickpea curry in spiced tomato and onion gravy
+indian-butter-chicken,indian,dinner,gluten_free,creamy tomato butter chicken
+indian-palak-tofu,indian,dinner,vegan,spinach curry with tofu in place of paneer
+indian-lamb-rogan-josh,indian,dinner,dairy_free,slow cooked lamb rogan josh with warm spices
+indian-prawn-coconut-curry,indian,dinner,pescatarian,prawn curry with coconut milk and curry leaves style spices
+indian-vegetable-biryani,indian,dinner,vegetarian,layered vegetable biryani with yoghurt and saffron colour from turmeric
+indian-chicken-tikka-traybake,indian,dinner,high_protein,yoghurt marinated chicken tikka traybake with peppers
+indian-sweet-potato-lentil-curry,indian,dinner,vegan,sweet potato and green lentil curry with coconut milk
+indian-egg-curry,indian,dinner,vegetarian,boiled egg curry in tomato onion masala
+indian-fish-curry-goan,indian,dinner,pescatarian,goan style cod curry with tamarind-like sourness from lime
+indian-roasted-spiced-chickpeas,indian,snack,vegan,crunchy roasted spiced chickpeas
+indian-mango-lassi-bowl,indian,snack,vegetarian,mango and yoghurt lassi smoothie bowl
+indian-rice-pudding-kheer,indian,dessert,gluten_free,cardamom rice pudding with pistachios
+chinese-congee,chinese,breakfast,dairy_free,rice congee with ginger; spring onion and soft egg
+chinese-scallion-egg-pancake,chinese,breakfast,vegetarian,egg and spring onion pancake
+chinese-tofu-scramble-bowl,chinese,breakfast,vegan,soy and sesame tofu scramble with greens
+chinese-hot-sour-soup,chinese,lunch,vegetarian,hot and sour soup with tofu; mushrooms and egg
+chinese-smacked-cucumber-salad,chinese,lunch,vegan,garlicky smashed cucumber salad with chilli oil
+chinese-chicken-noodle-soup,chinese,lunch,dairy_free,ginger chicken noodle soup with bok choy
+chinese-egg-fried-rice,chinese,lunch,vegetarian,egg fried rice with peas and spring onion
+chinese-kung-pao-chicken,chinese,dinner,dairy_free,kung pao chicken with peanuts and chilli
+chinese-mapo-tofu,chinese,dinner,,mapo tofu with pork mince and chilli bean sauce flavours
+chinese-beef-broccoli,chinese,dinner,high_protein,beef and broccoli stir fry in oyster sauce
+chinese-sweet-sour-tofu,chinese,dinner,vegan,sweet and sour tofu with pineapple and peppers
+chinese-steamed-fish-ginger,chinese,dinner,pescatarian,steamed cod with ginger; spring onion and soy
+chinese-char-siu-pork,chinese,dinner,,honey glazed char siu style pork loin
+chinese-garlic-green-beans,chinese,dinner,vegan,dry fried green beans with garlic and chilli
+chinese-chow-mein,chinese,dinner,,chicken chow mein with egg noodles and vegetables
+chinese-mushroom-bok-choy,chinese,dinner,vegan,shiitake mushrooms and bok choy in garlic sauce
+chinese-prawn-stir-fry,chinese,dinner,pescatarian,prawn and vegetable stir fry with rice
+chinese-sesame-edamame,chinese,snack,vegan,edamame tossed with sesame and chilli
+chinese-tea-eggs,chinese,snack,vegetarian,marbled soy tea eggs
+chinese-mango-sago-style-pudding,chinese,dessert,vegan,mango coconut pudding
+japanese-tamagoyaki,japanese,breakfast,dairy_free,rolled japanese omelette with soy and sugar
+japanese-miso-soup-breakfast,japanese,breakfast,vegan,miso soup with tofu; spring onion and rice
+japanese-salmon-rice-bowl,japanese,breakfast,pescatarian,flaked salmon rice bowl with cucumber and sesame
+japanese-soba-salad,japanese,lunch,vegan,cold soba noodle salad with edamame and sesame dressing
+japanese-onigiri-tuna,japanese,lunch,pescatarian,tuna mayo rice balls
+japanese-chicken-katsu-curry,japanese,dinner,,breaded chicken katsu with japanese curry sauce and rice
+japanese-teriyaki-salmon,japanese,dinner,pescatarian,teriyaki glazed salmon with rice and greens
+japanese-vegetable-tempura-style,japanese,dinner,vegan,light battered vegetable fritters with dipping sauce
+japanese-gyudon,japanese,dinner,dairy_free,beef and onion rice bowl simmered in soy and sugar
+japanese-miso-aubergine,japanese,dinner,vegan,miso glazed roasted aubergine with rice
+japanese-chicken-yakitori,japanese,dinner,high_protein,grilled chicken thigh skewers with tare glaze
+japanese-tofu-donburi,japanese,dinner,vegan,crispy tofu rice bowl with teriyaki sauce
+japanese-udon-style-noodle-soup,japanese,dinner,vegetarian,noodle soup with mushrooms; egg and spring onion
+japanese-sushi-bowl,japanese,dinner,pescatarian,deconstructed sushi bowl with smoked salmon and avocado
+japanese-pork-ginger-stir-fry,japanese,dinner,dairy_free,shogayaki ginger pork with cabbage
+japanese-okonomiyaki,japanese,dinner,,cabbage pancake with bacon and mayonnaise
+japanese-edamame-snack,japanese,snack,vegan,salted steamed edamame
+japanese-cucumber-sesame-snack,japanese,snack,vegan,cucumber pickled in rice vinegar with sesame
+japanese-matcha-style-chia-pudding,japanese,dessert,vegan,chia pudding with coconut and honeyless maple syrup
+japanese-strawberry-sando,japanese,dessert,vegetarian,soft bread sandwiches with whipped cream and strawberries
+thai-coconut-rice-porridge,thai,breakfast,vegan,coconut rice porridge with mango and lime
+thai-omelette-rice,thai,breakfast,dairy_free,crispy thai omelette with fish sauce over rice
+thai-banana-pancake,thai,breakfast,vegetarian,banana pancakes with condensed-style honey drizzle
+thai-tom-yum-soup,thai,lunch,pescatarian,hot and sour prawn soup with mushrooms and lime
+thai-papaya-style-slaw,thai,lunch,vegan,crunchy carrot and cucumber slaw with lime; chilli and peanuts
+thai-larb-chicken,thai,lunch,dairy_free,chicken mince salad with mint; lime and chilli
+thai-peanut-noodle-salad,thai,lunch,vegan,rice noodle salad with peanut lime dressing
+thai-green-curry-chicken,thai,dinner,gluten_free,green curry with chicken; aubergine and coconut milk
+thai-red-curry-tofu,thai,dinner,vegan,red curry with tofu; pumpkin and coconut milk
+thai-pad-thai-prawn,thai,dinner,pescatarian,prawn pad thai with rice noodles; egg and peanuts
+thai-basil-chicken,thai,dinner,high_protein,stir fried chicken mince with basil and chilli; fried egg
+thai-massaman-beef,thai,dinner,dairy_free,slow cooked massaman beef curry with potatoes and peanuts
+thai-pad-see-ew-vegetable,thai,dinner,vegetarian,wide rice noodles with broccoli; egg and soy
+thai-fish-cakes,thai,dinner,pescatarian,cod fish cakes with green beans and sweet chilli dip
+thai-pineapple-fried-rice,thai,dinner,vegan,pineapple fried rice with cashews and vegetables
+thai-coconut-soup-chicken,thai,dinner,gluten_free,tom kha chicken coconut soup
+thai-satay-tofu-skewers,thai,snack,vegan,tofu skewers with peanut satay sauce
+thai-spring-rolls-fresh,thai,snack,vegan,fresh rice paper style rolls with herbs and noodles
+thai-mango-sticky-rice,thai,dessert,vegan,mango with coconut sticky rice
+thai-coconut-pancakes,thai,dessert,vegetarian,small coconut pancakes
+korean-gyeran-bap,korean,breakfast,vegetarian,fried egg rice with sesame oil and soy
+korean-kimchi-style-pancake,korean,breakfast,vegan,spicy cabbage and spring onion pancake
+korean-steamed-egg,korean,breakfast,dairy_free,fluffy steamed egg with spring onion
+korean-bibimbap,korean,lunch,vegetarian,rice bowl with vegetables; fried egg and chilli sauce
+korean-japchae,korean,lunch,dairy_free,sweet potato style glass noodles with beef and vegetables
+korean-tofu-soup,korean,lunch,,spicy soft tofu stew with pork and egg
+korean-cucumber-salad,korean,lunch,vegan,spicy sesame cucumber salad
+korean-bulgogi-beef,korean,dinner,dairy_free,soy pear-style marinated beef bulgogi with rice
+korean-fried-chicken,korean,dinner,,crispy chicken with sweet spicy glaze
+korean-spicy-pork,korean,dinner,dairy_free,gochujang style spicy pork stir fry with onions
+korean-tofu-bulgogi,korean,dinner,vegan,bulgogi marinated tofu with rice and greens
+korean-salmon-rice-bowl,korean,dinner,pescatarian,spicy salmon rice bowl with cucumber and avocado
+korean-kimchi-fried-rice,korean,dinner,vegetarian,cabbage chilli fried rice with a fried egg
+korean-beef-short-rib-stew,korean,dinner,gluten_free,braised beef stew with carrots and potato in tamari
+korean-mushroom-bibim-noodles,korean,dinner,vegan,cold spicy noodles with mushrooms and cucumber
+korean-chicken-ginseng-style-soup,korean,dinner,gluten_free,chicken and rice soup with garlic and ginger
+korean-doenjang-stew,korean,dinner,vegan,fermented soybean paste stew with tofu; courgette and potato
+korean-seaweed-free-rice-rolls,korean,snack,pescatarian,kimbap style rice rolls with tuna and vegetables
+korean-sweet-potato-snack,korean,snack,vegan,honeyless roasted sweet potato wedges with sesame
+korean-hotteok-style-pancakes,korean,dessert,vegetarian,sweet pancakes filled with brown sugar and walnuts
+vietnamese-banh-mi-eggs,vietnamese,breakfast,vegetarian,baguette style roll with fried egg; pickled carrot and coriander
+vietnamese-pho-breakfast,vietnamese,breakfast,dairy_free,quick beef pho with rice noodles and herbs
+vietnamese-coconut-coffee-oats,vietnamese,breakfast,vegan,overnight oats with coconut and banana
+vietnamese-summer-rolls-prawn,vietnamese,lunch,pescatarian,prawn summer rolls with herbs and peanut dip
+vietnamese-bun-cha,vietnamese,lunch,dairy_free,grilled pork patties with rice noodles and herbs
+vietnamese-tofu-noodle-salad,vietnamese,lunch,vegan,lemongrass-free lime tofu noodle salad with herbs
+vietnamese-chicken-salad,vietnamese,lunch,gluten_free,shredded chicken and cabbage salad with mint and lime
+vietnamese-pho-ga,vietnamese,dinner,dairy_free,chicken pho with ginger and star anise style spices
+vietnamese-caramel-salmon,vietnamese,dinner,pescatarian,caramelised salmon with fish sauce and rice
+vietnamese-lemongrass-style-beef,vietnamese,dinner,high_protein,garlic lime beef with rice noodles and vegetables
+vietnamese-vegetable-curry,vietnamese,dinner,vegan,coconut vegetable curry with sweet potato and tofu
+vietnamese-shaking-beef,vietnamese,dinner,dairy_free,seared beef cubes with onion and watercress-style rocket
+vietnamese-pork-rice-bowl,vietnamese,dinner,,grilled pork chop rice bowl with egg
+vietnamese-mushroom-pho,vietnamese,dinner,vegan,mushroom pho with tofu and herbs
+vietnamese-garlic-noodles,vietnamese,dinner,vegetarian,buttery garlic noodles with parmesan
+vietnamese-fish-turmeric-dill,vietnamese,dinner,pescatarian,turmeric cod with dill and rice noodles
+vietnamese-crispy-pancake,vietnamese,dinner,,crispy turmeric rice pancake with prawns and pork
+vietnamese-fresh-rolls-veg,vietnamese,snack,vegan,vegetable rice paper rolls with hoisin peanut dip
+vietnamese-sweet-corn-pudding,vietnamese,snack,vegan,sweetcorn coconut pudding
+vietnamese-banana-coconut-cake,vietnamese,dessert,vegetarian,baked banana and coconut cake
+middle_eastern-shakshuka,middle_eastern,breakfast,vegetarian,eggs poached in spiced tomato and pepper sauce
+middle_eastern-labneh-toast,middle_eastern,breakfast,vegetarian,strained yoghurt toast with olive oil and mint
+middle_eastern-ful-medames,middle_eastern,breakfast,vegan,warm mashed beans with lemon; garlic and cumin
+middle_eastern-falafel-wrap,middle_eastern,lunch,vegan,baked falafel pita with tahini and salad
+middle_eastern-tabbouleh,middle_eastern,lunch,vegan,herby bulgur salad with tomato; parsley and lemon
+middle_eastern-fattoush,middle_eastern,lunch,vegan,crispy pita salad with radish and cucumber
+middle_eastern-lentil-soup,middle_eastern,lunch,vegan,lemony red lentil soup with cumin
+middle_eastern-chicken-shawarma,middle_eastern,dinner,dairy_free,spiced chicken shawarma traybake with onions
+middle_eastern-lamb-kofta,middle_eastern,dinner,high_protein,lamb kofta with yoghurt sauce and salad
+middle_eastern-mujadara,middle_eastern,dinner,vegan,lentils and rice with crispy onions
+middle_eastern-stuffed-aubergine,middle_eastern,dinner,vegan,aubergine stuffed with spiced chickpeas and tomato
+middle_eastern-baked-salmon-tahini,middle_eastern,dinner,pescatarian,salmon with tahini lemon sauce and herbs
+middle_eastern-cauliflower-shawarma,middle_eastern,dinner,vegan,roasted spiced cauliflower with tahini
+middle_eastern-chicken-freekeh-style,middle_eastern,dinner,,chicken with bulgur pilaf and almonds
+middle_eastern-beef-kebab-rice,middle_eastern,dinner,gluten_free,beef kebabs with saffron-style turmeric rice
+middle_eastern-halloumi-style-traybake,middle_eastern,dinner,vegetarian,feta and vegetable traybake with chickpeas
+middle_eastern-hummus,middle_eastern,snack,vegan,classic hummus with olive oil and paprika
+middle_eastern-baba-ganoush,middle_eastern,snack,vegan,smoky aubergine dip with tahini
+middle_eastern-muhammara,middle_eastern,snack,vegan,roasted red pepper and walnut dip
+middle_eastern-date-tahini-bites,middle_eastern,dessert,vegan,date and tahini energy bites
+greek-yoghurt-honey-walnuts,greek,breakfast,vegetarian,greek yoghurt with honey and walnuts
+greek-spinach-feta-omelette,greek,breakfast,gluten_free,spinach and feta omelette
+greek-tomato-toast-feta,greek,breakfast,vegetarian,grated tomato toast with feta and oregano
+greek-salad,greek,lunch,vegetarian,classic greek salad with feta; olives and cucumber
+greek-avgolemono,greek,lunch,dairy_free,lemon chicken rice soup thickened with egg
+greek-gigantes-beans,greek,lunch,vegan,baked white beans in tomato and dill
+greek-chicken-souvlaki-pita,greek,lunch,,chicken souvlaki pita with tzatziki
+greek-moussaka,greek,dinner,,layered aubergine and lamb bake with bechamel
+greek-spanakopita-pie,greek,dinner,vegetarian,spinach and feta pie
+greek-baked-cod-plaki,greek,dinner,pescatarian,cod baked with tomatoes; onions and parsley
+greek-lemon-potatoes-chicken,greek,dinner,gluten_free,lemon oregano chicken thighs with roast potatoes
+greek-stuffed-peppers-gemista,greek,dinner,vegan,peppers stuffed with herby rice and tomato
+greek-lamb-kleftiko,greek,dinner,dairy_free,slow roasted lamb shoulder with garlic and lemon
+greek-prawn-saganaki,greek,dinner,pescatarian,prawns in tomato sauce with feta
+greek-fasolakia,greek,dinner,vegan,green beans braised in tomato and olive oil
+greek-orzo-style-pasta-salad,greek,dinner,vegetarian,small pasta salad with feta; olives and peppers
+greek-turkey-meatballs,greek,dinner,high_protein,turkey meatballs with tomato sauce and herbs
+greek-tzatziki,greek,snack,vegetarian,cucumber garlic yoghurt dip with dill
+greek-olive-feta-snack-plate,greek,snack,vegetarian,marinated olives and feta with cucumber
+greek-baked-honey-figs-style-pears,greek,dessert,vegetarian,baked pears with honey and yoghurt
+french-croque-madame,french,breakfast,,ham and cheese toastie with a fried egg
+french-omelette-herbs,french,breakfast,gluten_free,soft french omelette with chives-style herbs
+french-toast-berries,french,breakfast,vegetarian,eggy bread with berries and maple syrup
+french-nicoise-salad,french,lunch,pescatarian,tuna nicoise with egg; green beans and olives
+french-onion-soup,french,lunch,vegetarian,french onion soup with cheese toast and vegetable stock
+french-lentil-salad,french,lunch,vegan,green lentil salad with mustard vinaigrette
+french-leek-potato-soup,french,lunch,vegetarian,leek and potato soup with cream
+french-ratatouille,french,dinner,vegan,provencal ratatouille with courgette; aubergine and peppers
+french-coq-au-vin,french,dinner,dairy_free,chicken braised in red wine with mushrooms and bacon
+french-beef-bourguignon,french,dinner,dairy_free,beef stew with red wine; carrots and mushrooms
+french-moules-marinieres,french,dinner,pescatarian,mussels in white wine; garlic and parsley
+french-salmon-en-papillote,french,dinner,pescatarian,salmon baked in parcels with lemon and dill
+french-chicken-dijon,french,dinner,gluten_free,chicken in creamy dijon mustard sauce
+french-mushroom-bourguignon,french,dinner,vegan,mushroom and lentil red wine stew
+french-tartiflette-style-bake,french,dinner,,potato; bacon and cheese bake
+french-quiche-lorraine,french,dinner,,bacon and cheese quiche
+french-cassoulet-bean,french,dinner,,sausage and white bean cassoulet
+french-gougeres-style-cheese-puffs,french,snack,vegetarian,cheese puffs
+french-chocolate-mousse,french,dessert,vegetarian,dark chocolate mousse
+french-apple-tart,french,dessert,vegetarian,simple apple tart
+spanish-tortilla,spanish,breakfast,gluten_free,potato and onion omelette
+spanish-pan-con-tomate,spanish,breakfast,vegan,toasted bread rubbed with tomato and garlic
+spanish-huevos-flamencos,spanish,breakfast,,baked eggs with tomato; peppers and chorizo
+spanish-gazpacho,spanish,lunch,vegan,chilled tomato; cucumber and pepper soup
+spanish-chickpea-spinach,spanish,lunch,vegan,espinacas con garbanzos with cumin and paprika
+spanish-tuna-empanada-style-salad,spanish,lunch,pescatarian,tuna; pepper and egg salad
+spanish-white-bean-chorizo-soup,spanish,lunch,dairy_free,white bean soup with chorizo and kale
+spanish-seafood-paella,spanish,dinner,pescatarian,paella with prawns; mussels and squid
+spanish-chicken-chorizo-rice,spanish,dinner,dairy_free,one pan chicken and chorizo rice
+spanish-vegetable-paella,spanish,dinner,vegan,vegetable paella with artichoke-style courgette and peas
+spanish-garlic-prawns,spanish,dinner,pescatarian,gambas al ajillo with chilli and bread
+spanish-pork-paprika-stew,spanish,dinner,gluten_free,pork and potato stew with smoked paprika
+spanish-albondigas,spanish,dinner,,beef meatballs in tomato sauce
+spanish-cod-with-peppers,spanish,dinner,pescatarian,cod with piperade style peppers
+spanish-romesco-chicken,spanish,dinner,,chicken with romesco sauce of peppers and almonds
+spanish-patatas-bravas,spanish,dinner,vegan,crispy potatoes with spicy tomato sauce
+spanish-pisto-eggs,spanish,dinner,vegetarian,spanish vegetable stew with baked eggs
+spanish-marinated-olives-almonds,spanish,snack,vegan,marinated olives with toasted almonds
+spanish-padron-style-peppers,spanish,snack,vegan,blistered green peppers with salt
+spanish-crema-catalana-style-custard,spanish,dessert,vegetarian,citrus custard with caramelised sugar
+british-full-english-lite,british,breakfast,,lighter full english with eggs; bacon; mushrooms and tomatoes
+british-porridge-berries,british,breakfast,vegan,oat porridge with berries and maple syrup
+british-kedgeree,british,breakfast,pescatarian,smoked salmon kedgeree with eggs and curried rice
+british-beans-on-toast,british,breakfast,vegan,homemade baked beans on toast
+british-ploughmans-salad,british,lunch,vegetarian,cheddar; apple and pickle salad plate
+british-pea-mint-soup,british,lunch,vegan,pea and mint soup
+british-coronation-chicken,british,lunch,,curried chicken salad sandwich
+british-jacket-potato-tuna,british,lunch,pescatarian,jacket potato with tuna and sweetcorn
+british-shepherds-pie,british,dinner,gluten_free,lamb shepherds pie with mashed potato top
+british-fish-pie,british,dinner,pescatarian,creamy fish pie with cod; smoked salmon and prawns
+british-sausage-mash,british,dinner,,sausages with mash and onion gravy
+british-roast-chicken-veg,british,dinner,dairy_free,roast chicken thighs with root vegetables
+british-cottage-pie-lentil,british,dinner,vegan,lentil cottage pie with sweet potato mash
+british-beef-stew-dumplings,british,dinner,,beef and ale-style stew with dumplings
+british-cauliflower-cheese,british,dinner,vegetarian,cauliflower cheese bake
+british-fish-chips-baked,british,dinner,pescatarian,oven baked breaded cod with chips and peas
+british-toad-in-hole,british,dinner,,sausages baked in yorkshire pudding batter
+british-cheese-scones,british,snack,vegetarian,cheddar cheese scones
+british-crumble,british,dessert,vegetarian,apple and blackberry style berry crumble
+british-sticky-toffee-pudding,british,dessert,vegetarian,date sponge with toffee sauce
+american-blueberry-pancakes,american,breakfast,vegetarian,blueberry buttermilk-style pancakes
+american-avocado-toast-egg,american,breakfast,vegetarian,avocado toast with poached egg and chilli
+american-protein-oats,american,breakfast,high_protein,overnight oats with greek yoghurt and peanut butter
+american-tofu-breakfast-tacos,american,breakfast,vegan,tofu scramble breakfast tacos
+american-cobb-salad,american,lunch,gluten_free,cobb salad with chicken; bacon; egg and avocado
+american-turkey-club,american,lunch,,turkey; bacon and tomato club sandwich
+american-chickpea-salad-sandwich,american,lunch,vegan,smashed chickpea salad sandwich
+american-tomato-soup-grilled-cheese,american,lunch,vegetarian,tomato soup with grilled cheese sandwich
+american-mac-cheese,american,dinner,vegetarian,baked macaroni cheese
+american-turkey-chilli,american,dinner,high_protein,turkey and bean chilli
+american-bbq-chicken-traybake,american,dinner,dairy_free,bbq chicken thighs with corn and sweet potato
+american-burger,american,dinner,,beef burger with cheddar; lettuce and tomato
+american-cajun-salmon,american,dinner,pescatarian,cajun spiced salmon with rice and green beans
+american-jambalaya,american,dinner,dairy_free,chicken; sausage and prawn jambalaya
+american-meatloaf,american,dinner,,beef meatloaf with ketchup glaze
+american-buddha-bowl,american,dinner,vegan,quinoa buddha bowl with roasted veg and tahini
+american-stuffed-sweet-potato,american,dinner,vegan,sweet potatoes stuffed with black beans and salsa
+american-trail-mix,american,snack,vegan,nut; seed and raisin trail mix
+american-banana-bread,american,dessert,vegetarian,banana bread with walnuts
+american-brownies,american,dessert,vegetarian,fudgy chocolate brownies
+moroccan-msemen-style-flatbread,moroccan,breakfast,vegan,flaky flatbread with honeyless date syrup and tea
+moroccan-baked-eggs-merguez-style,moroccan,breakfast,,eggs baked with spiced lamb mince and tomato
+moroccan-spiced-yoghurt-bowl,moroccan,breakfast,vegetarian,yoghurt with dates; almonds and cinnamon
+moroccan-harira,moroccan,lunch,vegan,tomato; lentil and chickpea soup with spices
+moroccan-carrot-salad,moroccan,lunch,vegan,cumin carrot salad with orange and mint
+moroccan-couscous-salad,moroccan,lunch,vegan,herby couscous salad with chickpeas and raisins
+moroccan-chicken-wrap,moroccan,lunch,,ras el hanout style spiced chicken wrap with yoghurt
+moroccan-chicken-tagine,moroccan,dinner,gluten_free,chicken tagine with olives and preserved-style lemon
+moroccan-lamb-apricot-tagine,moroccan,dinner,dairy_free,lamb tagine with dried apricots and almonds
+moroccan-vegetable-tagine,moroccan,dinner,vegan,root vegetable and chickpea tagine with couscous
+moroccan-fish-chermoula,moroccan,dinner,pescatarian,cod with herby chermoula and potatoes
+moroccan-kefta-tagine,moroccan,dinner,,beef kefta meatballs with eggs in tomato sauce
+moroccan-sweet-potato-stew,moroccan,dinner,vegan,sweet potato and lentil stew with cinnamon and cumin
+moroccan-prawn-tomato,moroccan,dinner,pescatarian,spiced prawns in tomato with coriander
+moroccan-stuffed-squash,moroccan,dinner,vegetarian,butternut squash stuffed with spiced couscous and feta
+moroccan-chicken-bastilla-style-bake,moroccan,dinner,,chicken and almond filo-style pie with cinnamon
+moroccan-chickpea-pumpkin-stew,moroccan,dinner,vegan,pumpkin and chickpea stew with harissa-like chilli
+moroccan-spiced-nuts,moroccan,snack,vegan,cumin and cinnamon roasted almonds
+moroccan-orange-cinnamon,moroccan,dessert,vegan,sliced oranges with cinnamon and mint
+moroccan-almond-date-cookies,moroccan,dessert,vegetarian,almond and date cookies

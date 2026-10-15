@@ -44,25 +44,39 @@ Work on one step at a time; each step is its own PR.
   tracing off when the variables are unset.
 - Next.js App Router + Tailwind v4 + shadcn/ui (Base UI) in `web/`.
 
-## Layout (target; keep this section current as code lands)
+## Layout (keep this section current as code lands)
 
-- `src/pantrio/schema.py`: Pydantic models (Recipe, Ingredient, NutritionFacts, UserProfile,
-  PantryItem, MealPlan, GroceryList). Models sent as structured outputs carry field
-  descriptions, which are part of the prompt.
-- `src/pantrio/corpus.py`: load, normalise and validate the recipe corpus.
-- `src/pantrio/nutrition.py`: per-recipe nutrition from ingredient quantities (USDA FoodData
-  Central values, public domain).
+- `src/pantrio/schema.py`: Pydantic models (Recipe, Ingredient, NutritionFacts; enums for the
+  14 EU allergens, diet tags, meal types, units). Planned: UserProfile, PantryItem, MealPlan,
+  GroceryList. Models sent as structured outputs carry field descriptions, which are part of
+  the prompt.
+- `src/pantrio/foods.py`: the ingredient table (`data/ingredients.csv` joined to
+  `data/usda_foods.csv`): unit conversion to grams, allergens and diet class per food,
+  allergen and diet derivation.
+- `src/pantrio/nutrition.py`: per-serving nutrition from ingredient grams (USDA FoodData
+  Central SR Legacy values, public domain) and the low-carb/high-protein thresholds.
+- `src/pantrio/corpus.py`: `RecipeDraft` (the model's structured output), `build_recipe`
+  (normalise, compute, derive, reject allergen disagreements), `check_recipe`, load/save.
 - `src/pantrio/embeddings.py`: embedding text builder and batched OpenAI embedding calls with
-  a content-hash cache so re-ingest is free.
+  a content-hash cache (DB + `.cache/embeddings/`) so re-ingest is free.
 - `src/pantrio/search.py`: hybrid retrieval (pgvector cosine + Postgres full text, merged with
-  reciprocal rank fusion) with hard SQL filters for diet, allergens and time.
-- `src/pantrio/constraints.py`: deterministic checks (allergens, diet, calorie/macro targets,
-  repeats, pantry use). The single source of truth for "is this plan safe and valid".
-- `src/pantrio/planner.py`: LangGraph meal-planning graph and its tools.
-- `src/pantrio/assistant.py`: chat agent and tools.
-- `src/pantrio/db.py`, `src/pantrio/api.py`, `src/pantrio/cli.py`.
-- `evals/`: datasets (retrieval queries, planning profiles), scorers, runners, LangSmith upload.
-- `tests/`: offline tests; OpenAI is mocked. Paid tests are marked `live`.
+  reciprocal rank fusion) with hard SQL filters for allergens, diets, time, meal, cuisine and
+  excluded foods; optional LLM query parser.
+- `src/pantrio/config.py`: settings and prices from the environment.
+- `src/pantrio/db.py`: connections, migrations (`pantrio_migrations` table), seeding.
+- `src/pantrio/cli.py`: `pantrio db migrate|seed`, `ingest`, `search`, `corpus check`.
+- Planned: `constraints.py` (deterministic plan checks, the single source of truth for "is
+  this plan safe and valid"), `planner.py` (LangGraph meal-planning graph), `assistant.py`
+  (chat agent), `api.py`.
+- `data/`: `ingredients.csv` (hand-curated), `usda_foods.csv` (built by
+  `scripts/build_usda_table.py`), `dish_briefs.csv` (300 fixed briefs), `recipes/*.json`
+  (generated corpus, one file per recipe), `corpus_manifest.json` (generation runs and cost).
+- `scripts/`: `generate_corpus.py`, `build_usda_table.py`.
+- `supabase/migrations/`: SQL migrations.
+- `evals/`: `retrieval_queries.py` (deterministic query generator) -> `data/retrieval_queries.json`,
+  `metrics.py`, `run_retrieval.py`, `reports/`.
+- `tests/`: offline tests; OpenAI is mocked. DB tests run when `PANTRIO_TEST_DATABASE_URL` is
+  set. Paid tests are marked `live`.
 - `web/`: frontend; see `web/DESIGN_SYSTEM.md`.
 
 ## Commands
@@ -74,11 +88,15 @@ uv run ruff check . && uv run ruff format --check .
 docker compose up -d db                  # local Postgres 16 + pgvector
 uv run pantrio db migrate && uv run pantrio db seed   # needs DATABASE_URL
 uv run pantrio ingest                    # embed the corpus (needs OPENAI_API_KEY)
-uv run pantrio search "quick vegan dinner with chickpeas"
-uv run python -m evals.run_retrieval     # retrieval eval
+uv run pantrio search "quick vegan dinner with chickpeas" [--parse] [--mode vector|fulltext]
+uv run pantrio corpus check              # re-derive nutrition/allergens/diets, report drift
+uv run python scripts/generate_corpus.py [--sample | --only ids | --force]  # paid
+uv run python scripts/build_usda_table.py           # rebuild data/usda_foods.csv
+uv run python -m evals.retrieval_queries # regenerate labelled queries from the corpus
+uv run python -m evals.run_retrieval     # retrieval eval (vector vs full text vs hybrid)
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
-uv run uvicorn pantrio.api:app --env-file .env --reload
-cd web && npm ci && npm run dev          # :3000
+uv run uvicorn pantrio.api:app --env-file .env --reload   # from step 4
+cd web && npm ci && npm run dev          # :3000, from step 4
 ```
 
 Update this block when commands change.
