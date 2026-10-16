@@ -78,50 +78,56 @@ export default function LoginPage() {
       <section className="flex items-center justify-center p-6">
         <div className="w-full max-w-sm">
           <Logo className="mb-10 lg:hidden" />
-          <h1 className="text-[24px] font-bold leading-8">Sign in to Pantrio</h1>
+          <h1 className="text-[24px] font-bold leading-8">Try Pantrio</h1>
           <p className="mt-1 text-muted-foreground">
-            We email you a sign-in link. No password needed.
+            No account needed. Set your diet and allergies, add what is in your kitchen and plan
+            a week.
           </p>
-
-          {sent ? (
-            <div className="mt-8 rounded-[20px] border bg-surface p-5">
-              <Mail className="mb-2 size-6 text-primary-text" aria-hidden />
-              <p className="font-semibold">Check your inbox</p>
-              <p className="mt-1 text-muted-foreground">
-                We sent a link to <strong>{email}</strong>. Open it on this device to sign in.
-              </p>
-              <Button variant="link" className="mt-2 px-0" onClick={() => setSent(false)}>
-                Use another email
-              </Button>
-            </div>
-          ) : (
-            <form onSubmit={sendLink} className="mt-8 grid gap-3">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                required
-                autoComplete="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-11"
-              />
-              <Button type="submit" size="lg" disabled={busy !== null}>
-                {busy === "email" ? "Sending…" : "Email me a sign-in link"}
-              </Button>
-            </form>
-          )}
-
-          <div className="my-6 flex items-center gap-3 text-[12px] text-muted-foreground">
-            <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
-          </div>
-          <Button variant="outline" size="lg" className="w-full" onClick={guest} disabled={busy !== null}>
+          <Button size="lg" className="mt-8 w-full" onClick={guest} disabled={busy !== null}>
             <UserRound /> {busy === "guest" ? "Starting…" : "Try it as a guest"}
           </Button>
           <p className="mt-2 text-center text-[12px] text-muted-foreground">
-            Guest data stays with this browser session.
+            Your guest data stays with this browser session.
           </p>
+
+          <details className="mt-10 rounded-[20px] border bg-surface p-4 text-[13px]">
+            <summary className="cursor-pointer font-medium text-muted-foreground">
+              Sign in with email (owner only)
+            </summary>
+            {sent ? (
+              <div className="mt-3">
+                <Mail className="mb-2 size-5 text-primary-text" aria-hidden />
+                <p>
+                  If <strong>{email}</strong> can receive Pantrio email, a link is on its way. Open
+                  it on this device.
+                </p>
+                <Button variant="link" className="mt-1 px-0" onClick={() => setSent(false)}>
+                  Use another email
+                </Button>
+              </div>
+            ) : (
+              <form onSubmit={sendLink} className="mt-3 grid gap-2">
+                <p className="text-muted-foreground">
+                  The demo only emails sign-in links to its owner. Everyone else: use the guest
+                  button above.
+                </p>
+                <Label htmlFor="email" className="sr-only">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-10"
+                />
+                <Button type="submit" variant="outline" disabled={busy !== null}>
+                  {busy === "email" ? "Sending…" : "Email me a sign-in link"}
+                </Button>
+              </form>
+            )}
+          </details>
           {error && (
             <p role="alert" className="mt-4 rounded-xl bg-danger-soft p-3 text-[13px] text-danger">
               {error}
