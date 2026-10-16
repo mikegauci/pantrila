@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import time
 from collections import Counter
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from typing import Protocol, TypedDict
 
@@ -73,6 +73,11 @@ class DbStore:
         result = search(self.conn, query, filters, limit=limit, embed_query=self.embed_query)
         self.embed_tokens += result.embed_tokens
         return result.ids
+
+    def browse(self, filters: SearchFilters, limit: int) -> list[str]:
+        from pantrio.search import browse
+
+        return browse(self.conn, filters, limit)
 
     def get(self, ids: Iterable[str]) -> dict[str, Recipe]:
         from pantrio.db import load_recipes
@@ -281,11 +286,21 @@ class Planner:
         g.add_edge("finalise", END)
         return g.compile()
 
-    def plan(self, profile: UserProfile) -> PlanResult:
+    def plan(
+        self, profile: UserProfile, on_step: Callable[[str], None] | None = None
+    ) -> PlanResult:
+        """Plan meals. `on_step` is called with each graph node's name as it finishes."""
         self.usage = Usage()
         start_tokens = self.store.embed_tokens
         start = time.perf_counter()
-        state = self.graph.invoke({"profile": profile, "path": []})
+        state: PlanState = {}
+        inputs = {"profile": profile, "path": []}
+        for mode, chunk in self.graph.stream(inputs, stream_mode=["updates", "values"]):
+            if mode == "values":
+                state = chunk
+            elif on_step:
+                for node in chunk:
+                    on_step(node)
         latency = (time.perf_counter() - start) * 1000
         self.usage.embed_tokens = self.store.embed_tokens - start_tokens
         profile, plan, recipes = state["profile"], state["plan"], state["recipes"]

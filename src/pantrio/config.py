@@ -71,5 +71,34 @@ def database_url() -> str:
     return url
 
 
+def supabase_url() -> str:
+    url = os.environ.get("SUPABASE_URL")
+    if not url:
+        raise SystemExit("SUPABASE_URL is not set (see .env.example)")
+    return url
+
+
+def cors_origins() -> list[str]:
+    raw = os.environ.get("PANTRIO_CORS_ORIGINS") or "http://localhost:3000"
+    return [o.strip().rstrip("/") for o in raw.split(",") if o.strip()]
+
+
+@dataclass(frozen=True)
+class Limits:
+    """Daily caps that keep a public demo cheap. Days start at midnight UTC."""
+
+    plans_per_user: int
+    chats_per_user: int
+    budget_usd: float  # all users together
+
+
+def limits() -> Limits:
+    return Limits(
+        plans_per_user=int(os.environ.get("PANTRIO_DAILY_PLANS") or 5),
+        chats_per_user=int(os.environ.get("PANTRIO_DAILY_CHATS") or 50),
+        budget_usd=float(os.environ.get("PANTRIO_DAILY_BUDGET_USD") or 2.0),
+    )
+
+
 def fmt_cost(usd: float | None) -> str:
     return "n/a (set PANTRIO_PRICE_*_PER_MTOK)" if usd is None else f"${usd:.4f}"

@@ -161,7 +161,7 @@ def conn():
         c.autocommit = True
         c.execute(
             "drop table if exists recipe_embeddings, recipe_ingredients, recipes, pantry_items,"
-            " user_profiles, pantrio_migrations cascade"
+            " user_profiles, meal_plans, usage_events, pantrio_migrations cascade"
         )
         c.autocommit = False
         db.migrate(c)
@@ -189,6 +189,10 @@ class CorpusStore:
 
         ok = [r for r in self.recipes.values() if not filters.violations(r)]
         return [r.id for r in sorted(ok, key=lambda r: (-overlap(r), r.id))][:limit]
+
+    def browse(self, filters, limit):
+        ok = [r for r in self.recipes.values() if not filters.violations(r)]
+        return [r.id for r in sorted(ok, key=lambda r: (r.title, r.id))][:limit]
 
     def get(self, ids):
         return {i: self.recipes[i] for i in ids if i in self.recipes}
