@@ -104,3 +104,56 @@ class Recipe(BaseModel):
     @property
     def foods(self) -> set[str]:
         return {i.food for i in self.ingredients}
+
+
+# --- People and plans ----------------------------------------------------------------------
+
+DEFAULT_MEALS = [MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER]
+
+
+class NutritionTargets(BaseModel):
+    """Daily targets for one person. Unset means no target."""
+
+    kcal: float | None = Field(default=None, gt=0, description="Energy per day.")
+    min_protein_g: float | None = Field(default=None, gt=0)
+    max_carbs_g: float | None = Field(default=None, gt=0)
+
+
+class UserProfile(BaseModel):
+    """What the planner knows about a person. Allergies, diets, excluded foods and the time
+    limit are hard rules; targets, pantry, cuisines and notes are goals."""
+
+    allergies: list[Allergen] = Field(default_factory=list)
+    diets: list[DietTag] = Field(default_factory=list)
+    exclude_foods: list[str] = Field(
+        default_factory=list, description="Food keys the person will not eat."
+    )
+    max_minutes: int | None = Field(default=None, gt=0, description="Longest recipe to cook.")
+    days: int = Field(default=7, ge=1, le=7)
+    meals: list[MealType] = Field(default_factory=lambda: list(DEFAULT_MEALS), min_length=1)
+    targets: NutritionTargets = Field(default_factory=NutritionTargets)
+    pantry: list[str] = Field(
+        default_factory=list, description="Food keys already in the kitchen, to use up first."
+    )
+    cuisines: list[str] = Field(default_factory=list, description="Preferred cuisines.")
+    notes: str = Field(default="", description="Free-text tastes, e.g. 'loves spicy food'.")
+
+
+class PlannedMeal(BaseModel):
+    meal_type: MealType
+    recipe_id: str
+    portions: float = Field(default=1.0, description="Servings of the recipe per person.")
+
+
+class PlanDay(BaseModel):
+    day: int = Field(ge=1)
+    meals: list[PlannedMeal]
+
+
+class MealPlan(BaseModel):
+    days: list[PlanDay]
+    notes: str = ""
+
+    @property
+    def meals(self) -> list[tuple[int, PlannedMeal]]:
+        return [(d.day, m) for d in self.days for m in d.meals]

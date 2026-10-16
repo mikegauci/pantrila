@@ -1,0 +1,215 @@
+"""Deterministic plan checks: the single source of truth for "is this plan safe and valid".
+
+The model proposes recipes; this module decides. Hard violations (allergens, diets, excluded
+foods, time limit, wrong meal, malformed plan, unknown recipe) mean the plan is never shown to
+the user. Soft violations (nutrition targets, repeats) are goals: the planner tries to repair
+them and reports any that remain.
+
+Allergens and diets are re-derived from each recipe's ingredients here rather than trusted
+from the stored tags, and the stricter of the two is used.
+"""
+
+from __future__ import annotations
+
+import itertools
+from collections import Counter
+from collections.abc import Mapping
+from dataclasses import dataclass
+from enum import StrEnum
+
+from pantrio.foods import derive_allergens, derive_ingredient_diets
+from pantrio.nutrition import nutrition_diets
+from pantrio.schema import (
+    Allergen,
+    DietTag,
+    MealPlan,
+    MealType,
+    NutritionFacts,
+    PlanDay,
+    Recipe,
+    UserProfile,
+)
+from pantrio.search import SearchFilters
+
+# Which recipe meal types can fill each slot in a plan.
+SLOT_MEALS: dict[MealType, list[MealType]] = {
+    MealType.BREAKFAST: [MealType.BREAKFAST],
+    MealType.LUNCH: [MealType.LUNCH, MealType.DINNER],
+    MealType.DINNER: [MealType.DINNER, MealType.LUNCH],
+    MealType.SNACK: [MealType.SNACK, MealType.DESSERT],
+    MealType.DESSERT: [MealType.DESSERT, MealType.SNACK],
+}
+
+PORTION_STEPS = (0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0)
+KCAL_TOLERANCE = 0.10  # daily energy within +/-10% of the target
+MAX_REPEATS = 2  # the same recipe at most twice a week (cook once, eat the leftovers)
+
+
+class Severity(StrEnum):
+    HARD = "hard"
+    SOFT = "soft"
+
+
+@dataclass(frozen=True)
+class Violation:
+    rule: str
+    severity: Severity
+    message: str
+    day: int | None = None
+    meal: MealType | None = None
+
+    def __str__(self) -> str:
+        where = " ".join(p for p in (self.day and f"day {self.day}", self.meal) if p)
+        return f"{where}: {self.message}" if where else self.message
+
+
+def slot_filters(profile: UserProfile, slot: MealType) -> SearchFilters:
+    """The hard rules as search filters, so retrieval only ever offers safe recipes."""
+    return SearchFilters(
+        exclude_allergens=profile.allergies,
+        require_diets=profile.diets,
+        max_minutes=profile.max_minutes,
+        meal_types=SLOT_MEALS[slot],
+        exclude_foods=profile.exclude_foods,
+    )
+
+
+def recipe_allergens(recipe: Recipe) -> set[Allergen]:
+    return set(recipe.allergens) | derive_allergens(recipe.foods)
+
+
+def recipe_diets(recipe: Recipe) -> set[DietTag]:
+    derived = derive_ingredient_diets(recipe.foods) | nutrition_diets(recipe.nutrition)
+    return set(recipe.diet_tags) & derived
+
+
+def recipe_violations(
+    recipe: Recipe, profile: UserProfile, slot: MealType
+) -> list[tuple[str, str]]:
+    """Hard-rule problems, as (rule, message), with putting this recipe in this slot."""
+    try:
+        allergens, diets = recipe_allergens(recipe), recipe_diets(recipe)
+    except KeyError as exc:
+        return [("unverifiable", f"{recipe.id} uses {exc}, which is not in the ingredient table")]
+    out = []
+    if bad := allergens & set(profile.allergies):
+        out.append(("allergen", f"{recipe.id} contains {', '.join(sorted(bad))}"))
+    if missing := set(profile.diets) - diets:
+        out.append(("diet", f"{recipe.id} is not {', '.join(sorted(missing))}"))
+    if bad := recipe.foods & set(profile.exclude_foods):
+        out.append(("excluded_food", f"{recipe.id} uses {', '.join(sorted(bad))}"))
+    if profile.max_minutes is not None and recipe.total_minutes > profile.max_minutes:
+        out.append(
+            ("time", f"{recipe.id} takes {recipe.total_minutes} min (limit {profile.max_minutes})")
+        )
+    if not set(recipe.meal_types) & set(SLOT_MEALS[slot]):
+        out.append(("meal_type", f"{recipe.id} is not a {slot} recipe"))
+    return out
+
+
+def day_nutrition(day: PlanDay, recipes: Mapping[str, Recipe]) -> NutritionFacts:
+    totals = dict.fromkeys(NutritionFacts.model_fields, 0.0)
+    for m in day.meals:
+        if r := recipes.get(m.recipe_id):
+            for f in totals:
+                totals[f] += getattr(r.nutrition, f) * m.portions
+    return NutritionFacts(**{k: round(v, 1) for k, v in totals.items()})
+
+
+def _target_cost(n: dict[str, float], profile: UserProfile) -> float:
+    t = profile.targets
+    cost = 0.0
+    if t.kcal:
+        cost += abs(n["kcal"] - t.kcal) / t.kcal
+    if t.min_protein_g:
+        cost += max(0.0, t.min_protein_g - n["protein_g"]) / t.min_protein_g
+    if t.max_carbs_g:
+        cost += max(0.0, n["carbs_g"] - t.max_carbs_g) / t.max_carbs_g
+    return cost
+
+
+def fit_portions(plan: MealPlan, profile: UserProfile, recipes: Mapping[str, Recipe]) -> MealPlan:
+    """Choose portions (0.5 to 2 servings, in quarters) per meal to bring each day closest to
+    the targets. Exhaustive over at most 7^5 combinations a day; ties go to normal portions."""
+    t = profile.targets
+    if not (t.kcal or t.min_protein_g or t.max_carbs_g):
+        return plan
+    days = []
+    for day in plan.days:
+        known = [i for i, m in enumerate(day.meals) if m.recipe_id in recipes]
+        best, best_cost = None, float("inf")
+        for combo in itertools.product(PORTION_STEPS, repeat=len(known)):
+            n = dict.fromkeys(("kcal", "protein_g", "carbs_g"), 0.0)
+            for i, p in zip(known, combo, strict=True):
+                facts = recipes[day.meals[i].recipe_id].nutrition
+                for f in n:
+                    n[f] += getattr(facts, f) * p
+            cost = _target_cost(n, profile) + 0.001 * sum(abs(p - 1) for p in combo)
+            if cost < best_cost - 1e-12:
+                best, best_cost = combo, cost
+        portions = dict(zip(known, best or (), strict=True))
+        meals = [
+            m.model_copy(update={"portions": portions.get(i, m.portions)})
+            for i, m in enumerate(day.meals)
+        ]
+        days.append(day.model_copy(update={"meals": meals}))
+    return plan.model_copy(update={"days": days})
+
+
+def check_plan(
+    plan: MealPlan, profile: UserProfile, recipes: Mapping[str, Recipe]
+) -> list[Violation]:
+    """Every rule the plan breaks. `recipes` must come from the trusted corpus, not the model."""
+    out: list[Violation] = []
+
+    def hard(rule, msg, day=None, meal=None):
+        out.append(Violation(rule, Severity.HARD, msg, day, meal))
+
+    def soft(rule, msg, day=None, meal=None):
+        out.append(Violation(rule, Severity.SOFT, msg, day, meal))
+
+    if sorted(d.day for d in plan.days) != list(range(1, profile.days + 1)):
+        hard("structure", f"plan must have days 1 to {profile.days}, one each")
+    for day in plan.days:
+        slots = Counter(m.meal_type for m in day.meals)
+        if slots != Counter(profile.meals):
+            hard("structure", f"meals must be exactly {', '.join(profile.meals)}", day.day)
+        for m in day.meals:
+            recipe = recipes.get(m.recipe_id)
+            if recipe is None:
+                hard("unknown_recipe", f"{m.recipe_id!r} is not a known recipe", day.day,
+                     m.meal_type)  # fmt: skip
+                continue
+            for rule, msg in recipe_violations(recipe, profile, m.meal_type):
+                hard(rule, msg, day.day, m.meal_type)
+            if not PORTION_STEPS[0] <= m.portions <= PORTION_STEPS[-1]:
+                hard("portions", f"{m.portions} portions is outside 0.5-2", day.day, m.meal_type)
+        if any(c > 1 for c in Counter(m.recipe_id for m in day.meals).values()):
+            soft("variety", "the same recipe twice in one day", day.day)
+
+        t = profile.targets
+        n = day_nutrition(day, recipes)
+        if t.kcal and abs(n.kcal - t.kcal) > KCAL_TOLERANCE * t.kcal:
+            soft("kcal", f"{n.kcal:.0f} kcal, target {t.kcal:.0f} +/-10%", day.day)
+        if t.min_protein_g and n.protein_g < t.min_protein_g:
+            soft("protein", f"{n.protein_g:.0f} g protein, need {t.min_protein_g:.0f}", day.day)
+        if t.max_carbs_g and n.carbs_g > t.max_carbs_g:
+            soft("carbs", f"{n.carbs_g:.0f} g carbs, limit {t.max_carbs_g:.0f}", day.day)
+
+    for rid, count in Counter(m.recipe_id for _, m in plan.meals).items():
+        if count > MAX_REPEATS and rid in recipes:
+            soft("variety", f"{rid} appears {count} times (limit {MAX_REPEATS})")
+    return out
+
+
+def hard_violations(violations: list[Violation]) -> list[Violation]:
+    return [v for v in violations if v.severity is Severity.HARD]
+
+
+def pantry_use(plan: MealPlan, profile: UserProfile, recipes: Mapping[str, Recipe]) -> float:
+    """Share of the pantry foods the plan uses at least once (1.0 when the pantry is empty)."""
+    if not profile.pantry:
+        return 1.0
+    plan_foods = [recipes[m.recipe_id].foods for _, m in plan.meals if m.recipe_id in recipes]
+    used = set().union(*plan_foods)
+    return len(used & set(profile.pantry)) / len(set(profile.pantry))
