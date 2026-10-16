@@ -9,6 +9,7 @@ usually contains an allergen (soy sauce has wheat, UK sausages have rusk), the f
 from __future__ import annotations
 
 import csv
+from collections.abc import Mapping
 from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
@@ -79,8 +80,10 @@ def food_keys() -> list[str]:
     return sorted(load_foods())
 
 
-def to_grams(food: str, quantity: float, unit: Unit) -> float:
-    f = load_foods()[food]
+def to_grams(
+    food: str, quantity: float, unit: Unit, table: Mapping[str, Food] | None = None
+) -> float:
+    f = (table or load_foods())[food]
     if unit in GRAMS_PER_UNIT:
         return quantity * GRAMS_PER_UNIT[unit]
     if unit in ML_PER_UNIT:
@@ -94,16 +97,18 @@ def to_grams(food: str, quantity: float, unit: Unit) -> float:
     raise UnitError(f"unknown unit {unit}")
 
 
-def derive_allergens(foods: set[str]) -> set[Allergen]:
-    table = load_foods()
+def derive_allergens(foods: set[str], table: Mapping[str, Food] | None = None) -> set[Allergen]:
+    table = table or load_foods()
     return set().union(*(table[f].allergens for f in foods))
 
 
-def derive_ingredient_diets(foods: set[str]) -> set[DietTag]:
+def derive_ingredient_diets(
+    foods: set[str], table: Mapping[str, Food] | None = None
+) -> set[DietTag]:
     """Diet tags that follow from ingredients alone (nutrition-based tags are separate)."""
-    table = load_foods()
+    table = table or load_foods()
     classes = {table[f].diet_class for f in foods}
-    allergens = derive_allergens(foods)
+    allergens = derive_allergens(foods, table)
     tags: set[DietTag] = set()
     if not classes & NOT_VEGAN:
         tags.add(DietTag.VEGAN)

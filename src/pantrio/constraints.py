@@ -99,17 +99,27 @@ def recipe_problems(recipe: Recipe, profile: UserProfile) -> list[tuple[str, str
         allergens, diets = recipe_allergens(recipe), recipe_diets(recipe)
     except KeyError as exc:
         return [("unverifiable", f"{recipe.id} uses {exc}, which is not in the ingredient table")]
+    return rule_problems(recipe.id, allergens, diets, recipe.foods, recipe.total_minutes, profile)
+
+
+def rule_problems(
+    name: str,
+    allergens: set[Allergen],
+    diets: set[DietTag],
+    foods: set[str],
+    minutes: int,
+    profile: UserProfile,
+) -> list[tuple[str, str]]:
+    """The hard rules a dish with these derived facts breaks for this person."""
     out = []
     if bad := allergens & set(profile.allergies):
-        out.append(("allergen", f"{recipe.id} contains {', '.join(sorted(bad))}"))
+        out.append(("allergen", f"{name} contains {', '.join(sorted(bad))}"))
     if missing := set(profile.diets) - diets:
-        out.append(("diet", f"{recipe.id} is not {', '.join(sorted(missing))}"))
-    if bad := recipe.foods & set(profile.exclude_foods):
-        out.append(("excluded_food", f"{recipe.id} uses {', '.join(sorted(bad))}"))
-    if profile.max_minutes is not None and recipe.total_minutes > profile.max_minutes:
-        out.append(
-            ("time", f"{recipe.id} takes {recipe.total_minutes} min (limit {profile.max_minutes})")
-        )
+        out.append(("diet", f"{name} is not {', '.join(sorted(missing))}"))
+    if bad := foods & set(profile.exclude_foods):
+        out.append(("excluded_food", f"{name} uses {', '.join(sorted(bad))}"))
+    if profile.max_minutes is not None and minutes > profile.max_minutes:
+        out.append(("time", f"{name} takes {minutes} min (limit {profile.max_minutes})"))
     return out
 
 
