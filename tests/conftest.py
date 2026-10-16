@@ -11,6 +11,12 @@ from pantrio.corpus import Brief, RecipeDraft, build_recipe
 from pantrio.schema import DietTag, MealType, Recipe
 
 
+@pytest.fixture(autouse=True)
+def no_tracing(monkeypatch):
+    """Offline tests never send traces or feedback to LangSmith, whatever .env says."""
+    monkeypatch.setenv("LANGSMITH_TRACING", "false")
+
+
 def draft(**overrides) -> RecipeDraft:
     base = {
         "title": "Chickpea and Spinach Curry",

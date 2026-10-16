@@ -89,7 +89,9 @@ def run_one(case: dict, model: str, effort: str) -> dict:
         store = DbStore(conn, openai_query_embedder(config.embed_model()))
         kitchen = kitchen_for(case)
         try:
-            result = Assistant(store, kitchen, model=model, effort=effort).reply(case["message"])
+            result = Assistant(store, kitchen, model=model, effort=effort, source="eval").reply(
+                case["message"]
+            )
         except Exception as exc:  # a failed turn is a result, not a crash
             return {"case_id": case["id"], "kind": case["kind"], "ok": False,
                     "error": f"{type(exc).__name__}: {exc}"}  # fmt: skip

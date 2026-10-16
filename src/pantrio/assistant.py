@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import re
 import time
+import uuid
 from dataclasses import dataclass
 from typing import TypedDict
 
@@ -180,8 +181,9 @@ class ChatState(TypedDict, total=False):
 
 class Assistant:
     def __init__(self, store: RecipeStore, kitchen: Kitchen, client=None,
-                 model: str | None = None, effort: str = "low"):  # fmt: skip
-        self.store, self.kitchen, self.effort = store, kitchen, effort
+                 model: str | None = None, effort: str = "low",
+                 source: str = "cli"):  # fmt: skip
+        self.store, self.kitchen, self.effort, self.source = store, kitchen, effort, source
         self.client = client or config.openai_client()
         self.model = model or config.model()
         self.usage = Usage()
@@ -204,17 +206,20 @@ class Assistant:
         start_tokens = self.store.embed_tokens
         start = time.perf_counter()
         history = list(history)[-MAX_HISTORY:]
+        run_id = uuid.uuid4()
         state = self.graph.invoke(
             {
                 "profile": self.kitchen.profile(),
                 "items": [*history, {"role": "user", "content": message}],
                 "rounds": 0,
                 "tool_calls": [],
-            }
+            },
+            config.trace_config("chat", self.source, run_id, model=self.model, effort=self.effort),
         )
         self.usage.embed_tokens = self.store.embed_tokens - start_tokens
         text = state["text"]
         cited = list(dict.fromkeys(CITED.findall(text)))
+        config.log_feedback(run_id, {"flagged_citations": len(state.get("flagged", []))})
         return ChatResult(
             text=text,
             history=[*history, {"role": "user", "content": message},

@@ -15,6 +15,7 @@
 from __future__ import annotations
 
 import time
+import uuid
 from collections import Counter
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
@@ -262,8 +263,8 @@ class PlanState(TypedDict, total=False):
 
 class Planner:
     def __init__(self, store: RecipeStore, client=None, model: str | None = None,
-                 effort: str = "low"):  # fmt: skip
-        self.store, self.effort = store, effort
+                 effort: str = "low", source: str = "cli"):  # fmt: skip
+        self.store, self.effort, self.source = store, effort, source
         self.client = client or config.openai_client()
         self.model = model or config.model()
         self.usage = Usage()
@@ -295,7 +296,11 @@ class Planner:
         start = time.perf_counter()
         state: PlanState = {}
         inputs = {"profile": profile, "path": []}
-        for mode, chunk in self.graph.stream(inputs, stream_mode=["updates", "values"]):
+        run_id = uuid.uuid4()
+        trace = config.trace_config(
+            "plan", self.source, run_id, model=self.model, effort=self.effort
+        )
+        for mode, chunk in self.graph.stream(inputs, trace, stream_mode=["updates", "values"]):
             if mode == "values":
                 state = chunk
             elif on_step:
@@ -304,12 +309,19 @@ class Planner:
         latency = (time.perf_counter() - start) * 1000
         self.usage.embed_tokens = self.store.embed_tokens - start_tokens
         profile, plan, recipes = state["profile"], state["plan"], state["recipes"]
+        used = pantry_use(plan, profile, recipes)
+        config.log_feedback(run_id, {
+            "targets_met": float(not state["violations"]),
+            "repairs": state.get("repairs", 0),
+            "fallbacks": state.get("fallbacks", 0),
+            "pantry_use": used if profile.pantry else None,
+        })  # fmt: skip
         return PlanResult(
             plan=plan,
             recipes={m.recipe_id: recipes[m.recipe_id] for _, m in plan.meals},
             warnings=state["violations"],
             nutrition=[day_nutrition(d, recipes) for d in plan.days],
-            pantry_use=pantry_use(plan, profile, recipes),
+            pantry_use=used,
             repairs=state.get("repairs", 0),
             fallbacks=state.get("fallbacks", 0),
             first_draft_violations=state["first_violations"],

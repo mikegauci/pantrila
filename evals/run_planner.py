@@ -77,7 +77,7 @@ def run_one(pid: str, profile: UserProfile, model: str, effort: str) -> dict:
     with db.connect(config.database_url()) as conn:
         store = DbStore(conn, openai_query_embedder(config.embed_model()))
         try:
-            result = Planner(store, model=model, effort=effort).plan(profile)
+            result = Planner(store, model=model, effort=effort, source="eval").plan(profile)
         except Exception as exc:  # a refused or failed plan is a result, not a crash
             return {"profile_id": pid, "ok": False, "error": f"{type(exc).__name__}: {exc}"}
     row = score(pid, profile, result)
