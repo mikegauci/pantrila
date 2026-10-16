@@ -10,6 +10,7 @@ from openai.types.responses import ResponseFunctionToolCall
 
 from pantrio.api import Session, create_app
 from pantrio.auth import AuthError, User
+from pantrio.cookbook import MemoryCookbook
 from pantrio.pantry import MemoryKitchen
 from pantrio.planner import PlanDraft
 from pantrio.records import MemoryRecords
@@ -60,7 +61,8 @@ class MemoryBackend:
     @contextmanager
     def session(self, user_id):
         kitchen = self.kitchens.setdefault(user_id, MemoryKitchen())
-        yield Session(self.store, kitchen, MemoryRecords(user_id, self.shared))
+        yield Session(self.store, kitchen, MemoryRecords(user_id, self.shared),
+                      MemoryCookbook(user_id, self.shared))  # fmt: skip
 
     def close(self):
         pass
@@ -260,3 +262,93 @@ def test_meta_and_foods(api):
     assert MealType.BREAKFAST in meta["meal_types"]
     foods = {f["key"]: f for f in api.get("/foods").json()}
     assert foods["red_lentils"]["name"] == "red lentils" and "water" not in foods
+
+
+TOAST = {
+    "title": "Cheese toast", "meal_types": ["breakfast"], "total_minutes": 10, "servings": 1,
+    "ingredients": [
+        {"name": "bread", "quantity": 2, "unit": "piece", "food": "white_bread"},
+        {"name": "butter", "quantity": 10, "unit": "g", "food": "butter"},
+    ],
+    "steps": ["Toast.", "Butter."],
+}  # fmt: skip
+
+
+def test_cookbook_crud_is_per_user_and_derived_in_code(api):
+    api.put("/me/profile", json={"allergies": ["milk"]})
+    api.post("/me/pantry", json={"food": "butter"})
+    created = api.post("/me/recipes", json=TOAST)
+    assert created.status_code == 201
+    r = created.json()
+    assert r["allergens"] == ["gluten", "milk"] and r["problems"] == ["contains milk"]
+    assert r["source"] == "manual" and not r["estimated"] and r["pantry_foods"] == ["butter"]
+    assert [i["in_pantry"] for i in r["ingredients"]] == [False, True]
+    assert r["nutrition"]["kcal"] > 0 and r["recipe"]["title"] == "Cheese toast"
+
+    assert [c["id"] for c in api.get("/me/recipes").json()] == [r["id"]]
+    bob = {"Authorization": "Bearer bob"}
+    assert api.get("/me/recipes", headers=bob).json() == []
+    assert api.get(f"/me/recipes/{r['id']}", headers=bob).status_code == 404
+    assert api.delete(f"/me/recipes/{r['id']}", headers=bob).status_code == 404
+
+    vegan = {**TOAST, "ingredients": TOAST["ingredients"][:1]}
+    updated = api.put(f"/me/recipes/{r['id']}", json=vegan).json()
+    assert updated["problems"] == [] and "vegan" in updated["diet_tags"]
+    assert api.delete(f"/me/recipes/{r['id']}").status_code == 204
+    assert api.get(f"/me/recipes/{r['id']}").status_code == 404
+
+
+def test_cookbook_refuses_lines_it_cannot_derive(api):
+    bad = {**TOAST, "ingredients": [{"name": "dragon fruit", "quantity": 1, "unit": "piece"},
+                                    {"name": "butter", "quantity": 1, "unit": "piece",
+                                     "food": "butter"}]}  # fmt: skip
+    r = api.post("/me/recipes", json=bad)
+    assert r.status_code == 422
+    problems = r.json()["detail"]["problems"]
+    assert "pick a food or estimate it" in problems[0] and "pieces" in problems[1]
+    assert api.post("/me/recipes/preview", json=bad).status_code == 422
+    preview = api.post("/me/recipes/preview", json=TOAST).json()
+    assert preview["allergens"] == ["gluten", "milk"] and api.get("/me/recipes").json() == []
+
+
+def imported_reply() -> SimpleNamespace:
+    from pantrio.recipe_import import ImportedRecipe
+
+    parsed = ImportedRecipe.model_validate({
+        "is_recipe": True, "title": "Toast", "summary": "", "cuisine": "", "total_minutes": 5,
+        "servings": 1, "meal_types": ["breakfast"], "steps": ["Toast."],
+        "ingredients": [{"name": "bread", "quantity": 2, "unit": "piece",
+                         "food": "white_bread", "estimate": None}],
+    })  # fmt: skip
+    return SimpleNamespace(output=[], output_parsed=parsed, usage=USAGE)
+
+
+def test_link_import_returns_a_draft_logs_usage_and_saves_nothing(api, backend, monkeypatch):
+    import pantrio.recipe_import as ri
+
+    monkeypatch.setattr(ri, "fetch_page", lambda url, http=None, resolve=None:
+                        (url, "<p>Toast: 2 slices of bread</p>"))  # fmt: skip
+    backend.client.replies = [imported_reply()]
+    r = api.post("/me/recipes/import/link", json={"url": "https://example.com/toast"}).json()
+    assert r["draft"]["source"] == "link" and r["draft"]["source_url"].endswith("/toast")
+    assert r["draft"]["ingredients"][0]["food"] == "white_bread" and r["notes"] == []
+    assert r["cost_usd"] == pytest.approx(0.002)
+    assert api.get("/me/recipes").json() == []
+    usage = api.get("/me/usage").json()
+    assert [e["kind"] for e in usage["events"]] == ["import"]
+    assert usage["limits"]["imports_left"] == usage["limits"]["imports_per_day"] - 1
+
+
+def test_bad_links_fail_before_any_paid_call(api):
+    r = api.post("/me/recipes/import/link", json={"url": "http://127.0.0.1/admin"})
+    assert r.status_code == 422 and "private" in r.json()["detail"]
+    assert api.get("/me/usage").json()["events"] == []
+
+
+def test_imports_are_capped_per_day(api, backend, monkeypatch):
+    monkeypatch.setenv("PANTRIO_DAILY_IMPORTS", "1")
+    png = "data:image/png;base64,iVBORw0KGgo="
+    backend.client.replies = [imported_reply()]
+    assert api.post("/me/recipes/import/photos", json={"images": [png]}).status_code == 200
+    r = api.post("/me/recipes/estimate", json={"names": ["gochujang"]})
+    assert r.status_code == 429
