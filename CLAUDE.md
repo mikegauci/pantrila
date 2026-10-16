@@ -57,8 +57,8 @@ chat turn 4.5 s / $0.0023. Deployed: web https://pantrio-azure.vercel.app (Verce
 root `web/`, auto-deploys `main`), API https://pantrio-api.onrender.com (Render Blueprint from
 `render.yaml`, free plan, sleeps when idle). Supabase Auth: anonymous sign-ins on, Site URL and
 `/auth/callback` redirects set for the Vercel URL and localhost:3000. Live check: guest sign-in,
-search, a 2-day plan (18.6 s, $0.005) and a chat turn all pass. Magic-link email to non-team
-addresses still needs custom SMTP.
+search, a 2-day plan (18.6 s, $0.005) and a chat turn all pass. Decision: guests are the public
+way in; magic-link email is owner-only (Supabase's built-in sender, no custom domain for SMTP).
 Next: step 5 (portfolio polish). Paid evals workflow needs
 `OPENAI_API_KEY` and `DATABASE_URL` repository secrets; `LANGSMITH_API_KEY` is set locally
 (EU endpoint), so local eval runs upload LangSmith experiments.
