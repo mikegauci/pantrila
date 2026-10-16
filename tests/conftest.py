@@ -166,3 +166,29 @@ def conn():
         c.autocommit = False
         db.migrate(c)
         yield c
+
+
+# --- offline recipe store ------------------------------------------------------------------
+
+
+class CorpusStore:
+    """In-memory RecipeStore: the same hard filters as SQL, ranked by word overlap."""
+
+    def __init__(self, recipes):
+        self.recipes = {r.id: r for r in recipes}
+        self.embed_tokens = 0
+        self.queries: list[str] = []
+
+    def search(self, query, filters, limit):
+        self.queries.append(query)
+        words = set(re.findall(r"[a-z]+", query.lower()))
+
+        def overlap(r):
+            text = f"{r.title} {r.summary} {' '.join(r.foods)}".lower().replace("_", " ")
+            return len(words & set(re.findall(r"[a-z]+", text)))
+
+        ok = [r for r in self.recipes.values() if not filters.violations(r)]
+        return [r.id for r in sorted(ok, key=lambda r: (-overlap(r), r.id))][:limit]
+
+    def get(self, ids):
+        return {i: self.recipes[i] for i in ids if i in self.recipes}
