@@ -37,8 +37,8 @@ Step 1 merged (PR #1): 300-recipe corpus, Supabase seeded and embedded, 65 label
 hybrid recall@10 0.843, MRR 0.922 (`evals/reports/retrieval-2026-10-15T195536Z.md`).
 
 Step 2 merged (PR #2): LangGraph planner, `constraints.py`, 16 eval profiles. First
-eval `evals/reports/planner-2026-10-16T084243Z.md` on `gpt-5.4-mini` (reasoning low, chosen
-for budget; `gpt-5.5` not yet run because its prices are not in `.env`): 16/16 plans, 0 hard
+eval `evals/reports/planner-2026-10-16T084243Z.md` on `gpt-5.4-mini` (reasoning low; now the
+default model, chosen as the cheapest; `gpt-5.5` never evaluated): 16/16 plans, 0 hard
 violations, 13/16 meet every target, protein days 94%, pantry use 94%, $0.023 per plan,
 p50 19s / p95 84s. Weakest: `cutting` (130 g protein in 1600 kcal, 43% of days met).
 Migration 0002 widened `recipe_ingredients.quantity` to 3 decimals (applied and reseeded on
@@ -58,7 +58,8 @@ is unset, so no LangSmith experiments yet.
   Tables in `public` are exposed by Supabase's REST API: enable row level security before any
   user data (pantry, profiles) lands.
 - OpenAI Python SDK (Responses API, structured outputs, tool calling). Default chat model
-  `gpt-5.5` (override `PANTRIO_MODEL`), embeddings `text-embedding-3-small`
+  `gpt-5.4-mini`, the cheapest that passes the evals (override `PANTRIO_MODEL`; the first 144
+  corpus recipes came from `gpt-5.5`), embeddings `text-embedding-3-small`
   (override `PANTRIO_EMBED_MODEL`). Do not use the Anthropic API.
 - LangGraph for the planner and chat agent.
 - LangSmith for tracing, datasets and experiments (`LANGSMITH_*`); everything works with
@@ -123,8 +124,8 @@ uv run pantrio ingest                    # embed the corpus (needs OPENAI_API_KE
 uv run pantrio search "quick vegan dinner with chickpeas" [--parse] [--mode vector|fulltext]
 uv run pantrio corpus check              # re-derive nutrition/allergens/diets, report drift
 uv run python scripts/generate_corpus.py [--sample | --only ids | --force | --limit n]  # paid
-#   cheaper model for one run: PANTRIO_MODEL=gpt-5.4-mini PANTRIO_PRICE_INPUT_PER_MTOK=0.75 \
-#   PANTRIO_PRICE_OUTPUT_PER_MTOK=4.50 (shell variables override .env)
+#   other model for one run: PANTRIO_MODEL=<model> PANTRIO_PRICE_INPUT_PER_MTOK=<usd> \
+#   PANTRIO_PRICE_OUTPUT_PER_MTOK=<usd> (shell variables override .env)
 uv run python scripts/build_usda_table.py           # rebuild data/usda_foods.csv
 uv run python -m evals.retrieval_queries # regenerate labelled queries from the corpus
 uv run python -m evals.run_retrieval     # retrieval eval (vector vs full text vs hybrid)
