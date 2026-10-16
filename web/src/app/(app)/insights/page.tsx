@@ -92,6 +92,7 @@ export default function InsightsPage() {
           <div className="grid gap-3">
             <KindStats name="Plan" events={events.filter((e) => e.kind === "plan")} />
             <KindStats name="Chat turn" events={events.filter((e) => e.kind === "chat")} />
+            <KindStats name="Recipe import" events={events.filter((e) => e.kind === "import")} />
             {events.length > 0 && (
               <div className="overflow-x-auto">
                 <table className="tabular w-full text-left text-[13px]">

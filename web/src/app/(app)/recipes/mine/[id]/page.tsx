@@ -1,0 +1,169 @@
+"use client"
+
+import { ArrowLeft, Check, Clock, ExternalLink, Pencil, Trash2, Users } from "lucide-react"
+import Link from "next/link"
+import { useParams, useRouter } from "next/navigation"
+import { useState } from "react"
+import { toast } from "sonner"
+import { useSWRConfig } from "swr"
+
+import { AiBadge, AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
+import { CookbookForm, RECIPE_SOURCE } from "@/components/cookbook-form"
+import { MacroRing } from "@/components/macro-ring"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
+import { send } from "@/lib/api"
+import { label } from "@/lib/format"
+import { useCookbookRecipe, useProfile } from "@/lib/hooks"
+import { cn } from "@/lib/utils"
+
+function amount(q: number) {
+  return q < 10 ? String(Math.round(q * 100) / 100) : String(Math.round(q))
+}
+
+export default function MyRecipePage() {
+  const { id } = useParams<{ id: string }>()
+  const router = useRouter()
+  const { mutate } = useSWRConfig()
+  const { data: r, error, isLoading, mutate: refresh } = useCookbookRecipe(id)
+  const { data: profile } = useProfile()
+  const [editing, setEditing] = useState(false)
+
+  if (error) {
+    return <p role="alert" className="text-danger">{error.status === 404 ? "No such recipe in your cookbook." : error.message}</p>
+  }
+  if (isLoading || !r) return <Skeleton className="h-96 rounded-[20px]" />
+
+  if (editing) {
+    return (
+      <div className="grid gap-5">
+        <h2 className="text-[18px] font-semibold">Edit {r.title}</h2>
+        <CookbookForm
+          initial={r.recipe}
+          recipeId={r.id}
+          onSaved={(saved) => {
+            refresh(saved, { revalidate: false })
+            mutate("/me/recipes")
+            setEditing(false)
+          }}
+          onCancel={() => setEditing(false)}
+        />
+      </div>
+    )
+  }
+
+  async function remove() {
+    if (!r || !window.confirm(`Delete ${r.title} from your recipes?`)) return
+    try {
+      await send(`/me/recipes/${r.id}`, "DELETE")
+      toast.success(`Deleted ${r.title}`)
+      mutate("/me/recipes")
+      router.push("/recipes/mine")
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not delete.")
+    }
+  }
+
+  const allergies = new Set(profile?.allergies ?? [])
+  const { icon: SourceIcon, text: sourceText } = RECIPE_SOURCE[r.source]
+  const have = r.ingredients.filter((i) => i.in_pantry).length
+
+  return (
+    <div className="grid gap-5">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Link href="/recipes/mine" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "w-fit")}>
+          <ArrowLeft /> My recipes
+        </Link>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => setEditing(true)}><Pencil /> Edit</Button>
+          <Button variant="outline" size="sm" onClick={remove}><Trash2 /> Delete</Button>
+        </div>
+      </div>
+
+      <ProblemAlert title="This recipe does not suit you" items={r.problems} />
+      <ProblemAlert title="This recipe needs a fix (edit it)" items={r.invalid} />
+
+      <Panel className="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+        <RecipeArt meal={r.meal_types[0]} cuisine={r.cuisine || undefined} size="lg" className="aspect-[4/3] w-full" />
+        <div className="flex flex-col gap-3">
+          <h2 className="text-[24px] font-bold leading-8">{r.title}</h2>
+          {r.summary && <p className="text-muted-foreground">{r.summary}</p>}
+          <p className="tabular flex flex-wrap gap-4 text-[13px] text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5"><Clock className="size-4" aria-hidden />{r.total_minutes} min</span>
+            <span className="inline-flex items-center gap-1.5"><Users className="size-4" aria-hidden />Serves {r.servings}</span>
+            <span>{r.meal_types.map(label).join(", ")}</span>
+          </p>
+          <p className="inline-flex flex-wrap items-center gap-1.5 text-[13px] text-muted-foreground">
+            <SourceIcon className="size-4" aria-hidden /> {sourceText}
+            {r.source_url && (
+              <a href={r.source_url} target="_blank" rel="noopener noreferrer nofollow"
+                 className="inline-flex items-center gap-1 font-medium text-primary-text underline-offset-2 hover:underline">
+                {new URL(r.source_url).hostname.replace(/^www\./, "")} <ExternalLink className="size-3.5" aria-hidden />
+              </a>
+            )}
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {r.estimated && <AiBadge>Estimated</AiBadge>}
+            {r.diet_tags.map((d) => <DietBadge key={d} diet={d} />)}
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[12px] font-medium text-muted-foreground">Allergens:</span>
+            {r.allergens.length
+              ? r.allergens.map((a) => <AllergenBadge key={a} allergen={a} danger={allergies.has(a)} />)
+              : <span className="text-[12px]">none of the 14 EU allergens</span>}
+          </div>
+        </div>
+      </Panel>
+
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+        <Panel>
+          <PanelTitle>Ingredients</PanelTitle>
+          <p className="mb-2 text-[12px] text-muted-foreground">You have {have} of {r.ingredients.length} in your pantry.</p>
+          <ul>
+            {r.ingredients.map((ing, i) => (
+              <li key={i} className="flex items-center gap-3 border-b py-2.5 last:border-0">
+                <span
+                  className={cn("grid size-5 shrink-0 place-items-center rounded-full border",
+                                ing.in_pantry ? "border-primary bg-primary text-primary-foreground" : "border-border")}
+                  title={ing.in_pantry ? "In your pantry" : "Not in your pantry"}
+                >
+                  {ing.in_pantry && <Check className="size-3" strokeWidth={3} />}
+                </span>
+                <span className="flex-1">
+                  <span className="tabular font-semibold">{amount(ing.quantity)} {ing.unit}</span> {ing.name}
+                  {ing.in_pantry && <span className="sr-only"> (in your pantry)</span>}
+                </span>
+                {!ing.food && ing.estimate && <AiBadge>Estimated</AiBadge>}
+              </li>
+            ))}
+          </ul>
+        </Panel>
+
+        <Panel>
+          <PanelTitle>Per serving</PanelTitle>
+          {r.nutrition ? <MacroRing nutrition={r.nutrition} size={150} /> : <p className="text-muted-foreground">Fix the recipe to see nutrition.</p>}
+          <p className="mt-4 text-[12px] text-muted-foreground">
+            {r.estimated
+              ? "Some foods are estimated by AI, so these numbers and allergens are a best guess."
+              : "Computed from the ingredients with USDA FoodData Central values."}{" "}
+            Macros means protein, carbs and fat.
+          </p>
+        </Panel>
+      </div>
+
+      <Panel>
+        <PanelTitle>Method</PanelTitle>
+        <ol className="grid gap-4">
+          {r.steps.map((step, i) => (
+            <li key={i} className="flex gap-4">
+              <span className="tabular grid size-8 shrink-0 place-items-center rounded-full bg-primary-soft font-semibold text-primary-text">
+                {i + 1}
+              </span>
+              <p className="pt-1">{step}</p>
+            </li>
+          ))}
+        </ol>
+      </Panel>
+    </div>
+  )
+}

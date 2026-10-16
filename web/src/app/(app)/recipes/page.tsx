@@ -1,11 +1,12 @@
 "use client"
 
-import { ChefHat, Search, ShieldCheck } from "lucide-react"
+import { BookOpen, ChefHat, Search, ShieldCheck } from "lucide-react"
+import Link from "next/link"
 import { useState } from "react"
 
 import { EmptyState } from "@/components/bits"
 import { RecipeCard } from "@/components/recipe-card"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Switch } from "@/components/ui/switch"
@@ -82,6 +83,10 @@ export default function RecipesPage() {
           />
         </div>
         <Button type="submit" size="lg" className="h-12">Search</Button>
+        <Link href="/recipes/mine" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-12 bg-surface")}>
+          <BookOpen /> <span className="hidden sm:inline">My recipes</span>
+          <span className="sr-only sm:hidden">My recipes</span>
+        </Link>
       </form>
 
       <div className="grid gap-3">
