@@ -160,8 +160,8 @@ def conn():
     with db.connect(url) as c:
         c.autocommit = True
         c.execute(
-            "drop table if exists recipe_embeddings, recipe_ingredients, recipes,"
-            " pantrio_migrations cascade"
+            "drop table if exists recipe_embeddings, recipe_ingredients, recipes, pantry_items,"
+            " user_profiles, pantrio_migrations cascade"
         )
         c.autocommit = False
         db.migrate(c)

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from enum import StrEnum
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class Allergen(StrEnum):
@@ -157,3 +157,39 @@ class MealPlan(BaseModel):
     @property
     def meals(self) -> list[tuple[int, PlannedMeal]]:
         return [(d.day, m) for d in self.days for m in d.meals]
+
+
+# --- Pantry and shopping -------------------------------------------------------------------
+
+
+class PantryItem(BaseModel):
+    """A food the person has at home. No quantity means "some", enough for any recipe."""
+
+    food: str = Field(description="Key of the food in Pantrio's ingredient table.")
+    quantity: float | None = Field(default=None, gt=0)
+    unit: Unit | None = None
+    grams: float | None = Field(default=None, ge=0, description="Quantity normalised in code.")
+
+    @model_validator(mode="after")
+    def _amount_is_complete(self) -> PantryItem:
+        if (self.quantity is None) != (self.unit is None):
+            raise ValueError("quantity and unit go together")
+        if (self.quantity is None) != (self.grams is None):
+            raise ValueError("grams are set exactly when a quantity is")
+        return self
+
+
+class GroceryItem(BaseModel):
+    food: str
+    aisle: str
+    need_g: float = Field(description="Grams the plan uses.")
+    have_g: float = Field(description="Grams the pantry covers.")
+    buy_g: float = Field(description="Grams to buy: need minus have, never below zero.")
+    amount: str = Field(description="What to buy in shop terms, e.g. '3 pieces' or '400 g'.")
+    recipes: list[str] = Field(description="Recipe ids that use the food.")
+
+
+class GroceryList(BaseModel):
+    people: int = 1
+    items: list[GroceryItem] = Field(description="Foods to buy, grouped by aisle.")
+    covered: list[GroceryItem] = Field(description="Foods the pantry fully covers.")
