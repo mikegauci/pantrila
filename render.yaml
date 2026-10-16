@@ -1,0 +1,45 @@
+# Render Blueprint for the Pantrio API (FastAPI). New > Blueprint in the Render dashboard,
+# pick this repo, then fill in the secrets marked sync: false.
+services:
+  - type: web
+    name: pantrio-api
+    runtime: python
+    region: frankfurt
+    plan: free
+    branch: main
+    buildCommand: pip install uv && uv sync --locked --no-dev
+    startCommand: .venv/bin/uvicorn pantrio.api:app --host 0.0.0.0 --port $PORT --proxy-headers
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: DATABASE_URL # Supabase session pooler URL
+        sync: false
+      - key: SUPABASE_URL
+        value: https://tlnigvzkselebbtetibt.supabase.co
+      - key: PANTRIO_CORS_ORIGINS # the Vercel URL(s), comma separated
+        sync: false
+      - key: PANTRIO_MODEL
+        value: gpt-5.4-mini
+      - key: PANTRIO_PRICE_INPUT_PER_MTOK
+        value: "0.75"
+      - key: PANTRIO_PRICE_OUTPUT_PER_MTOK
+        value: "4.50"
+      - key: PANTRIO_PRICE_EMBED_PER_MTOK
+        value: "0.02"
+      - key: PANTRIO_DAILY_PLANS
+        value: "5"
+      - key: PANTRIO_DAILY_CHATS
+        value: "50"
+      - key: PANTRIO_DAILY_BUDGET_USD
+        value: "2"
+      - key: LANGSMITH_API_KEY
+        sync: false
+      - key: LANGSMITH_ENDPOINT
+        value: https://eu.api.smith.langchain.com
+      - key: LANGSMITH_PROJECT
+        value: pantrio
+      - key: LANGSMITH_TRACING
+        value: "true"
