@@ -70,7 +70,7 @@ function Week({ plan }: { plan: Plan }) {
             <h3 className="text-[15px] font-semibold">Day {d.day}</h3>
             {i === today && <span className="rounded-full bg-yellow px-2 text-[12px] font-semibold">Today</span>}
           </div>
-          <ul className="mb-4 grid gap-2">
+          <ul className="mb-4 grid grid-cols-1 gap-2">
             {[...d.meals].sort((a, b) => MEAL_ORDER.indexOf(a.meal_type) - MEAL_ORDER.indexOf(b.meal_type)).map((m) => (
               <li key={m.meal_type}>
                 <Link

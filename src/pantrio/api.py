@@ -599,7 +599,7 @@ def create_app(
             start = time.perf_counter()
             try:
                 with backend.session(user.id) as s:
-                    planner = Planner(s.store, client=backend.client, model=model)
+                    planner = Planner(s.store, client=backend.client, model=model, source="api")
                     try:
                         result = planner.plan(
                             s.kitchen.profile(), on_step=lambda n: events.put(("step", {"node": n}))
@@ -637,7 +637,7 @@ def create_app(
         check_quota(s.records, "chat")
         backend: Backend = request.app.state.backend
         model = config.model()
-        bot = Assistant(s.store, s.kitchen, client=backend.client, model=model)
+        bot = Assistant(s.store, s.kitchen, client=backend.client, model=model, source="api")
         history = [t.model_dump() for t in body.history][-MAX_CHAT_HISTORY:]
         start = time.perf_counter()
         try:

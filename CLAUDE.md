@@ -49,7 +49,7 @@ Supabase), grocery list, deterministic swaps, LangGraph chat agent with 5 tools 
 guard; 24 chat eval cases. `evals/reports/assistant-2026-10-16T094533Z.md` on `gpt-5.4-mini`:
 right tools 100%, pantry as asked 100%, 0 unsafe and 0 made-up cited recipes, $0.0022 per
 turn, p50 8s / p95 17s (first run before the prompt fix: 96% tools, 50% pantry, 1 made-up id).
-Step 4 (this PR): FastAPI `api.py` (Supabase Auth ES256 tokens verified via JWKS; `sub` is
+Step 4 (PR #7): FastAPI `api.py` (Supabase Auth ES256 tokens verified via JWKS; `sub` is
 `user_id`), migration 0004 (`meal_plans`, `usage_events`, RLS; applied on Supabase), plan
 progress as SSE, daily caps per user and a total daily budget; Next.js 16 app in `web/` (10
 screens per `DESIGN_SYSTEM.md`). Local end-to-end run on `gpt-5.4-mini`: plan 17 s / $0.012,
@@ -59,7 +59,14 @@ root `web/`, auto-deploys `main`), API https://pantrio-api.onrender.com (Render 
 `/auth/callback` redirects set for the Vercel URL and localhost:3000. Live check: guest sign-in,
 search, a 2-day plan (18.6 s, $0.005) and a chat turn all pass. Decision: guests are the public
 way in; magic-link email is owner-only (Supabase's built-in sender, no custom domain for SMTP).
-Next: step 5 (portfolio polish). Paid evals workflow needs
+Step 5 (this PR): README rewritten (mermaid architecture and planner diagrams, eval table,
+design decisions, limitations, screenshots in `docs/screenshots/`), `docs/demo-script.md` for
+the video (to be recorded by the owner and linked in the README). Traces: root runs named
+`plan`/`chat`, tagged `api|cli|eval`, with feedback `targets_met`, `repairs`, `fallbacks`,
+`pantry_use` (plans) and `flagged_citations` (chat); "Pantrio live" LangSmith dashboard (EU)
+built by `scripts/langsmith_dashboard.py`, filtered to `api` traffic. LangSmith's charts API
+only accepts V2 definitions (`metric_definition` + `filter_definition`). Fixed plan day cards
+overflowing at 1280 px. No prompt/model change, so no eval rerun. Paid evals workflow needs
 `OPENAI_API_KEY` and `DATABASE_URL` repository secrets; `LANGSMITH_API_KEY` is set locally
 (EU endpoint), so local eval runs upload LangSmith experiments.
 
@@ -103,7 +110,9 @@ Next: step 5 (portfolio polish). Paid evals workflow needs
 - `src/pantrio/search.py`: hybrid retrieval (pgvector cosine + Postgres full text, merged with
   reciprocal rank fusion) with hard SQL filters for allergens, diets, time, meal, cuisine and
   excluded foods; optional LLM query parser.
-- `src/pantrio/config.py`: settings and prices from the environment.
+- `src/pantrio/config.py`: settings and prices from the environment; LangSmith helpers
+  (`trace_config` names root runs `plan`/`chat` and tags them `api|cli|eval`; `log_feedback`
+  attaches deterministic scores to a run; both no-ops with tracing off).
 - `src/pantrio/constraints.py`: deterministic plan checks, the single source of truth for "is
   this plan safe and valid". Hard rules (allergens and diets re-derived from ingredients,
   excluded foods, time, meal slot, structure, unknown ids) vs soft goals (daily kcal +/-10%,
@@ -144,7 +153,10 @@ Next: step 5 (portfolio polish). Paid evals workflow needs
 - `data/`: `ingredients.csv` (hand-curated), `usda_foods.csv` (built by
   `scripts/build_usda_table.py`), `dish_briefs.csv` (300 fixed briefs), `recipes/*.json`
   (generated corpus, one file per recipe), `corpus_manifest.json` (generation runs and cost).
-- `scripts/`: `generate_corpus.py`, `build_usda_table.py`.
+- `scripts/`: `generate_corpus.py`, `build_usda_table.py`, `langsmith_dashboard.py` (rebuilds the
+  "Pantrio live" LangSmith dashboard via the charts API).
+- `docs/`: `demo-script.md` (video walkthrough), `screenshots/` (README images, taken from the
+  web app at 1280 px wide).
 - `supabase/migrations/`: SQL migrations.
 - `evals/`: `retrieval_queries.py` (deterministic query generator) -> `data/retrieval_queries.json`,
   `plan_profiles.py` (16 eval profiles) -> `data/plan_profiles.json`, `chat_cases.py` (24
@@ -188,6 +200,7 @@ uv run pantrio chat [--user me] [--message "..."]  # cooking assistant (paid)
 uv run python -m evals.chat_cases        # regenerate the assistant eval cases
 uv run python -m evals.run_assistant [--only ids] # assistant eval (paid; ~$0.002/turn)
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
+uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # LangSmith dashboard
 uv run uvicorn pantrio.api:app --env-file .env --reload   # API on :8000 (SUPABASE_URL, DATABASE_URL)
 cd web && npm ci && npm run dev          # :3000; web/.env.local from web/.env.example
 cd web && npm run lint && npm run typecheck && npm run build   # what CI runs for web

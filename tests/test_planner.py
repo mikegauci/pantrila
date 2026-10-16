@@ -5,6 +5,7 @@ from types import SimpleNamespace
 import pytest
 from openai.types.responses import ResponseFunctionToolCall
 
+from pantrio import config
 from pantrio.constraints import check_plan, hard_violations
 from pantrio.planner import MAX_REPAIRS, MAX_TOOL_ROUNDS, PlanDraft, Planner, PlanningError
 from pantrio.schema import Allergen, MealType, NutritionTargets, UserProfile
@@ -76,6 +77,17 @@ def test_clean_draft_goes_straight_to_finalise(store):
     # Retrieval already applied the hard rules: the fish recipe is never offered.
     assert SALMON not in call["input"][0]["content"]
     assert CHICKEN in call["input"][0]["content"]
+
+
+def test_plan_run_is_named_and_scored(store, monkeypatch):
+    seen = {}
+    monkeypatch.setattr(config, "log_feedback", lambda run_id, scores: seen.update(scores))
+    client = FakeClient(plan_reply(CHICKEN, CURRY))
+    Planner(store, client=client, model="m", source="api").plan(profile())
+    assert seen == {"targets_met": 1.0, "repairs": 0, "fallbacks": 0, "pantry_use": None}
+    trace = config.trace_config("plan", "api", "id", model="m")
+    assert trace["run_name"] == "plan" and trace["tags"] == ["api"]
+    assert trace["metadata"] == {"source": "api", "model": "m"}
 
 
 def test_tool_calls_are_answered_from_the_store(store):

@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import functools
+import logging
 import os
+import uuid
 from dataclasses import dataclass
 
 from dotenv import load_dotenv
@@ -57,11 +60,46 @@ def openai_client():
     from openai import OpenAI
 
     client = OpenAI()
-    if os.environ.get("LANGSMITH_TRACING", "").lower() == "true":
+    if tracing():
         from langsmith.wrappers import wrap_openai
 
         client = wrap_openai(client)
     return client
+
+
+def tracing() -> bool:
+    return os.environ.get("LANGSMITH_TRACING", "").lower() == "true"
+
+
+def trace_config(name: str, source: str, run_id: uuid.UUID, **metadata) -> dict:
+    """LangGraph run config: a root run named `plan` or `chat`, tagged with where it ran
+    (`api`, `cli`, `eval`) so LangSmith dashboards can split live traffic from evals."""
+    return {"run_name": name, "run_id": run_id, "tags": [source],
+            "metadata": {"source": source, **metadata}}  # fmt: skip
+
+
+@functools.cache
+def _langsmith():
+    from langsmith import Client
+
+    client = Client()
+    project = client.read_project(project_name=os.environ.get("LANGSMITH_PROJECT") or "default")
+    return client, project.id
+
+
+def log_feedback(run_id: uuid.UUID, scores: dict[str, float | None]) -> None:
+    """Attach deterministic quality scores to a traced run (no-op with tracing off). The
+    LangSmith dashboard charts them; a failure here never breaks the request."""
+    if not tracing():
+        return
+    try:
+        client, project_id = _langsmith()
+        for key, score in scores.items():
+            if score is not None:
+                client.create_feedback(run_id, key, score=score, trace_id=run_id,
+                                       session_id=project_id)  # fmt: skip
+    except Exception:
+        logging.getLogger(__name__).warning("could not log LangSmith feedback", exc_info=True)
 
 
 def database_url() -> str:
