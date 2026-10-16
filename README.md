@@ -5,8 +5,9 @@ and nutrition targets; it finds recipes with hybrid RAG search, plans your week,
 grocery list and answers cooking questions. Allergen and diet safety is checked by
 deterministic code, never by the model's word.
 
-Status: step 2 of 5. Done: the recipe corpus, hybrid pgvector search and retrieval evals;
-the LangGraph meal-planning agent with a deterministic constraint checker and plan evals.
+Status: step 4 of 5. Done: the recipe corpus, hybrid pgvector search and retrieval evals;
+the LangGraph meal-planning agent with a deterministic constraint checker and plan evals;
+pantry, grocery list and a tool-calling cooking assistant; the FastAPI + Next.js web app.
 See `CLAUDE.md` for the build plan and commands.
 
 ## Quick start
@@ -19,7 +20,30 @@ uv run pantrio db migrate && uv run pantrio db seed
 uv run pantrio ingest
 uv run pantrio search "quick vegan dinner with chickpeas" --parse
 uv run pantrio plan vegan-high-protein    # a week of meals for an eval profile
+
+# web app: API on :8000, web on :3000 (sign in with Supabase Auth)
+uv run uvicorn pantrio.api:app --env-file .env --reload
+cd web && cp .env.example .env.local && npm ci && npm run dev
 ```
+
+## Web app
+
+```
+browser (Next.js, Vercel) --Supabase Auth--> access token (ES256 JWT)
+        |  Bearer token
+        v
+FastAPI (Render) -- verifies the token with Supabase's public keys, user id = token `sub`
+        |-- recipes: hybrid search with the person's rules as SQL filters
+        |-- plans: LangGraph planner, progress streamed as server-sent events
+        |-- chat: LangGraph assistant with 5 tools and the citation guard
+        v
+Supabase Postgres + pgvector (RLS on every table; only the API's owner role reads data)
+```
+
+Every recipe the API returns is checked against the person's current profile, so a new
+allergy shows up in red on a saved plan. Each paid call (plan or chat turn) is logged with
+tokens, cost and latency; the Insights page shows them next to the offline eval numbers,
+and daily caps per user plus a total daily budget keep the public demo cheap.
 
 ## How the corpus is made
 
