@@ -3,7 +3,7 @@
 AI cooking and meal-planning assistant. Tell it what is in your kitchen, your diet, allergies
 and nutrition targets; it finds recipes with hybrid RAG search, plans your week with a
 LangGraph agent, builds a grocery list from what is missing and answers cooking questions in
-a chat. **The model proposes; deterministic code decides.** Every recipe and plan is
+a chat. You can add your own recipes from photos, a link or by typing them in. **The model proposes; deterministic code decides.** Every recipe and plan is
 re-checked against your allergens and diet before you see it.
 
 **Live demo: https://pantrio-azure.vercel.app** ("Try it as a guest" needs no account. The API
@@ -14,20 +14,27 @@ seconds.) Demo video walkthrough: [`docs/demo-script.md`](docs/demo-script.md).
 
 ## Results
 
-All numbers are on `gpt-5.4-mini` (reasoning effort low), the cheapest model that passes the
-evals. Each figure links to the committed report it comes from.
+All numbers are on `gpt-5.4-mini` (reasoning effort low; medium for recipe import), the
+cheapest model that passes the evals. Each figure links to the committed report it comes from.
 
 | What | Eval set | Quality | Cost | Latency p50 / p95 |
 |---|---|---|---|---|
 | [Recipe search](evals/reports/retrieval-2026-10-15T195536Z.md) | 65 labelled queries, 300 recipes | hybrid recall@10 **0.843** (vector 0.811, full text 0.770), MRR **0.922**, 0 filter violations | embeddings only | 0.57 s / 0.73 s |
 | [Meal planner](evals/reports/planner-2026-10-16T084243Z.md) | 16 diet and allergy profiles, 1 to 7 days | **0 hard violations**, 13/16 plans meet every target, protein days 94%, pantry use 94% | **$0.023** per plan | 19 s / 84 s |
 | [Cooking assistant](evals/reports/assistant-2026-10-16T094533Z.md) | 24 single-turn cases | right tools **100%**, pantry edits as asked 100%, **0** unsafe or made-up cited recipes | **$0.0022** per turn | 8 s / 17 s |
+| [Recipe import](evals/reports/import-2026-10-16T185930Z.md) | 12 labelled recipe pages (JSON-LD, blog text, no recipe, prompt injection) | **0** missed allergens, food matching 99%, servings 100%, injection ignored | **$0.006** per import | 6.5 s / 11.5 s |
 
 - Hybrid search beats either retriever alone. It gains most on allergen queries (0.875
   against 0.741 for vector alone) and ingredient queries (0.911 against 0.824).
 - The assistant's first run scored 96% right tools, 50% pantry edits and 1 made-up recipe id.
   A prompt fix and the citation guard brought these to 100%, 100% and 0
   ([before](evals/reports/assistant-2026-10-16T094306Z.md)).
+- Recipe import on reasoning effort low missed an allergen in 2 of 12 drafts
+  ([before](evals/reports/import-2026-10-16T185353Z.md)): curry powder estimated instead of
+  matched (losing mustard), and shrimp paste in Thai curry paste. A code safety net (an
+  estimated line gains the allergens of any table food it names) fixed the first; medium
+  effort fixed the second ([low with the safety net](evals/reports/import-2026-10-16T185756Z.md)
+  still missed it once).
 - Weakest case: `cutting` (130 g protein in 1600 kcal) meets the protein minimum on 43% of
   days. The plan still comes back, with the missed days listed as warnings.
 - Hard rules (allergens, diet, excluded foods, time, meal slot) are never traded away. A plan
@@ -127,6 +134,12 @@ one or does not exist, so a made-up recipe can't reach the user without a warnin
 - **Cost guards for a public demo.** Guests sign in anonymously. Each user gets 5 plans and
   50 chat turns a day, and a total daily budget caps the spend across everyone. Every paid
   call is logged with tokens, cost and latency (the Insights page).
+- **Your recipes, checked like ours.** Imports (a photo, a web page's schema.org data or its
+  text) come back as a draft you review; nothing is saved first. Each ingredient maps to the
+  food table, so nutrition and allergens are computed in code. A food the table lacks gets a
+  model estimate, marked "Estimated" in the UI, with allergens you can correct. Links are
+  fetched with SSRF guards (public addresses only, every redirect re-checked). Your recipes
+  stay in your cookbook and never go into meal plans.
 - **No data retention at OpenAI.** Every Responses API call uses `store=False`, and tool
   loops are capped.
 
@@ -167,6 +180,7 @@ uv run pytest                            # offline: OpenAI mocked, no network
 uv run python -m evals.run_retrieval     # retrieval eval (embeddings only)
 uv run python -m evals.run_planner       # planner eval, about $0.40 for 16 profiles
 uv run python -m evals.run_assistant     # assistant eval, about $0.05 for 24 cases
+uv run python -m evals.run_import        # recipe-import eval, about $0.08 for 12 pages
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 ```
 
@@ -184,6 +198,7 @@ The paid evals are a manual GitHub Actions workflow.
 | `src/pantrio/constraints.py` | The deterministic checker: hard rules and soft targets |
 | `src/pantrio/planner.py` | Planner graph |
 | `src/pantrio/assistant.py`, `swaps.py`, `pantry.py`, `grocery.py` | Assistant graph and its tools |
+| `src/pantrio/cookbook.py`, `recipe_import.py` | Your own recipes: derivation, storage, import from photos and links |
 | `src/pantrio/api.py`, `auth.py`, `records.py` | FastAPI app, Supabase token check, saved plans and usage log |
 | `supabase/migrations/` | SQL migrations (pgvector, full text, RLS) |
 | `evals/` | Eval generators, runners, committed reports |
@@ -197,6 +212,10 @@ The paid evals are a manual GitHub Actions workflow.
   (`--parse`) exists but is off in the evals.
 - Nutrition is computed from ingredient weights and USDA averages. It is an estimate, not
   medical advice.
+- Some recipe sites block bots (Allrecipes answers 402/403), so link import fails there; the
+  app suggests a screenshot instead. The import eval covers web pages only; photos were
+  checked by hand.
+- Estimated foods are a best guess. Check the label of anything you buy.
 - Render's free plan sleeps when idle, so the first request after a pause is slow.
 
 "Macros" means protein, carbs and fat; "kcal" is food energy (calories).
