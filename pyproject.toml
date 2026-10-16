@@ -12,13 +12,21 @@ dependencies = [
     "typer>=0.12",
     "langsmith>=0.3",
     "langgraph>=1.2.15",
+    "fastapi>=0.143.2",
+    "uvicorn[standard]>=0.54.0",
+    "pyjwt[crypto]>=2.15.1",
+    "psycopg-pool>=3.3.3",
 ]
 
 [project.scripts]
 pantrio = "pantrio.cli:app"
 
 [dependency-groups]
-dev = ["pytest>=8.3", "ruff>=0.8"]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=8.3",
+    "ruff>=0.8",
+]
 
 [build-system]
 requires = ["hatchling"]

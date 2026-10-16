@@ -49,7 +49,14 @@ Supabase), grocery list, deterministic swaps, LangGraph chat agent with 5 tools 
 guard; 24 chat eval cases. `evals/reports/assistant-2026-10-16T094533Z.md` on `gpt-5.4-mini`:
 right tools 100%, pantry as asked 100%, 0 unsafe and 0 made-up cited recipes, $0.0022 per
 turn, p50 8s / p95 17s (first run before the prompt fix: 96% tools, 50% pantry, 1 made-up id).
-Next: step 4 (FastAPI + Next.js; auth decides `user_id`). Paid evals workflow needs
+Step 4 (this PR): FastAPI `api.py` (Supabase Auth ES256 tokens verified via JWKS; `sub` is
+`user_id`), migration 0004 (`meal_plans`, `usage_events`, RLS; applied on Supabase), plan
+progress as SSE, daily caps per user and a total daily budget; Next.js 16 app in `web/` (10
+screens per `DESIGN_SYSTEM.md`). Local end-to-end run on `gpt-5.4-mini`: plan 17 s / $0.012,
+chat turn 4.5 s / $0.0023. Deploy: `render.yaml` (API) and Vercel (root `web/`). Auth needs, in
+the Supabase dashboard: anonymous sign-ins on (guest button), the Vercel URL in redirect URLs,
+and custom SMTP for magic links to non-team emails.
+Next: step 5 (portfolio polish). Paid evals workflow needs
 `OPENAI_API_KEY` and `DATABASE_URL` repository secrets; `LANGSMITH_API_KEY` is set locally
 (EU endpoint), so local eval runs upload LangSmith experiments.
 
@@ -119,7 +126,18 @@ Next: step 4 (FastAPI + Next.js; auth decides `user_id`). Paid evals workflow ne
   tools search_recipes, check_pantry, update_pantry, swap_ingredient, scale_recipe; replies
   cite recipes as `[recipe-id]` and the guard appends a note for any cited recipe that breaks
   a hard rule or does not exist.
-- Planned: `api.py`.
+- `src/pantrio/auth.py`: verifies Supabase Auth access tokens (ES256 via the project JWKS,
+  audience `authenticated`, issuer `SUPABASE_URL/auth/v1`); returns the user id.
+- `src/pantrio/records.py`: saved plans and the usage log per user (`Records` protocol,
+  `DbRecords` on `meal_plans`/`usage_events`, `MemoryRecords` for tests).
+- `src/pantrio/api.py`: FastAPI app (`create_app(backend, verify)`; tests pass an in-memory
+  backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
+  `/me/usage`, `/recipes` (search or browse, profile rules as filters unless `safe=false`),
+  `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
+  `/plans/latest`, `/plans/latest/grocery`, `POST /chat`. Every recipe returned carries the hard
+  rules it breaks for the person's current profile. Paid calls are capped per user per day
+  (`PANTRIO_DAILY_PLANS`, `PANTRIO_DAILY_CHATS`) and in total (`PANTRIO_DAILY_BUDGET_USD`).
+- `render.yaml`: Render Blueprint for the API.
 - `data/`: `ingredients.csv` (hand-curated), `usda_foods.csv` (built by
   `scripts/build_usda_table.py`), `dish_briefs.csv` (300 fixed briefs), `recipes/*.json`
   (generated corpus, one file per recipe), `corpus_manifest.json` (generation runs and cost).
@@ -133,7 +151,12 @@ Next: step 4 (FastAPI + Next.js; auth decides `user_id`). Paid evals workflow ne
   repository secrets).
 - `tests/`: offline tests; OpenAI is mocked. DB tests run when `PANTRIO_TEST_DATABASE_URL` is
   set. Paid tests are marked `live`.
-- `web/`: frontend; see `web/DESIGN_SYSTEM.md`.
+- `web/`: Next.js 16 App Router (Cache Components on), Tailwind v4, shadcn/ui on Base UI;
+  see `web/DESIGN_SYSTEM.md` (tokens live in `src/app/globals.css`). Signed-in screens are
+  client components under `src/app/(app)/` fetching the API with SWR (`src/lib/hooks.ts`,
+  `src/lib/api.ts`, types in `src/lib/types.ts` mirror `api.py`); Supabase is used only for
+  sign-in (magic link or anonymous guest). Read `web/AGENTS.md`: this Next.js differs from
+  older versions (e.g. `proxy.ts` replaces middleware; check `node_modules/next/dist/docs/`).
 
 ## Commands
 
@@ -162,8 +185,9 @@ uv run pantrio chat [--user me] [--message "..."]  # cooking assistant (paid)
 uv run python -m evals.chat_cases        # regenerate the assistant eval cases
 uv run python -m evals.run_assistant [--only ids] # assistant eval (paid; ~$0.002/turn)
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
-uv run uvicorn pantrio.api:app --env-file .env --reload   # from step 4
-cd web && npm ci && npm run dev          # :3000, from step 4
+uv run uvicorn pantrio.api:app --env-file .env --reload   # API on :8000 (SUPABASE_URL, DATABASE_URL)
+cd web && npm ci && npm run dev          # :3000; web/.env.local from web/.env.example
+cd web && npm run lint && npm run typecheck && npm run build   # what CI runs for web
 ```
 
 Update this block when commands change.

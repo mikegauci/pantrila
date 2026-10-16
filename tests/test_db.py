@@ -101,3 +101,35 @@ def test_every_table_has_row_level_security(conn):
     ).fetchall()
     assert {"recipes", "pantry_items", "user_profiles"} <= {name for name, _ in rows}
     assert [name for name, rls in rows if not rls] == []
+
+
+def test_db_records_keep_plans_and_usage_per_user(conn):
+    from datetime import UTC, datetime, timedelta
+
+    from pantrio.records import DbRecords, UsageEvent
+    from pantrio.schema import MealPlan, PlanDay, PlannedMeal
+
+    alice, bob = DbRecords(conn, "alice"), DbRecords(conn, "bob")
+    assert alice.latest_plan() is None
+    plan = MealPlan(
+        days=[
+            PlanDay(
+                day=1, meals=[PlannedMeal(meal_type=MealType.DINNER, recipe_id="x", portions=1.5)]
+            )
+        ]
+    )
+    alice.save_plan(plan, {"repairs": 0})
+    second = alice.save_plan(plan.model_copy(update={"notes": "newer"}), {"repairs": 1})
+    latest = alice.latest_plan()
+    assert latest.id == second.id and latest.plan.notes == "newer"
+    assert latest.report == {"repairs": 1} and bob.latest_plan() is None
+
+    alice.log(UsageEvent("plan", "m", 1200, llm_calls=2, cost_usd=0.02))
+    alice.log(UsageEvent("chat", "m", 300, cost_usd=None, ok=False))
+    bob.log(UsageEvent("chat", "m", 300, cost_usd=0.005))
+    since = datetime.now(UTC) - timedelta(minutes=1)
+    assert alice.count_since("chat", since) == 1 and bob.count_since("plan", since) == 0
+    assert alice.spend_since(since) == pytest.approx(0.025)
+    events = alice.events()
+    assert [(e.kind, e.ok, e.cost_usd) for e in events] == [("chat", False, None),
+                                                             ("plan", True, 0.02)]  # fmt: skip

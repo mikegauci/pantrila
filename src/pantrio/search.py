@@ -145,6 +145,16 @@ def fulltext_candidates(
     return [r[0] for r in rows]
 
 
+def browse(conn: psycopg.Connection, f: SearchFilters, limit: int = 24) -> list[str]:
+    """Recipe ids that pass the filters, by title, for listing without a query."""
+    where, params = filter_sql(f)
+    rows = conn.execute(
+        f"select r.id from recipes r where {where} order by r.title, r.id limit %(k)s",
+        {**params, "k": limit},
+    ).fetchall()
+    return [r[0] for r in rows]
+
+
 @dataclass
 class SearchResult:
     ids: list[str]

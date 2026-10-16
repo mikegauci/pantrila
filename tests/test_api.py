@@ -1,0 +1,262 @@
+"""API tests: in-memory backend, scripted OpenAI client, fake token verifier (no API calls)."""
+
+import json
+from contextlib import contextmanager
+from types import SimpleNamespace
+
+import pytest
+from fastapi.testclient import TestClient
+from openai.types.responses import ResponseFunctionToolCall
+
+from pantrio.api import Session, create_app
+from pantrio.auth import AuthError, User
+from pantrio.pantry import MemoryKitchen
+from pantrio.planner import PlanDraft
+from pantrio.records import MemoryRecords
+from pantrio.schema import MealType
+from tests.conftest import CorpusStore
+
+OMELETTE, CHICKEN, CURRY, SALMON, NOODLES = (
+    "french-mushroom-omelette", "greek-lemon-chicken", "indian-chickpea-curry",
+    "italian-salmon-pasta", "thai-peanut-noodles",
+)  # fmt: skip
+USAGE = SimpleNamespace(input_tokens=1000, output_tokens=100)
+
+
+def plan_reply(*dinners: str) -> SimpleNamespace:
+    draft = PlanDraft.model_validate(
+        {"days": [{"day": i, "meals": [{"meal_type": "breakfast", "recipe_id": OMELETTE},
+                                       {"meal_type": "dinner", "recipe_id": rid}]}
+                  for i, rid in enumerate(dinners, start=1)],
+         "notes": "Uses the eggs early."}
+    )  # fmt: skip
+    return SimpleNamespace(output=[SimpleNamespace(type="message")], output_parsed=draft,
+                           usage=USAGE)  # fmt: skip
+
+
+def text_reply(text: str) -> SimpleNamespace:
+    return SimpleNamespace(output=[SimpleNamespace(type="message")], output_text=text,
+                           usage=USAGE)  # fmt: skip
+
+
+class FakeClient:
+    def __init__(self):
+        self.replies: list = []
+        self.responses = self
+
+    def parse(self, **kwargs):
+        return self.replies.pop(0)
+
+    create = parse
+
+
+class MemoryBackend:
+    def __init__(self, corpus):
+        self.store = CorpusStore(corpus)
+        self.kitchens: dict[str, MemoryKitchen] = {}
+        self.shared: dict = {"plans": [], "events": []}
+        self.client = FakeClient()
+
+    @contextmanager
+    def session(self, user_id):
+        kitchen = self.kitchens.setdefault(user_id, MemoryKitchen())
+        yield Session(self.store, kitchen, MemoryRecords(user_id, self.shared))
+
+    def close(self):
+        pass
+
+
+def verify(token: str) -> User:
+    if token not in {"alice", "bob"}:
+        raise AuthError("bad signature")
+    return User(id=token, email=f"{token}@example.com")
+
+
+@pytest.fixture
+def backend(corpus):
+    return MemoryBackend(corpus)
+
+
+@pytest.fixture
+def api(backend, monkeypatch):
+    monkeypatch.setenv("PANTRIO_PRICE_INPUT_PER_MTOK", "1")
+    monkeypatch.setenv("PANTRIO_PRICE_OUTPUT_PER_MTOK", "10")
+    with TestClient(create_app(backend, verify)) as client:
+        client.headers["Authorization"] = "Bearer alice"
+        yield client
+
+
+def sse(text: str) -> list[tuple[str, dict]]:
+    events = []
+    for block in text.strip().split("\n\n"):
+        lines = dict(line.split(": ", 1) for line in block.splitlines())
+        events.append((lines["event"], json.loads(lines["data"])))
+    return events
+
+
+def test_health_is_public_and_everything_else_needs_a_token(api):
+    assert api.get("/health").json() == {"ok": True}
+    assert api.get("/me/profile", headers={"Authorization": ""}).status_code == 401
+    r = api.get("/me/profile", headers={"Authorization": "Bearer forged"})
+    assert r.status_code == 401 and "bad signature" in r.json()["detail"]
+
+
+def test_profile_round_trip_resolves_excluded_foods(api):
+    profile = {"allergies": ["fish"], "diets": [], "exclude_foods": ["mushrooms"],
+               "days": 2, "meals": ["breakfast", "dinner"]}  # fmt: skip
+    saved = api.put("/me/profile", json=profile).json()
+    assert saved["exclude_foods"] == ["mushroom"] and saved["allergies"] == ["fish"]
+    assert api.get("/me/profile").json() == saved
+    bad = api.put("/me/profile", json={**profile, "exclude_foods": ["unobtainium"]})
+    assert bad.status_code == 422
+
+
+def test_users_do_not_see_each_others_pantry(api):
+    assert api.post("/me/pantry", json={"food": "eggs", "quantity": 6, "unit": "piece"}
+                    ).status_code == 201  # fmt: skip
+    mine = api.get("/me/pantry").json()
+    assert [(i["key"], i["quantity"], i["unit"]) for i in mine] == [("egg", 6, "piece")]
+    assert mine[0]["grams"] > 0
+    assert api.get("/me/pantry", headers={"Authorization": "Bearer bob"}).json() == []
+
+    unknown = api.post("/me/pantry", json={"food": "chikpeas"})
+    assert unknown.status_code == 422 and "chickpeas" in unknown.json()["suggestions"]
+    assert api.delete("/me/pantry/egg").status_code == 204
+    assert api.delete("/me/pantry/egg").status_code == 404
+
+
+def test_recipe_search_applies_the_profile_unless_asked_not_to(api):
+    api.put("/me/profile", json={"allergies": ["peanuts", "fish"]})
+    safe = api.get("/recipes", params={"q": "noodles salmon pasta"}).json()
+    ids = [r["id"] for r in safe["recipes"]]
+    assert NOODLES not in ids and SALMON not in ids and ids
+    assert set(safe["rules"]["exclude_allergens"]) == {"peanuts", "fish"}
+
+    everything = api.get("/recipes", params={"safe": "false"}).json()["recipes"]
+    flagged = {r["id"]: r["problems"] for r in everything}
+    assert flagged[NOODLES] == ["contains peanuts"] and flagged[CHICKEN] == []
+    assert [r["title"] for r in everything] == sorted(r["title"] for r in everything)
+
+    breakfast = api.get("/recipes", params={"meal": "breakfast"}).json()["recipes"]
+    assert [r["id"] for r in breakfast] == [OMELETTE]
+
+
+def test_recipe_detail_marks_pantry_ingredients_and_problems(api):
+    api.put("/me/profile", json={"allergies": ["eggs"]})
+    api.post("/me/pantry", json={"food": "mushroom"})
+    r = api.get(f"/recipes/{OMELETTE}").json()
+    assert r["problems"] == ["contains eggs"]
+    assert {i["food"]: i["in_pantry"] for i in r["ingredients"]}["mushroom"] is True
+    assert r["pantry_foods"] == ["mushroom"] and r["steps"]
+    assert api.get("/recipes/no-such-recipe").status_code == 404
+
+
+def test_swaps_are_checked_against_the_profile(api):
+    options = api.get(f"/recipes/{SALMON}/swaps", params={"food": "double cream"}).json()
+    assert options["food"] == "double_cream"
+    assert options["swaps"] and all(s["safe"] for s in options["swaps"])
+    # Every dairy-aisle swap for cream contains milk, so none suits a milk allergy.
+    api.put("/me/profile", json={"allergies": ["milk"]})
+    assert api.get(f"/recipes/{SALMON}/swaps", params={"food": "cream"}).json()["swaps"] == []
+    named = api.get(f"/recipes/{SALMON}/swaps",
+                    params={"food": "double cream", "replacement": "butter"}).json()  # fmt: skip
+    (swap,) = named["swaps"]
+    assert swap["safe"] is False and "milk" in swap["problems"][0]
+    assert api.get(f"/recipes/{SALMON}/swaps", params={"food": "egg"}).status_code == 422
+
+
+def test_plan_streams_steps_saves_the_plan_and_logs_usage(api, backend):
+    api.put("/me/profile", json={"days": 2, "meals": ["breakfast", "dinner"],
+                                 "allergies": ["fish"]})  # fmt: skip
+    api.post("/me/pantry", json={"food": "potato", "quantity": 500, "unit": "g"})
+    backend.client.replies = [plan_reply(CHICKEN, CURRY)]
+    with api.stream("POST", "/plans") as r:
+        assert r.headers["content-type"].startswith("text/event-stream")
+        events = sse(r.read().decode())
+    steps = [d["node"] for kind, d in events if kind == "step"]
+    assert steps == ["profile", "retrieve", "draft", "check", "finalise"]
+    kind, plan = events[-1]
+    assert kind == "plan"
+    assert [[m["recipe"]["id"] for m in d["meals"]] for d in plan["days"]] == [
+        [OMELETTE, CHICKEN],
+        [OMELETTE, CURRY],
+    ]
+    assert plan["problems"] == [] and plan["report"]["llm_calls"] == 1
+    assert plan["report"]["cost_usd"] == pytest.approx(0.002)
+
+    latest = api.get("/plans/latest").json()
+    assert latest["id"] == plan["id"]
+    usage = api.get("/me/usage").json()
+    assert [(e["kind"], e["ok"]) for e in usage["events"]] == [("plan", True)]
+    assert usage["limits"]["plans_left"] == usage["limits"]["plans_per_day"] - 1
+
+    grocery = api.get("/plans/latest/grocery", params={"people": 2}).json()
+    assert grocery["people"] == 2
+    potato = next(i for i in grocery["items"] + grocery["covered"] if i["food"] == "potato")
+    assert potato["have_g"] == min(500, potato["need_g"]) > 0
+
+    # A new allergy after planning is shown loudly on the saved plan.
+    api.put("/me/profile", json={"days": 2, "meals": ["breakfast", "dinner"],
+                                 "allergies": ["fish", "eggs"]})  # fmt: skip
+    problems = api.get("/plans/latest").json()["problems"]
+    assert {(p["day"], p["meal_type"]) for p in problems} == {(1, "breakfast"), (2, "breakfast")}
+    assert api.get("/plans/latest", headers={"Authorization": "Bearer bob"}).status_code == 404
+
+
+def test_planning_error_is_streamed_and_logged(api, backend):
+    api.put("/me/profile", json={"days": 1, "meals": ["snack"]})
+    with api.stream("POST", "/plans") as r:
+        events = sse(r.read().decode())
+    assert events[-1][0] == "error" and "snack" in events[-1][1]["message"]
+    assert api.get("/me/usage").json()["events"][0]["ok"] is False
+
+
+def test_daily_limits(api, backend, monkeypatch):
+    monkeypatch.setenv("PANTRIO_DAILY_CHATS", "1")
+    backend.client.replies = [text_reply("Fold gently.")]
+    assert api.post("/chat", json={"message": "Fluffy omelette?"}).status_code == 200
+    r = api.post("/chat", json={"message": "Again?"})
+    assert r.status_code == 429
+
+    monkeypatch.setenv("PANTRIO_DAILY_BUDGET_USD", "0.001")
+    bob = {"Authorization": "Bearer bob"}
+    assert api.post("/chat", json={"message": "Hi"}, headers=bob).status_code == 503
+    assert api.post("/plans", headers=bob).status_code == 503
+
+
+def test_chat_returns_cited_recipes_tools_and_guard_notes(api, backend):
+    api.put("/me/profile", json={"allergies": ["fish"]})
+    call = ResponseFunctionToolCall(
+        type="function_call", call_id="c1", name="update_pantry",
+        arguments=json.dumps({"add": [{"food": "eggs", "quantity": None, "unit": None}],
+                              "remove": []}),
+    )  # fmt: skip
+    backend.client.replies = [
+        SimpleNamespace(output=[call], output_text="", usage=USAGE),
+        text_reply(f"Try [{OMELETTE}] or [{SALMON}]."),
+    ]
+    r = api.post(
+        "/chat",
+        json={
+            "message": "I bought eggs. Ideas?",
+            "history": [
+                {"role": "user", "content": "hi"},
+                {"role": "assistant", "content": "Hello!"},
+            ],
+        },
+    )
+    body = r.json()
+    assert [c["id"] for c in body["cited"]] == [OMELETTE, SALMON]
+    assert body["flagged"] == [SALMON] and "does not suit you" in body["text"]
+    assert body["pantry_changed"] is True
+    assert body["tool_calls"][0]["name"] == "update_pantry"
+    assert len(body["history"]) == 4
+    assert [i["key"] for i in api.get("/me/pantry").json()] == ["egg"]
+
+
+def test_meta_and_foods(api):
+    meta = api.get("/meta").json()
+    assert len(meta["allergens"]) == 14 and "italian" in meta["cuisines"]
+    assert MealType.BREAKFAST in meta["meal_types"]
+    foods = {f["key"]: f for f in api.get("/foods").json()}
+    assert foods["red_lentils"]["name"] == "red lentils" and "water" not in foods
