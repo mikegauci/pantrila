@@ -53,9 +53,12 @@ Step 4 (this PR): FastAPI `api.py` (Supabase Auth ES256 tokens verified via JWKS
 `user_id`), migration 0004 (`meal_plans`, `usage_events`, RLS; applied on Supabase), plan
 progress as SSE, daily caps per user and a total daily budget; Next.js 16 app in `web/` (10
 screens per `DESIGN_SYSTEM.md`). Local end-to-end run on `gpt-5.4-mini`: plan 17 s / $0.012,
-chat turn 4.5 s / $0.0023. Deploy: `render.yaml` (API) and Vercel (root `web/`). Auth needs, in
-the Supabase dashboard: anonymous sign-ins on (guest button), the Vercel URL in redirect URLs,
-and custom SMTP for magic links to non-team emails.
+chat turn 4.5 s / $0.0023. Deployed: web https://pantrio-azure.vercel.app (Vercel project `pantrio`,
+root `web/`, auto-deploys `main`), API https://pantrio-api.onrender.com (Render Blueprint from
+`render.yaml`, free plan, sleeps when idle). Supabase Auth: anonymous sign-ins on, Site URL and
+`/auth/callback` redirects set for the Vercel URL and localhost:3000. Live check: guest sign-in,
+search, a 2-day plan (18.6 s, $0.005) and a chat turn all pass. Magic-link email to non-team
+addresses still needs custom SMTP.
 Next: step 5 (portfolio polish). Paid evals workflow needs
 `OPENAI_API_KEY` and `DATABASE_URL` repository secrets; `LANGSMITH_API_KEY` is set locally
 (EU endpoint), so local eval runs upload LangSmith experiments.

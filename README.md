@@ -10,6 +10,9 @@ the LangGraph meal-planning agent with a deterministic constraint checker and pl
 pantry, grocery list and a tool-calling cooking assistant; the FastAPI + Next.js web app.
 See `CLAUDE.md` for the build plan and commands.
 
+**Live demo: https://pantrio-azure.vercel.app** ("Try it as a guest" needs no account; the API
+on Render's free plan sleeps when idle, so the first request can take about 50 seconds).
+
 ## Quick start
 
 ```bash
