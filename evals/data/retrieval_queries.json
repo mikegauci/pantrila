@@ -1,0 +1,1509 @@
+[
+  {
+    "id": "dish-01",
+    "kind": "dish",
+    "query": "chicken curry",
+    "filters": {},
+    "relevant_ids": [
+      "indian-chicken-tikka-traybake",
+      "japanese-chicken-katsu-curry",
+      "thai-green-curry-chicken"
+    ]
+  },
+  {
+    "id": "dish-02",
+    "kind": "dish",
+    "query": "salmon rice bowl",
+    "filters": {},
+    "relevant_ids": [
+      "american-cajun-salmon",
+      "british-kedgeree",
+      "japanese-salmon-rice-bowl",
+      "japanese-sushi-bowl",
+      "japanese-teriyaki-salmon",
+      "korean-salmon-rice-bowl",
+      "vietnamese-caramel-salmon"
+    ]
+  },
+  {
+    "id": "dish-03",
+    "kind": "dish",
+    "query": "prawn stir fry",
+    "filters": {},
+    "relevant_ids": [
+      "chinese-prawn-stir-fry",
+      "thai-pad-thai-prawn",
+      "vietnamese-crispy-pancake"
+    ]
+  },
+  {
+    "id": "dish-04",
+    "kind": "dish",
+    "query": "lentil soup",
+    "filters": {},
+    "relevant_ids": [
+      "indian-dal-tadka",
+      "middle-eastern-lentil-soup",
+      "moroccan-harira"
+    ]
+  },
+  {
+    "id": "dish-05",
+    "kind": "dish",
+    "query": "tacos",
+    "filters": {},
+    "relevant_ids": [
+      "american-tofu-breakfast-tacos",
+      "mexican-fish-tacos",
+      "mexican-prawn-tacos",
+      "mexican-sweet-potato-black-bean-tacos"
+    ]
+  },
+  {
+    "id": "dish-06",
+    "kind": "dish",
+    "query": "slow cooked beef stew",
+    "filters": {},
+    "relevant_ids": [
+      "british-beef-stew-dumplings",
+      "french-beef-bourguignon",
+      "italian-beef-ragu",
+      "korean-beef-short-rib-stew",
+      "thai-massaman-beef"
+    ]
+  },
+  {
+    "id": "dish-07",
+    "kind": "dish",
+    "query": "pancakes",
+    "filters": {
+      "meal_types": [
+        "breakfast"
+      ]
+    },
+    "relevant_ids": [
+      "american-blueberry-pancakes",
+      "chinese-scallion-egg-pancake",
+      "italian-ricotta-lemon-pancakes",
+      "korean-kimchi-style-pancake",
+      "thai-banana-pancake"
+    ]
+  },
+  {
+    "id": "dish-08",
+    "kind": "dish",
+    "query": "noodle soup",
+    "filters": {},
+    "relevant_ids": [
+      "chinese-chicken-noodle-soup",
+      "japanese-gyudon",
+      "japanese-udon-style-noodle-soup",
+      "vietnamese-mushroom-pho",
+      "vietnamese-pho-breakfast",
+      "vietnamese-pho-ga"
+    ]
+  },
+  {
+    "id": "dish-09",
+    "kind": "dish",
+    "query": "crispy tofu",
+    "filters": {},
+    "relevant_ids": [
+      "chinese-hot-sour-soup",
+      "chinese-mapo-tofu",
+      "chinese-sweet-sour-tofu",
+      "indian-palak-tofu",
+      "japanese-tofu-donburi",
+      "korean-doenjang-stew",
+      "korean-tofu-bulgogi",
+      "korean-tofu-soup",
+      "thai-red-curry-tofu",
+      "vietnamese-mushroom-pho",
+      "vietnamese-tofu-noodle-salad",
+      "vietnamese-vegetable-curry"
+    ]
+  },
+  {
+    "id": "dish-10",
+    "kind": "dish",
+    "query": "salad with feta",
+    "filters": {},
+    "relevant_ids": [
+      "greek-orzo-style-pasta-salad",
+      "greek-salad",
+      "mexican-elote-salad"
+    ]
+  },
+  {
+    "id": "dish-11",
+    "kind": "dish",
+    "query": "chocolate dessert",
+    "filters": {},
+    "relevant_ids": [
+      "american-brownies",
+      "french-chocolate-mousse"
+    ]
+  },
+  {
+    "id": "dish-12",
+    "kind": "dish",
+    "query": "eggs for breakfast",
+    "filters": {
+      "meal_types": [
+        "breakfast"
+      ]
+    },
+    "relevant_ids": [
+      "american-avocado-toast-egg",
+      "american-blueberry-pancakes",
+      "british-full-english-lite",
+      "british-kedgeree",
+      "chinese-congee",
+      "chinese-scallion-egg-pancake",
+      "french-croque-madame",
+      "french-omelette-herbs",
+      "french-toast-berries",
+      "greek-spinach-feta-omelette",
+      "indian-masala-omelette",
+      "italian-frittata-courgette",
+      "italian-ricotta-lemon-pancakes",
+      "italian-tomato-bruschetta-eggs",
+      "japanese-tamagoyaki",
+      "korean-gyeran-bap",
+      "korean-steamed-egg",
+      "mexican-breakfast-burrito",
+      "mexican-huevos-rancheros",
+      "middle-eastern-shakshuka",
+      "moroccan-baked-eggs-merguez-style",
+      "spanish-huevos-flamencos",
+      "spanish-tortilla",
+      "thai-banana-pancake",
+      "thai-omelette-rice",
+      "vietnamese-banh-mi-eggs"
+    ]
+  },
+  {
+    "id": "ingr-01",
+    "kind": "ingredient",
+    "query": "recipes with chickpeas",
+    "filters": {},
+    "relevant_ids": [
+      "american-buddha-bowl",
+      "american-chickpea-salad-sandwich",
+      "indian-chana-chaat",
+      "indian-chana-masala",
+      "indian-roasted-spiced-chickpeas",
+      "italian-pasta-e-ceci",
+      "mexican-vegan-chilli",
+      "middle-eastern-falafel-wrap",
+      "middle-eastern-halloumi-style-traybake",
+      "middle-eastern-hummus",
+      "middle-eastern-stuffed-aubergine",
+      "moroccan-chickpea-pumpkin-stew",
+      "moroccan-couscous-salad",
+      "moroccan-harira",
+      "moroccan-vegetable-tagine",
+      "spanish-chickpea-spinach",
+      "spanish-pisto-eggs"
+    ]
+  },
+  {
+    "id": "ingr-02",
+    "kind": "ingredient",
+    "query": "what can I cook with aubergine",
+    "filters": {},
+    "relevant_ids": [
+      "french-ratatouille",
+      "greek-moussaka",
+      "italian-aubergine-parmigiana",
+      "japanese-miso-aubergine",
+      "japanese-vegetable-tempura-style",
+      "middle-eastern-baba-ganoush",
+      "middle-eastern-halloumi-style-traybake",
+      "middle-eastern-stuffed-aubergine",
+      "thai-green-curry-chicken"
+    ]
+  },
+  {
+    "id": "ingr-03",
+    "kind": "ingredient",
+    "query": "sweet potato dinner",
+    "filters": {
+      "meal_types": [
+        "dinner"
+      ]
+    },
+    "relevant_ids": [
+      "american-bbq-chicken-traybake",
+      "american-buddha-bowl",
+      "american-stuffed-sweet-potato",
+      "british-cottage-pie-lentil",
+      "indian-sweet-potato-lentil-curry",
+      "japanese-vegetable-tempura-style",
+      "mexican-sweet-potato-black-bean-tacos",
+      "moroccan-sweet-potato-stew",
+      "moroccan-vegetable-tagine",
+      "vietnamese-vegetable-curry"
+    ]
+  },
+  {
+    "id": "ingr-04",
+    "kind": "ingredient",
+    "query": "mushroom recipes",
+    "filters": {},
+    "relevant_ids": [
+      "british-beef-stew-dumplings",
+      "british-cottage-pie-lentil",
+      "british-full-english-lite",
+      "chinese-hot-sour-soup",
+      "chinese-mushroom-bok-choy",
+      "french-beef-bourguignon",
+      "french-coq-au-vin",
+      "french-mushroom-bourguignon",
+      "italian-mushroom-risotto",
+      "japanese-udon-style-noodle-soup",
+      "japanese-vegetable-tempura-style",
+      "korean-bibimbap",
+      "korean-japchae",
+      "korean-mushroom-bibim-noodles",
+      "korean-tofu-soup",
+      "thai-coconut-soup-chicken",
+      "thai-tom-yum-soup",
+      "vietnamese-mushroom-pho"
+    ]
+  },
+  {
+    "id": "ingr-05",
+    "kind": "ingredient",
+    "query": "something with salmon",
+    "filters": {},
+    "relevant_ids": [
+      "american-cajun-salmon",
+      "british-fish-pie",
+      "british-kedgeree",
+      "french-salmon-en-papillote",
+      "japanese-salmon-rice-bowl",
+      "japanese-sushi-bowl",
+      "japanese-teriyaki-salmon",
+      "korean-salmon-rice-bowl",
+      "middle-eastern-baked-salmon-tahini",
+      "vietnamese-caramel-salmon"
+    ]
+  },
+  {
+    "id": "ingr-06",
+    "kind": "ingredient",
+    "query": "ways to use up spinach",
+    "filters": {},
+    "relevant_ids": [
+      "american-buddha-bowl",
+      "american-tofu-breakfast-tacos",
+      "chinese-tofu-scramble-bowl",
+      "greek-spanakopita-pie",
+      "greek-spinach-feta-omelette",
+      "indian-palak-tofu",
+      "indian-sweet-potato-lentil-curry",
+      "korean-bibimbap",
+      "korean-japchae",
+      "korean-seaweed-free-rice-rolls",
+      "korean-tofu-bulgogi",
+      "mexican-quesadilla",
+      "spanish-chickpea-spinach"
+    ]
+  },
+  {
+    "id": "ingr-07",
+    "kind": "ingredient",
+    "query": "lamb dinner",
+    "filters": {
+      "meal_types": [
+        "dinner"
+      ]
+    },
+    "relevant_ids": [
+      "british-shepherds-pie",
+      "greek-lamb-kleftiko",
+      "greek-moussaka",
+      "indian-lamb-rogan-josh",
+      "middle-eastern-lamb-kofta",
+      "moroccan-lamb-apricot-tagine"
+    ]
+  },
+  {
+    "id": "ingr-08",
+    "kind": "ingredient",
+    "query": "dishes with peanut butter",
+    "filters": {},
+    "relevant_ids": [
+      "american-protein-oats",
+      "chinese-kung-pao-chicken",
+      "indian-poha-style-rice",
+      "thai-massaman-beef",
+      "thai-pad-thai-prawn",
+      "thai-papaya-style-slaw",
+      "thai-peanut-noodle-salad",
+      "thai-satay-tofu-skewers",
+      "vietnamese-chicken-salad",
+      "vietnamese-fish-turmeric-dill",
+      "vietnamese-fresh-rolls-veg",
+      "vietnamese-lemongrass-style-beef",
+      "vietnamese-summer-rolls-prawn"
+    ]
+  },
+  {
+    "id": "cuis-01",
+    "kind": "cuisine_diet",
+    "query": "vegan thai dinner",
+    "filters": {
+      "require_diets": [
+        "vegan"
+      ],
+      "meal_types": [
+        "dinner"
+      ]
+    },
+    "relevant_ids": [
+      "thai-pineapple-fried-rice",
+      "thai-red-curry-tofu"
+    ]
+  },
+  {
+    "id": "cuis-02",
+    "kind": "cuisine_diet",
+    "query": "vegetarian italian pasta",
+    "filters": {
+      "require_diets": [
+        "vegetarian"
+      ]
+    },
+    "relevant_ids": [
+      "italian-minestrone",
+      "italian-pasta-e-ceci",
+      "italian-pasta-pomodoro"
+    ]
+  },
+  {
+    "id": "cuis-03",
+    "kind": "cuisine_diet",
+    "query": "gluten-free mexican food",
+    "filters": {
+      "require_diets": [
+        "gluten_free"
+      ]
+    },
+    "relevant_ids": [
+      "mexican-beef-chilli",
+      "mexican-black-bean-soup",
+      "mexican-burrito-bowl",
+      "mexican-chia-mango-pot",
+      "mexican-chicken-tortilla-soup",
+      "mexican-elote-salad",
+      "mexican-enchiladas-verdes",
+      "mexican-guacamole-snack",
+      "mexican-huevos-rancheros",
+      "mexican-pork-carnitas",
+      "mexican-prawn-tacos",
+      "mexican-spiced-pumpkin-seeds",
+      "mexican-stuffed-peppers",
+      "mexican-sweet-potato-black-bean-tacos",
+      "mexican-vegan-chilli"
+    ]
+  },
+  {
+    "id": "cuis-04",
+    "kind": "cuisine_diet",
+    "query": "japanese fish dinner",
+    "filters": {
+      "meal_types": [
+        "dinner"
+      ]
+    },
+    "relevant_ids": [
+      "japanese-sushi-bowl",
+      "japanese-teriyaki-salmon"
+    ]
+  },
+  {
+    "id": "cuis-05",
+    "kind": "cuisine_diet",
+    "query": "low carb chicken dinner",
+    "filters": {
+      "require_diets": [
+        "low_carb"
+      ],
+      "meal_types": [
+        "dinner"
+      ]
+    },
+    "relevant_ids": [
+      "chinese-kung-pao-chicken",
+      "french-chicken-dijon",
+      "french-coq-au-vin",
+      "italian-chicken-cacciatore",
+      "japanese-chicken-yakitori",
+      "middle-eastern-chicken-shawarma",
+      "moroccan-chicken-tagine",
+      "spanish-romesco-chicken",
+      "thai-coconut-soup-chicken"
+    ]
+  },
+  {
+    "id": "cuis-06",
+    "kind": "cuisine_diet",
+    "query": "korean beef",
+    "filters": {},
+    "relevant_ids": [
+      "korean-beef-short-rib-stew",
+      "korean-bulgogi-beef",
+      "korean-japchae"
+    ]
+  },
+  {
+    "id": "cuis-07",
+    "kind": "cuisine_diet",
+    "query": "middle eastern vegan lunch",
+    "filters": {
+      "require_diets": [
+        "vegan"
+      ],
+      "meal_types": [
+        "lunch"
+      ]
+    },
+    "relevant_ids": [
+      "middle-eastern-falafel-wrap",
+      "middle-eastern-fattoush",
+      "middle-eastern-lentil-soup",
+      "middle-eastern-tabbouleh"
+    ]
+  },
+  {
+    "id": "cuis-08",
+    "kind": "cuisine_diet",
+    "query": "dairy-free indian curry",
+    "filters": {
+      "require_diets": [
+        "dairy_free"
+      ]
+    },
+    "relevant_ids": [
+      "indian-aloo-gobi",
+      "indian-chana-masala",
+      "indian-dal-tadka",
+      "indian-egg-curry",
+      "indian-fish-curry-goan",
+      "indian-lamb-rogan-josh",
+      "indian-masala-omelette",
+      "indian-palak-tofu",
+      "indian-prawn-coconut-curry",
+      "indian-spiced-oats",
+      "indian-sweet-potato-lentil-curry"
+    ]
+  },
+  {
+    "id": "cuis-09",
+    "kind": "cuisine_diet",
+    "query": "pescatarian spanish dishes",
+    "filters": {
+      "require_diets": [
+        "pescatarian"
+      ]
+    },
+    "relevant_ids": [
+      "spanish-cod-with-peppers",
+      "spanish-garlic-prawns",
+      "spanish-seafood-paella",
+      "spanish-tuna-empanada-style-salad"
+    ]
+  },
+  {
+    "id": "cuis-10",
+    "kind": "cuisine_diet",
+    "query": "high protein breakfast",
+    "filters": {
+      "require_diets": [
+        "high_protein"
+      ],
+      "meal_types": [
+        "breakfast"
+      ]
+    },
+    "relevant_ids": [
+      "american-protein-oats",
+      "american-tofu-breakfast-tacos",
+      "british-full-english-lite",
+      "chinese-tofu-scramble-bowl",
+      "greek-spinach-feta-omelette",
+      "japanese-miso-soup-breakfast",
+      "japanese-salmon-rice-bowl",
+      "moroccan-baked-eggs-merguez-style",
+      "vietnamese-pho-breakfast"
+    ]
+  },
+  {
+    "id": "allg-01",
+    "kind": "allergen",
+    "query": "thai noodles, I have a nut allergy",
+    "filters": {
+      "exclude_allergens": [
+        "peanuts",
+        "tree_nuts"
+      ]
+    },
+    "relevant_ids": [
+      "thai-pad-see-ew-vegetable",
+      "thai-spring-rolls-fresh"
+    ]
+  },
+  {
+    "id": "allg-02",
+    "kind": "allergen",
+    "query": "coeliac friendly chicken dinner",
+    "filters": {
+      "exclude_allergens": [
+        "gluten"
+      ],
+      "meal_types": [
+        "dinner"
+      ]
+    },
+    "relevant_ids": [
+      "american-bbq-chicken-traybake",
+      "british-roast-chicken-veg",
+      "french-chicken-dijon",
+      "french-coq-au-vin",
+      "greek-lemon-potatoes-chicken",
+      "indian-butter-chicken",
+      "indian-chicken-tikka-traybake",
+      "italian-chicken-cacciatore",
+      "korean-chicken-ginseng-style-soup",
+      "mexican-burrito-bowl",
+      "middle-eastern-chicken-shawarma",
+      "moroccan-chicken-tagine",
+      "spanish-chicken-chorizo-rice",
+      "spanish-romesco-chicken",
+      "thai-coconut-soup-chicken",
+      "thai-green-curry-chicken",
+      "vietnamese-pho-ga"
+    ]
+  },
+  {
+    "id": "allg-03",
+    "kind": "allergen",
+    "query": "breakfast for someone allergic to eggs",
+    "filters": {
+      "exclude_allergens": [
+        "eggs"
+      ],
+      "meal_types": [
+        "breakfast"
+      ]
+    },
+    "relevant_ids": [
+      "american-protein-oats",
+      "american-tofu-breakfast-tacos",
+      "british-beans-on-toast",
+      "british-porridge-berries",
+      "chinese-tofu-scramble-bowl",
+      "greek-tomato-toast-feta",
+      "greek-yoghurt-honey-walnuts",
+      "indian-poha-style-rice",
+      "indian-spiced-oats",
+      "japanese-miso-soup-breakfast",
+      "japanese-salmon-rice-bowl",
+      "korean-kimchi-style-pancake",
+      "mexican-chia-mango-pot",
+      "middle-eastern-ful-medames",
+      "middle-eastern-labneh-toast",
+      "moroccan-msemen-style-flatbread",
+      "moroccan-spiced-yoghurt-bowl",
+      "spanish-pan-con-tomate",
+      "thai-coconut-rice-porridge",
+      "vietnamese-coconut-coffee-oats",
+      "vietnamese-pho-breakfast"
+    ]
+  },
+  {
+    "id": "allg-04",
+    "kind": "allergen",
+    "query": "seafood dinner, shellfish allergy",
+    "filters": {
+      "exclude_allergens": [
+        "crustaceans",
+        "molluscs"
+      ],
+      "meal_types": [
+        "dinner"
+      ]
+    },
+    "relevant_ids": [
+      "american-cajun-salmon",
+      "british-fish-chips-baked",
+      "chinese-steamed-fish-ginger",
+      "french-salmon-en-papillote",
+      "greek-baked-cod-plaki",
+      "indian-fish-curry-goan",
+      "italian-baked-cod-tomatoes",
+      "japanese-sushi-bowl",
+      "japanese-teriyaki-salmon",
+      "korean-salmon-rice-bowl",
+      "mexican-fish-tacos",
+      "middle-eastern-baked-salmon-tahini",
+      "moroccan-fish-chermoula",
+      "spanish-cod-with-peppers",
+      "thai-fish-cakes",
+      "vietnamese-caramel-salmon",
+      "vietnamese-fish-turmeric-dill"
+    ]
+  },
+  {
+    "id": "allg-05",
+    "kind": "allergen",
+    "query": "sesame-free asian noodles",
+    "filters": {
+      "exclude_allergens": [
+        "sesame"
+      ]
+    },
+    "relevant_ids": [
+      "thai-pad-see-ew-vegetable",
+      "thai-pad-thai-prawn",
+      "vietnamese-bun-cha",
+      "vietnamese-fish-turmeric-dill",
+      "vietnamese-garlic-noodles",
+      "vietnamese-mushroom-pho",
+      "vietnamese-pho-breakfast",
+      "vietnamese-pho-ga"
+    ]
+  },
+  {
+    "id": "allg-06",
+    "kind": "allergen",
+    "query": "dessert with no milk",
+    "filters": {
+      "exclude_allergens": [
+        "milk"
+      ],
+      "meal_types": [
+        "dessert"
+      ]
+    },
+    "relevant_ids": [
+      "chinese-mango-sago-style-pudding",
+      "japanese-matcha-style-chia-pudding",
+      "middle-eastern-date-tahini-bites",
+      "moroccan-orange-cinnamon",
+      "thai-coconut-pancakes",
+      "thai-mango-sticky-rice",
+      "vietnamese-sweet-corn-pudding"
+    ]
+  },
+  {
+    "id": "allg-07",
+    "kind": "allergen",
+    "query": "sesame-free stir fry",
+    "filters": {
+      "exclude_allergens": [
+        "sesame"
+      ]
+    },
+    "relevant_ids": [
+      "japanese-pork-ginger-stir-fry",
+      "thai-basil-chicken"
+    ]
+  },
+  {
+    "id": "allg-08",
+    "kind": "allergen",
+    "query": "stew without mustard or celery",
+    "filters": {
+      "exclude_allergens": [
+        "mustard",
+        "celery"
+      ]
+    },
+    "relevant_ids": [
+      "american-avocado-toast-egg",
+      "american-turkey-chilli",
+      "chinese-garlic-green-beans",
+      "chinese-kung-pao-chicken",
+      "chinese-sesame-edamame",
+      "chinese-smacked-cucumber-salad",
+      "french-beef-bourguignon",
+      "french-cassoulet-bean",
+      "indian-dal-tadka",
+      "indian-masala-omelette",
+      "korean-bibimbap",
+      "korean-kimchi-fried-rice",
+      "mexican-beef-chilli",
+      "mexican-elote-salad",
+      "mexican-spiced-pumpkin-seeds",
+      "moroccan-chicken-tagine",
+      "moroccan-chickpea-pumpkin-stew",
+      "moroccan-kefta-tagine",
+      "moroccan-sweet-potato-stew",
+      "moroccan-vegetable-tagine",
+      "spanish-garlic-prawns",
+      "spanish-pork-paprika-stew",
+      "thai-basil-chicken",
+      "thai-fish-cakes",
+      "thai-larb-chicken",
+      "thai-papaya-style-slaw"
+    ]
+  },
+  {
+    "id": "neg-01",
+    "kind": "negation",
+    "query": "pasta dinner, no mushrooms",
+    "filters": {
+      "meal_types": [
+        "dinner"
+      ],
+      "exclude_foods": [
+        "mushroom",
+        "shiitake"
+      ]
+    },
+    "relevant_ids": [
+      "american-mac-cheese",
+      "greek-orzo-style-pasta-salad",
+      "italian-beef-ragu",
+      "italian-pasta-e-ceci",
+      "italian-pasta-pomodoro",
+      "italian-spaghetti-carbonara"
+    ]
+  },
+  {
+    "id": "neg-02",
+    "kind": "negation",
+    "query": "curry but no coconut",
+    "filters": {
+      "exclude_foods": [
+        "coconut_milk",
+        "coconut_cream",
+        "desiccated_coconut"
+      ]
+    },
+    "relevant_ids": [
+      "indian-aloo-gobi",
+      "indian-egg-curry",
+      "japanese-chicken-katsu-curry"
+    ]
+  },
+  {
+    "id": "neg-03",
+    "kind": "negation",
+    "query": "salad without tomatoes",
+    "filters": {
+      "exclude_foods": [
+        "tomato",
+        "cherry_tomato",
+        "canned_tomatoes"
+      ]
+    },
+    "relevant_ids": [
+      "british-coronation-chicken",
+      "british-ploughmans-salad",
+      "chinese-smacked-cucumber-salad",
+      "french-lentil-salad",
+      "japanese-soba-salad",
+      "korean-cucumber-salad",
+      "mexican-elote-salad",
+      "moroccan-carrot-salad",
+      "thai-larb-chicken",
+      "thai-peanut-noodle-salad",
+      "vietnamese-chicken-salad",
+      "vietnamese-tofu-noodle-salad"
+    ]
+  },
+  {
+    "id": "neg-04",
+    "kind": "negation",
+    "query": "rice dish, hold the peas",
+    "filters": {
+      "exclude_foods": [
+        "peas"
+      ]
+    },
+    "relevant_ids": [
+      "american-cajun-salmon",
+      "british-kedgeree",
+      "chinese-congee",
+      "chinese-prawn-stir-fry",
+      "greek-avgolemono",
+      "greek-stuffed-peppers-gemista",
+      "indian-rice-pudding-kheer",
+      "japanese-chicken-katsu-curry",
+      "japanese-gyudon",
+      "japanese-miso-aubergine",
+      "japanese-miso-soup-breakfast",
+      "japanese-onigiri-tuna",
+      "japanese-salmon-rice-bowl",
+      "japanese-teriyaki-salmon",
+      "japanese-tofu-donburi",
+      "korean-bibimbap",
+      "korean-bulgogi-beef",
+      "korean-chicken-ginseng-style-soup",
+      "korean-gyeran-bap",
+      "korean-kimchi-fried-rice",
+      "korean-salmon-rice-bowl",
+      "korean-seaweed-free-rice-rolls",
+      "korean-tofu-bulgogi",
+      "mexican-burrito-bowl",
+      "mexican-stuffed-peppers",
+      "middle-eastern-beef-kebab-rice",
+      "middle-eastern-mujadara",
+      "thai-coconut-rice-porridge",
+      "thai-mango-sticky-rice",
+      "thai-omelette-rice",
+      "vietnamese-caramel-salmon",
+      "vietnamese-pork-rice-bowl"
+    ]
+  },
+  {
+    "id": "neg-05",
+    "kind": "negation",
+    "query": "taco night but not beef",
+    "filters": {
+      "exclude_foods": [
+        "beef_mince",
+        "beef_steak",
+        "beef_stewing"
+      ]
+    },
+    "relevant_ids": [
+      "american-tofu-breakfast-tacos",
+      "mexican-fish-tacos",
+      "mexican-prawn-tacos",
+      "mexican-sweet-potato-black-bean-tacos"
+    ]
+  },
+  {
+    "id": "neg-06",
+    "kind": "negation",
+    "query": "fish for dinner, anything but salmon",
+    "filters": {
+      "meal_types": [
+        "dinner"
+      ],
+      "exclude_foods": [
+        "salmon",
+        "smoked_salmon"
+      ]
+    },
+    "relevant_ids": [
+      "british-fish-chips-baked",
+      "chinese-steamed-fish-ginger",
+      "greek-baked-cod-plaki",
+      "indian-fish-curry-goan",
+      "italian-baked-cod-tomatoes",
+      "mexican-fish-tacos",
+      "moroccan-fish-chermoula",
+      "spanish-cod-with-peppers",
+      "thai-fish-cakes",
+      "vietnamese-fish-turmeric-dill"
+    ]
+  },
+  {
+    "id": "neg-07",
+    "kind": "negation",
+    "query": "soup with no meat",
+    "filters": {
+      "require_diets": [
+        "vegetarian"
+      ]
+    },
+    "relevant_ids": [
+      "american-tomato-soup-grilled-cheese",
+      "british-pea-mint-soup",
+      "chinese-congee",
+      "chinese-hot-sour-soup",
+      "french-leek-potato-soup",
+      "french-onion-soup",
+      "italian-pasta-e-ceci",
+      "japanese-miso-soup-breakfast",
+      "japanese-udon-style-noodle-soup",
+      "mexican-black-bean-soup",
+      "middle-eastern-lentil-soup",
+      "moroccan-harira",
+      "spanish-gazpacho",
+      "vietnamese-mushroom-pho"
+    ]
+  },
+  {
+    "id": "neg-08",
+    "kind": "negation",
+    "query": "breakfast without eggs or bread",
+    "filters": {
+      "meal_types": [
+        "breakfast"
+      ],
+      "exclude_foods": [
+        "egg",
+        "flour_tortilla",
+        "pita",
+        "white_bread",
+        "wholemeal_bread"
+      ]
+    },
+    "relevant_ids": [
+      "american-protein-oats",
+      "american-tofu-breakfast-tacos",
+      "british-porridge-berries",
+      "chinese-tofu-scramble-bowl",
+      "greek-yoghurt-honey-walnuts",
+      "indian-poha-style-rice",
+      "indian-spiced-oats",
+      "japanese-miso-soup-breakfast",
+      "japanese-salmon-rice-bowl",
+      "korean-kimchi-style-pancake",
+      "mexican-chia-mango-pot",
+      "middle-eastern-ful-medames",
+      "moroccan-msemen-style-flatbread",
+      "moroccan-spiced-yoghurt-bowl",
+      "thai-coconut-rice-porridge",
+      "vietnamese-coconut-coffee-oats",
+      "vietnamese-pho-breakfast"
+    ]
+  },
+  {
+    "id": "vague-01",
+    "kind": "vague",
+    "query": "something cosy for a cold night",
+    "filters": {
+      "meal_types": [
+        "dinner"
+      ]
+    },
+    "relevant_ids": [
+      "american-bbq-chicken-traybake",
+      "american-mac-cheese",
+      "american-turkey-chilli",
+      "british-beef-stew-dumplings",
+      "british-cauliflower-cheese",
+      "british-cottage-pie-lentil",
+      "british-fish-chips-baked",
+      "british-fish-pie",
+      "british-shepherds-pie",
+      "british-toad-in-hole",
+      "chinese-garlic-green-beans",
+      "chinese-kung-pao-chicken",
+      "chinese-mapo-tofu",
+      "french-beef-bourguignon",
+      "french-coq-au-vin",
+      "french-mushroom-bourguignon",
+      "french-salmon-en-papillote",
+      "french-tartiflette-style-bake",
+      "greek-baked-cod-plaki",
+      "greek-fasolakia",
+      "greek-lamb-kleftiko",
+      "greek-moussaka",
+      "greek-spanakopita-pie",
+      "indian-chana-masala",
+      "indian-chicken-tikka-traybake",
+      "indian-egg-curry",
+      "indian-fish-curry-goan",
+      "indian-lamb-rogan-josh",
+      "indian-palak-tofu",
+      "indian-prawn-coconut-curry",
+      "indian-sweet-potato-lentil-curry",
+      "italian-aubergine-parmigiana",
+      "italian-baked-cod-tomatoes",
+      "italian-beef-ragu",
+      "italian-chicken-cacciatore",
+      "italian-pasta-e-ceci",
+      "italian-sausage-lentils",
+      "japanese-chicken-katsu-curry",
+      "japanese-udon-style-noodle-soup",
+      "korean-beef-short-rib-stew",
+      "korean-chicken-ginseng-style-soup",
+      "korean-doenjang-stew",
+      "korean-kimchi-fried-rice",
+      "mexican-beef-chilli",
+      "mexican-enchiladas-verdes",
+      "mexican-pork-carnitas",
+      "mexican-vegan-chilli",
+      "middle-eastern-baked-salmon-tahini",
+      "middle-eastern-chicken-shawarma",
+      "middle-eastern-halloumi-style-traybake",
+      "moroccan-chicken-bastilla-style-bake",
+      "moroccan-chicken-tagine",
+      "moroccan-chickpea-pumpkin-stew",
+      "moroccan-kefta-tagine",
+      "moroccan-lamb-apricot-tagine",
+      "moroccan-sweet-potato-stew",
+      "moroccan-vegetable-tagine",
+      "spanish-garlic-prawns",
+      "spanish-pisto-eggs",
+      "spanish-pork-paprika-stew",
+      "thai-basil-chicken",
+      "thai-coconut-soup-chicken",
+      "thai-fish-cakes",
+      "thai-green-curry-chicken",
+      "thai-massaman-beef",
+      "thai-red-curry-tofu",
+      "vietnamese-vegetable-curry"
+    ]
+  },
+  {
+    "id": "vague-02",
+    "kind": "vague",
+    "query": "light summer lunch",
+    "filters": {
+      "meal_types": [
+        "lunch"
+      ]
+    },
+    "relevant_ids": [
+      "american-chickpea-salad-sandwich",
+      "american-cobb-salad",
+      "british-coronation-chicken",
+      "british-ploughmans-salad",
+      "chinese-smacked-cucumber-salad",
+      "french-lentil-salad",
+      "french-nicoise-salad",
+      "greek-salad",
+      "indian-chana-chaat",
+      "italian-caprese-salad",
+      "italian-panzanella",
+      "italian-tuna-white-bean-salad",
+      "japanese-soba-salad",
+      "korean-cucumber-salad",
+      "mexican-elote-salad",
+      "mexican-prawn-tacos",
+      "middle-eastern-falafel-wrap",
+      "middle-eastern-fattoush",
+      "middle-eastern-tabbouleh",
+      "moroccan-carrot-salad",
+      "moroccan-couscous-salad",
+      "spanish-gazpacho",
+      "spanish-tuna-empanada-style-salad",
+      "thai-larb-chicken",
+      "thai-papaya-style-slaw",
+      "thai-peanut-noodle-salad",
+      "vietnamese-chicken-salad",
+      "vietnamese-summer-rolls-prawn",
+      "vietnamese-tofu-noodle-salad"
+    ]
+  },
+  {
+    "id": "vague-03",
+    "kind": "vague",
+    "query": "comfort food",
+    "filters": {},
+    "relevant_ids": [
+      "american-avocado-toast-egg",
+      "american-bbq-chicken-traybake",
+      "american-burger",
+      "american-chickpea-salad-sandwich",
+      "american-mac-cheese",
+      "american-meatloaf",
+      "american-tomato-soup-grilled-cheese",
+      "american-turkey-chilli",
+      "british-beans-on-toast",
+      "british-beef-stew-dumplings",
+      "british-cauliflower-cheese",
+      "british-cottage-pie-lentil",
+      "british-fish-chips-baked",
+      "british-fish-pie",
+      "british-sausage-mash",
+      "british-shepherds-pie",
+      "british-toad-in-hole",
+      "chinese-garlic-green-beans",
+      "chinese-kung-pao-chicken",
+      "chinese-mapo-tofu",
+      "chinese-sesame-edamame",
+      "chinese-smacked-cucumber-salad",
+      "french-beef-bourguignon",
+      "french-mushroom-bourguignon",
+      "french-salmon-en-papillote",
+      "french-tartiflette-style-bake",
+      "greek-baked-cod-plaki",
+      "greek-baked-honey-figs-style-pears",
+      "greek-gigantes-beans",
+      "greek-moussaka",
+      "greek-spanakopita-pie",
+      "indian-chicken-tikka-traybake",
+      "indian-dal-tadka",
+      "indian-masala-omelette",
+      "italian-aubergine-parmigiana",
+      "italian-baked-cod-tomatoes",
+      "italian-frittata-courgette",
+      "italian-mushroom-risotto",
+      "korean-beef-short-rib-stew",
+      "korean-bibimbap",
+      "korean-doenjang-stew",
+      "korean-kimchi-fried-rice",
+      "korean-tofu-soup",
+      "mexican-beef-chilli",
+      "mexican-chicken-tortilla-soup",
+      "mexican-churro-oats",
+      "mexican-elote-salad",
+      "mexican-enchiladas-verdes",
+      "mexican-spiced-pumpkin-seeds",
+      "mexican-vegan-chilli",
+      "middle-eastern-baked-salmon-tahini",
+      "middle-eastern-chicken-shawarma",
+      "middle-eastern-falafel-wrap",
+      "middle-eastern-ful-medames",
+      "middle-eastern-halloumi-style-traybake",
+      "moroccan-baked-eggs-merguez-style",
+      "moroccan-chicken-bastilla-style-bake",
+      "moroccan-chickpea-pumpkin-stew",
+      "moroccan-sweet-potato-stew",
+      "spanish-garlic-prawns",
+      "spanish-huevos-flamencos",
+      "spanish-pisto-eggs",
+      "spanish-pork-paprika-stew",
+      "thai-basil-chicken",
+      "thai-fish-cakes",
+      "thai-larb-chicken",
+      "thai-papaya-style-slaw",
+      "vietnamese-banana-coconut-cake"
+    ]
+  },
+  {
+    "id": "vague-04",
+    "kind": "vague",
+    "query": "healthy high protein lunch",
+    "filters": {
+      "meal_types": [
+        "lunch"
+      ]
+    },
+    "relevant_ids": [
+      "american-cobb-salad",
+      "british-coronation-chicken",
+      "chinese-chicken-noodle-soup",
+      "french-nicoise-salad",
+      "greek-avgolemono",
+      "greek-chicken-souvlaki-pita",
+      "indian-raita-chicken-wrap",
+      "italian-tuna-white-bean-salad",
+      "korean-tofu-soup",
+      "mexican-chicken-tortilla-soup",
+      "mexican-prawn-tacos",
+      "moroccan-chicken-wrap",
+      "spanish-tuna-empanada-style-salad",
+      "thai-larb-chicken",
+      "thai-tom-yum-soup",
+      "vietnamese-chicken-salad"
+    ]
+  },
+  {
+    "id": "vague-05",
+    "kind": "vague",
+    "query": "something sweet",
+    "filters": {},
+    "relevant_ids": [
+      "american-banana-bread",
+      "american-brownies",
+      "british-crumble",
+      "british-sticky-toffee-pudding",
+      "chinese-mango-sago-style-pudding",
+      "french-apple-tart",
+      "french-chocolate-mousse",
+      "greek-baked-honey-figs-style-pears",
+      "indian-rice-pudding-kheer",
+      "italian-affogato-style-ricotta",
+      "italian-panna-cotta",
+      "japanese-matcha-style-chia-pudding",
+      "japanese-strawberry-sando",
+      "korean-hotteok-style-pancakes",
+      "mexican-churro-oats",
+      "middle-eastern-date-tahini-bites",
+      "moroccan-almond-date-cookies",
+      "moroccan-orange-cinnamon",
+      "spanish-crema-catalana-style-custard",
+      "thai-coconut-pancakes",
+      "thai-mango-sticky-rice",
+      "vietnamese-banana-coconut-cake",
+      "vietnamese-sweet-corn-pudding"
+    ]
+  },
+  {
+    "id": "vague-06",
+    "kind": "vague",
+    "query": "a fresh zingy salad",
+    "filters": {},
+    "relevant_ids": [
+      "american-chickpea-salad-sandwich",
+      "american-cobb-salad",
+      "british-coronation-chicken",
+      "french-nicoise-salad",
+      "greek-orzo-style-pasta-salad",
+      "indian-chana-chaat",
+      "italian-tuna-white-bean-salad",
+      "japanese-soba-salad",
+      "mexican-elote-salad",
+      "mexican-prawn-tacos",
+      "middle-eastern-falafel-wrap",
+      "middle-eastern-fattoush",
+      "middle-eastern-lamb-kofta",
+      "middle-eastern-tabbouleh",
+      "moroccan-carrot-salad",
+      "moroccan-couscous-salad",
+      "spanish-tuna-empanada-style-salad",
+      "thai-larb-chicken",
+      "thai-papaya-style-slaw",
+      "thai-peanut-noodle-salad",
+      "vietnamese-chicken-salad",
+      "vietnamese-tofu-noodle-salad"
+    ]
+  },
+  {
+    "id": "vague-07",
+    "kind": "vague",
+    "query": "date night dinner to impress",
+    "filters": {
+      "meal_types": [
+        "dinner"
+      ]
+    },
+    "relevant_ids": [
+      "french-beef-bourguignon",
+      "french-coq-au-vin",
+      "french-moules-marinieres",
+      "french-salmon-en-papillote",
+      "greek-lamb-kleftiko",
+      "indian-lamb-rogan-josh",
+      "italian-beef-ragu",
+      "italian-mushroom-risotto",
+      "japanese-teriyaki-salmon",
+      "moroccan-lamb-apricot-tagine",
+      "spanish-garlic-prawns",
+      "spanish-seafood-paella"
+    ]
+  },
+  {
+    "id": "vague-08",
+    "kind": "vague",
+    "query": "kid friendly dinner",
+    "filters": {
+      "meal_types": [
+        "dinner"
+      ]
+    },
+    "relevant_ids": [
+      "american-bbq-chicken-traybake",
+      "american-burger",
+      "american-mac-cheese",
+      "american-meatloaf",
+      "british-cauliflower-cheese",
+      "british-fish-chips-baked",
+      "british-sausage-mash",
+      "british-toad-in-hole",
+      "italian-pasta-pomodoro",
+      "japanese-chicken-katsu-curry",
+      "mexican-chicken-fajitas",
+      "mexican-quesadilla",
+      "spanish-albondigas"
+    ]
+  },
+  {
+    "id": "vague-09",
+    "kind": "vague",
+    "query": "hangover breakfast",
+    "filters": {
+      "meal_types": [
+        "breakfast"
+      ]
+    },
+    "relevant_ids": [
+      "american-avocado-toast-egg",
+      "british-beans-on-toast",
+      "british-full-english-lite",
+      "french-croque-madame",
+      "mexican-breakfast-burrito",
+      "mexican-huevos-rancheros",
+      "middle-eastern-shakshuka",
+      "spanish-huevos-flamencos"
+    ]
+  },
+  {
+    "id": "pantry-01",
+    "kind": "pantry",
+    "query": "I have chickpeas, spinach and tomatoes",
+    "filters": {},
+    "relevant_ids": [
+      "american-buddha-bowl",
+      "american-chickpea-salad-sandwich",
+      "indian-chana-chaat",
+      "indian-chana-masala",
+      "indian-palak-tofu",
+      "indian-sweet-potato-lentil-curry",
+      "italian-pasta-e-ceci",
+      "mexican-vegan-chilli",
+      "middle-eastern-falafel-wrap",
+      "middle-eastern-halloumi-style-traybake",
+      "middle-eastern-stuffed-aubergine",
+      "moroccan-chickpea-pumpkin-stew",
+      "moroccan-couscous-salad",
+      "moroccan-harira",
+      "moroccan-vegetable-tagine",
+      "spanish-chickpea-spinach",
+      "spanish-pisto-eggs"
+    ]
+  },
+  {
+    "id": "pantry-02",
+    "kind": "pantry",
+    "query": "eggs, cheese and bread",
+    "filters": {},
+    "relevant_ids": [
+      "american-avocado-toast-egg",
+      "american-burger",
+      "american-tomato-soup-grilled-cheese",
+      "british-ploughmans-salad",
+      "french-croque-madame",
+      "french-gougeres-style-cheese-puffs",
+      "french-onion-soup",
+      "french-quiche-lorraine",
+      "french-toast-berries",
+      "greek-moussaka",
+      "greek-spanakopita-pie",
+      "greek-spinach-feta-omelette",
+      "greek-tomato-toast-feta",
+      "italian-frittata-courgette",
+      "italian-ricotta-lemon-pancakes",
+      "italian-spaghetti-carbonara",
+      "italian-tomato-bruschetta-eggs",
+      "mexican-breakfast-burrito",
+      "mexican-quesadilla",
+      "middle-eastern-shakshuka",
+      "vietnamese-banh-mi-eggs"
+    ]
+  },
+  {
+    "id": "pantry-03",
+    "kind": "pantry",
+    "query": "leftover rice, eggs, frozen peas and soy sauce",
+    "filters": {},
+    "relevant_ids": [
+      "chinese-egg-fried-rice",
+      "japanese-chicken-katsu-curry",
+      "korean-bibimbap",
+      "korean-gyeran-bap",
+      "korean-kimchi-fried-rice",
+      "thai-basil-chicken",
+      "thai-pineapple-fried-rice",
+      "vietnamese-pork-rice-bowl"
+    ]
+  },
+  {
+    "id": "pantry-04",
+    "kind": "pantry",
+    "query": "chicken thighs, a lemon and some potatoes",
+    "filters": {},
+    "relevant_ids": [
+      "american-cobb-salad",
+      "british-coronation-chicken",
+      "british-roast-chicken-veg",
+      "french-chicken-dijon",
+      "greek-avgolemono",
+      "greek-chicken-souvlaki-pita",
+      "greek-lemon-potatoes-chicken",
+      "indian-butter-chicken",
+      "indian-chicken-tikka-traybake",
+      "indian-raita-chicken-wrap",
+      "mexican-burrito-bowl",
+      "mexican-chicken-fajitas",
+      "mexican-chicken-tortilla-soup",
+      "middle-eastern-chicken-freekeh-style",
+      "middle-eastern-chicken-shawarma",
+      "moroccan-chicken-tagine",
+      "moroccan-chicken-wrap",
+      "thai-coconut-soup-chicken",
+      "thai-green-curry-chicken",
+      "vietnamese-chicken-salad",
+      "vietnamese-pho-ga"
+    ]
+  },
+  {
+    "id": "pantry-05",
+    "kind": "pantry",
+    "query": "tofu, broccoli, ginger and garlic",
+    "filters": {},
+    "relevant_ids": [
+      "chinese-hot-sour-soup",
+      "chinese-mapo-tofu",
+      "chinese-sweet-sour-tofu",
+      "chinese-tofu-scramble-bowl",
+      "indian-palak-tofu",
+      "japanese-miso-soup-breakfast",
+      "japanese-tofu-donburi",
+      "korean-doenjang-stew",
+      "korean-tofu-bulgogi",
+      "korean-tofu-soup",
+      "thai-red-curry-tofu",
+      "thai-satay-tofu-skewers",
+      "vietnamese-mushroom-pho",
+      "vietnamese-vegetable-curry"
+    ]
+  },
+  {
+    "id": "pantry-06",
+    "kind": "pantry",
+    "query": "canned tuna, pasta and sweetcorn",
+    "filters": {},
+    "relevant_ids": [
+      "british-jacket-potato-tuna",
+      "french-nicoise-salad",
+      "japanese-onigiri-tuna",
+      "korean-seaweed-free-rice-rolls"
+    ]
+  },
+  {
+    "id": "pantry-07",
+    "kind": "pantry",
+    "query": "sweet potato, black beans and an avocado",
+    "filters": {},
+    "relevant_ids": [
+      "american-stuffed-sweet-potato",
+      "mexican-burrito-bowl",
+      "mexican-sweet-potato-black-bean-tacos"
+    ]
+  },
+  {
+    "id": "pantry-08",
+    "kind": "pantry",
+    "query": "oats, bananas and peanut butter",
+    "filters": {},
+    "relevant_ids": [
+      "american-protein-oats",
+      "vietnamese-coconut-coffee-oats"
+    ]
+  },
+  {
+    "id": "pantry-09",
+    "kind": "pantry",
+    "query": "red lentils, coconut milk and an onion",
+    "filters": {},
+    "relevant_ids": [
+      "british-cottage-pie-lentil",
+      "french-mushroom-bourguignon",
+      "indian-dal-tadka",
+      "indian-sweet-potato-lentil-curry",
+      "italian-sausage-lentils",
+      "middle-eastern-lentil-soup",
+      "middle-eastern-mujadara",
+      "moroccan-harira",
+      "moroccan-sweet-potato-stew"
+    ]
+  },
+  {
+    "id": "pantry-10",
+    "kind": "pantry",
+    "query": "salmon fillets, rice and a cucumber",
+    "filters": {},
+    "relevant_ids": [
+      "american-cajun-salmon",
+      "british-kedgeree",
+      "japanese-salmon-rice-bowl",
+      "japanese-sushi-bowl",
+      "japanese-teriyaki-salmon",
+      "korean-salmon-rice-bowl",
+      "vietnamese-caramel-salmon"
+    ]
+  }
+]

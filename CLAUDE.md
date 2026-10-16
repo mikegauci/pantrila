@@ -28,14 +28,35 @@ latency per plan, and clear architecture matter as much as features.
 5. **Portfolio polish**: README with architecture diagram, eval snapshot, LangSmith
    dashboards for quality/cost/latency, demo script and video.
 
-Work on one step at a time; each step is its own PR.
+Work on one step at a time; each step is its own PR (commits within it can be split for a
+readable history). Start a fresh Claude Code chat per step; this file carries the context.
+
+## Status (update as work lands)
+
+Step 1 on `feat/recipe-search`; code committed, no PR yet. Remaining, in order (the corpus
+comes first because the labelled queries and the eval numbers are generated from it):
+
+1. Done: corpus complete (300 recipes). The first 144 came from `gpt-5.5` (no manifest entry;
+   that run crashed before writing it); the rest, plus 13 regenerated after `water` was added
+   to the ingredient table, from `gpt-5.4-mini` at about $0.008 per recipe ($1 total) to fit
+   the budget. The manifest records the model per run.
+2. Done: `pantrio corpus check` is clean (after the frying-oil rule in `nutrition.py`).
+3. Done: Supabase seeded (300 recipes) and embedded (`pantrio ingest`, $0.0006).
+4. Done: 65 labelled queries; first eval in `evals/reports/retrieval-2026-10-15T195536Z.md`
+   (hybrid recall@10 0.843, MRR 0.922; vague queries weakest at 0.55).
+5. Next: commit the corpus, manifest, queries and report; open the PR with the eval numbers.
 
 ## Stack
 
 - Python 3.12, `uv`, Pydantic v2, FastAPI, pytest, ruff.
-- PostgreSQL 16 + `pgvector` (Supabase in deploy, Docker locally), SQL migrations in
-  `supabase/migrations/` (add a new file; never edit an applied one). Plain SQL via `psycopg`,
-  no ORM.
+- PostgreSQL + `pgvector`, SQL migrations in `supabase/migrations/` (add a new file; never
+  edit an applied one). Plain SQL via `psycopg`, no ORM. Locally and in CI: Postgres 16 in
+  Docker. Deployed: Supabase project `pantrio` (ref `tlnigvzkselebbtetibt`, eu-north-1,
+  Postgres 17, pgvector 0.8.2), reached through the session pooler; migrations and seed run
+  with `pantrio db migrate|seed`, not the Supabase CLI, so `pantrio_migrations` stays the
+  record. The Supabase MCP server (claude.ai connector) can inspect tables and run SQL there.
+  Tables in `public` are exposed by Supabase's REST API: enable row level security before any
+  user data (pantry, profiles) lands.
 - OpenAI Python SDK (Responses API, structured outputs, tool calling). Default chat model
   `gpt-5.5` (override `PANTRIO_MODEL`), embeddings `text-embedding-3-small`
   (override `PANTRIO_EMBED_MODEL`). Do not use the Anthropic API.
@@ -86,11 +107,13 @@ uv sync                                  # install
 uv run pytest                            # offline tests (no API calls)
 uv run ruff check . && uv run ruff format --check .
 docker compose up -d db                  # local Postgres 16 + pgvector
-uv run pantrio db migrate && uv run pantrio db seed   # needs DATABASE_URL
+uv run pantrio db migrate && uv run pantrio db seed   # DATABASE_URL (config loads .env)
 uv run pantrio ingest                    # embed the corpus (needs OPENAI_API_KEY)
 uv run pantrio search "quick vegan dinner with chickpeas" [--parse] [--mode vector|fulltext]
 uv run pantrio corpus check              # re-derive nutrition/allergens/diets, report drift
-uv run python scripts/generate_corpus.py [--sample | --only ids | --force]  # paid
+uv run python scripts/generate_corpus.py [--sample | --only ids | --force | --limit n]  # paid
+#   cheaper model for one run: PANTRIO_MODEL=gpt-5.4-mini PANTRIO_PRICE_INPUT_PER_MTOK=0.75 \
+#   PANTRIO_PRICE_OUTPUT_PER_MTOK=4.50 (shell variables override .env)
 uv run python scripts/build_usda_table.py           # rebuild data/usda_foods.csv
 uv run python -m evals.retrieval_queries # regenerate labelled queries from the corpus
 uv run python -m evals.run_retrieval     # retrieval eval (vector vs full text vs hybrid)
@@ -131,3 +154,16 @@ Update this block when commands change.
   pgvector and a 60-query retrieval eval"). No "Step N" prefix and no branch names.
 - CI (GitHub Actions) runs ruff, pytest against Postgres 16 + pgvector, and the web
   typecheck/lint/build. Paid evals are manual `workflow_dispatch` jobs.
+- **Ship every build-plan step or big feature without asking** (standing approval to push and
+  merge):
+  1. Work on a `feat/<name>` branch off up-to-date `main` (never commit to `main`).
+  2. Run ruff and pytest locally; commit (split into readable commits) and
+     `git push -u origin <branch>`.
+  3. Open the PR with `gh pr create --base main` (title per the rule above; body has a summary,
+     the eval numbers when relevant, and a test plan).
+  4. Watch CI with `gh pr checks <pr> --watch --fail-fast`. On failure, read the logs
+     (`gh run view <run-id> --log-failed`), fix, push and watch again. Stop and ask after three
+     failed attempts or when the fix needs a product decision.
+  5. When every check passes, merge with `gh pr merge <pr> --merge --delete-branch` (merge
+     commit, so the split commits stay), then `git switch main && git pull`.
+  6. Update the Status section of this file in that PR's last commit, before merging.

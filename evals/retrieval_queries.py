@@ -246,7 +246,13 @@ SPECS: list[Spec] = [
         meal(M.DESSERT),
         F(exclude_allergens=[A.MILK], meal_types=[M.DESSERT]),
     ),
-    Spec("allg-07", "allergen", "soy-free stir fry", brief(r"stir"), F(exclude_allergens=[A.SOY])),
+    Spec(
+        "allg-07",
+        "allergen",
+        "sesame-free stir fry",
+        brief(r"stir"),
+        F(exclude_allergens=[A.SESAME]),
+    ),
     Spec(
         "allg-08",
         "allergen",
@@ -391,7 +397,7 @@ SPECS: list[Spec] = [
             "mexican-breakfast-burrito",
             "mexican-huevos-rancheros",
             "french-croque-madame",
-            "middle_eastern-shakshuka",
+            "middle-eastern-shakshuka",
             "spanish-huevos-flamencos",
             "british-beans-on-toast",
             "american-avocado-toast-egg",
