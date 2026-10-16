@@ -1,0 +1,167 @@
+{
+  "id": "middle-eastern-beef-kebab-rice",
+  "title": "Middle Eastern Beef Kebabs with Turmeric Rice",
+  "summary": "Juicy spiced beef kebabs served with fragrant turmeric rice, inspired by classic Middle Eastern grill flavours. It’s a satisfying dinner with warm spices, lemon, and a bright golden finish.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "beef steak, cut into chunks",
+      "food": "beef_steak",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "red onion, cut into chunks",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "red bell pepper, cut into chunks",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 600.0,
+      "unit": "ml",
+      "grams": 600.0
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "lemon, cut into wedges",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    }
+  ],
+  "steps": [
+    "If using wooden skewers, soak them in water for 20 minutes. In a bowl, combine the beef with olive oil, garlic, cumin, paprika, ground coriander, turmeric, black pepper, salt, and lemon juice. Toss well and leave to marinate while you start the rice.",
+    "Rinse the rice until the water runs mostly clear. Put it in a saucepan with the water, turmeric, olive oil, and salt. Bring to a boil, then cover and reduce to a low simmer for about 12 minutes, until the water is absorbed and the rice is tender.",
+    "Remove the rice from the heat and let it stand, covered, for 5 minutes. Fluff with a fork and stir through the chopped parsley.",
+    "Thread the beef onto skewers, alternating with the red onion and red pepper chunks. Heat a grill pan, barbecue, or heavy frying pan over medium-high heat.",
+    "Cook the kebabs for 8 to 10 minutes in total, turning occasionally, until the beef is browned on the outside and cooked to your liking. Let them rest for 2 minutes before serving.",
+    "Serve the kebabs with the turmeric rice and lemon wedges. Finish with extra parsley if you like."
+  ],
+  "nutrition": {
+    "kcal": 769.9,
+    "protein_g": 37.3,
+    "carbs_g": 72.3,
+    "fat_g": 36.4,
+    "fibre_g": 4.4
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "id": "korean-hotteok-style-pancakes",
+  "title": "Korean Hotteok with Brown Sugar and Walnuts",
+  "summary": "Sweet Korean-style yeasted pancakes with a sticky brown sugar, cinnamon and walnut filling. They are crisp and golden outside, chewy inside, and best served hot as a dessert or street-food treat.",
+  "cuisine": "korean",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian"
+  ],
+  "allergens": [
+    "gluten",
+    "milk",
+    "tree_nuts"
+  ],
+  "total_minutes": 75,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "dried yeast",
+      "food": "dried_yeast",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 12.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "milk, lukewarm",
+      "food": "milk",
+      "quantity": 180.0,
+      "unit": "ml",
+      "grams": 185.4
+    },
+    {
+      "name": "vegetable oil, plus extra for shaping and frying",
+      "food": "vegetable_oil",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 54.4
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "walnuts, finely chopped",
+      "food": "walnuts",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "cinnamon",
+      "food": "cinnamon",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.6
+    }
+  ],
+  "steps": [
+    "Mix the plain flour, dried yeast, sugar and salt in a large bowl. Pour in the lukewarm milk and 1 tablespoon of vegetable oil, then stir to make a soft, sticky dough.",
+    "Cover the bowl and leave the dough in a warm place for 45 minutes, until puffed and roughly doubled in size.",
+    "Meanwhile, mix the brown sugar, chopped walnuts and cinnamon in a small bowl for the filling.",
+    "Lightly oil your hands and a work surface. Divide the risen dough into 8 equal pieces and flatten each piece into a small disc.",
+    "Put a spoonful of the walnut sugar filling in the centre of each disc. Pinch the edges tightly together to seal, then gently shape into a ball with the seam underneath.",
+    "Heat the remaining vegetable oil in a frying pan over medium heat. Add the filled dough balls seam-side down, leaving space between them, and cook for 1 to 2 minutes until the bottoms are golden.",
+    "Flip the pancakes and press each one gently with a spatula to flatten. Cook for 2 to 3 minutes, then flip once more and cook for another 1 to 2 minutes until both sides are deep golden and crisp and the filling has melted.",
+    "Let the hotteok cool for 2 minutes before eating, as the sugar filling will be very hot."
+  ],
+  "nutrition": {
+    "kcal": 551.1,
+    "protein_g": 10.3,
+    "carbs_g": 75.4,
+    "fat_g": 24.0,
+    "fibre_g": 3.2
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "id": "middle-eastern-tabbouleh",
+  "title": "Herby Bulgur Salad with Tomato and Lemon",
+  "summary": "A fresh Middle Eastern-style bulgur salad tossed with juicy tomatoes, parsley, lemon and olive oil. It’s light, vibrant and perfect for a vegan lunch served warm or chilled.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "bulgur",
+      "food": "bulgur",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 250.0,
+      "unit": "ml",
+      "grams": 250.0
+    },
+    {
+      "name": "tomatoes, diced",
+      "food": "tomato",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "parsley, finely chopped",
+      "food": "parsley",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "mint, finely chopped",
+      "food": "mint",
+      "quantity": 8.0,
+      "unit": "g",
+      "grams": 8.0
+    },
+    {
+      "name": "spring onion, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "lemon, juiced",
+      "food": "lemon_juice",
+      "quantity": 40.0,
+      "unit": "ml",
+      "grams": 41.2
+    },
+    {
+      "name": "lemon zest",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 27.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Put the bulgur in a heatproof bowl, pour over the boiling water, cover and leave for 10 to 12 minutes until tender and the liquid is absorbed.",
+    "Fluff the bulgur with a fork and let it cool for a few minutes so it stays light and separate.",
+    "Add the tomatoes, parsley, mint and spring onion to the bulgur.",
+    "Stir in the lemon juice, lemon zest, olive oil, salt and black pepper until everything is evenly coated.",
+    "Taste and adjust with a little more salt or lemon if needed, then serve immediately or chill for 15 minutes for a colder salad."
+  ],
+  "nutrition": {
+    "kcal": 373.8,
+    "protein_g": 9.6,
+    "carbs_g": 56.9,
+    "fat_g": 15.1,
+    "fibre_g": 11.0
+  }
+}

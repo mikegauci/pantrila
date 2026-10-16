@@ -1,0 +1,171 @@
+{
+  "id": "mexican-chicken-tortilla-soup",
+  "title": "Mexican Tomato Chicken Soup with Chilli and Crispy Tortilla Strips",
+  "summary": "A bright, dairy-free Mexican-inspired chicken soup with a tomato-rich broth, gentle chilli heat and crunchy baked tortilla strips. It makes a satisfying lunch with tender shredded chicken, sweetcorn and black beans.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken breast",
+      "food": "chicken_breast",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "chicken stock",
+      "food": "chicken_stock",
+      "quantity": 900.0,
+      "unit": "ml",
+      "grams": 900.0
+    },
+    {
+      "name": "corn tortillas",
+      "food": "corn_tortilla",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 104.0
+    },
+    {
+      "name": "black beans, drained and rinsed",
+      "food": "black_beans",
+      "quantity": 240.0,
+      "unit": "g",
+      "grams": 240.0
+    },
+    {
+      "name": "sweetcorn",
+      "food": "sweetcorn",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "red bell pepper, diced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "fresh chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "lime, cut into wedges",
+      "food": "lime",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Cut the corn tortillas into thin strips, toss them on a baking tray with 1 tbsp olive oil and a pinch of the salt, then bake for 8–10 minutes until crisp and lightly golden. Set aside.",
+    "Heat the remaining 1 tbsp olive oil in a large saucepan over a medium heat. Add the onion and red bell pepper and cook for 6–8 minutes until softened and starting to colour.",
+    "Add the garlic, chilli, cumin, paprika and dried oregano. Cook for 1 minute, stirring, until fragrant.",
+    "Stir in the tomato paste, then add the canned tomatoes, chicken stock, remaining salt and black pepper. Bring to a simmer.",
+    "Add the chicken breasts, reduce the heat to a gentle simmer and cook for 18–22 minutes until the chicken is cooked through and no longer pink in the centre.",
+    "Lift the chicken onto a board and shred it with two forks. Return it to the pan with the black beans and sweetcorn, then simmer for 5 minutes until everything is hot and the soup is slightly thickened.",
+    "Taste and adjust the seasoning if needed. Ladle into bowls, squeeze over lime juice, scatter with fresh coriander and top with the crispy tortilla strips just before serving."
+  ],
+  "nutrition": {
+    "kcal": 519.8,
+    "protein_g": 43.8,
+    "carbs_g": 55.5,
+    "fat_g": 15.4,
+    "fibre_g": 13.3
+  }
+}

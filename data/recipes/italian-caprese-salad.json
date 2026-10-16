@@ -1,0 +1,87 @@
+{
+  "id": "italian-caprese-salad",
+  "title": "Italian Tomato, Mozzarella and Basil Salad",
+  "summary": "A simple Caprese-style salad with juicy tomatoes, creamy mozzarella, fresh basil and a sweet-sharp balsamic dressing. It is perfect for a light vegetarian lunch or as part of a summer spread.",
+  "cuisine": "italian",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "milk",
+    "sulphites"
+  ],
+  "total_minutes": 10,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "ripe tomatoes, sliced",
+      "food": "tomato",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "fresh mozzarella, sliced",
+      "food": "mozzarella",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "fresh basil leaves",
+      "food": "basil",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "extra virgin olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "balsamic vinegar",
+      "food": "balsamic_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.7
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper, freshly ground",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Arrange the sliced tomatoes and mozzarella on a large plate, overlapping them slightly for an even layer.",
+    "Tuck the basil leaves between the tomato and mozzarella slices so the herbs are spread throughout the salad.",
+    "Drizzle over the olive oil and balsamic vinegar.",
+    "Sprinkle with salt and black pepper, then let the salad sit for 5 minutes so the tomatoes release a little juice and the flavours mingle.",
+    "Serve immediately while the tomatoes are fresh and the mozzarella is soft and creamy."
+  ],
+  "nutrition": {
+    "kcal": 464.6,
+    "protein_g": 24.2,
+    "carbs_g": 11.9,
+    "fat_g": 36.2,
+    "fibre_g": 2.6
+  }
+}

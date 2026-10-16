@@ -1,0 +1,146 @@
+{
+  "id": "japanese-teriyaki-salmon",
+  "title": "Teriyaki Glazed Salmon with Rice and Greens",
+  "summary": "A Japanese-inspired pescatarian dinner with tender salmon brushed in a glossy sweet-savoury teriyaki glaze, served over fluffy rice with garlicky greens. It is quick enough for a weeknight but feels like a complete, balanced bowl.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "fish",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 35,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "sushi rice",
+      "food": "sushi_rice",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "vegetable stock for cooking rice",
+      "food": "vegetable_stock",
+      "quantity": 300.0,
+      "unit": "ml",
+      "grams": 300.0
+    },
+    {
+      "name": "salmon fillets",
+      "food": "salmon",
+      "quantity": 260.0,
+      "unit": "g",
+      "grams": 260.0
+    },
+    {
+      "name": "teriyaki sauce",
+      "food": "teriyaki_sauce",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 68.0
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "garlic clove, grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 9.1
+    },
+    {
+      "name": "bok choy, halved lengthways",
+      "food": "bok_choy",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "edamame beans",
+      "food": "edamame",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Rinse the sushi rice in a sieve under cold water until the water runs mostly clear. Put it in a small saucepan with the vegetable stock and a pinch of salt, bring to a simmer, cover, and cook gently for 12 minutes. Turn off the heat and leave covered for 10 minutes, until fluffy and tender.",
+    "Mix the teriyaki sauce, tamari, rice vinegar, grated ginger and grated garlic in a small bowl. Pat the salmon dry and season lightly with black pepper.",
+    "Heat 1 tsp sesame oil in a non-stick frying pan over medium heat. Add the salmon skin-side down if it has skin, and cook for 4 minutes until the underside is golden. Turn and cook for 2 minutes more.",
+    "Pour the teriyaki mixture into the pan around the salmon. Simmer for 2–3 minutes, spooning the bubbling glaze over the fish, until the salmon is just cooked through and flakes easily, and the sauce is glossy and slightly thickened.",
+    "Meanwhile, heat the remaining 1 tsp sesame oil in another pan over medium-high heat. Add the bok choy cut-side down and cook for 2 minutes until lightly browned. Add the edamame with a splash of water, cover, and steam for 3–4 minutes until the greens are bright and tender-crisp.",
+    "Divide the rice between bowls. Top with the bok choy, edamame and glazed salmon, then spoon over any remaining teriyaki glaze. Finish with spring onions and sesame seeds."
+  ],
+  "nutrition": {
+    "kcal": 762.4,
+    "protein_g": 44.9,
+    "carbs_g": 83.4,
+    "fat_g": 27.2,
+    "fibre_g": 7.4
+  }
+}

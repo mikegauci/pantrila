@@ -1,0 +1,137 @@
+{
+  "id": "japanese-soba-salad",
+  "title": "Cold Soba Noodle Salad with Edamame and Sesame Dressing",
+  "summary": "A refreshing Japanese-inspired lunch with chilled soba noodles, tender edamame, crisp vegetables and a nutty sesame-tamari dressing. It is bright, savoury and ideal for warm days or make-ahead lunches.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "soba noodles",
+      "food": "soba_noodles",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "shelled edamame",
+      "food": "edamame",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "cucumber, cut into matchsticks",
+      "food": "cucumber",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "carrot, cut into matchsticks",
+      "food": "carrot",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "fresh coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 22.4
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 6.5
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Bring a large pan of water to the boil. Add the soba noodles and cook according to the packet instructions, usually 4–6 minutes, until just tender but still springy.",
+    "Add the edamame for the final 2 minutes of cooking, then drain everything and rinse thoroughly under cold running water until completely cool. Drain well so the dressing does not become watery.",
+    "Whisk the tamari, rice vinegar, sesame oil, maple syrup, grated ginger, lime juice and a pinch of salt together in a large bowl until glossy and combined.",
+    "Add the cold noodles, edamame, cucumber, carrot, spring onions and coriander to the dressing. Toss gently with tongs until the noodles are evenly coated and the vegetables are distributed.",
+    "Divide between bowls and scatter with sesame seeds. Serve cold, or chill for up to 24 hours and toss again before eating."
+  ],
+  "nutrition": {
+    "kcal": 503.1,
+    "protein_g": 24.4,
+    "carbs_g": 79.7,
+    "fat_g": 13.7,
+    "fibre_g": 6.9
+  }
+}

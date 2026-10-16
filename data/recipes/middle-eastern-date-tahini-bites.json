@@ -1,0 +1,97 @@
+{
+  "id": "middle-eastern-date-tahini-bites",
+  "title": "Date and Tahini Energy Bites",
+  "summary": "Soft, chewy little bites with caramel-like dates and nutty tahini, finished with sesame and a hint of vanilla. They make a simple Middle Eastern-style vegan dessert or snack for when you want something sweet without turning on the oven.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "snack",
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame"
+  ],
+  "total_minutes": 20,
+  "servings": 12,
+  "ingredients": [
+    {
+      "name": "pitted dates",
+      "food": "dates",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "tahini",
+      "food": "tahini",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "rolled oats",
+      "food": "rolled_oats",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "desiccated coconut",
+      "food": "desiccated_coconut",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 19.5
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "sesame seeds, for coating",
+      "food": "sesame_seeds",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    }
+  ],
+  "steps": [
+    "If the dates are dry, soak them in hot water for 5 minutes, then drain well.",
+    "Add the dates, tahini, rolled oats, desiccated coconut, maple syrup, vanilla extract and a pinch of salt to a food processor.",
+    "Blend until the mixture comes together into a sticky paste. Scrape down the sides as needed; the mixture should hold together when pressed.",
+    "Roll the mixture into 12 small balls using damp hands.",
+    "Roll each ball in sesame seeds to coat lightly.",
+    "Chill for 10 minutes to firm up before serving, or keep in the fridge until needed."
+  ],
+  "nutrition": {
+    "kcal": 136.1,
+    "protein_g": 2.6,
+    "carbs_g": 19.4,
+    "fat_g": 6.4,
+    "fibre_g": 2.8
+  }
+}

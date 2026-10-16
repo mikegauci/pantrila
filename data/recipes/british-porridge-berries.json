@@ -1,0 +1,79 @@
+{
+  "id": "british-porridge-berries",
+  "title": "Vegan Berry Oat Porridge",
+  "summary": "A warm British-style breakfast bowl of creamy oats topped with juicy berries and a drizzle of maple syrup. Comforting, lightly sweet, and ready in minutes.",
+  "cuisine": "british",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten"
+  ],
+  "total_minutes": 10,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "rolled oats",
+      "food": "rolled_oats",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 500.0,
+      "unit": "ml",
+      "grams": 500.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "blueberries",
+      "food": "blueberries",
+      "quantity": 75.0,
+      "unit": "g",
+      "grams": 75.0
+    },
+    {
+      "name": "strawberries",
+      "food": "strawberries",
+      "quantity": 75.0,
+      "unit": "g",
+      "grams": 75.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 39.0
+    }
+  ],
+  "steps": [
+    "Put the rolled oats, water, and a pinch of salt into a saucepan over medium heat.",
+    "Bring to a gentle simmer, then cook for 5 to 7 minutes, stirring often, until the oats are soft and the porridge is creamy.",
+    "Meanwhile, slice the strawberries if needed and warm the berries briefly in a small pan or microwave, just until they start to soften and release a little juice.",
+    "Spoon the porridge into bowls, top with the berries, and drizzle over the maple syrup.",
+    "Serve immediately while hot and creamy."
+  ],
+  "nutrition": {
+    "kcal": 311.5,
+    "protein_g": 8.4,
+    "carbs_g": 62.0,
+    "fat_g": 4.2,
+    "fibre_g": 7.7
+  }
+}

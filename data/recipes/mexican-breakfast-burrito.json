@@ -1,0 +1,135 @@
+{
+  "id": "mexican-breakfast-burrito",
+  "title": "Chorizo, Potato and Scrambled Egg Breakfast Burritos",
+  "summary": "A hearty Mexican-inspired breakfast burrito filled with crisp potatoes, smoky chorizo, soft scrambled eggs and melted cheddar. It is filling, savoury and ideal for a weekend breakfast or brunch.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "potato, peeled and cut into 1 cm dice",
+      "food": "potato",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "chorizo, diced",
+      "food": "chorizo",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 400.0
+    },
+    {
+      "name": "flour tortillas",
+      "food": "flour_tortilla",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 180.0
+    },
+    {
+      "name": "cheddar, grated",
+      "food": "cheddar",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "red onion, finely diced",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "red bell pepper, diced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "jalapeno, finely chopped",
+      "food": "jalapeno",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salsa, to serve inside the burritos",
+      "food": "salsa",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    }
+  ],
+  "steps": [
+    "Put the diced potato in a pan of salted boiling water and cook for 6–8 minutes, until just tender but not falling apart. Drain well and let the steam dry for 2 minutes.",
+    "Heat the olive oil in a large frying pan over medium-high heat. Add the potatoes and cook for 8–10 minutes, turning occasionally, until golden and crisp at the edges.",
+    "Add the diced chorizo to the potatoes and fry for 3–4 minutes, until it releases its red oil and starts to crisp. Stir in the red onion, red bell pepper and jalapeno, then cook for 4–5 minutes until softened.",
+    "Sprinkle in the cumin, paprika, salt and black pepper. Stir well, then reduce the heat to low to keep the potato and chorizo mixture warm.",
+    "Crack the eggs into a bowl and beat until evenly mixed. Pour them into a separate non-stick pan over low-medium heat and cook gently, stirring with a spatula for 3–5 minutes, until softly scrambled and still slightly glossy.",
+    "Warm the flour tortillas in a dry pan or microwave until flexible. Divide the potato and chorizo mixture, scrambled eggs, grated cheddar and salsa between the tortillas.",
+    "Fold in the sides of each tortilla, then roll up tightly into burritos. Place seam-side down in a dry pan for 1–2 minutes per side if you want them lightly toasted and sealed. Serve hot."
+  ],
+  "nutrition": {
+    "kcal": 700.6,
+    "protein_g": 33.3,
+    "carbs_g": 56.3,
+    "fat_g": 38.3,
+    "fibre_g": 6.7
+  }
+}

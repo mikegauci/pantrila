@@ -1,0 +1,151 @@
+{
+  "id": "indian-spiced-oats",
+  "title": "Masala Oats with Vegetables",
+  "summary": "A savoury Indian breakfast of oats simmered with spiced vegetables, soft and porridge-like with a warm, comforting flavour. It is quick enough for busy mornings but filling enough to keep you going.",
+  "cuisine": "indian",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "mustard"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "rolled oats",
+      "food": "rolled_oats",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "carrot, diced",
+      "food": "carrot",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 70.0
+    },
+    {
+      "name": "green bell pepper, diced",
+      "food": "green_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "tomato, chopped",
+      "food": "tomato",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 120.0
+    },
+    {
+      "name": "peas",
+      "food": "peas",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "ginger, grated",
+      "food": "ginger",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "cumin seeds",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "curry powder",
+      "food": "curry_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 500.0,
+      "unit": "ml",
+      "grams": 500.0
+    },
+    {
+      "name": "coriander leaves, to serve",
+      "food": "coriander",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a medium pan over medium heat. Add the cumin seeds and let them sizzle for about 30 seconds until fragrant.",
+    "Add the chopped onion, carrot, and green bell pepper. Cook for 4 to 5 minutes, stirring often, until the onion softens.",
+    "Stir in the garlic and ginger, then add the turmeric, chilli powder, curry powder, and salt. Cook for 30 seconds to bloom the spices.",
+    "Add the tomato and peas and cook for 2 minutes, until the tomato starts to soften.",
+    "Pour in the water and bring to a gentle simmer. Stir in the rolled oats and cook for 4 to 5 minutes, stirring frequently, until thick and creamy.",
+    "Taste and adjust the seasoning if needed. Serve hot, topped with fresh coriander."
+  ],
+  "nutrition": {
+    "kcal": 405.1,
+    "protein_g": 12.8,
+    "carbs_g": 65.5,
+    "fat_g": 11.8,
+    "fibre_g": 13.1
+  }
+}

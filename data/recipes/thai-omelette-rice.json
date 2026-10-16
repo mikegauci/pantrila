@@ -1,0 +1,101 @@
+{
+  "id": "thai-omelette-rice",
+  "title": "Crispy Thai Omelette with Fish Sauce over Rice",
+  "summary": "A Thai-style khai jiao: puffed, lacy-edged omelette seasoned with fish sauce and served over hot white rice. It is fast, savoury and satisfying for a dairy-free breakfast.",
+  "cuisine": "thai",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "eggs",
+    "fish"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "fish sauce",
+      "food": "fish_sauce",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 11.8
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "fresh chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "vegetable oil, for frying",
+      "food": "vegetable_oil",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 54.4
+    },
+    {
+      "name": "coriander leaves, to serve",
+      "food": "coriander",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    }
+  ],
+  "steps": [
+    "Rinse the rice until the water runs mostly clear, then cook it in fresh water according to the packet instructions or in a rice cooker until tender and fluffy, about 12–15 minutes. Keep warm.",
+    "Crack the eggs into a bowl. Add the fish sauce, lime juice, sliced spring onions, chilli and black pepper, then beat vigorously for 30–45 seconds until very foamy.",
+    "Heat the vegetable oil in a small wok or frying pan over medium-high heat until shimmering. A drop of egg should sizzle immediately on contact.",
+    "Pour the beaten egg into the hot oil in one go. Let it puff and crisp without stirring for 1–2 minutes, until the edges are deep golden and lacy.",
+    "Carefully flip the omelette and cook the second side for 30–60 seconds, until golden and just set in the centre. Lift out and drain briefly on kitchen paper if desired.",
+    "Divide the hot rice between bowls, place the crispy omelette on top, and finish with coriander leaves. Serve immediately while the edges are still crisp."
+  ],
+  "nutrition": {
+    "kcal": 584.6,
+    "protein_g": 18.8,
+    "carbs_g": 63.7,
+    "fat_g": 27.5,
+    "fibre_g": 1.7
+  }
+}

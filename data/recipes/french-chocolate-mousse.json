@@ -1,0 +1,82 @@
+{
+  "id": "french-chocolate-mousse",
+  "title": "Dark Chocolate Mousse",
+  "summary": "A classic French mousse with a rich, bittersweet chocolate flavour and a light, airy texture. It’s an elegant make-ahead dessert for dinner parties or a simple indulgent finish to a meal.",
+  "cuisine": "french",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "eggs",
+    "milk",
+    "soy"
+  ],
+  "total_minutes": 25,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "dark chocolate, chopped",
+      "food": "dark_chocolate",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "double cream",
+      "food": "double_cream",
+      "quantity": 200.0,
+      "unit": "ml",
+      "grams": 200.0
+    },
+    {
+      "name": "eggs, separated",
+      "food": "egg",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "caster sugar",
+      "food": "sugar",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Melt the dark chocolate gently in a heatproof bowl over a pan of just-simmering water, or in short bursts in the microwave, then let it cool for 5 minutes so it is warm but not hot.",
+    "Whisk the egg yolks with the vanilla extract until smooth, then stir them into the melted chocolate until fully combined.",
+    "In a clean bowl, whip the double cream to soft peaks; it should hold its shape but still look billowy.",
+    "In another clean bowl, whisk the egg whites with the pinch of salt until foamy, then gradually add the sugar and whisk to glossy stiff peaks.",
+    "Fold the whipped cream into the chocolate mixture, then gently fold in the egg whites in two additions, keeping as much air in the mixture as possible.",
+    "Spoon the mousse into 4 glasses or ramekins and chill for at least 2 hours, until set and airy.",
+    "Serve cold, optionally with a few chocolate shavings or fresh berries if desired."
+  ],
+  "nutrition": {
+    "kcal": 480.0,
+    "protein_g": 9.1,
+    "carbs_g": 26.5,
+    "fat_g": 37.6,
+    "fibre_g": 4.1
+  }
+}

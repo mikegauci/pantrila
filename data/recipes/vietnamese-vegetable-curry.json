@@ -1,0 +1,183 @@
+{
+  "id": "vietnamese-vegetable-curry",
+  "title": "Vietnamese-Style Coconut Sweet Potato and Tofu Curry",
+  "summary": "A fragrant vegan coconut curry inspired by Vietnamese flavours, with tender sweet potato, crisp-edged tofu and green vegetables in a gently spiced coconut broth. It is warming, colourful and ideal for an easy dinner with rice.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "mustard",
+    "soy"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "firm tofu, drained and cubed",
+      "food": "tofu",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "sweet potato, peeled and cut into 2 cm chunks",
+      "food": "sweet_potato",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 388.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 300.0,
+      "unit": "ml",
+      "grams": 300.0
+    },
+    {
+      "name": "onion, thinly sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "red chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "curry powder",
+      "food": "curry_powder",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 11.8
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "carrot, sliced",
+      "food": "carrot",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "green beans, trimmed and halved",
+      "food": "green_beans",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "bok choy, roughly chopped",
+      "food": "bok_choy",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "white rice, to serve",
+      "food": "white_rice",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    }
+  ],
+  "steps": [
+    "Rinse the rice, then cook it according to the packet instructions so it is ready when the curry is finished.",
+    "Pat the tofu dry. Heat 1 tbsp vegetable oil in a large non-stick pan over medium-high heat, add the tofu cubes and fry for 6–8 minutes, turning occasionally, until lightly golden on several sides. Lift onto a plate.",
+    "Add the remaining 1 tbsp oil to the pan. Add the onion and cook for 4–5 minutes until softened and just starting to colour.",
+    "Stir in the garlic, ginger and chilli and cook for 1 minute until fragrant. Add the curry powder and turmeric and stir for 30 seconds so the spices bloom in the oil.",
+    "Add the sweet potato and carrot, then pour in the coconut milk and vegetable stock. Stir in the tamari, salt and black pepper. Bring to a simmer, cover loosely and cook for 15–18 minutes until the sweet potato is almost tender when pierced with a knife.",
+    "Return the tofu to the pan and add the green beans. Simmer uncovered for 5 minutes until the beans are bright green and tender-crisp and the sauce has thickened slightly.",
+    "Stir in the bok choy and cook for 2–3 minutes until wilted but still fresh-looking. Turn off the heat and stir in the lime juice.",
+    "Taste and adjust with a little more salt or lime juice if needed. Scatter with fresh coriander and serve hot with the rice."
+  ],
+  "nutrition": {
+    "kcal": 886.4,
+    "protein_g": 31.0,
+    "carbs_g": 114.6,
+    "fat_g": 37.7,
+    "fibre_g": 13.7
+  }
+}

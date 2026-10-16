@@ -1,0 +1,116 @@
+{
+  "id": "middle-eastern-baked-salmon-tahini",
+  "title": "Salmon with Tahini Lemon Sauce and Herbs",
+  "summary": "Pan-seared salmon is served with a creamy tahini lemon sauce and plenty of fresh herbs. It’s bright, nutty, and savoury, with a fresh Middle Eastern feel that works well for a quick dinner.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "fish",
+    "sesame"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "salmon fillets",
+      "food": "salmon",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 280.0
+    },
+    {
+      "name": "tahini",
+      "food": "tahini",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 44.4
+    },
+    {
+      "name": "lemon, juiced",
+      "food": "lemon_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 44.4
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "dill, chopped",
+      "food": "dill",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "mint, chopped",
+      "food": "mint",
+      "quantity": 5.0,
+      "unit": "g",
+      "grams": 5.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Pat the salmon fillets dry and season both sides with salt and black pepper.",
+    "Whisk the tahini, lemon juice, grated garlic and water in a small bowl until smooth and pourable. Add a little more water if needed.",
+    "Heat the olive oil in a non-stick frying pan over medium-high heat. Cook the salmon for 3 to 4 minutes on the first side, until well browned, then turn and cook for another 2 to 4 minutes until just cooked through.",
+    "Transfer the salmon to plates and spoon over the tahini lemon sauce.",
+    "Scatter the parsley, dill and mint over the top and serve right away."
+  ],
+  "nutrition": {
+    "kcal": 497.2,
+    "protein_g": 33.1,
+    "carbs_g": 7.8,
+    "fat_g": 37.7,
+    "fibre_g": 2.8
+  }
+}

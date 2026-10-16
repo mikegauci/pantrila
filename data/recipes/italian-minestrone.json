@@ -1,0 +1,173 @@
+{
+  "id": "italian-minestrone",
+  "title": "Hearty Vegan Vegetable Minestrone",
+  "summary": "A warming Italian-style minestrone packed with cannellini beans, vegetables, tomato and small pasta. It is satisfying enough for lunch, with a herby savoury broth and tender vegetables.",
+  "cuisine": "italian",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "carrots, diced",
+      "food": "carrot",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 140.0
+    },
+    {
+      "name": "celery sticks, diced",
+      "food": "celery",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 80.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "courgette, diced",
+      "food": "courgette",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "potato, peeled and diced",
+      "food": "potato",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "cannellini beans, drained and rinsed",
+      "food": "cannellini_beans",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "small pasta",
+      "food": "pasta",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 1.2,
+      "unit": "l",
+      "grams": 1200.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 0.2
+    },
+    {
+      "name": "kale, chopped",
+      "food": "kale",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "fresh parsley, chopped",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large soup pot over a medium heat. Add the onion, carrots and celery with a pinch of the measured salt, then cook for 8 minutes, stirring often, until softened but not browned.",
+    "Add the garlic and cook for 1 minute until fragrant. Stir in the courgette and potato, then cook for 3 minutes to coat the vegetables in the oil.",
+    "Add the tomato paste, dried oregano, dried thyme and bay leaf. Stir for 1 minute until the tomato paste darkens slightly.",
+    "Pour in the canned tomatoes and vegetable stock. Add the remaining salt and the black pepper, bring to a boil, then reduce to a steady simmer. Cook for 15 minutes, until the potato is just tender.",
+    "Stir in the cannellini beans and pasta. Simmer for 10 to 12 minutes, stirring occasionally, until the pasta is al dente and the soup has thickened slightly.",
+    "Add the chopped kale and simmer for 3 to 4 minutes, until wilted and tender. Remove the bay leaf.",
+    "Taste and adjust seasoning if needed. Ladle into bowls and finish with chopped parsley."
+  ],
+  "nutrition": {
+    "kcal": 430.1,
+    "protein_g": 17.0,
+    "carbs_g": 74.6,
+    "fat_g": 8.9,
+    "fibre_g": 13.3
+  }
+}

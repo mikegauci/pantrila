@@ -1,0 +1,63 @@
+{
+  "id": "moroccan-spiced-yoghurt-bowl",
+  "title": "Moroccan Yoghurt with Dates and Almonds",
+  "summary": "A simple Moroccan-style breakfast bowl with creamy yoghurt, sticky dates, toasted almonds and warm cinnamon. It’s lightly sweet, fresh and ready in minutes.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free"
+  ],
+  "allergens": [
+    "milk",
+    "tree_nuts"
+  ],
+  "total_minutes": 10,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "plain yoghurt",
+      "food": "plain_yogurt",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "dates, pitted and chopped",
+      "food": "dates",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "almonds, roughly chopped",
+      "food": "almonds",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "ground cinnamon",
+      "food": "cinnamon",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.6
+    }
+  ],
+  "steps": [
+    "Toast the chopped almonds in a dry pan over medium heat for 2 to 3 minutes, stirring often, until lightly golden and fragrant. Set aside to cool slightly.",
+    "Divide the yoghurt between two bowls and smooth the surface with the back of a spoon.",
+    "Top with the chopped dates and toasted almonds, then dust evenly with cinnamon.",
+    "Serve immediately, or chill for 10 minutes if you prefer it colder."
+  ],
+  "nutrition": {
+    "kcal": 292.4,
+    "protein_g": 9.2,
+    "carbs_g": 41.3,
+    "fat_g": 12.4,
+    "fibre_g": 5.2
+  }
+}

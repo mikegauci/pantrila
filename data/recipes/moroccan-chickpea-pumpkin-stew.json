@@ -1,0 +1,164 @@
+{
+  "id": "moroccan-chickpea-pumpkin-stew",
+  "title": "Moroccan Pumpkin and Chickpea Stew",
+  "summary": "A hearty vegan stew with sweet pumpkin, creamy chickpeas and a smoky, harissa-like chilli kick. It’s warm, fragrant and ideal for a comforting dinner with bread or couscous.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 3.9
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "cayenne pepper",
+      "food": "cayenne",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "pumpkin, peeled and cut into chunks",
+      "food": "pumpkin",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "canned chickpeas, drained and rinsed",
+      "food": "chickpeas",
+      "quantity": 2.0,
+      "unit": "cup",
+      "grams": 321.6
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 400.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large pot over medium heat. Add the onion with a pinch of salt and cook for 5 to 6 minutes, stirring often, until softened and lightly golden.",
+    "Stir in the garlic and ginger, then add the cumin, ground coriander, paprika, chilli powder and cayenne. Cook for 1 minute until fragrant.",
+    "Mix in the tomato paste and cook for 30 seconds, then add the pumpkin, chickpeas, canned tomatoes and water. Stir well and bring to a simmer.",
+    "Cover partially and cook for 20 to 25 minutes, stirring occasionally, until the pumpkin is tender and the stew has thickened.",
+    "Mash a few pieces of pumpkin against the side of the pot to make the stew silkier. Stir in the lemon juice, black pepper and more salt to taste.",
+    "Serve hot topped with chopped coriander.",
+    ""
+  ],
+  "nutrition": {
+    "kcal": 270.6,
+    "protein_g": 9.7,
+    "carbs_g": 40.6,
+    "fat_g": 10.3,
+    "fibre_g": 10.2
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "id": "spanish-pork-paprika-stew",
+  "title": "Spanish Pork and Potato Stew",
+  "summary": "A hearty Spanish-style stew with tender pork, potatoes, peppers and a warm smoky paprika broth. It’s rustic, filling and ideal for a comforting dinner.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [],
+  "total_minutes": 85,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "pork shoulder, diced",
+      "food": "pork_loin",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "potatoes, peeled and cut into chunks",
+      "food": "potato",
+      "quantity": 700.0,
+      "unit": "g",
+      "grams": 700.0
+    },
+    {
+      "name": "onion, chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "red bell pepper, chopped",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "smoked paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 0.4
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 500.0,
+      "unit": "ml",
+      "grams": 500.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large heavy pot over medium-high heat. Season the pork with a little salt and pepper, then brown it in batches until well coloured all over. Remove and set aside.",
+    "Add the onion and red bell pepper to the pot and cook for 6 to 8 minutes, stirring often, until softened and starting to turn golden. Add the garlic and cook for 1 minute more.",
+    "Stir in the smoked paprika, dried thyme and bay leaves, then add the canned tomatoes. Cook for 2 minutes, scraping up any browned bits from the bottom of the pot.",
+    "Return the pork to the pot and add the water and salt. Bring to a simmer, then cover and cook gently for 35 minutes.",
+    "Add the potato chunks and continue simmering, covered, for 25 to 30 minutes, until the pork is tender and the potatoes are cooked through.",
+    "Remove the bay leaves, taste and adjust the seasoning with more salt or pepper if needed. Stir through the parsley and serve hot."
+  ],
+  "nutrition": {
+    "kcal": 557.2,
+    "protein_g": 37.8,
+    "carbs_g": 44.0,
+    "fat_g": 27.3,
+    "fibre_g": 8.6
+  }
+}

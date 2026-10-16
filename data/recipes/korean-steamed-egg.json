@@ -1,0 +1,81 @@
+{
+  "id": "korean-steamed-egg",
+  "title": "Fluffy Korean Steamed Egg",
+  "summary": "A soft, savoury Korean steamed egg with a light custardy texture and fresh spring onion on top. It’s quick, comforting, and ideal for a warm breakfast.",
+  "cuisine": "korean",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "eggs",
+    "sesame"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 180.0,
+      "unit": "ml",
+      "grams": 180.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "spring onion, finely sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Crack the eggs into a bowl and whisk until fully blended but not too foamy.",
+    "Add the water and salt, then whisk again until combined.",
+    "Pour the mixture into a heatproof bowl or small pot and strain it if you want an extra-smooth custard.",
+    "Place over very low heat with a lid on, or steam for about 12 to 15 minutes, until the egg is just set and softly jiggly in the middle.",
+    "Top with the sliced spring onion, sesame oil, and a pinch of black pepper, then serve immediately while hot."
+  ],
+  "nutrition": {
+    "kcal": 168.2,
+    "protein_g": 12.9,
+    "carbs_g": 1.9,
+    "fat_g": 11.8,
+    "fibre_g": 0.4
+  }
+}

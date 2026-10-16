@@ -1,0 +1,112 @@
+{
+  "id": "moroccan-msemen-style-flatbread",
+  "title": "Flaky Moroccan Flatbreads with Date Syrup",
+  "summary": "Thin, flaky Moroccan-style flatbreads served warm with a simple honeyless date syrup. They’re crisp at the edges, soft inside, and perfect for a light breakfast with tea.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "baking powder",
+      "food": "baking_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "warm water",
+      "food": "water",
+      "quantity": 180.0,
+      "unit": "ml",
+      "grams": 180.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 27.6
+    },
+    {
+      "name": "dates, pitted",
+      "food": "dates",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 250.0,
+      "unit": "ml",
+      "grams": 250.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "ground cinnamon",
+      "food": "cinnamon",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.3
+    },
+    {
+      "name": "pinch of salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Make the date syrup first. Put the dates, water, lemon juice, cinnamon, and a pinch of salt into a small saucepan.",
+    "Bring to a gentle simmer over medium heat, then cook for 8 to 10 minutes until the dates are very soft and the liquid looks syrupy.",
+    "Blend until smooth, or mash very well for a rustic syrup, then set aside to cool slightly.",
+    "For the flatbread dough, mix the flour, salt, and baking powder in a large bowl.",
+    "Add the warm water and 15 ml of the olive oil, then stir until a shaggy dough forms.",
+    "Knead for 5 to 7 minutes until smooth and elastic. Cover and rest for 15 minutes.",
+    "Divide the dough into 4 balls. Lightly oil your work surface and stretch or press each ball into a very thin round.",
+    "Brush a little olive oil over the surface, fold or pleat the dough into a square package, then gently flatten again to create flaky layers.",
+    "Heat a dry frying pan over medium heat. Cook each flatbread for 2 to 3 minutes per side, pressing lightly, until golden brown with crisp, blistered spots.",
+    "Serve the flatbreads warm with the date syrup for dipping or drizzling. Pour tea alongside if desired."
+  ],
+  "nutrition": {
+    "kcal": 460.9,
+    "protein_g": 8.6,
+    "carbs_g": 91.8,
+    "fat_g": 7.7,
+    "fibre_g": 5.2
+  }
+}

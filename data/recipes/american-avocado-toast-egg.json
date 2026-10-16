@@ -1,0 +1,93 @@
+{
+  "id": "american-avocado-toast-egg",
+  "title": "Avocado Toast with Poached Egg and Chilli",
+  "summary": "Creamy avocado on crisp toast topped with a silky poached egg and a fresh chilli kick. It makes a quick, satisfying vegetarian breakfast with plenty of flavour and texture.",
+  "cuisine": "american",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs"
+  ],
+  "total_minutes": 15,
+  "servings": 1,
+  "ingredients": [
+    {
+      "name": "wholemeal bread",
+      "food": "wholemeal_bread",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 64.0
+    },
+    {
+      "name": "avocado",
+      "food": "avocado",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "fresh chilli",
+      "food": "chilli",
+      "quantity": 0.5,
+      "unit": "piece",
+      "grams": 7.5
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.1
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Toast the bread until golden and crisp.",
+    "Halve the avocado, remove the stone, and mash the flesh with lemon juice, olive oil, salt, and black pepper until mostly smooth but still a little chunky.",
+    "Bring a small saucepan of water to a gentle simmer. Crack each egg into a small cup, then slide them into the water and poach for 3 to 4 minutes until the whites are set and the yolks are still soft.",
+    "Spread the avocado mixture over the toast.",
+    "Top each slice with a poached egg, then finish with sliced chilli and an extra pinch of black pepper if you like."
+  ],
+  "nutrition": {
+    "kcal": 589.7,
+    "protein_g": 23.7,
+    "carbs_g": 42.2,
+    "fat_g": 38.3,
+    "fibre_g": 14.2
+  }
+}

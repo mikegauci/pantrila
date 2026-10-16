@@ -1,0 +1,131 @@
+{
+  "id": "italian-pasta-e-ceci",
+  "title": "Thick Chickpea and Pasta Soup with Rosemary",
+  "summary": "A rustic Italian-style vegan soup, thick with chickpeas, small pasta, tomatoes and fragrant rosemary. It is hearty enough for dinner and perfect for a cool evening with a drizzle of olive oil on top.",
+  "cuisine": "italian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "carrot, finely diced",
+      "food": "carrot",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 70.0
+    },
+    {
+      "name": "celery stick, finely diced",
+      "food": "celery",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 40.0
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh rosemary, finely chopped",
+      "food": "rosemary",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "chickpeas, drained and rinsed",
+      "food": "chickpeas",
+      "quantity": 480.0,
+      "unit": "g",
+      "grams": 480.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 900.0,
+      "unit": "ml",
+      "grams": 900.0
+    },
+    {
+      "name": "small dried pasta",
+      "food": "pasta",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large saucepan over a medium heat. Add the onion, carrot and celery with a pinch of the salt, then cook for 8–10 minutes, stirring often, until the vegetables are soft and the onion is translucent.",
+    "Stir in the garlic and rosemary and cook for 1 minute, just until fragrant, making sure the garlic does not brown.",
+    "Add the canned tomatoes and cook for 3–4 minutes, stirring and breaking them down, until slightly reduced and glossy.",
+    "Add the chickpeas and vegetable stock. Bring to a boil, then reduce the heat and simmer for 15 minutes so the chickpeas soften and the broth becomes savoury.",
+    "Use a potato masher or the back of a spoon to crush about one third of the chickpeas in the pan. The soup should start to look creamy and thick while still keeping plenty of whole chickpeas.",
+    "Stir in the pasta, remaining salt and black pepper. Simmer for 10–12 minutes, stirring frequently so the pasta does not stick, until the pasta is tender and the soup is thick. Add a splash of water if it becomes too thick before the pasta is cooked.",
+    "Stir in the lemon juice, taste and adjust the seasoning. Serve hot with an extra drizzle of olive oil if you like."
+  ],
+  "nutrition": {
+    "kcal": 455.7,
+    "protein_g": 15.5,
+    "carbs_g": 68.0,
+    "fat_g": 14.6,
+    "fibre_g": 11.4
+  }
+}

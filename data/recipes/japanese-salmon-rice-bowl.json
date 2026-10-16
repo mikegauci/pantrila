@@ -1,0 +1,119 @@
+{
+  "id": "japanese-salmon-rice-bowl",
+  "title": "Salmon, Cucumber and Sesame Rice Bowl",
+  "summary": "A light Japanese-style breakfast bowl with tender flaked salmon, cool cucumber and nutty sesame over warm rice. It’s fresh, savoury and quick enough for a weekday morning.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "fish",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "sushi rice",
+      "food": "sushi_rice",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 300.0,
+      "unit": "ml",
+      "grams": 300.0
+    },
+    {
+      "name": "salmon fillet",
+      "food": "salmon",
+      "quantity": 240.0,
+      "unit": "g",
+      "grams": 240.0
+    },
+    {
+      "name": "cucumber",
+      "food": "cucumber",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "spring onion",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 17.7
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 25.5
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    }
+  ],
+  "steps": [
+    "Rinse the sushi rice until the water runs mostly clear, then cook it with the water according to the packet instructions until tender. Leave covered for 5 minutes after cooking.",
+    "While the rice cooks, season the salmon lightly with salt and cook it in a hot pan over medium heat for 3 to 4 minutes per side, until just cooked through and easy to flake.",
+    "Mix the soy sauce, rice vinegar, sesame oil and sugar in a small bowl until the sugar dissolves.",
+    "Thinly slice the cucumber and spring onion.",
+    "Flake the salmon into large pieces.",
+    "Divide the rice between two bowls, top with the cucumber and salmon, then spoon over the dressing.",
+    "Finish with the spring onion and sesame seeds, and serve warm.",
+    ""
+  ],
+  "nutrition": {
+    "kcal": 641.2,
+    "protein_g": 33.5,
+    "carbs_g": 72.6,
+    "fat_g": 23.4,
+    "fibre_g": 4.4
+  }
+}

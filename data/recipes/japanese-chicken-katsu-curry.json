@@ -1,0 +1,175 @@
+{
+  "id": "japanese-chicken-katsu-curry",
+  "title": "Chicken Katsu Curry with Rice",
+  "summary": "Crisp breaded chicken cutlets served with fluffy rice and a mild Japanese-style curry sauce. It is a comforting dinner with crunchy chicken, sweet savoury sauce and simple steamed rice.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "eggs",
+    "milk",
+    "mustard",
+    "soy"
+  ],
+  "total_minutes": 50,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "chicken breasts, butterflied into cutlets",
+      "food": "chicken_breast",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "eggs, beaten",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "breadcrumbs",
+      "food": "breadcrumbs",
+      "quantity": 140.0,
+      "unit": "g",
+      "grams": 140.0
+    },
+    {
+      "name": "vegetable oil, for shallow frying",
+      "food": "vegetable_oil",
+      "quantity": 120.0,
+      "unit": "ml",
+      "grams": 110.4
+    },
+    {
+      "name": "onion, finely sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "carrot, finely diced",
+      "food": "carrot",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "ginger, grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "curry powder",
+      "food": "curry_powder",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 11.8
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "plain flour, for thickening the sauce",
+      "food": "plain_flour",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    },
+    {
+      "name": "chicken stock",
+      "food": "chicken_stock",
+      "quantity": 600.0,
+      "unit": "ml",
+      "grams": 600.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "honey",
+      "food": "honey",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 21.0
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    }
+  ],
+  "steps": [
+    "Rinse the rice until the water runs mostly clear, then cook it with 600 ml water by your usual absorption method or in a rice cooker. Keep warm once tender and fluffy.",
+    "Season the chicken cutlets with 1 tsp salt and the black pepper. Put the 80 g flour, beaten eggs and breadcrumbs in three shallow bowls.",
+    "Coat each chicken cutlet in flour, shaking off excess, then dip in egg and press firmly into breadcrumbs until evenly covered. Set aside while you start the sauce.",
+    "Melt the butter in a saucepan over medium heat. Add the onion, carrot and remaining 0.5 tsp salt, then cook for 8–10 minutes until the onion is soft and lightly golden.",
+    "Add the garlic and ginger and cook for 1 minute until fragrant. Stir in the curry powder and turmeric, then cook for 30 seconds.",
+    "Sprinkle in the 25 g flour and stir for 1 minute to make a paste. Gradually whisk in the chicken stock, then add the soy sauce and honey. Simmer for 12–15 minutes, stirring often, until the carrot is tender and the sauce is glossy and thick enough to coat a spoon.",
+    "While the sauce simmers, heat the vegetable oil in a wide frying pan over medium heat. Fry the breaded chicken for 4–5 minutes per side, until deep golden, crisp and cooked through with no pink in the centre. Drain on kitchen paper.",
+    "Slice the chicken katsu into strips. Serve the rice in bowls, spoon over the curry sauce and place the sliced katsu on top."
+  ],
+  "nutrition": {
+    "kcal": 1034.8,
+    "protein_g": 55.3,
+    "carbs_g": 125.9,
+    "fat_g": 32.9,
+    "fibre_g": 6.8
+  }
+}

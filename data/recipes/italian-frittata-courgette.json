@@ -1,0 +1,117 @@
+{
+  "id": "italian-frittata-courgette",
+  "title": "One-Pan Courgette and Herb Frittata",
+  "summary": "A light Italian-style baked frittata with tender courgette, fresh herbs and a savoury parmesan finish. It is simple enough for breakfast and bakes in one ovenproof pan with no gluten-containing ingredients.",
+  "cuisine": "italian",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "courgette, thinly sliced",
+      "food": "courgette",
+      "quantity": 450.0,
+      "unit": "g",
+      "grams": 450.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 400.0
+    },
+    {
+      "name": "parmesan, finely grated",
+      "food": "parmesan",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 61.8
+    },
+    {
+      "name": "spring onions, finely sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "fresh basil, chopped",
+      "food": "basil",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh parsley, chopped",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Heat the oven to 190°C. Use a 24 cm ovenproof frying pan or skillet so the frittata can go from hob to oven in the same pan.",
+    "Heat the olive oil in the pan over a medium heat. Add the courgette and spring onions with 0.25 tsp of the salt, then cook for 6–8 minutes, stirring occasionally, until the courgette is softened and lightly golden in places.",
+    "Add the garlic and cook for 30 seconds, just until fragrant. Spread the courgette mixture evenly across the base of the pan.",
+    "In a bowl, whisk the eggs, milk, parmesan, basil, parsley, remaining 0.5 tsp salt and black pepper until well combined.",
+    "Pour the egg mixture over the vegetables. Cook on the hob for 2 minutes without stirring, until the edges just begin to set.",
+    "Transfer the pan to the oven and bake for 12–15 minutes, until the frittata is puffed, lightly golden and just set in the centre with no liquid egg visible.",
+    "Rest for 5 minutes in the pan, then slice into wedges and serve warm or at room temperature."
+  ],
+  "nutrition": {
+    "kcal": 292.2,
+    "protein_g": 18.5,
+    "carbs_g": 8.4,
+    "fat_g": 20.7,
+    "fibre_g": 1.7
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "id": "chinese-steamed-fish-ginger",
+  "title": "Chinese Steamed Cod with Ginger, Spring Onion and Soy",
+  "summary": "A light Cantonese-style steamed cod dish with fragrant ginger, fresh spring onion and a savoury soy-sesame dressing. It is quick enough for a weeknight dinner and best served with rice and greens.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "fish",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "cod fillets",
+      "food": "cod",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "fresh ginger, cut into fine matchsticks",
+      "food": "ginger",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    },
+    {
+      "name": "spring onions, finely shredded",
+      "food": "spring_onion",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 2.1
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "fresh coriander leaves, to finish",
+      "food": "coriander",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    }
+  ],
+  "steps": [
+    "Pat the cod fillets dry and place them on a heatproof plate that fits inside your steamer. Season with a pinch of salt and black pepper, then scatter half of the ginger over the fish.",
+    "Set up a steamer over simmering water. Steam the cod for 8–10 minutes, depending on thickness, until the flesh is opaque and flakes easily with a fork.",
+    "While the fish steams, mix the soy sauce, sesame oil and sugar in a small bowl until the sugar mostly dissolves.",
+    "Carefully lift the plate from the steamer and spoon away any excess watery liquid. Scatter the remaining ginger and the shredded spring onions over the hot cod.",
+    "Heat the vegetable oil in a small pan until shimmering but not smoking. Pour it carefully over the spring onions and ginger so they sizzle and soften.",
+    "Spoon the soy-sesame dressing over the fish, garnish with coriander, and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 237.3,
+    "protein_g": 29.0,
+    "carbs_g": 6.6,
+    "fat_g": 10.3,
+    "fibre_g": 1.4
+  }
+}

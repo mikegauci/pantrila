@@ -1,0 +1,124 @@
+{
+  "id": "korean-sweet-potato-snack",
+  "title": "Korean-Style Roasted Sweet Potato Wedges with Sesame",
+  "summary": "Sweet potato wedges are roasted until caramelised and tender, then tossed with sesame oil, sesame seeds and a gentle gochujang-style chilli kick. It is a vegan, honeyless Korean-inspired snack that works well warm from the oven.",
+  "cuisine": "korean",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "sweet potatoes, scrubbed and cut into wedges",
+      "food": "sweet_potato",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 20.4
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 19.5
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.0
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 17.7
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C/200°C fan. Line a large baking tray with baking paper, or use a non-stick tray.",
+    "Put the sweet potato wedges on the tray. Toss with the vegetable oil and salt, then spread them out in a single layer with space between the wedges.",
+    "Roast for 25–30 minutes, turning once halfway through, until the wedges are tender inside and browned at the edges.",
+    "Meanwhile, mix the sesame oil, soy sauce, maple syrup, rice vinegar, garlic, ginger and chilli powder in a large bowl to make a glossy dressing.",
+    "Add the hot roasted wedges to the bowl and toss gently until coated. Sprinkle over the sesame seeds and toss again.",
+    "Transfer to a plate and finish with the sliced spring onions. Serve warm, while the edges are still slightly crisp."
+  ],
+  "nutrition": {
+    "kcal": 297.5,
+    "protein_g": 4.7,
+    "carbs_g": 46.9,
+    "fat_g": 11.0,
+    "fibre_g": 7.1
+  }
+}

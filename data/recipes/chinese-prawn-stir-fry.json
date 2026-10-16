@@ -1,0 +1,152 @@
+{
+  "id": "chinese-prawn-stir-fry",
+  "title": "Prawn and Vegetable Stir-Fry with Rice",
+  "summary": "A quick Chinese-style stir-fry with juicy prawns, crisp vegetables and a savoury garlic-ginger sauce. It’s fresh, colourful and ideal for a fast weeknight dinner.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "crustaceans",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "prawns, peeled and deveined",
+      "food": "prawns",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "red bell pepper, sliced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "broccoli florets",
+      "food": "broccoli",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "carrot, julienned",
+      "food": "carrot",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 70.0
+    },
+    {
+      "name": "spring onion, sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "ginger, grated",
+      "food": "ginger",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 60.0
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.6
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "white pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    }
+  ],
+  "steps": [
+    "Rinse the rice, then cook it according to the packet instructions until fluffy. Keep it covered while you finish the stir-fry.",
+    "Mix the tamari, water, cornstarch and sugar in a small bowl until smooth.",
+    "Heat the vegetable oil in a large wok or frying pan over high heat. Add the prawns and stir-fry for 2 to 3 minutes until pink and just cooked through. Remove to a plate.",
+    "Add the garlic and ginger to the pan and stir-fry for 20 seconds until fragrant, then add the broccoli, carrot and red pepper. Cook for 3 to 4 minutes, stirring often, until the vegetables are bright and crisp-tender.",
+    "Return the prawns to the pan, pour in the sauce and toss for 1 to 2 minutes until glossy and lightly thickened. Stir through the spring onions, sesame oil, salt and white pepper.",
+    "Serve the stir-fry hot over the rice."
+  ],
+  "nutrition": {
+    "kcal": 572.6,
+    "protein_g": 37.1,
+    "carbs_g": 83.6,
+    "fat_g": 11.0,
+    "fibre_g": 7.3
+  }
+}

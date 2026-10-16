@@ -1,0 +1,162 @@
+{
+  "id": "vietnamese-bun-cha",
+  "title": "Grilled Pork Patties with Rice Noodles and Herbs",
+  "summary": "Juicy Vietnamese-style pork patties served with slippery rice noodles, fresh herbs, and a bright, savoury dressing. It’s light but satisfying, perfect for a fresh lunch.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "fish",
+    "soy"
+  ],
+  "total_minutes": 35,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "pork mince",
+      "food": "pork_mince",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "shallot, finely minced",
+      "food": "shallot",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "fish sauce",
+      "food": "fish_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.7
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "rice noodles",
+      "food": "rice_noodles",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "cucumber, cut into thin matchsticks",
+      "food": "cucumber",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "carrot, julienned",
+      "food": "carrot",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 70.0
+    },
+    {
+      "name": "mint leaves",
+      "food": "mint",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "coriander leaves",
+      "food": "coriander",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "spring onion, sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 29.6
+    },
+    {
+      "name": "chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Mix the pork mince with garlic, shallot, fish sauce, soy sauce, sugar, black pepper, and a little salt until evenly combined. Shape into 6 to 8 small patties.",
+    "Heat the vegetable oil in a frying pan or grill pan over medium-high heat. Cook the patties for about 3 to 4 minutes per side until well browned and cooked through.",
+    "Soak or cook the rice noodles according to the packet instructions, then drain and rinse briefly in cold water.",
+    "Toss the lime juice and water together to make a quick dressing. Add the cucumber, carrot, chilli, mint, coriander, and spring onion to the noodles and mix well.",
+    "Serve the noodles in bowls topped with the grilled pork patties, spoon over any remaining dressing, and finish with extra herbs if you like."
+  ],
+  "nutrition": {
+    "kcal": 814.9,
+    "protein_g": 33.7,
+    "carbs_g": 80.0,
+    "fat_g": 39.5,
+    "fibre_g": 4.8
+  }
+}

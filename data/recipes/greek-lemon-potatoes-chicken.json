@@ -1,0 +1,112 @@
+{
+  "id": "greek-lemon-potatoes-chicken",
+  "title": "Greek Lemon Oregano Chicken Thighs with Roast Potatoes",
+  "summary": "Juicy chicken thighs are roasted with lemon, garlic and oregano, alongside crisp golden potatoes. It’s a simple Greek-style dinner with bright, herby flavour and an easy one-pan feel.",
+  "cuisine": "greek",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [],
+  "total_minutes": 75,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken thighs, skin on",
+      "food": "chicken_thigh",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "potatoes, cut into wedges",
+      "food": "potato",
+      "quantity": 900.0,
+      "unit": "g",
+      "grams": 900.0
+    },
+    {
+      "name": "lemon, juiced",
+      "food": "lemon_juice",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 61.8
+    },
+    {
+      "name": "lemon, cut into wedges",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "garlic cloves, crushed",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 5.9
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 45.0,
+      "unit": "ml",
+      "grams": 41.4
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 11.8
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "red onion, cut into wedges",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C. Put the potato wedges and red onion in a roasting tray, then toss with half the olive oil, 1 teaspoon of the salt, half the black pepper and half the oregano.",
+    "Roast the potatoes and onion for 20 minutes so they start turning golden at the edges.",
+    "Meanwhile, mix the lemon juice, garlic, remaining olive oil, remaining oregano, remaining salt, remaining black pepper and paprika in a bowl. Add the chicken thighs and coat well.",
+    "Take the tray from the oven, nestle the chicken thighs among the potatoes, and pour over any remaining marinade. Add the lemon wedges to the tray.",
+    "Return to the oven and roast for 30 to 35 minutes, until the chicken is cooked through, the skin is browned, and the potatoes are crisp and tender.",
+    "Rest for 5 minutes before serving, spooning the pan juices over the chicken and potatoes."
+  ],
+  "nutrition": {
+    "kcal": 544.0,
+    "protein_g": 45.2,
+    "carbs_g": 48.7,
+    "fat_g": 19.1,
+    "fibre_g": 6.9
+  }
+}

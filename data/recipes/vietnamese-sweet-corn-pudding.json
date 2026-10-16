@@ -1,0 +1,81 @@
+{
+  "id": "vietnamese-sweet-corn-pudding",
+  "title": "Vietnamese Sweetcorn Coconut Pudding",
+  "summary": "A light Vietnamese-style chè made with sweetcorn, coconut milk and a gentle sweetness. It’s creamy, fragrant, and ideal as a vegan snack served warm or chilled.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "snack",
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "sweetcorn kernels",
+      "food": "sweetcorn",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 800.0,
+      "unit": "ml",
+      "grams": 776.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 70.0,
+      "unit": "g",
+      "grams": 70.0
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    }
+  ],
+  "steps": [
+    "Put the sweetcorn and half of the coconut milk into a saucepan and bring to a gentle simmer over medium heat.",
+    "Cook for 8 to 10 minutes, stirring now and then, until the corn is tender and the coconut milk is lightly infused.",
+    "Add the sugar and a pinch of salt, and stir until dissolved.",
+    "Mix the cornstarch with 3 tablespoons of cold coconut milk in a small bowl until smooth.",
+    "Lower the heat and stir the cornstarch slurry into the pan slowly. Cook for 2 to 3 minutes, stirring constantly, until the pudding thickens and looks glossy.",
+    "Pour in the remaining coconut milk and the vanilla extract. Warm through gently for 1 to 2 minutes without boiling.",
+    "Taste and adjust the sweetness if needed, then spoon into bowls and serve warm, or chill until set and creamy."
+  ],
+  "nutrition": {
+    "kcal": 567.6,
+    "protein_g": 7.2,
+    "carbs_g": 48.6,
+    "fat_g": 42.7,
+    "fibre_g": 2.1
+  }
+}

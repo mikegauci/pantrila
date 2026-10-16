@@ -1,0 +1,175 @@
+{
+  "id": "indian-prawn-coconut-curry",
+  "title": "South Indian-Style Prawn Coconut Curry",
+  "summary": "A fragrant Indian-inspired prawn curry simmered in coconut milk with curry-leaf-style aromatics, mustard seeds, cumin, turmeric and chilli. It is creamy, gently spicy and quick enough for a weeknight dinner.",
+  "cuisine": "indian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "crustaceans",
+    "mustard"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "raw prawns, peeled and deveined",
+      "food": "prawns",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 388.0
+    },
+    {
+      "name": "onion, finely sliced",
+      "food": "onion",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "tomatoes, chopped",
+      "food": "tomato",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "garlic cloves, finely grated",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    },
+    {
+      "name": "green chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "coconut oil",
+      "food": "coconut_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "mustard seeds",
+      "food": "mustard_seeds",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "cumin seeds",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "dried curry-leaf-style herb substitute: dried thyme",
+      "food": "dried_thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 3.9
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "white rice, to serve",
+      "food": "white_rice",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    }
+  ],
+  "steps": [
+    "Rinse the rice until the water runs mostly clear, then cook it according to the packet instructions while you make the curry.",
+    "Pat the prawns dry and toss them with the turmeric, chilli powder, black pepper and half the salt. Set aside for 10 minutes while you prepare the aromatics.",
+    "Heat the coconut oil in a wide pan over a medium heat. Add the mustard seeds and cumin seeds and cook for 30–60 seconds, until the mustard seeds start to pop and the cumin smells fragrant.",
+    "Add the onion and cook for 6–8 minutes, stirring often, until soft and lightly golden at the edges.",
+    "Stir in the garlic, ginger, green chilli and dried thyme. Cook for 1 minute, until the raw garlic smell has gone.",
+    "Add the chopped tomatoes, ground coriander and remaining salt. Cook for 6–8 minutes, stirring occasionally, until the tomatoes have broken down and the mixture looks thick and glossy.",
+    "Pour in the coconut milk and bring to a gentle simmer. Cook for 5 minutes so the sauce thickens slightly and the spices mellow.",
+    "Add the prawns and simmer gently for 3–5 minutes, turning once, until they are pink, opaque and just cooked through. Do not boil hard or they may become tough.",
+    "Stir in the lime juice and most of the fresh coriander. Taste and adjust salt if needed, then serve the curry over the rice with the remaining coriander scattered on top."
+  ],
+  "nutrition": {
+    "kcal": 711.0,
+    "protein_g": 39.7,
+    "carbs_g": 74.9,
+    "fat_g": 29.6,
+    "fibre_g": 3.9
+  }
+}

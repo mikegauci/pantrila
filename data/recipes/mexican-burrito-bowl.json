@@ -1,0 +1,163 @@
+{
+  "id": "mexican-burrito-bowl",
+  "title": "High-Protein Chicken Burrito Bowl",
+  "summary": "A colourful Mexican-inspired dinner bowl with spiced chicken, fluffy rice, black beans, sweetcorn and fresh tomato salsa. It is filling, bright and high in protein for an easy weeknight meal.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "milk"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "chicken breast, sliced into strips",
+      "food": "chicken_breast",
+      "quantity": 700.0,
+      "unit": "g",
+      "grams": 700.0
+    },
+    {
+      "name": "black beans, drained and rinsed",
+      "food": "black_beans",
+      "quantity": 480.0,
+      "unit": "g",
+      "grams": 480.0
+    },
+    {
+      "name": "sweetcorn",
+      "food": "sweetcorn",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "tomatoes, diced",
+      "food": "tomato",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "red onion, finely diced",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "lime, juiced",
+      "food": "lime",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 90.0
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "garlic powder",
+      "food": "garlic_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salsa",
+      "food": "salsa",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "avocado, sliced",
+      "food": "avocado",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "plain Greek yogurt",
+      "food": "greek_yogurt",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    }
+  ],
+  "steps": [
+    "Rinse the rice until the water runs mostly clear, then cook according to the packet instructions in lightly salted water until tender and fluffy, about 12–15 minutes. Drain if needed, cover and set aside.",
+    "Meanwhile, mix the chicken strips with 1 tbsp olive oil, cumin, paprika, chilli powder, garlic powder, 1 tsp salt and the black pepper until evenly coated.",
+    "Heat a large frying pan over medium-high heat. Add the chicken and cook for 6–8 minutes, turning occasionally, until browned at the edges and cooked through with no pink in the centre.",
+    "Warm the black beans and sweetcorn in a small pan with the remaining 1 tbsp olive oil and 0.25 tsp salt for 4–5 minutes, stirring until hot.",
+    "Make a fresh salsa by mixing the diced tomatoes, red onion, juice of 1 lime, chopped coriander and the remaining 0.25 tsp salt. Let it sit for a few minutes so the flavours mingle.",
+    "Fluff the rice and stir through the juice of the remaining lime. Divide the rice between four bowls.",
+    "Top each bowl with the spiced chicken, warm beans and sweetcorn, fresh tomato salsa, extra salsa, sliced avocado and a spoonful of Greek yogurt. Serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 928.4,
+    "protein_g": 62.3,
+    "carbs_g": 112.1,
+    "fat_g": 27.3,
+    "fibre_g": 19.4
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "id": "american-mac-cheese",
+  "title": "Baked Macaroni Cheese",
+  "summary": "A classic American baked pasta dish with a creamy cheese sauce and a golden, bubbling top. Comforting and rich, it works well for a weeknight dinner or a cosy weekend meal.",
+  "cuisine": "american",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "milk",
+    "mustard"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "pasta",
+      "food": "pasta",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 600.0,
+      "unit": "ml",
+      "grams": 618.0
+    },
+    {
+      "name": "cheddar cheese, grated",
+      "food": "cheddar",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "parmesan, grated",
+      "food": "parmesan",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "mustard",
+      "food": "mustard",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "nutmeg",
+      "food": "nutmeg",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "breadcrumbs",
+      "food": "breadcrumbs",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Cook the pasta in salted water until just al dente, then drain well.",
+    "Melt the butter in a saucepan over medium heat. Stir in the flour and cook for 1 minute, stirring constantly, until it smells slightly nutty.",
+    "Gradually whisk in the milk, a little at a time, until smooth. Cook for 3 to 5 minutes, stirring, until the sauce thickens and coats the spoon.",
+    "Take the pan off the heat and stir in most of the cheddar, all of the parmesan, the mustard, salt, black pepper and nutmeg until smooth.",
+    "Mix the drained pasta into the cheese sauce, then spoon into a baking dish.",
+    "Toss the breadcrumbs with the olive oil and the remaining cheddar, then scatter over the top.",
+    "Bake for 18 to 20 minutes, until bubbling and golden on top. Rest for 5 minutes before serving."
+  ],
+  "nutrition": {
+    "kcal": 856.8,
+    "protein_g": 34.7,
+    "carbs_g": 84.1,
+    "fat_g": 42.1,
+    "fibre_g": 3.5
+  }
+}

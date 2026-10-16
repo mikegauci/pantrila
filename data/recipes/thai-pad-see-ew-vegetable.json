@@ -1,0 +1,139 @@
+{
+  "id": "thai-pad-see-ew-vegetable",
+  "title": "Thai-Style Wide Rice Noodles with Broccoli, Egg and Soy",
+  "summary": "A quick vegetarian Thai-inspired stir-fry with chewy wide rice noodles, crisp-tender broccoli and soft ribbons of egg in a savoury soy-based sauce. It is ideal for a fast weeknight dinner with bright lime and fresh coriander to finish.",
+  "cuisine": "thai",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "soy"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "wide rice noodles",
+      "food": "rice_noodles",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "broccoli, cut into small florets",
+      "food": "broccoli",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "eggs, lightly beaten",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "garlic, finely chopped",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.6
+    },
+    {
+      "name": "sriracha",
+      "food": "sriracha",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.4
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "lime, cut into wedges",
+      "food": "lime",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "fresh coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Soak or cook the rice noodles according to the packet instructions until just tender but still chewy, then drain and rinse briefly under cold water to stop them sticking.",
+    "Mix the soy sauce, rice vinegar, brown sugar and sriracha in a small bowl until the sugar dissolves.",
+    "Bring a pan of salted water to the boil, add the broccoli and cook for 2 minutes until bright green and crisp-tender. Drain well.",
+    "Heat 1 tbsp vegetable oil in a large wok or frying pan over medium-high heat. Add the beaten eggs and cook, stirring gently, for 1–2 minutes until softly set, then transfer to a plate.",
+    "Add the remaining 1 tbsp oil to the pan. Stir-fry the garlic and spring onions for 30 seconds until fragrant, then add the broccoli and cook for 1 minute.",
+    "Add the drained noodles and sauce to the pan. Toss everything for 2–3 minutes until the noodles are hot, glossy and evenly coated.",
+    "Return the egg to the pan and gently break it into ribbons as you toss. Season with a pinch of black pepper and taste before adding any extra salt, as the soy sauce is salty.",
+    "Serve hot with chopped coriander and lime wedges for squeezing over."
+  ],
+  "nutrition": {
+    "kcal": 642.9,
+    "protein_g": 18.2,
+    "carbs_g": 98.4,
+    "fat_g": 19.6,
+    "fibre_g": 6.6
+  }
+}

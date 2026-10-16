@@ -1,0 +1,130 @@
+{
+  "id": "american-cobb-salad",
+  "title": "Gluten-Free Cobb Salad with Chicken, Bacon and Avocado",
+  "summary": "A classic American Cobb salad with crisp lettuce, juicy chicken, smoky bacon, egg and creamy avocado. It’s fresh, filling and ideal for a quick lunch.",
+  "cuisine": "american",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "eggs",
+    "mustard"
+  ],
+  "total_minutes": 30,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "chicken breast",
+      "food": "chicken_breast",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "bacon",
+      "food": "bacon",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "romaine-style lettuce",
+      "food": "lettuce",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "avocado",
+      "food": "avocado",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "cherry tomatoes",
+      "food": "cherry_tomato",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "cucumber",
+      "food": "cucumber",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "red onion",
+      "food": "red_onion",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "Dijon-style mustard",
+      "food": "mustard",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    }
+  ],
+  "steps": [
+    "Season the chicken breast with half the salt and black pepper. Cook in a hot pan with 1 tablespoon of the olive oil for 5 to 6 minutes per side, until golden and cooked through. Rest for 5 minutes, then slice.",
+    "Cook the bacon in a separate pan over medium heat until crisp, then drain on kitchen paper and roughly chop.",
+    "Boil the eggs for 9 to 10 minutes for hard-boiled yolks. Cool under cold water, peel and quarter.",
+    "In a large bowl or on a platter, arrange the lettuce, cherry tomatoes, cucumber and red onion.",
+    "Add the sliced chicken, bacon, eggs and avocado on top.",
+    "Whisk the remaining olive oil, lemon juice, mustard, and the remaining salt and black pepper to make a simple dressing. Drizzle over the salad and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 808.6,
+    "protein_g": 57.1,
+    "carbs_g": 17.8,
+    "fat_g": 57.2,
+    "fibre_g": 8.5
+  }
+}

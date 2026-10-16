@@ -1,0 +1,133 @@
+{
+  "id": "chinese-smacked-cucumber-salad",
+  "title": "Garlicky Smashed Cucumber Salad with Chilli Oil",
+  "summary": "A refreshing Chinese-style smashed cucumber salad with punchy garlic, tangy rice vinegar, soy, sesame and a warm chilli oil dressing. It makes a light vegan lunch or a crisp side for noodles or rice.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "cucumber, ends trimmed",
+      "food": "cucumber",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "garlic cloves, finely grated",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 25.5
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 22.4
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Lay the cucumbers on a board and smack them firmly with a rolling pin or the flat side of a heavy knife until they split and crack. Cut into rough 3–4 cm chunks.",
+    "Put the cucumber in a colander, sprinkle with the salt, toss well and leave to drain for 10 minutes. The pieces should soften slightly and release watery liquid.",
+    "Meanwhile, put the grated garlic, sliced chilli, chilli powder, sesame seeds and sliced spring onions in a heatproof bowl.",
+    "Heat the vegetable oil in a small pan over medium-high heat for 1–2 minutes until shimmering but not smoking. Carefully pour it over the garlic and chilli mixture; it should sizzle and smell fragrant.",
+    "Stir in the soy sauce, rice vinegar, sesame oil, sugar and black pepper until the sugar dissolves.",
+    "Shake off any excess liquid from the cucumber, then add it to the dressing. Toss thoroughly so the cracked edges catch the chilli oil.",
+    "Let the salad sit for 5 minutes, then toss again and serve at room temperature, spooning any garlicky chilli oil from the bowl over the top."
+  ],
+  "nutrition": {
+    "kcal": 291.0,
+    "protein_g": 4.9,
+    "carbs_g": 19.7,
+    "fat_g": 23.3,
+    "fibre_g": 3.3
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "id": "moroccan-chicken-bastilla-style-bake",
+  "title": "Moroccan Chicken and Almond Pie",
+  "summary": "A fragrant Moroccan-style dinner pie with spiced chicken, toasted almonds, and warm cinnamon. The crisp pastry and savoury-sweet filling make it comforting and aromatic.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [],
+  "allergens": [
+    "celery",
+    "gluten",
+    "eggs",
+    "milk",
+    "tree_nuts"
+  ],
+  "total_minutes": 90,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "butter, cold and diced",
+      "food": "butter",
+      "quantity": 125.0,
+      "unit": "g",
+      "grams": 125.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 90.0,
+      "unit": "ml",
+      "grams": 90.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, crushed",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "chicken breast, diced",
+      "food": "chicken_breast",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "ground cinnamon",
+      "food": "cinnamon",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "honey",
+      "food": "honey",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 21.0
+    },
+    {
+      "name": "chicken stock",
+      "food": "chicken_stock",
+      "quantity": 150.0,
+      "unit": "ml",
+      "grams": 150.0
+    },
+    {
+      "name": "almonds, roughly chopped",
+      "food": "almonds",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "egg, beaten",
+      "food": "egg",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 50.0
+    }
+  ],
+  "steps": [
+    "Make the pastry by rubbing the cold butter into the flour and salt until the mixture looks like coarse crumbs. Add the water and bring it together into a smooth dough, then wrap and rest it for 20 minutes.",
+    "Heat the olive oil in a pan over medium heat. Cook the onion for 5 minutes until soft, then add the garlic and cook for 1 minute more.",
+    "Add the chicken, cinnamon, cumin, coriander, black pepper, and salt. Cook for 5 to 7 minutes until the chicken is no longer pink on the outside.",
+    "Stir in the honey and chicken stock, then simmer for 10 to 12 minutes until the liquid has reduced and the chicken is cooked through. Mix in the almonds and parsley, then let the filling cool slightly.",
+    "Heat the oven to 200°C. Roll out the dough thinly and line a pie dish, leaving enough overhang to fold over the top. Spoon in the filling.",
+    "Roll out the remaining dough to make a lid, place it over the filling, and crimp the edges to seal. Brush the top with beaten egg and cut a few small steam vents.",
+    "Bake for 30 to 35 minutes until the pastry is golden brown and crisp. Rest for 10 minutes before slicing and serving."
+  ],
+  "nutrition": {
+    "kcal": 857.2,
+    "protein_g": 42.8,
+    "carbs_g": 64.9,
+    "fat_g": 48.1,
+    "fibre_g": 6.2
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "greek-yoghurt-honey-walnuts",
+  "title": "Greek Yogurt with Honey and Walnuts",
+  "summary": "A simple Greek breakfast of thick yogurt drizzled with honey and topped with crunchy walnuts. It’s creamy, sweet, and ready in minutes for a light start to the day.",
+  "cuisine": "greek",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free"
+  ],
+  "allergens": [
+    "milk",
+    "tree_nuts"
+  ],
+  "total_minutes": 5,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "Greek yogurt",
+      "food": "greek_yogurt",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "honey",
+      "food": "honey",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "walnuts, roughly chopped",
+      "food": "walnuts",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "pinch of salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Divide the Greek yogurt between two bowls.",
+    "Drizzle the honey evenly over the yogurt.",
+    "Scatter the chopped walnuts on top and add a tiny pinch of salt if using.",
+    "Serve immediately while the yogurt is cold and the nuts are crunchy."
+  ],
+  "nutrition": {
+    "kcal": 321.9,
+    "protein_g": 16.6,
+    "carbs_g": 21.1,
+    "fat_g": 20.5,
+    "fibre_g": 1.4
+  }
+}

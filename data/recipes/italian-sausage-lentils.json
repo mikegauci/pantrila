@@ -1,0 +1,151 @@
+{
+  "id": "italian-sausage-lentils",
+  "title": "Italian Sausages Braised with Green Lentils and Rosemary",
+  "summary": "A rustic Italian-style dinner of browned pork sausages gently braised with earthy green lentils, tomato, rosemary and vegetables. It is hearty, savoury and ideal for a cool evening with crusty bread or a simple salad.",
+  "cuisine": "italian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "sulphites"
+  ],
+  "total_minutes": 55,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "pork sausages",
+      "food": "pork_sausage",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "carrot, finely diced",
+      "food": "carrot",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 70.0
+    },
+    {
+      "name": "celery stick, finely diced",
+      "food": "celery",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 40.0
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh rosemary, finely chopped",
+      "food": "rosemary",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 0.2
+    },
+    {
+      "name": "green lentils, rinsed",
+      "food": "green_lentils",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "chicken stock",
+      "food": "chicken_stock",
+      "quantity": 600.0,
+      "unit": "ml",
+      "grams": 600.0
+    },
+    {
+      "name": "red wine",
+      "food": "red_wine",
+      "quantity": 100.0,
+      "unit": "ml",
+      "grams": 99.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 16.3
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "parsley, chopped, to finish",
+      "food": "parsley",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a wide, heavy pan over medium heat. Add the pork sausages and brown them on all sides for 6–8 minutes, then lift them onto a plate; they do not need to be cooked through yet.",
+    "Add the onion, carrot and celery to the same pan with a pinch of the measured salt. Cook for 6–8 minutes, stirring often, until softened and lightly golden.",
+    "Stir in the garlic, rosemary and bay leaf and cook for 1 minute until fragrant. Add the tomato paste and cook for another minute, stirring it into the vegetables.",
+    "Pour in the red wine and simmer for 2 minutes, scraping up any browned bits from the base of the pan, until slightly reduced.",
+    "Add the rinsed green lentils, canned tomatoes, chicken stock, remaining salt and black pepper. Stir well, then nestle the browned sausages back into the lentils.",
+    "Bring to a gentle simmer, cover loosely and cook for 30–35 minutes, stirring occasionally, until the lentils are tender and the sausages are cooked through. Add a splash of water if the pan looks dry before the lentils are done.",
+    "Remove the bay leaf. Taste and adjust the seasoning if needed, then rest for 5 minutes so the sauce thickens slightly. Scatter with chopped parsley and serve hot."
+  ],
+  "nutrition": {
+    "kcal": 768.3,
+    "protein_g": 38.5,
+    "carbs_g": 60.6,
+    "fat_g": 40.0,
+    "fibre_g": 10.3
+  }
+}

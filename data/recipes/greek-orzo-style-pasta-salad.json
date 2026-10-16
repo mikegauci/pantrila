@@ -1,0 +1,128 @@
+{
+  "id": "greek-orzo-style-pasta-salad",
+  "title": "Greek Pasta Salad with Feta, Olives and Peppers",
+  "summary": "A small, bright Greek-style pasta salad with salty feta, olives, sweet peppers and a lemony herb dressing. It’s fresh enough for dinner and tastes even better after a short chill.",
+  "cuisine": "greek",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "pasta",
+      "food": "pasta",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "feta",
+      "food": "feta",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "red bell pepper",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "cucumber",
+      "food": "cucumber",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "cherry tomatoes",
+      "food": "cherry_tomato",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "black olives",
+      "food": "olives",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "red onion",
+      "food": "red_onion",
+      "quantity": 0.5,
+      "unit": "piece",
+      "grams": 75.0
+    },
+    {
+      "name": "parsley",
+      "food": "parsley",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 22.9
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Bring a large pot of salted water to a boil and cook the pasta until just tender. Drain well and rinse briefly under cold water to cool it down.",
+    "While the pasta cooks, dice the red pepper and cucumber, halve the cherry tomatoes, thinly slice the red onion, and chop the parsley.",
+    "Whisk together the olive oil, lemon juice, oregano, salt and black pepper in a large bowl.",
+    "Add the cooled pasta, vegetables and olives to the bowl and toss until everything is evenly coated.",
+    "Crumble the feta over the top, add the parsley, and toss very gently so the cheese stays in pieces.",
+    "Taste and adjust with a little more salt, pepper or lemon juice if needed. Serve right away or chill for 10 minutes for a colder salad."
+  ],
+  "nutrition": {
+    "kcal": 633.3,
+    "protein_g": 19.3,
+    "carbs_g": 80.8,
+    "fat_g": 27.3,
+    "fibre_g": 7.3
+  }
+}

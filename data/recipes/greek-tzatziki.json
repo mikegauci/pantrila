@@ -1,0 +1,93 @@
+{
+  "id": "greek-tzatziki",
+  "title": "Greek Cucumber Garlic Yoghurt Dip",
+  "summary": "A cool, creamy cucumber dip with garlic and dill, inspired by classic Greek tzatziki. Fresh, tangy, and perfect with pita, crackers, or crisp vegetables as a snack.",
+  "cuisine": "greek",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "milk"
+  ],
+  "total_minutes": 15,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "Greek yogurt",
+      "food": "greek_yogurt",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "cucumber",
+      "food": "cucumber",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "garlic",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "fresh dill",
+      "food": "dill",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Grate the cucumber, then squeeze it well in a clean cloth or with your hands to remove as much liquid as possible.",
+    "Finely grate or crush the garlic and chop the dill.",
+    "In a bowl, mix the Greek yogurt, cucumber, garlic, dill, lemon juice, olive oil, salt, and black pepper until evenly combined.",
+    "Taste and adjust the seasoning if needed, then chill for 5 minutes before serving for the best flavour.",
+    "Serve cold with pita, crackers, or sliced vegetables."
+  ],
+  "nutrition": {
+    "kcal": 115.6,
+    "protein_g": 7.3,
+    "carbs_g": 6.0,
+    "fat_g": 7.2,
+    "fibre_g": 0.4
+  }
+}

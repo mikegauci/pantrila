@@ -1,0 +1,122 @@
+{
+  "id": "spanish-huevos-flamencos",
+  "title": "Spanish Baked Eggs with Tomato, Peppers and Chorizo",
+  "summary": "A warm Spanish-style breakfast of eggs baked in a smoky tomato and pepper sauce with slices of chorizo. It’s rich, savoury, and perfect with bread for soaking up the sauce.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "eggs"
+  ],
+  "total_minutes": 35,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "chorizo, sliced",
+      "food": "chorizo",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "red bell pepper, sliced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "green bell pepper, sliced",
+      "food": "green_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "smoked paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 1.5
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Warm the olive oil in a frying pan over medium heat.",
+    "Add the chorizo and cook for 2–3 minutes until it starts to release its oil and turn lightly crisp at the edges.",
+    "Stir in the onion and peppers and cook for 6–8 minutes, until softened.",
+    "Add the garlic and smoked paprika and cook for 30 seconds, stirring so it does not catch.",
+    "Pour in the canned tomatoes, season with salt and black pepper, and simmer for 5–7 minutes until the sauce has thickened slightly.",
+    "Spoon the sauce into a small baking dish or ovenproof skillet. Make 4 wells in the sauce and crack in the eggs.",
+    "Bake for 8–10 minutes, until the whites are just set and the yolks are still a little soft, or longer if you prefer them firmer.",
+    "Scatter over the parsley and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 461.6,
+    "protein_g": 23.8,
+    "carbs_g": 27.6,
+    "fat_g": 30.0,
+    "fibre_g": 8.7
+  }
+}

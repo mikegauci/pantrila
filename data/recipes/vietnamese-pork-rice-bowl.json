@@ -1,0 +1,172 @@
+{
+  "id": "vietnamese-pork-rice-bowl",
+  "title": "Vietnamese-Style Grilled Pork Chop Rice Bowl with Egg",
+  "summary": "A comforting cơm tấm-inspired rice bowl with caramelised lemongrass-style pork chops, cucumber, herbs and a fried egg over fluffy rice. It is savoury, sweet, tangy and ideal for a satisfying weeknight dinner.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "fish",
+    "soy"
+  ],
+  "total_minutes": 45,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "pork loin chops, boneless or bone-in",
+      "food": "pork_loin",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "ginger, finely grated",
+      "food": "ginger",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "fish sauce",
+      "food": "fish_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.7
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 9.2
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "carrot, julienned or grated",
+      "food": "carrot",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "cucumber, sliced",
+      "food": "cucumber",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "spring onion, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "fresh coriander leaves",
+      "food": "coriander",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "chilli, thinly sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 29.9
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Rinse the white rice until the water runs mostly clear, then cook it with about 300 ml water using your usual pan or rice cooker method until tender and fluffy, about 15 minutes plus resting time.",
+    "In a bowl, mix the garlic, ginger, soy sauce, fish sauce, brown sugar, 1 tbsp lime juice, 1 tbsp vegetable oil and black pepper. Add the pork chops, turn to coat well and marinate for at least 15 minutes while you prepare the vegetables.",
+    "Toss the carrot with the rice vinegar, sugar and salt. Set aside for 10–15 minutes until slightly softened and lightly pickled.",
+    "Heat a grill pan, barbecue or heavy frying pan over medium-high heat. Grill the pork for 4–5 minutes on each side, depending on thickness, until deeply browned at the edges and cooked through. Rest for 5 minutes, then slice if desired.",
+    "Heat the remaining 1 tbsp vegetable oil in a frying pan over medium heat. Crack in the eggs and fry until the whites are set and the edges are lightly crisp, 2–4 minutes, keeping the yolks runny or cooking longer if preferred.",
+    "Divide the rice between bowls. Top with the grilled pork, fried eggs, pickled carrot, cucumber, spring onion, coriander and chilli. Finish with the remaining 1 tbsp lime juice and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 1015.6,
+    "protein_g": 58.1,
+    "carbs_g": 93.3,
+    "fat_g": 45.3,
+    "fibre_g": 4.1
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "id": "japanese-vegetable-tempura-style",
+  "title": "Japanese-Style Vegetable Tempura Fritters with Tamari Dip",
+  "summary": "Light, crisp battered vegetable fritters inspired by Japanese tempura, served with a bright tamari-lime dipping sauce. This vegan dinner is best cooked just before eating, while the batter is airy and the vegetables are hot and crunchy.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "plain flour, chilled",
+      "food": "plain_flour",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "baking powder",
+      "food": "baking_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "salt, divided",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "ice-cold vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 220.0,
+      "unit": "ml",
+      "grams": 220.0
+    },
+    {
+      "name": "sweet potato, peeled and cut into thin half-moons",
+      "food": "sweet_potato",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "aubergine, cut into thin wedges",
+      "food": "aubergine",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "courgette, sliced into batons",
+      "food": "courgette",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "red bell pepper, sliced into strips",
+      "food": "red_bell_pepper",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "mushrooms, halved if large",
+      "food": "mushroom",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "vegetable oil, for frying",
+      "food": "vegetable_oil",
+      "quantity": 700.0,
+      "unit": "ml",
+      "grams": 644.0
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 80.0,
+      "unit": "ml",
+      "grams": 92.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "ginger, finely grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "spring onion, finely sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    }
+  ],
+  "steps": [
+    "Make the dipping sauce by stirring together the tamari, lime juice, grated ginger, spring onion, sugar and sesame oil until the sugar dissolves. Set aside while you cook the fritters.",
+    "Prepare the vegetables and pat them very dry with kitchen paper; dry vegetables help the batter stay crisp.",
+    "Pour the vegetable oil into a deep, heavy pan so it is several centimetres deep. Heat to 175°C, or until a drop of batter sizzles immediately and rises to the surface.",
+    "In a large bowl, whisk the plain flour, cornstarch, baking powder and 1/2 tsp salt. Add the ice-cold vegetable stock and stir briefly with chopsticks or a fork; stop while the batter is still a little lumpy, as overmixing makes it heavy.",
+    "Working in small batches, dip a few pieces of vegetable into the batter, letting excess drip off, then lower them carefully into the hot oil. Fry for 2–4 minutes, turning once, until pale golden, crisp and the vegetables are tender.",
+    "Lift the fritters out with a slotted spoon and drain on kitchen paper or a rack. Sprinkle lightly with the remaining salt while hot.",
+    "Let the oil return to temperature between batches and repeat with the remaining vegetables and batter. Serve immediately with the tamari dipping sauce."
+  ],
+  "nutrition": {
+    "kcal": 706.8,
+    "protein_g": 10.7,
+    "carbs_g": 65.4,
+    "fat_g": 46.4,
+    "fibre_g": 6.8
+  }
+}

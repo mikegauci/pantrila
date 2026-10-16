@@ -1,0 +1,92 @@
+{
+  "id": "french-croque-madame",
+  "title": "Ham and Cheese Toastie with Fried Egg",
+  "summary": "A classic French-style breakfast toastie with salty ham, melted cheese, and a runny fried egg on top. Crisp, rich, and ready in minutes for a satisfying morning meal.",
+  "cuisine": "french",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 15,
+  "servings": 1,
+  "ingredients": [
+    {
+      "name": "white bread",
+      "food": "white_bread",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "ham",
+      "food": "ham",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "cheddar, grated",
+      "food": "cheddar",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 50.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Butter one side of each slice of bread.",
+    "Place the bread butter-side down and layer one slice with the ham and grated cheddar, then top with the second slice of bread, butter-side up.",
+    "Heat a frying pan over medium heat and cook the sandwich for 2 to 3 minutes per side, until the bread is golden and the cheese has melted.",
+    "While the toastie cooks, heat the olive oil in a small pan over medium heat and fry the egg until the white is set but the yolk is still runny, or cook longer if you prefer.",
+    "Season the egg with a little salt and black pepper.",
+    "Serve the toastie hot with the fried egg on top or alongside."
+  ],
+  "nutrition": {
+    "kcal": 589.8,
+    "protein_g": 25.9,
+    "carbs_g": 32.7,
+    "fat_g": 39.4,
+    "fibre_g": 2.1
+  }
+}

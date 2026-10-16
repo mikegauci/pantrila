@@ -1,0 +1,73 @@
+{
+  "id": "japanese-strawberry-sando",
+  "title": "Japanese Strawberry Cream Sandwiches",
+  "summary": "Soft, fluffy milk-bread style sandwiches filled with lightly sweetened whipped cream and juicy strawberries. A simple Japanese café-style dessert, best served chilled with clean-cut edges.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "snack",
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 25,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "soft white bread slices, crusts removed",
+      "food": "white_bread",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 240.0
+    },
+    {
+      "name": "double cream, chilled",
+      "food": "double_cream",
+      "quantity": 300.0,
+      "unit": "ml",
+      "grams": 300.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 25.1
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "fresh strawberries, hulled and patted dry",
+      "food": "strawberries",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    }
+  ],
+  "steps": [
+    "Hull the strawberries and pat them very dry with kitchen paper so the sandwiches do not become soggy. Leave small berries whole, or halve very large ones lengthways.",
+    "Pour the chilled double cream into a bowl with the sugar and vanilla extract. Whip until thick and fluffy with medium-stiff peaks; it should hold its shape but still look smooth, not grainy.",
+    "Lay out 4 slices of white bread. Spread each with a generous layer of whipped cream, then arrange strawberries in the centre and corners so they will show neatly when cut.",
+    "Spoon more whipped cream over and around the strawberries, filling gaps so the sandwich is even. Top with the remaining bread slices and press very gently to seal.",
+    "Wrap each sandwich tightly in cling film and chill for 10 minutes to firm up. For the neatest cut, mark the direction of the strawberry line on the wrap before chilling.",
+    "Unwrap, trim off the crusts if not already removed, then cut each sandwich diagonally or straight through the marked strawberry line with a sharp knife wiped clean between cuts. Serve immediately chilled."
+  ],
+  "nutrition": {
+    "kcal": 466.0,
+    "protein_g": 7.9,
+    "carbs_g": 44.0,
+    "fat_g": 29.3,
+    "fibre_g": 3.1
+  }
+}

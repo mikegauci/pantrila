@@ -1,0 +1,99 @@
+{
+  "id": "indian-mango-lassi-bowl",
+  "title": "Mango Lassi Smoothie Bowl",
+  "summary": "A thick, spoonable Indian-inspired mango lassi bowl with creamy yoghurt, warm cardamom and a little crunch from nuts and seeds. It makes a refreshing vegetarian snack for warm afternoons or a light sweet treat.",
+  "cuisine": "indian",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free"
+  ],
+  "allergens": [
+    "milk",
+    "tree_nuts"
+  ],
+  "total_minutes": 10,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "ripe mango flesh, chopped",
+      "food": "mango",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "Greek yoghurt",
+      "food": "greek_yogurt",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 61.8
+    },
+    {
+      "name": "honey",
+      "food": "honey",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 21.0
+    },
+    {
+      "name": "ground cardamom",
+      "food": "cardamom",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.5
+    },
+    {
+      "name": "banana, sliced and frozen",
+      "food": "banana",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 120.0
+    },
+    {
+      "name": "pistachios, roughly chopped",
+      "food": "pistachios",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "chia seeds",
+      "food": "chia_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 9.6
+    },
+    {
+      "name": "desiccated coconut",
+      "food": "desiccated_coconut",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 5.2
+    }
+  ],
+  "steps": [
+    "Put the mango, Greek yoghurt, milk, honey, cardamom and frozen banana into a blender.",
+    "Blend until completely smooth and thick, stopping to scrape down the sides if needed. The mixture should be spoonable rather than drinkable; add a splash more milk only if the blender struggles.",
+    "Taste and adjust with a little more honey if the mango is not very sweet.",
+    "Divide the smoothie mixture between two bowls and smooth the tops with the back of a spoon.",
+    "Scatter over the chopped pistachios, chia seeds and desiccated coconut, then serve immediately while cold and thick."
+  ],
+  "nutrition": {
+    "kcal": 412.7,
+    "protein_g": 17.2,
+    "carbs_g": 56.8,
+    "fat_g": 15.7,
+    "fibre_g": 7.2
+  }
+}

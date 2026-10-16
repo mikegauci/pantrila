@@ -1,0 +1,123 @@
+{
+  "id": "vietnamese-caramel-salmon",
+  "title": "Vietnamese Caramelised Salmon with Rice",
+  "summary": "Tender salmon fillets simmered in a glossy Vietnamese-style caramel sauce with fish sauce, ginger, garlic and chilli. Serve with steamed white rice for a savoury-sweet dinner with a little heat.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "fish"
+  ],
+  "total_minutes": 35,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "salmon fillets",
+      "food": "salmon",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.5
+    },
+    {
+      "name": "fish sauce",
+      "food": "fish_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 35.5
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "red chilli, thinly sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Rinse the rice under cold water until the water runs mostly clear. Put it in a pan with 320 ml water and a pinch of salt, bring to a boil, then cover and cook gently for 12 minutes. Turn off the heat and let it steam, covered, for 10 minutes.",
+    "Pat the salmon dry and season with black pepper. In a small bowl, mix the fish sauce, lime juice and 3 tbsp water.",
+    "Heat the vegetable oil in a frying pan over medium-high heat. Add the salmon skin-side down if it has skin, and sear for 3 minutes until golden. Turn and cook for 1 minute more, then transfer to a plate.",
+    "Lower the heat to medium. Add the brown sugar to the pan with 1 tbsp water and let it bubble for 2–3 minutes, swirling occasionally, until it turns syrupy and deep amber.",
+    "Stir in the garlic, ginger and chilli for 30 seconds, then carefully add the fish sauce mixture. It will bubble vigorously; stir until the caramel dissolves into a glossy sauce.",
+    "Return the salmon to the pan and spoon the sauce over it. Simmer for 4–6 minutes, turning once, until the salmon is just cooked through and flakes easily, and the sauce coats the fish.",
+    "Fluff the rice with a fork. Serve the caramelised salmon over the rice, spoon over the remaining sauce and scatter with sliced spring onions."
+  ],
+  "nutrition": {
+    "kcal": 746.5,
+    "protein_g": 38.2,
+    "carbs_g": 83.7,
+    "fat_g": 27.6,
+    "fibre_g": 1.9
+  }
+}

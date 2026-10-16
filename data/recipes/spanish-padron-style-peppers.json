@@ -1,0 +1,57 @@
+{
+  "id": "spanish-padron-style-peppers",
+  "title": "Blistered Green Peppers with Salt",
+  "summary": "A simple Spanish-style tapa of green peppers cooked until blistered and lightly smoky, then finished with salt. Best served hot from the pan as a quick snack.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [],
+  "total_minutes": 15,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "green bell peppers",
+      "food": "green_bell_pepper",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 640.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    }
+  ],
+  "steps": [
+    "Wash and dry the peppers well.",
+    "Heat the olive oil in a large frying pan over medium-high heat.",
+    "Add the peppers in a single layer and cook for 8 to 10 minutes, turning occasionally, until the skins are blistered and charred in spots and the peppers have softened.",
+    "Transfer the peppers to a plate, sprinkle with the salt, and serve hot."
+  ],
+  "nutrition": {
+    "kcal": 124.1,
+    "protein_g": 2.8,
+    "carbs_g": 14.8,
+    "fat_g": 7.3,
+    "fibre_g": 5.4
+  }
+}

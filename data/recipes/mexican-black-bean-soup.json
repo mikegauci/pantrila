@@ -1,0 +1,138 @@
+{
+  "id": "mexican-black-bean-soup",
+  "title": "Smoky Black Bean Soup with Lime and Coriander",
+  "summary": "A hearty Mexican-inspired vegan black bean soup with smoky paprika, cumin, fresh lime and coriander. It is warming, bright and ideal for a satisfying lunch.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "red bell pepper, diced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "smoked paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "black beans, drained and rinsed",
+      "food": "black_beans",
+      "quantity": 720.0,
+      "unit": "g",
+      "grams": 720.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 700.0,
+      "unit": "ml",
+      "grams": 700.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "lime, juiced",
+      "food": "lime",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large saucepan over a medium heat. Add the onion and red bell pepper with a pinch of the salt, then cook for 6–8 minutes until softened and the onion is translucent.",
+    "Add the garlic, cumin, smoked paprika and chilli powder. Stir for 1 minute until fragrant, taking care not to let the garlic burn.",
+    "Add the canned tomatoes, black beans, vegetable stock, remaining salt and black pepper. Stir well, bring to a boil, then reduce to a gentle simmer.",
+    "Simmer uncovered for 18–20 minutes, stirring occasionally, until the vegetables are tender and the soup has slightly thickened.",
+    "Blend about half the soup with a stick blender, leaving plenty of whole beans for texture. Alternatively, mash some beans against the side of the pan with a spoon.",
+    "Stir in the lime juice and most of the coriander. Taste and adjust with more salt, pepper or lime if needed.",
+    "Ladle into bowls and finish with the remaining coriander. Serve hot."
+  ],
+  "nutrition": {
+    "kcal": 293.5,
+    "protein_g": 13.8,
+    "carbs_g": 44.9,
+    "fat_g": 8.4,
+    "fibre_g": 17.0
+  }
+}

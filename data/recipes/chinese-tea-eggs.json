@@ -1,0 +1,103 @@
+{
+  "id": "chinese-tea-eggs",
+  "title": "Marbled Soy Tea Eggs",
+  "summary": "A Chinese-style snack of hard-boiled eggs simmered in a spiced soy broth, then cracked and steeped so the whites turn beautifully marbled. Savoury, lightly salty, and ideal for make-ahead snacking.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "soy"
+  ],
+  "total_minutes": 90,
+  "servings": 6,
+  "ingredients": [
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 6.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 1000.0,
+      "unit": "ml",
+      "grams": 1000.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 120.0,
+      "unit": "ml",
+      "grams": 138.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "ginger, sliced",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 0.4
+    },
+    {
+      "name": "cinnamon stick",
+      "food": "cinnamon",
+      "quantity": 4.0,
+      "unit": "g",
+      "grams": 4.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    }
+  ],
+  "steps": [
+    "Place the eggs in a saucepan and cover with enough water to come 2 cm above them. Bring to a boil, then simmer for 9 minutes until hard-boiled.",
+    "Drain the eggs and cool them under cold running water. Gently tap the shells all over with the back of a spoon so the shells crack but stay on the eggs.",
+    "In the same pan, combine the water, soy sauce, salt, sugar, ginger, bay leaves, cinnamon, and black pepper. Bring to a simmer and cook for 5 minutes.",
+    "Add the cracked eggs to the simmering liquid and keep them just below a boil for 10 minutes to flavour the whites.",
+    "Turn off the heat and leave the eggs to steep in the liquid for at least 45 minutes, or ideally overnight in the fridge, for a deeper colour and stronger flavour.",
+    "Peel the eggs to reveal the marbled pattern and serve chilled or at room temperature."
+  ],
+  "nutrition": {
+    "kcal": 92.0,
+    "protein_g": 8.3,
+    "carbs_g": 3.6,
+    "fat_g": 4.9,
+    "fibre_g": 0.7
+  }
+}

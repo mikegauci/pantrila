@@ -1,0 +1,136 @@
+{
+  "id": "korean-bulgogi-beef",
+  "title": "Soy Pear-Style Beef Bulgogi with Rice",
+  "summary": "A Korean-inspired dairy-free dinner of thinly sliced beef in a sweet-savoury soy, pear and garlic marinade, quickly seared until caramelised and served over fluffy white rice. It is ideal for a weeknight when you want something aromatic, glossy and comforting.",
+  "cuisine": "korean",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "beef steak, very thinly sliced",
+      "food": "beef_steak",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "pear, grated",
+      "food": "pear",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 180.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 80.0,
+      "unit": "ml",
+      "grams": 92.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.5
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "ginger, finely grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "spring onions, sliced, whites and greens separated",
+      "food": "spring_onion",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "vegetable oil, for frying",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "cucumber, sliced, to serve",
+      "food": "cucumber",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Rinse the rice under cold water until the water runs mostly clear. Put it in a pan with 600 ml water and a pinch of salt, bring to the boil, then cover and cook on the lowest heat for 12 minutes. Turn off the heat and leave covered for 10 minutes before fluffing with a fork.",
+    "In a large bowl, mix the grated pear, soy sauce, brown sugar, sesame oil, garlic, ginger, spring onion whites and black pepper until the sugar dissolves.",
+    "Add the thinly sliced beef to the marinade and turn until every piece is coated. Leave to marinate for 20 minutes at room temperature, or up to 2 hours in the fridge if you have time.",
+    "Heat a large frying pan or wok over high heat until very hot. Add the vegetable oil, then lift the beef from the marinade and fry in batches so the pan is not crowded.",
+    "Cook each batch for 2–3 minutes, turning once or twice, until the beef is browned at the edges, glossy and just cooked through. Add a spoonful of marinade to the pan near the end of each batch and let it bubble until sticky; discard any leftover marinade that has not been boiled.",
+    "Serve the bulgogi over the rice, topped with sesame seeds and the sliced spring onion greens, with cucumber on the side."
+  ],
+  "nutrition": {
+    "kcal": 755.1,
+    "protein_g": 38.7,
+    "carbs_g": 80.6,
+    "fat_g": 30.2,
+    "fibre_g": 3.7
+  }
+}

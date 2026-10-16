@@ -1,0 +1,138 @@
+{
+  "id": "spanish-patatas-bravas",
+  "title": "Patatas Bravas with Spicy Tomato Sauce",
+  "summary": "Crispy roasted potatoes are served with a smoky, spicy tomato sauce inspired by classic Spanish patatas bravas. It’s bold, vegan, and perfect as a simple dinner or shared plate.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "sulphites"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "potatoes",
+      "food": "potato",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 54.4
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "smoked paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "chilli, finely chopped",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 16.3
+    },
+    {
+      "name": "red wine vinegar",
+      "food": "red_wine_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 60.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C. Cut the potatoes into bite-size chunks and pat them dry.",
+    "Toss the potatoes with 2 tbsp olive oil, 1 tsp salt, black pepper, and 1 tsp smoked paprika. Spread them out on a baking tray in a single layer.",
+    "Roast for 30 to 35 minutes, turning once halfway through, until the potatoes are deep golden and crisp at the edges.",
+    "Meanwhile, heat the remaining 2 tbsp olive oil in a pan over medium heat. Cook the onion with a pinch of salt for 6 to 8 minutes until soft and lightly golden.",
+    "Add the garlic and chilli, and cook for 1 minute until fragrant.",
+    "Stir in the remaining smoked paprika and tomato paste, then add the canned tomatoes, vinegar, sugar, and water. Simmer for 10 to 12 minutes until thick and glossy.",
+    "Taste the sauce and adjust with a little more salt if needed. Spoon the spicy tomato sauce over the crispy potatoes and finish with chopped parsley."
+  ],
+  "nutrition": {
+    "kcal": 324.6,
+    "protein_g": 6.0,
+    "carbs_g": 46.2,
+    "fat_g": 14.3,
+    "fibre_g": 7.5
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "id": "british-coronation-chicken",
+  "title": "Curried Chicken Salad Sandwich",
+  "summary": "A classic British sandwich filling with tender chicken, creamy curry mayo, and a little sweetness from apple and raisins. It’s bright, savoury, and perfect for a quick lunch.",
+  "cuisine": "british",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "eggs",
+    "milk",
+    "mustard"
+  ],
+  "total_minutes": 30,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "chicken breast",
+      "food": "chicken_breast",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "mayonnaise",
+      "food": "mayonnaise",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "plain yogurt",
+      "food": "plain_yogurt",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "curry powder",
+      "food": "curry_powder",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 3.9
+    },
+    {
+      "name": "mustard",
+      "food": "mustard",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "apple, finely diced",
+      "food": "apple",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 180.0
+    },
+    {
+      "name": "raisins",
+      "food": "raisins",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    },
+    {
+      "name": "celery, finely diced",
+      "food": "celery",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 40.0
+    },
+    {
+      "name": "spring onion, sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "white bread",
+      "food": "white_bread",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 120.0
+    },
+    {
+      "name": "lettuce",
+      "food": "lettuce",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 1200.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a pan over medium heat. Season the chicken with a little salt and cook for 5 to 6 minutes per side, until golden and cooked through with no pink in the middle. Leave to cool, then chop into small pieces.",
+    "In a bowl, mix the mayonnaise, plain yogurt, curry powder, mustard, lemon juice, salt, and black pepper until smooth.",
+    "Stir in the chopped chicken, apple, raisins, celery, and spring onion until everything is evenly coated.",
+    "Toast the bread if you like, then lay over the lettuce and spoon on the curried chicken salad.",
+    "Top with the remaining bread slices, press gently, and cut in half to serve."
+  ],
+  "nutrition": {
+    "kcal": 817.0,
+    "protein_g": 48.7,
+    "carbs_g": 76.3,
+    "fat_g": 38.1,
+    "fibre_g": 18.9
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "id": "korean-beef-short-rib-stew",
+  "title": "Korean-Style Tamari Braised Beef Stew",
+  "summary": "A gluten-free Korean-inspired beef stew with tender beef, soft potatoes and sweet carrots braised in a savoury tamari, garlic and ginger sauce. It is warming, glossy and comforting for dinner with rice or greens.",
+  "cuisine": "korean",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 120,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "beef stewing pieces, cut into 3 cm chunks",
+      "food": "beef_stewing",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "potatoes, peeled and cut into large chunks",
+      "food": "potato",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "carrots, cut into thick chunks",
+      "food": "carrot",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "onion, sliced",
+      "food": "onion",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 80.0,
+      "unit": "ml",
+      "grams": 92.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 20.6
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "gluten-free vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 600.0,
+      "unit": "ml",
+      "grams": 600.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    }
+  ],
+  "steps": [
+    "Pat the beef dry and season it with the salt and black pepper. Heat the vegetable oil in a large heavy casserole over medium-high heat, then brown the beef in batches for 3–4 minutes per batch until well coloured on at least two sides. Transfer the browned beef to a plate.",
+    "Lower the heat to medium. Add the sliced onion to the same pan and cook for 4–5 minutes, scraping up the browned bits, until softened and lightly golden.",
+    "Add the garlic and ginger and stir for 1 minute until fragrant. Return the beef and any juices to the pan.",
+    "Pour in the tamari and add the brown sugar, sesame oil and gluten-free vegetable stock. Stir well, bring to a gentle boil, then reduce the heat to low. Cover and simmer for 60 minutes, stirring occasionally, until the beef is starting to become tender.",
+    "Add the potato and carrot chunks, making sure they are mostly submerged in the braising liquid. Cover again and simmer for 30–40 minutes until the beef is very tender and the potatoes can be pierced easily with a knife.",
+    "Uncover and simmer for a further 5–10 minutes if you want a glossier, slightly reduced sauce. Taste and adjust with a little more salt only if needed, as tamari is already salty.",
+    "Scatter over the sliced spring onions and sesame seeds, then serve hot."
+  ],
+  "nutrition": {
+    "kcal": 778.8,
+    "protein_g": 46.5,
+    "carbs_g": 48.7,
+    "fat_g": 44.4,
+    "fibre_g": 6.9
+  }
+}

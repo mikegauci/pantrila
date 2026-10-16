@@ -1,0 +1,125 @@
+{
+  "id": "moroccan-almond-date-cookies",
+  "title": "Moroccan Almond and Date Cookies",
+  "summary": "Soft, fragrant cookies with a sweet date filling and a lightly spiced almond dough. They’re a lovely dessert with tea or coffee, especially warm from the oven.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk",
+    "tree_nuts"
+  ],
+  "total_minutes": 45,
+  "servings": 12,
+  "ingredients": [
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 132.0,
+      "unit": "g",
+      "grams": 132.0
+    },
+    {
+      "name": "ground almonds",
+      "food": "almonds",
+      "quantity": 72.0,
+      "unit": "g",
+      "grams": 72.0
+    },
+    {
+      "name": "butter, softened",
+      "food": "butter",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 48.0,
+      "unit": "g",
+      "grams": 48.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 50.0
+    },
+    {
+      "name": "baking powder",
+      "food": "baking_powder",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 2.2
+    },
+    {
+      "name": "ground cinnamon",
+      "food": "cinnamon",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 2.2
+    },
+    {
+      "name": "dates, pitted and chopped",
+      "food": "dates",
+      "quantity": 108.0,
+      "unit": "g",
+      "grams": 108.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.8
+    },
+    {
+      "name": "almonds, finely chopped",
+      "food": "almonds",
+      "quantity": 18.0,
+      "unit": "g",
+      "grams": 18.0
+    }
+  ],
+  "steps": [
+    "Preheat the oven to 180°C and line two baking trays with baking paper.",
+    "Make the filling by gently warming the chopped dates with the water in a small pan for 3 to 4 minutes, stirring until the dates soften into a thick paste. Stir in the chopped almonds, then set aside to cool.",
+    "In a bowl, mix the flour, ground almonds, baking powder, cinnamon, and salt.",
+    "In a separate large bowl, beat the butter and sugar until pale and fluffy. Beat in the egg and vanilla extract.",
+    "Add the dry ingredients to the butter mixture and mix until a soft dough forms. If it feels very sticky, chill it for 10 minutes.",
+    "Divide the dough into 12 pieces. Flatten each piece, place a small spoonful of date filling in the centre, then wrap the dough around it and roll into a ball.",
+    "Arrange the cookies on the trays, leaving space between them, and flatten them slightly with your fingers or the palm of your hand.",
+    "Bake for 12 to 15 minutes, until the cookies are lightly golden at the edges but still soft in the centre.",
+    "Leave to cool on the tray for 5 minutes, then transfer to a wire rack to cool completely."
+  ],
+  "nutrition": {
+    "kcal": 166.6,
+    "protein_g": 3.5,
+    "carbs_g": 21.0,
+    "fat_g": 8.3,
+    "fibre_g": 1.9
+  }
+}

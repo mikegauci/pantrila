@@ -1,0 +1,116 @@
+{
+  "id": "american-banana-bread",
+  "title": "Walnut Banana Bread",
+  "summary": "A moist, gently spiced banana bread studded with walnuts and baked until golden. It makes a comforting dessert or an afternoon treat with tea or coffee.",
+  "cuisine": "american",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk",
+    "tree_nuts"
+  ],
+  "total_minutes": 70,
+  "servings": 8,
+  "ingredients": [
+    {
+      "name": "ripe bananas, mashed",
+      "food": "banana",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 360.0
+    },
+    {
+      "name": "walnuts, chopped",
+      "food": "walnuts",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "baking powder",
+      "food": "baking_powder",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "bicarbonate of soda",
+      "food": "baking_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "ground cinnamon",
+      "food": "cinnamon",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.6
+    },
+    {
+      "name": "butter, melted",
+      "food": "butter",
+      "quantity": 75.0,
+      "unit": "g",
+      "grams": 75.0
+    },
+    {
+      "name": "caster sugar",
+      "food": "sugar",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    }
+  ],
+  "steps": [
+    "Preheat the oven to 180°C and line a 2 lb loaf tin with baking paper.",
+    "In a bowl, mix the flour, baking powder, bicarbonate of soda, salt and cinnamon.",
+    "In a separate large bowl, mash the bananas until mostly smooth, then whisk in the melted butter, sugar, eggs and vanilla extract.",
+    "Fold the dry ingredients into the wet mixture just until no dry flour remains, then stir in most of the walnuts.",
+    "Pour the batter into the prepared tin and scatter the remaining walnuts over the top.",
+    "Bake for 50 to 60 minutes, until the loaf is risen, golden, and a skewer inserted into the centre comes out clean.",
+    "Leave to cool in the tin for 10 minutes, then lift out and cool completely before slicing."
+  ],
+  "nutrition": {
+    "kcal": 381.9,
+    "protein_g": 7.3,
+    "carbs_g": 51.7,
+    "fat_g": 17.4,
+    "fibre_g": 3.0
+  }
+}

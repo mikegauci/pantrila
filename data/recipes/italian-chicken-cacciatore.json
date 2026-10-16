@@ -1,0 +1,152 @@
+{
+  "id": "italian-chicken-cacciatore",
+  "title": "Italian Braised Chicken Thighs with Peppers, Tomato and Olives",
+  "summary": "Tender chicken thighs are simmered with sweet peppers, tomatoes, garlic, herbs and briny olives for a rustic Italian-style dinner. It is naturally gluten-free and ideal with rice, potatoes or a simple green salad.",
+  "cuisine": "italian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "sulphites"
+  ],
+  "total_minutes": 55,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken thighs, bone-in or boneless",
+      "food": "chicken_thigh",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "red bell pepper, sliced",
+      "food": "red_bell_pepper",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 320.0
+    },
+    {
+      "name": "green bell pepper, sliced",
+      "food": "green_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "onion, thinly sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "olives, pitted",
+      "food": "olives",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "dry white wine",
+      "food": "white_wine",
+      "quantity": 100.0,
+      "unit": "ml",
+      "grams": 99.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 0.7
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 0.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "fresh parsley, chopped",
+      "food": "parsley",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    }
+  ],
+  "steps": [
+    "Pat the chicken thighs dry and season them all over with half the salt and the black pepper.",
+    "Heat the olive oil in a large deep frying pan or casserole over medium-high heat. Add the chicken, skin-side down if using skin-on thighs, and brown for 4–5 minutes per side until golden. Transfer to a plate.",
+    "Reduce the heat to medium. Add the onion and sliced peppers to the same pan and cook for 6–8 minutes, stirring often, until softened and lightly coloured.",
+    "Stir in the garlic, tomato paste, dried oregano and dried thyme. Cook for 1 minute until fragrant and the tomato paste darkens slightly.",
+    "Pour in the white wine and scrape up any browned bits from the base of the pan. Simmer for 2 minutes to reduce slightly.",
+    "Add the canned tomatoes, olives, bay leaf and remaining salt. Stir, then return the chicken and any juices to the pan, nestling the pieces into the sauce.",
+    "Cover and simmer gently for 25–30 minutes, turning the chicken once, until the chicken is cooked through and tender and the sauce has thickened. If the sauce is too thin, uncover for the final 5–10 minutes.",
+    "Remove the bay leaf, taste and adjust seasoning if needed. Scatter with chopped parsley and serve hot."
+  ],
+  "nutrition": {
+    "kcal": 420.6,
+    "protein_g": 42.6,
+    "carbs_g": 19.0,
+    "fat_g": 17.9,
+    "fibre_g": 6.0
+  }
+}

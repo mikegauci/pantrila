@@ -1,0 +1,175 @@
+{
+  "id": "thai-pineapple-fried-rice",
+  "title": "Thai Pineapple Fried Rice with Cashews",
+  "summary": "A bright vegan Thai-style fried rice with sweet pineapple, crunchy cashews and colourful vegetables. It is quick enough for a weeknight dinner and best made with chilled rice for a lightly chewy, separate-grain texture.",
+  "cuisine": "thai",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free"
+  ],
+  "allergens": [
+    "mustard",
+    "tree_nuts",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "white rice, cooked and chilled",
+      "food": "white_rice",
+      "quantity": 700.0,
+      "unit": "g",
+      "grams": 700.0
+    },
+    {
+      "name": "pineapple, diced",
+      "food": "pineapple",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "cashews",
+      "food": "cashews",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "garlic, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "ginger, finely grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "red onion, finely sliced",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "carrot, diced small",
+      "food": "carrot",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "red bell pepper, diced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "peas",
+      "food": "peas",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 51.0
+    },
+    {
+      "name": "curry powder",
+      "food": "curry_powder",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Toast the cashews in a large dry wok or frying pan over medium heat for 2–3 minutes, shaking often, until lightly golden and fragrant. Tip onto a plate and set aside.",
+    "Heat the vegetable oil in the wok over medium-high heat. Add the garlic, ginger and red onion and stir-fry for 1–2 minutes until the onion starts to soften and the aromatics smell fragrant.",
+    "Add the carrot and red bell pepper. Stir-fry for 3–4 minutes until the vegetables are bright and just tender but still slightly crisp.",
+    "Add the peas, curry powder and turmeric, then stir for 30 seconds so the spices coat the vegetables and smell toasted.",
+    "Add the chilled rice, breaking up any clumps with a spatula. Stir-fry for 4–5 minutes until the rice is hot, dry-looking and separated into grains.",
+    "Stir in the pineapple, tamari, lime juice, sugar, salt and black pepper. Cook for 2–3 minutes more, tossing constantly, until the pineapple is warmed through and the rice is evenly seasoned.",
+    "Fold through most of the spring onions, coriander and toasted cashews. Taste and adjust with a little more salt or lime juice if needed.",
+    "Serve hot, topped with the remaining spring onions, coriander and cashews."
+  ],
+  "nutrition": {
+    "kcal": 939.6,
+    "protein_g": 21.4,
+    "carbs_g": 175.0,
+    "fat_g": 17.4,
+    "fibre_g": 9.0
+  }
+}

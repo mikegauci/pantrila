@@ -1,0 +1,123 @@
+{
+  "id": "middle-eastern-muhammara",
+  "title": "Roasted Red Pepper and Walnut Dip",
+  "summary": "A smoky, slightly sweet Middle Eastern-style dip with roasted peppers, toasted walnuts, and garlic. It’s great with flatbread, crackers, or fresh vegetables as a snack or mezze starter.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "gluten",
+    "tree_nuts"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "red bell peppers",
+      "food": "red_bell_pepper",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 320.0
+    },
+    {
+      "name": "walnuts",
+      "food": "walnuts",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "breadcrumbs",
+      "food": "breadcrumbs",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    },
+    {
+      "name": "garlic",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 15.0,
+      "unit": "ml",
+      "grams": 15.5
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 27.6
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "cayenne",
+      "food": "cayenne",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C. Put the red bell peppers on a baking tray and roast for 20–25 minutes, turning once, until blistered and softened.",
+    "Tip the hot peppers into a bowl, cover with a plate, and leave for 5 minutes. Peel off the skins, remove the seeds, and roughly chop the flesh.",
+    "Toast the walnuts in a dry pan over medium heat for 2–3 minutes until fragrant, then let them cool slightly.",
+    "Add the roasted peppers, walnuts, breadcrumbs, garlic, lemon juice, olive oil, tomato paste, cumin, paprika, cayenne, salt, and black pepper to a food processor.",
+    "Blend until mostly smooth but still slightly textured. Taste and adjust the seasoning or lemon juice if needed.",
+    "Transfer to a bowl and serve at room temperature with pita, flatbread, or vegetable sticks."
+  ],
+  "nutrition": {
+    "kcal": 249.8,
+    "protein_g": 5.2,
+    "carbs_g": 14.6,
+    "fat_g": 20.8,
+    "fibre_g": 3.9
+  }
+}

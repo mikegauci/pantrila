@@ -1,0 +1,89 @@
+{
+  "id": "japanese-cucumber-sesame-snack",
+  "title": "Japanese Sesame Pickled Cucumber",
+  "summary": "A crisp, tangy Japanese-style cucumber snack dressed with rice vinegar, sesame oil and toasted sesame seeds. It is quick to make and best after a short chill, when the cucumber is lightly pickled but still crunchy.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "sesame"
+  ],
+  "total_minutes": 40,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "cucumber, thinly sliced",
+      "food": "cucumber",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 45.0,
+      "unit": "ml",
+      "grams": 45.5
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "spring onion, finely sliced",
+      "food": "spring_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Put the sliced cucumber in a bowl with the salt and toss well. Leave for 10 minutes until the cucumber softens slightly and releases a little liquid.",
+    "Toast the sesame seeds in a dry frying pan over medium heat for 2–3 minutes, shaking the pan, until lightly golden and fragrant. Tip onto a plate to cool.",
+    "Drain off the cucumber liquid and gently squeeze the slices with clean hands to remove excess moisture without crushing them.",
+    "In a bowl, stir together the rice vinegar, sugar and sesame oil until the sugar dissolves.",
+    "Add the cucumber and spring onion to the dressing and toss until evenly coated. Chill for 20 minutes so the cucumber lightly pickles.",
+    "Sprinkle with the toasted sesame seeds just before serving, and toss once more."
+  ],
+  "nutrition": {
+    "kcal": 82.5,
+    "protein_g": 1.9,
+    "carbs_g": 9.1,
+    "fat_g": 4.6,
+    "fibre_g": 1.5
+  }
+}

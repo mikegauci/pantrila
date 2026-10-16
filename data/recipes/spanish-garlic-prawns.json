@@ -1,0 +1,100 @@
+{
+  "id": "spanish-garlic-prawns",
+  "title": "Gambas al Ajillo with Chilli and Bread",
+  "summary": "A classic Spanish prawn tapa made with sizzling garlic, olive oil and chilli, served with crusty bread for soaking up every last drop. It’s quick, fragrant and perfect for a relaxed dinner.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "crustaceans"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "prawns, peeled and deveined",
+      "food": "prawns",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "garlic cloves, thinly sliced",
+      "food": "garlic",
+      "quantity": 5.0,
+      "unit": "piece",
+      "grams": 25.0
+    },
+    {
+      "name": "red chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 55.2
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "white bread, to serve",
+      "food": "white_bread",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 120.0
+    }
+  ],
+  "steps": [
+    "Slice the garlic and chilli, and chop the parsley. Pat the prawns dry with kitchen paper so they sear well.",
+    "Heat the olive oil in a frying pan over medium-low heat. Add the garlic and chilli and cook for 1 to 2 minutes, stirring often, until the garlic is fragrant and just starting to turn pale gold.",
+    "Stir in the paprika, then add the prawns, salt and black pepper. Cook for 2 to 3 minutes, turning once, until the prawns are pink, opaque and just cooked through.",
+    "Remove the pan from the heat and stir through the parsley. Taste and add a little more salt if needed.",
+    "Serve immediately with warm white bread for dipping into the garlicky oil."
+  ],
+  "nutrition": {
+    "kcal": 558.5,
+    "protein_g": 36.7,
+    "carbs_g": 35.6,
+    "fat_g": 30.7,
+    "fibre_g": 2.6
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "id": "italian-pesto-gnocchi-style-potatoes",
+  "title": "Crispy Pesto Potatoes with Green Beans",
+  "summary": "Golden roasted potatoes are tossed with tender green beans and a bright basil pesto for a simple Italian-inspired vegetarian dinner. It is crisp, herby and satisfying, especially with a little parmesan-style richness from the pesto.",
+  "cuisine": "italian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free"
+  ],
+  "allergens": [
+    "milk",
+    "tree_nuts"
+  ],
+  "total_minutes": 45,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "potatoes, cut into 3 cm chunks",
+      "food": "potato",
+      "quantity": 700.0,
+      "unit": "g",
+      "grams": 700.0
+    },
+    {
+      "name": "green beans, trimmed",
+      "food": "green_beans",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "basil pesto",
+      "food": "pesto",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "black pepper, freshly ground",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "parmesan, finely grated, to serve",
+      "food": "parmesan",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C/200°C fan. Put the potato chunks in a pan of salted boiling water and simmer for 8 minutes, until just tender at the edges but not falling apart.",
+    "Drain the potatoes well, then return them to the hot pan for 1 minute to steam dry. Shake the pan gently to rough up the edges; this helps them crisp.",
+    "Tip the potatoes onto a baking tray. Toss with the olive oil, 0.5 tsp salt and the black pepper, then spread out in a single layer. Roast for 25–30 minutes, turning once, until deeply golden and crisp on the outside.",
+    "Meanwhile, cook the green beans in boiling water for 3–4 minutes, until bright green and tender-crisp. Drain and rinse briefly under cold water to stop them overcooking.",
+    "Stir the pesto with the grated garlic and lemon juice in a large bowl. Add the hot crispy potatoes and green beans, then toss gently until everything is coated.",
+    "Taste and add the remaining salt if needed. Serve immediately, scattered with grated parmesan."
+  ],
+  "nutrition": {
+    "kcal": 643.8,
+    "protein_g": 16.5,
+    "carbs_g": 76.9,
+    "fat_g": 32.1,
+    "fibre_g": 11.6
+  }
+}

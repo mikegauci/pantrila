@@ -1,0 +1,71 @@
+{
+  "id": "spanish-pan-con-tomate",
+  "title": "Pan con Tomate",
+  "summary": "A simple Spanish breakfast of crisp toasted bread rubbed with garlic and ripe tomato, finished with olive oil and salt. It’s fresh, savoury, and best served immediately while the toast is still warm.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten"
+  ],
+  "total_minutes": 10,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "white bread",
+      "food": "white_bread",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 120.0
+    },
+    {
+      "name": "ripe tomato",
+      "food": "tomato",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 240.0
+    },
+    {
+      "name": "garlic",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Toast the bread slices until golden and crisp on both sides.",
+    "Cut the garlic clove in half and rub the cut side over the warm toast so it lightly perfumes the surface.",
+    "Cut the tomatoes in half and rub the cut side firmly over each slice of toast until the bread is well coated with tomato pulp.",
+    "Drizzle each slice with olive oil and finish with a pinch of salt. Serve at once."
+  ],
+  "nutrition": {
+    "kcal": 305.1,
+    "protein_g": 6.5,
+    "carbs_g": 35.1,
+    "fat_g": 15.9,
+    "fibre_g": 3.1
+  }
+}

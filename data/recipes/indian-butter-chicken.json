@@ -1,0 +1,179 @@
+{
+  "id": "indian-butter-chicken",
+  "title": "Creamy Tomato Butter Chicken",
+  "summary": "A rich Indian-style butter chicken with tender pieces of chicken simmered in a spiced tomato, butter and cream sauce. Serve it for a comforting gluten-free dinner with rice or your favourite gluten-free flatbread.",
+  "cuisine": "indian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "milk",
+    "mustard"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken breast, cut into bite-sized pieces",
+      "food": "chicken_breast",
+      "quantity": 700.0,
+      "unit": "g",
+      "grams": 700.0
+    },
+    {
+      "name": "plain yogurt",
+      "food": "plain_yogurt",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "garlic, grated",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 3.9
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.25,
+      "unit": "tsp",
+      "grams": 7.4
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "double cream",
+      "food": "double_cream",
+      "quantity": 150.0,
+      "unit": "ml",
+      "grams": 150.0
+    },
+    {
+      "name": "garam masala substitute: curry powder",
+      "food": "curry_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "white rice, to serve",
+      "food": "white_rice",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    }
+  ],
+  "steps": [
+    "Mix the yogurt, lemon juice, half the garlic, half the ginger, cumin, ground coriander, paprika, turmeric, chilli powder and 0.75 tsp salt in a bowl. Add the chicken and turn to coat well. Marinate for 15 minutes while you prepare the sauce ingredients, or longer in the fridge if you have time.",
+    "Heat the vegetable oil in a large frying pan or wide saucepan over medium-high heat. Add the marinated chicken in a single layer, shaking off excess marinade, and cook for 5–6 minutes, turning once, until lightly browned on the outside. It does not need to be fully cooked through. Transfer to a plate.",
+    "Reduce the heat to medium and add the butter to the same pan. Add the onion and cook for 6–8 minutes, stirring often, until soft and golden at the edges.",
+    "Stir in the remaining garlic and ginger and cook for 1 minute until fragrant. Add the tomato paste and cook for another minute, stirring, until it darkens slightly.",
+    "Add the canned tomatoes, curry powder and remaining 0.5 tsp salt. Simmer for 10 minutes, stirring occasionally, until the sauce thickens and the tomatoes taste mellow.",
+    "For a smoother sauce, mash well with a spoon or briefly blend carefully. Return the chicken and any juices to the pan, then simmer gently for 8–10 minutes until the chicken is cooked through and tender.",
+    "Stir in the double cream and simmer for 2–3 minutes until the sauce is glossy, creamy and lightly thickened. Taste and adjust salt if needed.",
+    "Meanwhile cook the white rice according to packet instructions until tender. Serve the butter chicken over the rice, scattered with fresh coriander."
+  ],
+  "nutrition": {
+    "kcal": 812.5,
+    "protein_g": 49.6,
+    "carbs_g": 75.8,
+    "fat_g": 34.3,
+    "fibre_g": 5.5
+  }
+}

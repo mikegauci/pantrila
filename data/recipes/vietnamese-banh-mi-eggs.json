@@ -1,0 +1,138 @@
+{
+  "id": "vietnamese-banh-mi-eggs",
+  "title": "Vegetarian Breakfast Banh Mi with Fried Egg",
+  "summary": "A Vietnamese-inspired baguette-style breakfast roll filled with a crisp fried egg, quick pickled carrot, fresh coriander and a tangy chilli-mayo style sauce. It is bright, savoury and satisfying for a fast vegetarian breakfast.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "mustard",
+    "soy"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "wholemeal bread rolls or baguette-style rolls",
+      "food": "wholemeal_bread",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "carrot, cut into thin matchsticks",
+      "food": "carrot",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 44.8
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 8.4
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "mayonnaise",
+      "food": "mayonnaise",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "sriracha",
+      "food": "sriracha",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.4
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.7
+    },
+    {
+      "name": "fresh coriander leaves",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "cucumber, thinly sliced",
+      "food": "cucumber",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "red chilli, thinly sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "vegetable oil, for frying",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Put the carrot matchsticks in a bowl with the rice vinegar, sugar and salt. Toss well and leave to pickle for at least 15 minutes, stirring once or twice, until slightly softened but still crisp.",
+    "Mix the mayonnaise, sriracha and soy sauce in a small bowl to make a savoury chilli mayo.",
+    "Split the bread rolls and warm them in a dry pan or oven for 2–3 minutes until lightly crisp on the outside.",
+    "Heat the vegetable oil in a non-stick frying pan over medium-high heat. Crack in the eggs and fry for 2–3 minutes until the whites are set and the edges are crisp; leave the yolks runny or cook longer if preferred. Season with black pepper.",
+    "Spread the chilli mayo inside the warm rolls. Add cucumber slices, drained pickled carrot, coriander and chilli slices.",
+    "Place a fried egg in each roll, close gently and serve straight away while the egg is hot and the bread is crisp."
+  ],
+  "nutrition": {
+    "kcal": 486.1,
+    "protein_g": 17.8,
+    "carbs_g": 47.8,
+    "fat_g": 24.8,
+    "fibre_g": 7.2
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "id": "japanese-chicken-yakitori",
+  "title": "Japanese Tare-Glazed Chicken Thigh Skewers",
+  "summary": "Juicy grilled chicken thigh skewers brushed with a glossy sweet-savoury tare glaze inspired by yakitori. Serve for a high-protein dinner with rice or crisp vegetables.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy",
+    "sulphites"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "boneless skinless chicken thighs, cut into 3 cm pieces",
+      "food": "chicken_thigh",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 80.0,
+      "unit": "ml",
+      "grams": 92.0
+    },
+    {
+      "name": "white wine, as a mirin-style substitute",
+      "food": "white_wine",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 59.4
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 35.0,
+      "unit": "g",
+      "grams": 35.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "garlic cloves, finely grated",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "spring onions, cut into 3 cm lengths",
+      "food": "spring_onion",
+      "quantity": 6.0,
+      "unit": "piece",
+      "grams": 90.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "vegetable oil, for the grill",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "sesame seeds, to finish",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    }
+  ],
+  "steps": [
+    "If using wooden skewers, soak them in water for at least 20 minutes. Thread the chicken pieces onto skewers, alternating with spring onion lengths, and season with the salt and black pepper.",
+    "Make the tare glaze by putting the soy sauce, white wine, brown sugar, ginger and garlic in a small saucepan. Bring to a simmer over medium heat and cook for 8–10 minutes, stirring occasionally, until glossy and reduced by about one third. Stir in the sesame oil, then set aside.",
+    "Heat a grill pan, barbecue or overhead grill to medium-high. Brush the grates or pan lightly with vegetable oil.",
+    "Grill the skewers for 10–14 minutes, turning every few minutes, until the chicken is browned at the edges and nearly cooked through.",
+    "Brush the skewers generously with tare and continue grilling for 2–4 minutes, turning and brushing once or twice more, until the glaze is sticky and lightly caramelised and the chicken is fully cooked through.",
+    "Transfer to a plate, sprinkle with sesame seeds and rest for 3 minutes before serving."
+  ],
+  "nutrition": {
+    "kcal": 386.8,
+    "protein_g": 42.3,
+    "carbs_g": 13.9,
+    "fat_g": 16.4,
+    "fibre_g": 1.2
+  }
+}

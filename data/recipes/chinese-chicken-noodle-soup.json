@@ -1,0 +1,123 @@
+{
+  "id": "chinese-chicken-noodle-soup",
+  "title": "Ginger Chicken Noodle Soup with Bok Choy",
+  "summary": "A light Chinese-inspired lunch soup with tender chicken, warming ginger, rice noodles and crisp bok choy in a savoury broth. It is dairy-free, quick to cook, and soothing without being heavy.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken breast, thinly sliced",
+      "food": "chicken_breast",
+      "quantity": 450.0,
+      "unit": "g",
+      "grams": 450.0
+    },
+    {
+      "name": "rice noodles",
+      "food": "rice_noodles",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "bok choy, leaves separated and larger stems sliced",
+      "food": "bok_choy",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "garlic cloves, finely sliced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "spring onions, sliced, whites and greens separated",
+      "food": "spring_onion",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "chicken stock",
+      "food": "chicken_stock",
+      "quantity": 1.2,
+      "unit": "l",
+      "grams": 1200.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 51.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 9.1
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    }
+  ],
+  "steps": [
+    "Soak or cook the rice noodles according to the packet instructions until just tender, then drain and rinse briefly under cool water to stop them sticking. Set aside.",
+    "Heat the vegetable oil in a large saucepan over a medium heat. Add the ginger, garlic and the white parts of the spring onions, and cook for 1–2 minutes until fragrant but not browned.",
+    "Pour in the chicken stock and bring to a gentle boil. Add the soy sauce, black pepper and salt, then reduce to a simmer.",
+    "Add the sliced chicken breast and simmer for 6–8 minutes, stirring occasionally, until the chicken is cooked through and no longer pink in the centre.",
+    "Add the bok choy stems first and simmer for 2 minutes, then add the leaves and cook for another 1–2 minutes until bright green and just wilted.",
+    "Divide the noodles between bowls. Ladle over the hot chicken, bok choy and broth, then finish with sesame oil and the green parts of the spring onions before serving."
+  ],
+  "nutrition": {
+    "kcal": 508.8,
+    "protein_g": 38.7,
+    "carbs_g": 56.8,
+    "fat_g": 12.8,
+    "fibre_g": 2.3
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "id": "middle-eastern-labneh-toast",
+  "title": "Strained Yoghurt Toast with Olive Oil and Mint",
+  "summary": "Creamy strained yoghurt on crisp toast, finished with fragrant olive oil and fresh mint. It’s a quick, savoury Middle Eastern-style breakfast that feels light but satisfying.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 10,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "wholemeal bread",
+      "food": "wholemeal_bread",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 128.0
+    },
+    {
+      "name": "greek yogurt",
+      "food": "greek_yogurt",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "mint",
+      "food": "mint",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Toast the bread until golden and crisp at the edges.",
+    "Stir the yoghurt with a pinch of salt until smooth, then spread it thickly over the toast.",
+    "Drizzle each slice with olive oil.",
+    "Scatter over the mint leaves and finish with a little black pepper.",
+    "Serve immediately while the toast is still crisp."
+  ],
+  "nutrition": {
+    "kcal": 405.5,
+    "protein_g": 19.4,
+    "carbs_g": 32.9,
+    "fat_g": 22.1,
+    "fibre_g": 4.2
+  }
+}

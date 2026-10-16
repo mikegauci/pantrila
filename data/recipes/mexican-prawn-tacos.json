@@ -1,0 +1,150 @@
+{
+  "id": "mexican-prawn-tacos",
+  "title": "Garlic Lime Prawn Tacos with Cabbage Slaw",
+  "summary": "Bright Mexican-style tacos filled with juicy garlic-lime prawns, crunchy cabbage slaw and a creamy yoghurt-lime drizzle. They make a fresh, quick pescatarian lunch with plenty of zing and texture.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "crustaceans",
+    "milk"
+  ],
+  "total_minutes": 25,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "prawns, peeled and deveined",
+      "food": "prawns",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "corn tortillas",
+      "food": "corn_tortilla",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 208.0
+    },
+    {
+      "name": "red cabbage, finely shredded",
+      "food": "red_cabbage",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "carrot, grated",
+      "food": "carrot",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 60.9
+    },
+    {
+      "name": "lime, cut into wedges",
+      "food": "lime",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "plain yogurt",
+      "food": "plain_yogurt",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "smoked-style paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Make the slaw by tossing the shredded red cabbage, grated carrot, spring onions, half the coriander, 2 tablespoons lime juice, 1 tablespoon olive oil and 0.25 teaspoon salt in a bowl. Scrunch lightly with your hands for 30 seconds, then set aside while you cook the prawns.",
+    "Stir the plain yogurt with 1 tablespoon lime juice, a pinch of salt and a little black pepper to make a quick lime crema. Loosen with a teaspoon of water if you want it more drizzleable.",
+    "Pat the prawns dry. Toss them with the minced garlic, cumin, paprika, chilli powder, remaining 1 tablespoon lime juice, remaining 0.5 teaspoon salt and black pepper.",
+    "Heat the remaining 1 tablespoon olive oil in a large frying pan over medium-high heat. Add the prawns in a single layer and cook for 2 minutes, then turn and cook for 1–2 minutes more until pink, opaque and lightly golden at the edges.",
+    "Warm the corn tortillas in a dry frying pan for about 30 seconds per side until flexible and lightly toasted, or wrap and microwave briefly until soft.",
+    "Fill each tortilla with cabbage slaw and garlic-lime prawns. Drizzle with the lime yogurt, scatter over the remaining coriander and serve with lime wedges for squeezing."
+  ],
+  "nutrition": {
+    "kcal": 352.1,
+    "protein_g": 31.2,
+    "carbs_g": 37.6,
+    "fat_g": 10.4,
+    "fibre_g": 6.7
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "id": "indian-masala-omelette",
+  "title": "Indian Spiced Tomato, Onion and Chilli Omelette",
+  "summary": "A quick Indian-style masala omelette with softened onion, juicy tomato, fresh chilli and warming spices. It is a satisfying gluten-free breakfast that cooks in one pan in under 20 minutes.",
+  "cuisine": "indian",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "eggs"
+  ],
+  "total_minutes": 18,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "tomato, finely chopped",
+      "food": "tomato",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "fresh chilli, finely chopped",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "ground turmeric",
+      "food": "turmeric",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.7
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.1
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 20.4
+    }
+  ],
+  "steps": [
+    "Crack the eggs into a bowl and whisk with the salt, black pepper, cumin, turmeric and paprika until the mixture is evenly coloured and slightly frothy.",
+    "Stir the chopped tomato, diced onion, chilli and coriander into the beaten eggs.",
+    "Heat half the vegetable oil in a non-stick frying pan over medium heat. Pour in half the egg mixture and tilt the pan so it spreads evenly.",
+    "Cook for 2–3 minutes, until the edges are set and the underside is golden. Flip carefully and cook for another 1–2 minutes, until the omelette is fully set with no runny egg in the centre.",
+    "Slide onto a plate and repeat with the remaining oil and egg mixture to make the second omelette. Serve hot."
+  ],
+  "nutrition": {
+    "kcal": 269.8,
+    "protein_g": 14.0,
+    "carbs_g": 8.6,
+    "fat_g": 20.2,
+    "fibre_g": 2.1
+  }
+}

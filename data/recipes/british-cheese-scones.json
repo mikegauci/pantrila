@@ -1,0 +1,88 @@
+{
+  "id": "british-cheese-scones",
+  "title": "Cheddar Cheese Scones",
+  "summary": "Classic British scones packed with sharp cheddar and a tender, crumbly crumb. Best served warm as a savoury snack with butter or chutney.",
+  "cuisine": "british",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 30,
+  "servings": 8,
+  "ingredients": [
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "baking powder",
+      "food": "baking_powder",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "butter, cold and cubed",
+      "food": "butter",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "cheddar cheese, finely grated",
+      "food": "cheddar",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 150.0,
+      "unit": "ml",
+      "grams": 154.5
+    },
+    {
+      "name": "milk for brushing",
+      "food": "milk",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C and line a baking tray with baking paper.",
+    "In a large bowl, mix the plain flour, baking powder and salt.",
+    "Add the cold butter and rub it in with your fingertips until the mixture looks like coarse breadcrumbs.",
+    "Stir in the grated cheddar, then pour in most of the milk and mix gently to make a soft dough. Add a little more milk if needed, but do not overwork it.",
+    "Tip the dough onto a lightly floured surface and pat it out to about 2 cm thick.",
+    "Cut out 8 rounds with a cutter or shape into squares, then place them on the tray so they are just touching for softer sides.",
+    "Brush the tops with a little milk and bake for 12 to 15 minutes, until risen and golden brown.",
+    "Cool for a few minutes before serving warm."
+  ],
+  "nutrition": {
+    "kcal": 241.5,
+    "protein_g": 7.4,
+    "carbs_g": 25.7,
+    "fat_g": 12.1,
+    "fibre_g": 0.8
+  }
+}

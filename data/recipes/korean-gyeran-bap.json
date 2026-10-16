@@ -1,0 +1,102 @@
+{
+  "id": "korean-gyeran-bap",
+  "title": "Korean-Style Fried Egg Rice with Sesame Soy",
+  "summary": "A quick Korean-inspired breakfast bowl of hot rice tossed with sesame oil, soy sauce and spring onion, topped with a crisp-edged fried egg. It is savoury, nutty and comforting for busy mornings.",
+  "cuisine": "korean",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 15,
+  "servings": 1,
+  "ingredients": [
+    {
+      "name": "cooked white rice, preferably day-old",
+      "food": "white_rice",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 50.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 9.1
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 11.3
+    },
+    {
+      "name": "vegetable oil, for frying",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "spring onion, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "salt, only if needed",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "If using cold cooked rice, break up any clumps with your fingers or a spoon so the grains separate easily.",
+    "Heat the vegetable oil in a non-stick frying pan over medium-high heat. Crack in the egg and fry for 2–3 minutes, until the white is set and the edges are lightly crisp while the yolk is still soft, or cook longer if preferred. Transfer to a plate.",
+    "Add the rice to the same pan and stir-fry for 2 minutes, until hot and lightly sizzling. Stir in the soy sauce and 1 tsp of the sesame oil, tossing until the rice is evenly coated and fragrant.",
+    "Stir through most of the spring onion and the black pepper. Taste, adding a pinch of salt only if the rice needs it.",
+    "Spoon the rice into a bowl, top with the fried egg, then drizzle over the remaining 1 tsp sesame oil. Finish with sesame seeds and the remaining spring onion, and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 877.7,
+    "protein_g": 20.9,
+    "carbs_g": 146.9,
+    "fat_g": 21.1,
+    "fibre_g": 3.3
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "indian-rice-pudding-kheer",
+  "title": "Indian Cardamom Rice Pudding with Pistachios",
+  "summary": "A creamy Indian-style rice pudding scented with cardamom and finished with crunchy pistachios. It is naturally gluten-free and makes a comforting dessert served warm or chilled.",
+  "cuisine": "indian",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free"
+  ],
+  "allergens": [
+    "milk",
+    "tree_nuts"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "white rice, rinsed",
+      "food": "white_rice",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "whole milk",
+      "food": "milk",
+      "quantity": 750.0,
+      "unit": "ml",
+      "grams": 772.5
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "ground cardamom",
+      "food": "cardamom",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "pistachios, roughly chopped",
+      "food": "pistachios",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 2.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Put the rinsed rice, milk and salt in a heavy-based saucepan. Bring to a gentle simmer over medium heat, stirring often so the milk does not catch on the bottom.",
+    "Reduce the heat to low and cook for 30–35 minutes, stirring frequently, until the rice is very tender and the pudding is thick and creamy.",
+    "Stir in the sugar, cardamom and vanilla extract. Cook for another 3–5 minutes, stirring, until the sugar has dissolved and the pudding looks glossy.",
+    "Spoon into bowls and scatter over the chopped pistachios. Serve warm, or chill until cold for a thicker pudding."
+  ],
+  "nutrition": {
+    "kcal": 311.9,
+    "protein_g": 9.4,
+    "carbs_g": 46.6,
+    "fat_g": 9.9,
+    "fibre_g": 1.2
+  }
+}

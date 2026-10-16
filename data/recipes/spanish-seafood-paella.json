@@ -1,0 +1,145 @@
+{
+  "id": "spanish-seafood-paella",
+  "title": "Seafood Paella",
+  "summary": "A classic Spanish rice dish with prawns, mussels and squid, cooked until the rice is savoury and lightly toasted and the seafood is just tender. Bright, smoky and perfect for a relaxed dinner.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "crustaceans",
+    "molluscs"
+  ],
+  "total_minutes": 50,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "red bell pepper, sliced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "tomato, grated",
+      "food": "tomato",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 240.0
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "squid, cleaned and sliced into rings",
+      "food": "squid",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "paella rice or short-grain rice",
+      "food": "white_rice",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "vegetable stock, hot",
+      "food": "vegetable_stock",
+      "quantity": 900.0,
+      "unit": "ml",
+      "grams": 900.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "prawns, peeled and deveined",
+      "food": "prawns",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "mussels, cleaned",
+      "food": "mussels",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "lemon wedges to serve",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a wide paella pan or large frying pan over medium heat. Add the onion and red pepper and cook for 6 to 8 minutes, stirring now and then, until softened.",
+    "Add the garlic and cook for 1 minute, then stir in the tomato and paprika. Cook for 3 to 4 minutes until the mixture looks thick and jammy.",
+    "Add the squid and cook for 2 minutes so it turns opaque. Stir in the rice, coating it well in the tomato mixture.",
+    "Pour in the hot stock, add the salt and black pepper, and spread the rice out evenly. Bring to a gentle simmer, then cook uncovered for about 15 minutes without stirring.",
+    "Arrange the prawns and mussels over the top, pressing the mussels hinge-side down if possible. Cook for 8 to 10 minutes more, until the mussels open, the prawns are pink, and the rice is tender with a little bite. Discard any mussels that do not open.",
+    "Remove from the heat and rest for 5 minutes. Scatter over the parsley and serve with lemon wedges."
+  ],
+  "nutrition": {
+    "kcal": 592.1,
+    "protein_g": 42.0,
+    "carbs_g": 79.4,
+    "fat_g": 11.4,
+    "fibre_g": 4.2
+  }
+}

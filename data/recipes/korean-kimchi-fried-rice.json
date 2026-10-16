@@ -1,0 +1,132 @@
+{
+  "id": "korean-kimchi-fried-rice",
+  "title": "Korean-Style Cabbage Chilli Fried Rice with Fried Egg",
+  "summary": "A quick vegetarian fried rice inspired by Korean kimchi-bokkeumbap flavours, using cabbage, chilli, garlic and soy for a savoury-spicy dinner. A crisp-edged fried egg on top makes it rich and satisfying.",
+  "cuisine": "korean",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "cooked white rice, preferably chilled",
+      "food": "white_rice",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "cabbage, finely shredded",
+      "food": "cabbage",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "fresh chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 25.5
+    },
+    {
+      "name": "sriracha chilli sauce",
+      "food": "sriracha",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 16.3
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 9.1
+    },
+    {
+      "name": "vegetable oil, for frying",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Break up the chilled rice with your hands or a spoon so there are no large clumps. Keep the sliced spring onion greens separate for garnish if you like.",
+    "Heat 1 tablespoon vegetable oil in a large frying pan or wok over medium-high heat. Add the cabbage with the salt and stir-fry for 4–5 minutes, until wilted, lightly browned at the edges and reduced in volume.",
+    "Add the spring onion whites, garlic and fresh chilli. Stir-fry for 1 minute, until fragrant but not burnt.",
+    "Add the rice and spread it out in the pan. Fry for 3–4 minutes, stirring and pressing the rice against the hot pan, until the grains are hot and beginning to crisp in places.",
+    "Stir in the soy sauce, sriracha and sesame oil. Cook for 1–2 minutes more, tossing well, until the rice is evenly coated and glossy. Season with black pepper and adjust with a little more salt if needed.",
+    "Meanwhile, heat the remaining 1 tablespoon vegetable oil in a separate non-stick pan over medium-high heat. Crack in the eggs and fry for 2–3 minutes, until the whites are set with crisp edges and the yolks are still runny, or cook longer if preferred.",
+    "Divide the fried rice between bowls. Top each with a fried egg, sprinkle with sesame seeds and reserved spring onion greens, and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 1042.8,
+    "protein_g": 24.8,
+    "carbs_g": 174.5,
+    "fat_g": 26.1,
+    "fibre_g": 7.2
+  }
+}

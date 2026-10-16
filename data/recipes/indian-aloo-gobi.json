@@ -1,0 +1,152 @@
+{
+  "id": "indian-aloo-gobi",
+  "title": "Dry Spiced Potato and Cauliflower Curry",
+  "summary": "A vegan Indian-style aloo gobi with tender potatoes and cauliflower coated in warm spices, ginger and chilli. It is a dry curry that works well for lunch with rice, flatbread or a simple salad.",
+  "cuisine": "indian",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "cauliflower, cut into florets",
+      "food": "cauliflower",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "potatoes, peeled and cut into 2 cm cubes",
+      "food": "potato",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "onion, finely sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "green chilli, finely chopped",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "cumin seeds",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "ground turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 3.9
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "cayenne pepper",
+      "food": "cayenne",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "tomato, finely chopped",
+      "food": "tomato",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 120.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    }
+  ],
+  "steps": [
+    "Put the potato cubes in a pan of salted boiling water and cook for 6 minutes, until just starting to soften but not cooked through. Drain well and let them steam dry for a minute.",
+    "Heat the vegetable oil in a wide frying pan or sauté pan over medium heat. Add the cumin seeds and cook for about 30 seconds, until fragrant and sizzling.",
+    "Add the sliced onion and cook for 6–8 minutes, stirring often, until soft and lightly golden at the edges.",
+    "Stir in the garlic, ginger and chilli and cook for 1 minute, until aromatic.",
+    "Add the turmeric, ground coriander, paprika, cayenne and salt. Stir for 30 seconds, then add the chopped tomato and cook for 3–4 minutes, until it breaks down into a thick spiced paste.",
+    "Add the parboiled potatoes and cauliflower florets. Toss thoroughly so the vegetables are coated in the spice mixture.",
+    "Cover the pan and cook over medium-low heat for 15–18 minutes, stirring every few minutes, until the cauliflower is tender and the potatoes are cooked through. If the spices catch, add 1–2 tbsp water, but keep the curry dry rather than saucy.",
+    "Uncover and cook for 3–5 minutes more, stirring gently, until any moisture has evaporated and the vegetables have lightly browned in places.",
+    "Stir through the lemon juice and chopped coriander. Taste and adjust the salt before serving warm."
+  ],
+  "nutrition": {
+    "kcal": 266.8,
+    "protein_g": 7.0,
+    "carbs_g": 38.6,
+    "fat_g": 11.4,
+    "fibre_g": 7.9
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "id": "french-ratatouille",
+  "title": "Provencal Ratatouille",
+  "summary": "A classic French vegetable stew with courgette, aubergine and peppers simmered in tomato, garlic and herbs. It’s warm, glossy and deeply savoury, perfect as a vegan dinner with bread, rice or potatoes.",
+  "cuisine": "french",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 60,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "courgette, diced",
+      "food": "courgette",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 400.0
+    },
+    {
+      "name": "aubergine, diced",
+      "food": "aubergine",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "red pepper, sliced",
+      "food": "red_bell_pepper",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 320.0
+    },
+    {
+      "name": "yellow pepper, sliced",
+      "food": "green_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "onion, sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, crushed",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 0.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 100.0,
+      "unit": "ml",
+      "grams": 100.0
+    },
+    {
+      "name": "fresh basil, torn",
+      "food": "basil",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    }
+  ],
+  "steps": [
+    "Heat 2 tablespoons of the olive oil in a large wide pan over medium-high heat. Add the aubergine and cook for 6 to 8 minutes, stirring occasionally, until lightly browned and starting to soften. Remove to a plate.",
+    "Add the remaining oil to the pan, then cook the onion and peppers for 5 minutes until the onion is translucent and the peppers are beginning to soften. Add the garlic and cook for 30 seconds more.",
+    "Stir in the courgette and cook for 3 minutes, then add the tomato paste, canned tomatoes, water, oregano, thyme, bay leaf, salt and black pepper.",
+    "Return the aubergine to the pan, bring to a gentle simmer, then lower the heat and cook uncovered for 25 to 30 minutes, stirring now and then, until the vegetables are tender and the sauce is thick and glossy.",
+    "Remove the bay leaf, taste and adjust the seasoning. Stir through the basil just before serving."
+  ],
+  "nutrition": {
+    "kcal": 219.7,
+    "protein_g": 5.9,
+    "carbs_g": 28.7,
+    "fat_g": 11.6,
+    "fibre_g": 11.0
+  }
+}

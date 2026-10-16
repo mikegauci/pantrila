@@ -1,0 +1,144 @@
+{
+  "id": "thai-satay-tofu-skewers",
+  "title": "Thai-Style Tofu Skewers with Peanut Satay Sauce",
+  "summary": "Golden grilled tofu skewers served with a creamy, tangy peanut satay sauce. They make a satisfying vegan snack with Thai-inspired flavours of lime, ginger, soy and chilli.",
+  "cuisine": "thai",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "gluten",
+    "peanuts",
+    "soy"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "firm tofu, drained and cut into 2 cm cubes",
+      "food": "tofu",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "garlic cloves, crushed",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 120.0,
+      "unit": "ml",
+      "grams": 116.4
+    },
+    {
+      "name": "smooth peanut butter",
+      "food": "peanut_butter",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "soy sauce, for the satay sauce",
+      "food": "soy_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "lime juice, for the satay sauce",
+      "food": "lime_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 19.5
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "fresh coriander, chopped, to serve",
+      "food": "coriander",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    }
+  ],
+  "steps": [
+    "Pat the tofu dry with kitchen paper, then place it in a bowl with 2 tbsp soy sauce, 2 tbsp lime juice, grated ginger, crushed garlic and vegetable oil. Toss gently and marinate for 15 minutes while you make the sauce.",
+    "For the satay sauce, put the coconut milk, peanut butter, 1 tbsp soy sauce, 1 tbsp lime juice, maple syrup, chilli powder, cumin and a pinch of salt in a small saucepan. Warm over a low heat for 3–5 minutes, whisking until smooth, glossy and slightly thickened. Add a splash of water if it becomes too thick.",
+    "Thread the marinated tofu cubes onto skewers. Heat a grill pan or frying pan over medium-high heat until hot.",
+    "Cook the tofu skewers for 8–10 minutes, turning every couple of minutes, until the edges are golden brown and lightly charred in places.",
+    "Transfer the skewers to a plate, spoon over a little satay sauce, and scatter with chopped coriander. Serve warm with the remaining sauce for dipping."
+  ],
+  "nutrition": {
+    "kcal": 382.5,
+    "protein_g": 23.8,
+    "carbs_g": 14.8,
+    "fat_g": 28.8,
+    "fibre_g": 3.8
+  }
+}

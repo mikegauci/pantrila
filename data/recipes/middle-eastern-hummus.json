@@ -1,0 +1,101 @@
+{
+  "id": "middle-eastern-hummus",
+  "title": "Classic Hummus with Olive Oil and Paprika",
+  "summary": "A smooth, creamy Middle Eastern hummus with tahini, lemon, garlic and a warm paprika finish. It’s ideal as a snack with pita, vegetables or crackers.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "sesame"
+  ],
+  "total_minutes": 15,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chickpeas, drained and rinsed",
+      "food": "chickpeas",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "tahini",
+      "food": "tahini",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 45.0,
+      "unit": "ml",
+      "grams": 46.4
+    },
+    {
+      "name": "garlic cloves",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "cold water",
+      "food": "water",
+      "quantity": 45.0,
+      "unit": "ml",
+      "grams": 45.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 27.6
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    }
+  ],
+  "steps": [
+    "Add the chickpeas, tahini, lemon juice, garlic, cumin and salt to a food processor or blender.",
+    "Blend, scraping down the sides as needed, until the mixture starts to look smooth and thick.",
+    "With the motor running, add the water a little at a time until the hummus is creamy and spoonable.",
+    "Taste and adjust with a little more salt or lemon juice if needed.",
+    "Spread the hummus into a bowl, make a shallow swirl on top, then drizzle with olive oil and sprinkle over the paprika."
+  ],
+  "nutrition": {
+    "kcal": 299.5,
+    "protein_g": 10.0,
+    "carbs_g": 27.9,
+    "fat_g": 18.0,
+    "fibre_g": 8.1
+  }
+}

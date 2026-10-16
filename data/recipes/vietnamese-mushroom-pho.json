@@ -1,0 +1,191 @@
+{
+  "id": "vietnamese-mushroom-pho",
+  "title": "Vegan Mushroom Pho with Tofu and Herbs",
+  "summary": "A fragrant Vietnamese-style noodle soup with a deeply savoury mushroom broth, tender rice noodles, golden tofu and fresh herbs. It is warming, light and ideal for a vegan dinner.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "soy"
+  ],
+  "total_minutes": 50,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "shiitake mushrooms, sliced",
+      "food": "shiitake",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "button mushrooms, sliced",
+      "food": "mushroom",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "firm tofu, drained and cubed",
+      "food": "tofu",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "rice noodles",
+      "food": "rice_noodles",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 1.5,
+      "unit": "l",
+      "grams": 1500.0
+    },
+    {
+      "name": "onion, halved",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "fresh ginger, sliced",
+      "food": "ginger",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "garlic cloves, lightly crushed",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "cinnamon stick",
+      "food": "cinnamon",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.6
+    },
+    {
+      "name": "cardamom pods, lightly crushed",
+      "food": "cardamom",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 51.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.6
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "fresh coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    },
+    {
+      "name": "fresh mint leaves",
+      "food": "mint",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "bean sprouts",
+      "food": "bean_sprouts",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "lime, cut into wedges",
+      "food": "lime",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 90.0
+    },
+    {
+      "name": "fresh chilli, sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Heat a large dry pot over medium-high heat. Add the halved onion and sliced ginger cut-side down and char for 4–5 minutes, turning once, until dark golden and fragrant.",
+    "Add the garlic, cinnamon and cardamom to the pot and toast for 1 minute, stirring, until aromatic but not burnt.",
+    "Pour in the vegetable stock, then add the soy sauce, brown sugar, salt and black pepper. Bring to a boil, reduce to a gentle simmer and cook for 25 minutes to infuse the broth.",
+    "Meanwhile, heat 1 tbsp vegetable oil in a frying pan over medium-high heat. Add the tofu cubes and cook for 8–10 minutes, turning occasionally, until golden on several sides. Set aside.",
+    "Add the remaining 1 tbsp vegetable oil to the same pan. Fry the shiitake and button mushrooms for 6–8 minutes until browned, softened and any liquid has mostly evaporated.",
+    "Cook the rice noodles according to the packet instructions, usually soaking or simmering for 4–6 minutes until tender but not mushy. Drain and rinse briefly with warm water.",
+    "Strain the broth to remove the onion, ginger, garlic and spices, then return the clear broth to the pot. Add the fried mushrooms and simmer for 3 minutes. Taste and adjust with a little more salt if needed.",
+    "Divide the noodles between four bowls. Top with golden tofu, then ladle over the hot mushroom broth.",
+    "Finish each bowl with spring onions, coriander, mint, bean sprouts, chilli slices and lime wedges. Serve immediately while the broth is steaming hot."
+  ],
+  "nutrition": {
+    "kcal": 548.7,
+    "protein_g": 28.6,
+    "carbs_g": 77.0,
+    "fat_g": 17.0,
+    "fibre_g": 8.7
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "id": "chinese-congee",
+  "title": "Ginger Congee with Spring Onion and Soft Egg",
+  "summary": "A soothing Chinese rice congee simmered until silky with fresh ginger, then finished with spring onion and a soft-boiled egg. Light, warming, and ideal for a gentle breakfast.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "eggs",
+    "sesame"
+  ],
+  "total_minutes": 45,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "fresh ginger, sliced",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 1400.0,
+      "unit": "ml",
+      "grams": 1400.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "spring onion, finely sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    }
+  ],
+  "steps": [
+    "Rinse the rice under cold water until the water runs mostly clear.",
+    "Put the rice, ginger and water in a saucepan and bring to a boil, stirring once or twice so the rice does not stick.",
+    "Lower the heat to a very gentle simmer and cook for 35 to 40 minutes, stirring occasionally, until the rice breaks down and the congee looks thick and creamy. Add a little more water if it becomes too dense.",
+    "While the congee cooks, bring a small pan of water to a boil and soft-boil the eggs for 6 minutes, then cool them briefly in cold water and peel them.",
+    "Season the congee with salt, then ladle into bowls and stir in the sesame oil.",
+    "Top with the sliced spring onion and a halved soft egg before serving."
+  ],
+  "nutrition": {
+    "kcal": 323.2,
+    "protein_g": 11.0,
+    "carbs_g": 51.2,
+    "fat_g": 7.5,
+    "fibre_g": 1.4
+  }
+}

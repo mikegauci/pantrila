@@ -1,0 +1,60 @@
+{
+  "id": "japanese-edamame-snack",
+  "title": "Japanese Salted Steamed Edamame",
+  "summary": "A simple Japanese snack of tender edamame pods steamed until bright green and tossed with salt and a little sesame oil. It is quick, vegan, savoury, and ideal as a light appetiser or nibble.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 10,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "frozen edamame pods",
+      "food": "edamame",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "salt, plus extra to serve",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    }
+  ],
+  "steps": [
+    "Bring 2 cm of water to a boil in a saucepan fitted with a steamer basket.",
+    "Add the frozen edamame pods to the steamer basket, cover, and steam for 5–6 minutes until the pods are bright green and the beans inside are hot and tender.",
+    "Transfer the edamame to a bowl, drizzle with the sesame oil, sprinkle with the salt, and toss well while hot so the seasoning clings to the pods.",
+    "Serve warm or at room temperature. To eat, squeeze the beans from the pods and discard the pods."
+  ],
+  "nutrition": {
+    "kcal": 183.4,
+    "protein_g": 16.8,
+    "carbs_g": 11.4,
+    "fat_g": 9.3,
+    "fibre_g": 7.2
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "id": "korean-tofu-bulgogi",
+  "title": "Bulgogi-Style Marinated Tofu with Rice and Greens",
+  "summary": "A vegan Korean-inspired dinner with tofu glazed in a sweet-savoury bulgogi-style marinade, served over fluffy rice with garlicky greens. It is weeknight-friendly, filling, and full of sesame, ginger and soy flavour.",
+  "cuisine": "korean",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "firm tofu, pressed and cut into cubes",
+      "food": "tofu",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "spinach",
+      "food": "spinach",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 80.0,
+      "unit": "ml",
+      "grams": 92.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.5
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 17.7
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Rinse the rice until the water runs mostly clear, then cook it with 600 ml water and a pinch of the salt in a covered pan or rice cooker until tender and fluffy, about 12–15 minutes plus 5 minutes resting time.",
+    "In a bowl, mix the soy sauce, sesame oil, brown sugar, rice vinegar, grated ginger, half the minced garlic, chilli powder, black pepper and half the sesame seeds until the sugar dissolves.",
+    "Add the pressed tofu cubes to the marinade and turn gently to coat. Leave to marinate for at least 10 minutes while the rice cooks, turning once if possible.",
+    "Heat 1 tbsp vegetable oil in a large non-stick frying pan over medium-high heat. Lift the tofu from the marinade, reserving the marinade, and fry for 8–10 minutes, turning occasionally, until browned on several sides.",
+    "Pour the reserved marinade into the pan and bubble for 2–3 minutes, tossing the tofu, until the sauce thickens slightly and coats the cubes in a glossy glaze.",
+    "Meanwhile, heat the remaining 1 tbsp vegetable oil in another pan over medium heat. Add the remaining garlic and cook for 30 seconds, then add the spinach and remaining salt. Stir-fry for 2–3 minutes until just wilted and bright green.",
+    "Divide the rice between bowls, top with the garlicky spinach and bulgogi-style tofu, then finish with sliced spring onions and the remaining sesame seeds."
+  ],
+  "nutrition": {
+    "kcal": 706.5,
+    "protein_g": 36.5,
+    "carbs_g": 79.3,
+    "fat_g": 29.9,
+    "fibre_g": 7.3
+  }
+}

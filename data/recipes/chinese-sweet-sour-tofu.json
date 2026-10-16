@@ -1,0 +1,161 @@
+{
+  "id": "chinese-sweet-sour-tofu",
+  "title": "Sweet and Sour Tofu with Pineapple and Peppers",
+  "summary": "A vegan Chinese-style dinner with crisp-edged tofu, juicy pineapple and colourful peppers in a glossy tangy-sweet sauce. It is quick enough for a weeknight and great served with rice.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "soy"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "firm tofu, drained and cubed",
+      "food": "tofu",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "cornstarch, for coating tofu and thickening sauce",
+      "food": "cornstarch",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 23.5
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "red bell pepper, cut into chunks",
+      "food": "red_bell_pepper",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 320.0
+    },
+    {
+      "name": "green bell pepper, cut into chunks",
+      "food": "green_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "pineapple chunks",
+      "food": "pineapple",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "onion, cut into wedges",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, finely chopped",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "ketchup",
+      "food": "ketchup",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 68.0
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 44.8
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.5
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 120.0,
+      "unit": "ml",
+      "grams": 120.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "spring onion, sliced, to serve",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    }
+  ],
+  "steps": [
+    "Pat the tofu dry with kitchen paper, then toss it with 2 tbsp cornstarch, the salt and black pepper until lightly coated on all sides.",
+    "Heat 2 tbsp vegetable oil in a large non-stick frying pan or wok over medium-high heat. Fry the tofu for 8–10 minutes, turning occasionally, until golden and crisp on several sides. Transfer to a plate.",
+    "In a bowl, whisk together the ketchup, rice vinegar, soy sauce, brown sugar, 1 tbsp cornstarch and vegetable stock until smooth.",
+    "Add the remaining 1 tbsp vegetable oil to the pan. Stir-fry the onion and peppers for 4–5 minutes until bright and just tender but still a little crisp.",
+    "Add the garlic and ginger and stir-fry for 30 seconds until fragrant. Add the pineapple and cook for 1 minute to warm through.",
+    "Pour in the sauce and simmer for 2–3 minutes, stirring, until glossy and thick enough to coat the vegetables.",
+    "Return the tofu to the pan and toss gently for 1–2 minutes until coated and hot, keeping the tofu as intact as possible.",
+    "Scatter with sliced spring onion and serve immediately, ideally with steamed rice."
+  ],
+  "nutrition": {
+    "kcal": 434.7,
+    "protein_g": 24.9,
+    "carbs_g": 43.1,
+    "fat_g": 21.7,
+    "fibre_g": 7.5
+  }
+}

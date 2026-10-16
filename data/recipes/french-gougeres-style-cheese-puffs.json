@@ -1,0 +1,90 @@
+{
+  "id": "french-gougeres-style-cheese-puffs",
+  "title": "French Cheese Puffs",
+  "summary": "Light, savoury choux puffs with a crisp shell and a soft, cheesy centre. Best served warm as a snack or appetiser.",
+  "cuisine": "french",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 125.0,
+      "unit": "ml",
+      "grams": 125.0
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 75.0,
+      "unit": "g",
+      "grams": 75.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "cheddar, finely grated",
+      "food": "cheddar",
+      "quantity": 75.0,
+      "unit": "g",
+      "grams": 75.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C and line a baking tray with baking paper.",
+    "Put the water, butter, and salt in a saucepan and bring to a boil over medium heat.",
+    "Tip in the flour all at once and beat hard with a wooden spoon until the mixture forms a smooth ball and pulls away from the sides of the pan.",
+    "Cook the dough for 1 minute, stirring, to dry it slightly, then remove from the heat.",
+    "Beat in the eggs one at a time, mixing well after each addition until the dough is glossy and thick.",
+    "Stir in the grated cheddar and black pepper.",
+    "Spoon or pipe small mounds onto the tray, leaving space between them.",
+    "Bake for 18 to 20 minutes until puffed, deep golden, and crisp. Serve warm."
+  ],
+  "nutrition": {
+    "kcal": 269.6,
+    "protein_g": 9.5,
+    "carbs_g": 15.2,
+    "fat_g": 19.0,
+    "fibre_g": 0.5
+  }
+}

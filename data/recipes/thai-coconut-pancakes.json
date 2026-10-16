@@ -1,0 +1,108 @@
+{
+  "id": "thai-coconut-pancakes",
+  "title": "Thai Coconut Mini Pancakes",
+  "summary": "Small, tender coconut pancakes inspired by Thai street sweets, with crisp golden edges and a soft, creamy middle. They make a lovely vegetarian dessert served warm with fruit or a little extra coconut milk.",
+  "cuisine": "thai",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 388.0
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "desiccated coconut",
+      "food": "desiccated_coconut",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 50.0
+    },
+    {
+      "name": "baking powder",
+      "food": "baking_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "vegetable oil, for cooking",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "mango, diced, to serve",
+      "food": "mango",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    }
+  ],
+  "steps": [
+    "Whisk the coconut milk, egg and sugar in a large bowl until smooth and the sugar starts to dissolve.",
+    "Add the plain flour, cornstarch, baking powder, salt and desiccated coconut. Whisk to a smooth, pourable batter, then rest for 10 minutes so the coconut softens slightly.",
+    "Heat a large non-stick frying pan over medium heat and brush lightly with vegetable oil.",
+    "Spoon small rounds of batter into the pan, about 1 tablespoon each. Cook for 2–3 minutes, until the edges look set, the undersides are golden and small bubbles appear on top.",
+    "Flip carefully and cook for another 1–2 minutes, until puffed, lightly golden and cooked through. Repeat with the remaining batter, oiling the pan lightly as needed.",
+    "Serve the mini coconut pancakes warm with diced mango."
+  ],
+  "nutrition": {
+    "kcal": 537.3,
+    "protein_g": 7.5,
+    "carbs_g": 55.0,
+    "fat_g": 34.0,
+    "fibre_g": 2.7
+  }
+}

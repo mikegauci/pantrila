@@ -1,0 +1,142 @@
+{
+  "id": "moroccan-fish-chermoula",
+  "title": "Moroccan Cod with Herby Chermoula and Potatoes",
+  "summary": "Flaky cod is roasted with a bright Moroccan-style chermoula of herbs, lemon, garlic and spices, then served with golden potatoes. It’s fresh, fragrant and ideal for a relaxed dinner.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "fish"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "cod fillets",
+      "food": "cod",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "potatoes, cut into bite-sized chunks",
+      "food": "potato",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "red onion, sliced",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, crushed",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh parsley, chopped",
+      "food": "parsley",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "lemon, zest and juice",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 54.4
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "chilli flakes",
+      "food": "chilli",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.25,
+      "unit": "tsp",
+      "grams": 7.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 29.6
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C. Put the potatoes and red onion in a roasting tin, add 2 tbsp olive oil, 1 tsp salt and a little black pepper, then toss well. Roast for 20 minutes until the potatoes are starting to turn golden.",
+    "Meanwhile, mix the garlic, parsley, coriander, lemon zest and juice, remaining 2 tbsp olive oil, cumin, paprika, ground coriander, chilli flakes, 1/4 tsp salt and the water to make a loose chermoula.",
+    "Pat the cod dry and season lightly with the remaining salt and pepper. Remove the tray from the oven, turn the potatoes, then nestle the cod among them. Spoon the chermoula over the fish and vegetables.",
+    "Return to the oven and roast for 10 to 12 minutes, until the cod is opaque and flakes easily and the potatoes are tender.",
+    "Serve straight away, spooning any pan juices over the top for extra flavour."
+  ],
+  "nutrition": {
+    "kcal": 437.1,
+    "protein_g": 32.4,
+    "carbs_g": 43.7,
+    "fat_g": 15.5,
+    "fibre_g": 6.5
+  }
+}

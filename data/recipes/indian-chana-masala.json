@@ -1,0 +1,164 @@
+{
+  "id": "indian-chana-masala",
+  "title": "Chickpea Curry in Spiced Tomato-Onion Gravy",
+  "summary": "A hearty vegan Indian-style chickpea curry simmered in a warmly spiced tomato and onion gravy. It is comforting, pantry-friendly and ideal for a weeknight dinner with rice or flatbread.",
+  "cuisine": "indian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "green chilli, finely chopped",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 3.9
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "cayenne pepper",
+      "food": "cayenne",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "chickpeas, drained and rinsed",
+      "food": "chickpeas",
+      "quantity": 480.0,
+      "unit": "g",
+      "grams": 480.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 200.0,
+      "unit": "ml",
+      "grams": 194.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large saucepan over a medium heat. Add the chopped onion and cook for 8–10 minutes, stirring often, until soft, golden at the edges and sweet-smelling.",
+    "Add the garlic, ginger and green chilli. Cook for 1–2 minutes, stirring, until fragrant and no longer raw-smelling.",
+    "Stir in the cumin, ground coriander, turmeric, paprika and cayenne. Cook for 30 seconds so the spices bloom in the oil, taking care they do not burn.",
+    "Add the canned tomatoes, tomato paste, salt and black pepper. Simmer for 8–10 minutes, stirring occasionally, until the tomato mixture thickens and the oil starts to glisten around the edges.",
+    "Stir in the chickpeas and coconut milk. Bring to a gentle simmer, then cook uncovered for 12–15 minutes until the gravy is creamy and the chickpeas are hot and tender. Add a splash of water if it becomes thicker than you like.",
+    "Stir in the lemon juice and half the fresh coriander. Taste and adjust the salt or cayenne if needed.",
+    "Serve hot, scattered with the remaining coriander, with rice or another vegan side."
+  ],
+  "nutrition": {
+    "kcal": 397.5,
+    "protein_g": 12.4,
+    "carbs_g": 44.7,
+    "fat_g": 21.5,
+    "fibre_g": 12.4
+  }
+}

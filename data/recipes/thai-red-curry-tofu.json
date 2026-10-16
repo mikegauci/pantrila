@@ -1,0 +1,175 @@
+{
+  "id": "thai-red-curry-tofu",
+  "title": "Thai Red Curry with Tofu, Pumpkin and Coconut Milk",
+  "summary": "A creamy vegan Thai-style red curry with tender pumpkin, golden tofu and fragrant coconut milk. It is warming, mildly spicy and perfect for a weeknight dinner with rice.",
+  "cuisine": "thai",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "mustard",
+    "soy"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "firm tofu, drained and cubed",
+      "food": "tofu",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "pumpkin, peeled and cut into 2 cm cubes",
+      "food": "pumpkin",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 388.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 250.0,
+      "unit": "ml",
+      "grams": 250.0
+    },
+    {
+      "name": "red bell pepper, sliced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "green beans, trimmed and halved",
+      "food": "green_beans",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "onion, thinly sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "red chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "curry powder, used as a Thai red curry paste substitute",
+      "food": "curry_powder",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 11.8
+    },
+    {
+      "name": "paprika, for red curry colour",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.6
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "fresh basil leaves",
+      "food": "basil",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Pat the tofu dry with kitchen paper. Heat 1 tbsp vegetable oil in a large pan over medium-high heat, add the tofu cubes and fry for 6–8 minutes, turning occasionally, until lightly golden on several sides. Remove to a plate.",
+    "Add the remaining 1 tbsp oil to the same pan. Add the onion and cook for 3–4 minutes until softened, then stir in the garlic, ginger and chilli for 1 minute until fragrant.",
+    "Stir in the curry powder, paprika and ground coriander. Cook for 30 seconds, stirring constantly, so the spices bloom without burning.",
+    "Add the pumpkin cubes and stir to coat them in the spice mixture. Pour in the coconut milk and vegetable stock, then add the tamari, brown sugar and salt.",
+    "Bring to a gentle simmer, cover loosely and cook for 15–18 minutes, stirring occasionally, until the pumpkin is just tender when pierced with a knife.",
+    "Add the red bell pepper, green beans and fried tofu. Simmer uncovered for 6–8 minutes more, until the beans are bright green and tender-crisp and the sauce has thickened slightly.",
+    "Stir in the lime juice and basil leaves. Taste and adjust with a little more salt or lime juice if needed, then serve hot."
+  ],
+  "nutrition": {
+    "kcal": 515.8,
+    "protein_g": 24.7,
+    "carbs_g": 32.6,
+    "fat_g": 37.4,
+    "fibre_g": 8.4
+  }
+}

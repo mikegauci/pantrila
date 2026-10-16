@@ -1,0 +1,141 @@
+{
+  "id": "chinese-hot-sour-soup",
+  "title": "Vegetarian Hot and Sour Tofu Soup",
+  "summary": "A Chinese-inspired hot and sour soup with silky tofu, mushrooms and ribbons of egg in a peppery, tangy broth. It is warming, quick to make, and ideal for a satisfying vegetarian lunch.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "eggs",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "firm tofu, cut into thin strips",
+      "food": "tofu",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "shiitake mushrooms, thinly sliced",
+      "food": "shiitake",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "eggs, lightly beaten",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 1.0,
+      "unit": "l",
+      "grams": 1000.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 51.0
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 44.8
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 9.1
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "spring onions, finely sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "cornstarch, mixed with 3 tbsp cold water",
+      "food": "cornstarch",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 15.7
+    },
+    {
+      "name": "ground black pepper",
+      "food": "black_pepper",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 3.7
+    },
+    {
+      "name": "chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Put the vegetable stock, ginger, garlic, soy sauce, rice vinegar, black pepper and chilli into a large saucepan. Bring to a simmer over medium heat and cook for 5 minutes so the flavours infuse.",
+    "Add the sliced shiitake mushrooms and simmer for 6–8 minutes, until the mushrooms are tender and the broth is fragrant.",
+    "Gently add the tofu strips and simmer for 2 minutes, taking care not to break them up.",
+    "Stir the cornstarch mixture again, then pour it into the soup while stirring. Simmer for 1–2 minutes, until the broth looks slightly glossy and lightly thickened.",
+    "Reduce the heat to low. Slowly drizzle in the beaten eggs in a thin stream while gently stirring in one direction to form soft ribbons. Cook for 1 minute, until the egg is just set.",
+    "Stir in the sesame oil and most of the spring onions. Taste and adjust with a little more salt, vinegar or pepper if needed.",
+    "Ladle into bowls and finish with the remaining spring onions. Serve hot."
+  ],
+  "nutrition": {
+    "kcal": 227.0,
+    "protein_g": 19.2,
+    "carbs_g": 14.6,
+    "fat_g": 11.7,
+    "fibre_g": 3.5
+  }
+}

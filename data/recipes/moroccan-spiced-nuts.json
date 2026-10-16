@@ -1,0 +1,80 @@
+{
+  "id": "moroccan-spiced-nuts",
+  "title": "Moroccan Cumin Cinnamon Roasted Almonds",
+  "summary": "Crunchy roasted almonds coated with warm cumin, cinnamon and a little salt for a sweet-savoury Moroccan-style snack. They’re quick to make and ideal for grazing, packing into a lunchbox, or serving with drinks.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "tree_nuts"
+  ],
+  "total_minutes": 20,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "almonds",
+      "food": "almonds",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 15.0,
+      "unit": "ml",
+      "grams": 13.8
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "ground cinnamon",
+      "food": "cinnamon",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 19.5
+    }
+  ],
+  "steps": [
+    "Preheat the oven to 180°C and line a baking tray with baking paper.",
+    "In a bowl, toss the almonds with olive oil, cumin, cinnamon, salt and maple syrup until evenly coated.",
+    "Spread the almonds out in a single layer on the tray.",
+    "Roast for 10 to 12 minutes, stirring once halfway through, until fragrant and lightly browned.",
+    "Leave to cool completely on the tray so they crisp up before serving."
+  ],
+  "nutrition": {
+    "kcal": 338.9,
+    "protein_g": 10.8,
+    "carbs_g": 15.1,
+    "fat_g": 28.7,
+    "fibre_g": 6.7
+  }
+}

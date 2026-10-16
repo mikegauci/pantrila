@@ -1,0 +1,190 @@
+{
+  "id": "middle-eastern-lamb-kofta",
+  "title": "Lamb Kofta with Yoghurt Sauce and Salad",
+  "summary": "Juicy spiced lamb kofta served with a cool yoghurt sauce and a crisp cucumber-tomato salad. It’s a hearty Middle Eastern-style dinner with bold seasoning and plenty of protein.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "milk"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "lamb mince",
+      "food": "lamb_mince",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "red onion, finely grated",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, crushed",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "plain yoghurt",
+      "food": "plain_yogurt",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "mint, chopped",
+      "food": "mint",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "cucumber, diced",
+      "food": "cucumber",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "cherry tomatoes, halved",
+      "food": "cherry_tomato",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "red onion, thinly sliced",
+      "food": "red_onion",
+      "quantity": 0.5,
+      "unit": "piece",
+      "grams": 75.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "In a large bowl, combine the lamb mince, grated red onion, garlic, cumin, paprika, ground coriander, oregano, salt and black pepper. Mix until just combined, then shape into 12 oval kofta around skewers or into small sausage shapes with damp hands.",
+    "Heat the olive oil in a large frying pan over medium-high heat. Cook the kofta for 8 to 10 minutes, turning regularly, until browned all over and cooked through.",
+    "While the kofta cook, mix the yoghurt, lemon juice, mint, garlic and salt in a bowl. Taste and adjust with a little more lemon if needed.",
+    "In another bowl, toss the cucumber, cherry tomatoes, red onion and parsley with lemon juice, olive oil and salt.",
+    "Serve the kofta hot with the yoghurt sauce and salad on the side."
+  ],
+  "nutrition": {
+    "kcal": 593.1,
+    "protein_g": 30.0,
+    "carbs_g": 17.7,
+    "fat_g": 45.2,
+    "fibre_g": 3.1
+  }
+}

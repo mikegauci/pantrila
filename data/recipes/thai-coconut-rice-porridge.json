@@ -1,0 +1,85 @@
+{
+  "id": "thai-coconut-rice-porridge",
+  "title": "Thai Coconut Rice Porridge with Mango and Lime",
+  "summary": "A creamy vegan Thai-inspired breakfast porridge made with soft rice, coconut milk, ripe mango and a bright squeeze of lime. It is gently sweet, fragrant and comforting for a slow morning.",
+  "cuisine": "thai",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 35,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "white rice, rinsed",
+      "food": "white_rice",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 600.0,
+      "unit": "ml",
+      "grams": 582.0
+    },
+    {
+      "name": "mango, peeled and diced",
+      "food": "mango",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "lime, zested and juiced",
+      "food": "lime",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 29.3
+    },
+    {
+      "name": "desiccated coconut",
+      "food": "desiccated_coconut",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Put the rinsed rice, coconut milk and salt in a medium saucepan. Stir well and bring to a gentle simmer over medium heat.",
+    "Reduce the heat to low and cook for 25–30 minutes, stirring often, until the rice is very soft and the mixture is thick and creamy. If it thickens too quickly, keep the heat very low and stir frequently to prevent sticking.",
+    "Stir in the maple syrup and half the lime zest. Cook for 1 minute more, then remove from the heat.",
+    "Spoon the porridge into bowls. Top with diced mango, desiccated coconut, the remaining lime zest and a squeeze of lime juice.",
+    "Serve warm, adding extra lime juice to taste for a brighter finish."
+  ],
+  "nutrition": {
+    "kcal": 946.6,
+    "protein_g": 11.7,
+    "carbs_g": 85.1,
+    "fat_g": 67.7,
+    "fibre_g": 4.2
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "id": "middle-eastern-halloumi-style-traybake",
+  "title": "Middle Eastern Feta and Chickpea Traybake",
+  "summary": "A colourful vegetarian traybake with roasted vegetables, chickpeas and salty feta, finished with lemon and parsley. It’s warm, hearty and lightly spiced, perfect for an easy dinner.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "milk"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chickpeas, drained and rinsed",
+      "food": "chickpeas",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "aubergine, cut into chunks",
+      "food": "aubergine",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "courgette, sliced into thick half-moons",
+      "food": "courgette",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 400.0
+    },
+    {
+      "name": "red bell pepper, deseeded and sliced",
+      "food": "red_bell_pepper",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 320.0
+    },
+    {
+      "name": "red onion, cut into wedges",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "cherry tomatoes",
+      "food": "cherry_tomato",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "feta, crumbled",
+      "food": "feta",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "lemon, to serve",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C. Line a large baking tray with baking paper if you have it.",
+    "Put the aubergine, courgette, red pepper, red onion, cherry tomatoes and chickpeas on the tray.",
+    "Add the garlic, olive oil, cumin, paprika, ground coriander, salt and black pepper. Toss well so everything is evenly coated.",
+    "Spread the mixture out in a single layer and roast for 25 minutes, stirring halfway through, until the vegetables are tender and starting to brown at the edges.",
+    "Scatter the feta over the tray and roast for 5 to 7 minutes more, until the feta is warmed through and lightly golden.",
+    "Finish with parsley and a good squeeze of lemon. Serve hot, as is or with flatbread if desired."
+  ],
+  "nutrition": {
+    "kcal": 464.2,
+    "protein_g": 18.8,
+    "carbs_g": 46.9,
+    "fat_g": 25.1,
+    "fibre_g": 14.0
+  }
+}

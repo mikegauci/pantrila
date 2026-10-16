@@ -1,0 +1,146 @@
+{
+  "id": "american-meatloaf",
+  "title": "Beef Meatloaf with Ketchup Glaze",
+  "summary": "A classic American meatloaf with a savoury beef base and a sticky ketchup glaze. It’s hearty, comforting, and ideal for an easy family dinner.",
+  "cuisine": "american",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "fish",
+    "milk",
+    "mustard",
+    "sulphites"
+  ],
+  "total_minutes": 75,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "beef mince",
+      "food": "beef_mince",
+      "quantity": 750.0,
+      "unit": "g",
+      "grams": 750.0
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "breadcrumbs",
+      "food": "breadcrumbs",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 50.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 61.8
+    },
+    {
+      "name": "Worcestershire sauce",
+      "food": "worcestershire_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 16.3
+    },
+    {
+      "name": "mustard",
+      "food": "mustard",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "ketchup",
+      "food": "ketchup",
+      "quantity": 120.0,
+      "unit": "ml",
+      "grams": 138.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.8
+    },
+    {
+      "name": "apple cider vinegar",
+      "food": "cider_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    }
+  ],
+  "steps": [
+    "Heat the oven to 180°C and lightly oil a loaf tin or small baking dish.",
+    "Warm the olive oil in a pan over medium heat, then cook the onion for 5 minutes until softened. Add the garlic and cook for 1 minute more, then set aside to cool slightly.",
+    "In a large bowl, combine the beef mince, breadcrumbs, egg, milk, Worcestershire sauce, mustard, salt, pepper, parsley, and cooled onion mixture. Mix just until evenly combined; do not overwork.",
+    "Shape the mixture into a loaf in the prepared tin or dish.",
+    "In a small bowl, stir together the ketchup, brown sugar, and cider vinegar. Spread about half over the top of the loaf.",
+    "Bake for 50 minutes, then spread on the remaining glaze and bake for 10 to 15 minutes more, until the loaf is cooked through and the glaze is glossy and sticky.",
+    "Rest for 10 minutes before slicing so the meatloaf holds together well."
+  ],
+  "nutrition": {
+    "kcal": 611.9,
+    "protein_g": 40.6,
+    "carbs_g": 33.5,
+    "fat_g": 34.4,
+    "fibre_g": 1.8
+  }
+}

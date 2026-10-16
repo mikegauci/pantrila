@@ -1,0 +1,100 @@
+{
+  "id": "indian-roasted-spiced-chickpeas",
+  "title": "Crunchy Indian-Spiced Roasted Chickpeas",
+  "summary": "A crisp, savoury vegan snack of roasted chickpeas coated with warming Indian-style spices. They are great for meal prep, lunchboxes, or serving with drinks when you want something crunchy and satisfying.",
+  "cuisine": "indian",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "canned chickpeas, drained, rinsed and thoroughly dried",
+      "food": "chickpeas",
+      "quantity": 480.0,
+      "unit": "g",
+      "grams": 480.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 20.4
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Preheat the oven to 200°C fan or 220°C conventional. Line a large baking tray with baking paper.",
+    "Drain and rinse the chickpeas, then spread them on a clean tea towel and pat very dry. Remove any loose skins if they come away easily; drier chickpeas roast more crisply.",
+    "Tip the chickpeas onto the tray and toss with the vegetable oil until evenly coated. Roast for 20 minutes, shaking the tray halfway through, until they start to look dry and lightly golden.",
+    "Mix the cumin, ground coriander, turmeric, paprika, chilli powder, salt and black pepper in a small bowl.",
+    "Sprinkle the spice mix over the hot chickpeas and toss well on the tray. Return to the oven for 10–15 minutes more, shaking once, until the chickpeas are deep golden, crisp on the outside and rattle slightly on the tray.",
+    "Turn off the oven, open the door slightly and leave the chickpeas inside for 5 minutes to dry further. Cool for at least 10 minutes before eating; they will crisp up more as they cool."
+  ],
+  "nutrition": {
+    "kcal": 219.3,
+    "protein_g": 8.8,
+    "carbs_g": 28.3,
+    "fat_g": 8.8,
+    "fibre_g": 8.3
+  }
+}

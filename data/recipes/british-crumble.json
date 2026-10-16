@@ -1,0 +1,114 @@
+{
+  "id": "british-crumble",
+  "title": "Apple and Berry Crumble",
+  "summary": "A classic British crumble with soft baked apples, juicy berries and a golden buttery topping. It’s cosy, tart-sweet and best served warm with custard or cream.",
+  "cuisine": "british",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 50,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "apple, peeled and sliced",
+      "food": "apple",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 540.0
+    },
+    {
+      "name": "blueberries",
+      "food": "blueberries",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "raspberries",
+      "food": "raspberries",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "butter, cold and cubed",
+      "food": "butter",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "rolled oats",
+      "food": "rolled_oats",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "cinnamon",
+      "food": "cinnamon",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Heat the oven to 180°C. Lightly grease a medium baking dish.",
+    "Put the sliced apples, blueberries and raspberries into the dish. Add the sugar and lemon juice, then toss gently until coated.",
+    "In a bowl, mix the plain flour, rolled oats, brown sugar, cinnamon and salt.",
+    "Add the cold butter and rub it in with your fingertips until the mixture looks like coarse crumbs with some larger pieces.",
+    "Scatter the crumble topping evenly over the fruit, without pressing it down.",
+    "Bake for 30 to 35 minutes, until the top is golden and the fruit is bubbling at the edges. Leave to cool for a few minutes before serving."
+  ],
+  "nutrition": {
+    "kcal": 528.5,
+    "protein_g": 6.4,
+    "carbs_g": 89.7,
+    "fat_g": 18.1,
+    "fibre_g": 9.3
+  }
+}

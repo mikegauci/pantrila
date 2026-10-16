@@ -1,0 +1,138 @@
+{
+  "id": "british-beans-on-toast",
+  "title": "Homemade Baked Beans on Toast",
+  "summary": "A classic British breakfast with soft beans simmered in a rich tomato sauce, spooned over crisp toast. Hearty, mildly sweet, and comforting, it’s ideal for a quick vegan breakfast or brunch.",
+  "cuisine": "british",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "soy",
+    "sulphites"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "cannellini beans, drained and rinsed",
+      "food": "cannellini_beans",
+      "quantity": 2.0,
+      "unit": "cup",
+      "grams": 336.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.8
+    },
+    {
+      "name": "red wine vinegar",
+      "food": "red_wine_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.7
+    },
+    {
+      "name": "smoked paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "wholemeal bread",
+      "food": "wholemeal_bread",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 128.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a small saucepan over medium heat. Add the diced onion with a pinch of salt and cook for 5 minutes, stirring often, until soft and starting to turn golden.",
+    "Add the garlic, tomato paste, smoked paprika, and dried thyme. Cook for 1 minute, stirring, until fragrant.",
+    "Stir in the canned tomatoes, brown sugar, red wine vinegar, tamari, cannellini beans, the remaining salt, and black pepper.",
+    "Bring to a gentle simmer, then cook for 10 to 12 minutes, stirring occasionally, until the sauce has thickened and the beans are glossy and hot.",
+    "Toast the bread until crisp and golden.",
+    "Spoon the baked beans over the toast and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 531.1,
+    "protein_g": 24.2,
+    "carbs_g": 89.9,
+    "fat_g": 10.4,
+    "fibre_g": 18.5
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "id": "american-turkey-chilli",
+  "title": "Turkey and Bean Chilli",
+  "summary": "A hearty American-style chilli with lean turkey mince, beans and warm spices. It’s smoky, filling and ideal for a high-protein weeknight dinner.",
+  "cuisine": "american",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "turkey mince",
+      "food": "turkey_mince",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "red bell pepper, diced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "kidney beans, drained and rinsed",
+      "food": "kidney_beans",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "black beans, drained and rinsed",
+      "food": "black_beans",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 200.0,
+      "unit": "ml",
+      "grams": 200.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large pot over medium heat. Add the onion and red bell pepper and cook for 5 to 6 minutes, stirring occasionally, until softened.",
+    "Add the garlic and cook for 30 seconds until fragrant.",
+    "Add the turkey mince and break it up with a spoon. Cook for 5 to 7 minutes until no pink remains and the mince starts to brown.",
+    "Stir in the chilli powder, cumin, paprika and oregano, then add the tomato paste. Cook for 1 minute to toast the spices.",
+    "Add the canned tomatoes, kidney beans, black beans and water. Season with salt and black pepper.",
+    "Bring to a gentle simmer, then cook uncovered for 15 to 20 minutes, stirring occasionally, until thickened and rich. Taste and adjust the seasoning before serving."
+  ],
+  "nutrition": {
+    "kcal": 497.2,
+    "protein_g": 41.4,
+    "carbs_g": 52.5,
+    "fat_g": 15.4,
+    "fibre_g": 17.4
+  }
+}

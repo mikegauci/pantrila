@@ -1,0 +1,105 @@
+{
+  "id": "american-burger",
+  "title": "Beef Burger with Cheddar",
+  "summary": "Juicy beef burgers topped with melted cheddar, crisp lettuce, and fresh tomato. It’s a classic American dinner that comes together quickly and tastes savoury, sharp, and fresh.",
+  "cuisine": "american",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "beef mince",
+      "food": "beef_mince",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.1
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "cheddar, sliced",
+      "food": "cheddar",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "white bread burger buns",
+      "food": "white_bread",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "lettuce leaves",
+      "food": "lettuce",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 1200.0
+    },
+    {
+      "name": "tomato, sliced",
+      "food": "tomato",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 120.0
+    },
+    {
+      "name": "ketchup",
+      "food": "ketchup",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    }
+  ],
+  "steps": [
+    "Divide the beef mince into 2 equal portions and shape into burger patties about 2 cm thick. Season both sides with the salt, black pepper, and paprika.",
+    "Heat the olive oil in a frying pan over medium-high heat. Cook the patties for 3 to 4 minutes per side for medium, or a little longer if you prefer them well done.",
+    "In the last minute of cooking, place the cheddar on top of each patty and cover the pan briefly so the cheese melts.",
+    "Toast the white bread lightly if you like, then spread ketchup on the bottom halves.",
+    "Top each bun with lettuce, tomato slices, and a cheeseburger patty, then add the top halves and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 716.3,
+    "protein_g": 45.6,
+    "carbs_g": 43.2,
+    "fat_g": 42.3,
+    "fibre_g": 14.5
+  }
+}

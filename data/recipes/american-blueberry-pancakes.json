@@ -1,0 +1,111 @@
+{
+  "id": "american-blueberry-pancakes",
+  "title": "Blueberry Buttermilk-Style Pancakes",
+  "summary": "Fluffy American-style pancakes with a gentle tang and bursts of juicy blueberries. They’re quick enough for a relaxed breakfast and best served warm with maple syrup or butter.",
+  "cuisine": "american",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 25,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "baking powder",
+      "food": "baking_powder",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 25.1
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 300.0,
+      "unit": "ml",
+      "grams": 309.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "butter, melted",
+      "food": "butter",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "blueberries",
+      "food": "blueberries",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "butter, for the pan",
+      "food": "butter",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    }
+  ],
+  "steps": [
+    "In a jug, mix the milk and lemon juice, then leave for 2 minutes to make a quick buttermilk-style mixture.",
+    "In a large bowl, whisk together the flour, baking powder, sugar and salt.",
+    "In another bowl, whisk the eggs into the milk mixture, then stir in the melted butter.",
+    "Pour the wet ingredients into the dry ingredients and fold gently until just combined; a few small lumps are fine.",
+    "Gently fold in most of the blueberries, reserving a handful for the top.",
+    "Heat a large frying pan or griddle over medium heat and lightly butter it.",
+    "Spoon in small rounds of batter, leaving space between them, and dot a few reserved blueberries over the tops.",
+    "Cook for 2 to 3 minutes until bubbles appear and the edges look set, then flip and cook for another 1 to 2 minutes until golden and cooked through.",
+    "Serve warm with extra butter, syrup or more blueberries if you like."
+  ],
+  "nutrition": {
+    "kcal": 384.2,
+    "protein_g": 11.1,
+    "carbs_g": 54.6,
+    "fat_g": 13.6,
+    "fibre_g": 2.3
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "id": "chinese-tofu-scramble-bowl",
+  "title": "Soy and Sesame Tofu Scramble with Greens",
+  "summary": "A Chinese-inspired vegan breakfast scramble with crumbled tofu, wilted greens, soy, ginger and nutty sesame. It is savoury, quick and satisfying for a protein-rich start to the day.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "firm tofu, drained and patted dry",
+      "food": "tofu",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "spinach",
+      "food": "spinach",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "spring onions, finely sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 25.5
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "ground turmeric, for colour",
+      "food": "turmeric",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.7
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Crumble the tofu into small, uneven curds with your hands or a fork, keeping some larger pieces for texture.",
+    "Heat the vegetable oil in a large frying pan or wok over medium-high heat. Add the spring onion whites, garlic, ginger and chilli, and stir-fry for 1 minute until fragrant but not browned.",
+    "Add the crumbled tofu and turmeric. Stir-fry for 4–5 minutes, letting the tofu lose excess moisture and pick up a few lightly golden edges.",
+    "Pour in the soy sauce and sesame oil, then toss well so the tofu is evenly seasoned. Cook for 1–2 minutes until the pan looks mostly dry and the tofu is savoury and glossy.",
+    "Add the spinach and stir-fry for 1–2 minutes until just wilted and bright green.",
+    "Stir in the spring onion greens, sesame seeds and black pepper. Taste, add a pinch of salt only if needed, and serve hot."
+  ],
+  "nutrition": {
+    "kcal": 407.8,
+    "protein_g": 30.5,
+    "carbs_g": 13.7,
+    "fat_g": 29.4,
+    "fibre_g": 6.5
+  }
+}

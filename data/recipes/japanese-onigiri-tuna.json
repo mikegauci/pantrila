@@ -1,0 +1,97 @@
+{
+  "id": "japanese-onigiri-tuna",
+  "title": "Japanese Tuna Mayo Rice Balls",
+  "summary": "Simple onigiri-style rice balls filled with creamy tuna mayo and a little spring onion. They make a quick, satisfying pescatarian lunch that is easy to pack or eat by hand.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "eggs",
+    "fish",
+    "mustard",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 35,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "sushi rice, rinsed",
+      "food": "sushi_rice",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "vegetable stock for cooking the rice",
+      "food": "vegetable_stock",
+      "quantity": 330.0,
+      "unit": "ml",
+      "grams": 330.0
+    },
+    {
+      "name": "canned tuna, drained",
+      "food": "canned_tuna",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "mayonnaise",
+      "food": "mayonnaise",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.7
+    },
+    {
+      "name": "spring onion, finely sliced",
+      "food": "spring_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Put the rinsed sushi rice and vegetable stock in a saucepan. Bring to a boil, then cover, reduce the heat to low and cook for 12 minutes. Turn off the heat and leave covered for 10 minutes, until the grains are tender and sticky.",
+    "Meanwhile, mix the drained tuna, mayonnaise, soy sauce and sliced spring onion in a bowl until creamy and well combined.",
+    "Tip the cooked rice into a wide bowl and let it cool for 5 minutes, until warm enough to handle but still sticky. Sprinkle over the salt and sesame seeds and gently fold through.",
+    "Wet your hands with water to stop sticking. Take a handful of rice, flatten it slightly, add a spoonful of tuna mayo to the centre, then cover with more rice and press firmly into a ball or triangle.",
+    "Repeat to make 4 rice balls. Serve straight away, or cool completely and pack for lunch the same day."
+  ],
+  "nutrition": {
+    "kcal": 644.2,
+    "protein_g": 21.9,
+    "carbs_g": 105.4,
+    "fat_g": 13.8,
+    "fibre_g": 4.2
+  }
+}

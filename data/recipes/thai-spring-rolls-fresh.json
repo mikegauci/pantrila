@@ -1,0 +1,139 @@
+{
+  "id": "thai-spring-rolls-fresh",
+  "title": "Thai-Style Fresh Herb and Noodle Rolls",
+  "summary": "Light, fresh rice paper style rolls filled with rice noodles, crisp vegetables and fragrant Thai herbs, served with a tangy soy-lime dipping sauce. They make a refreshing vegan snack for warm days or a make-ahead platter.",
+  "cuisine": "thai",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "rice noodles",
+      "food": "rice_noodles",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "lettuce leaves, shredded",
+      "food": "lettuce",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "cucumber, cut into thin batons",
+      "food": "cucumber",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "carrot, cut into thin matchsticks",
+      "food": "carrot",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "bean sprouts",
+      "food": "bean_sprouts",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "fresh mint leaves",
+      "food": "mint",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh coriander leaves",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "sriracha",
+      "food": "sriracha",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.4
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Cook the rice noodles according to the packet instructions until just tender, usually 3–5 minutes. Drain, rinse under cold water and shake off excess water well.",
+    "Toss the noodles with a pinch of salt and 1 tablespoon of the lime juice so they are lightly seasoned and do not clump.",
+    "Prepare the fillings: keep the lettuce, cucumber, carrot, bean sprouts, mint, coriander and spring onions in separate piles so the rolls are easy to assemble.",
+    "Make the dipping sauce by stirring together the soy sauce, remaining 1 tablespoon lime juice, sesame oil, sriracha and brown sugar until the sugar dissolves.",
+    "To assemble rice paper style rolls, lay a lettuce leaf or two flat as the wrapper substitute, then add a small bundle of noodles, carrot, cucumber, bean sprouts, herbs and spring onion across the centre.",
+    "Fold the sides of the lettuce over the filling, then roll up tightly from the bottom into a compact roll. Repeat with the remaining fillings.",
+    "Serve immediately with the dipping sauce, or cover the rolls with a damp clean cloth and chill for up to 2 hours before serving."
+  ],
+  "nutrition": {
+    "kcal": 142.0,
+    "protein_g": 3.9,
+    "carbs_g": 28.8,
+    "fat_g": 1.6,
+    "fibre_g": 2.7
+  }
+}

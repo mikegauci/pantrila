@@ -1,0 +1,142 @@
+{
+  "id": "middle-eastern-shakshuka",
+  "title": "Middle Eastern Spiced Eggs in Tomato and Pepper Sauce",
+  "summary": "A warm Middle Eastern-style breakfast of eggs gently poached in a fragrant tomato and pepper sauce. It’s savoury, lightly smoky, and perfect with bread for scooping up the sauce.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs"
+  ],
+  "total_minutes": 30,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "red bell pepper, sliced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "cayenne pepper",
+      "food": "cayenne",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 16.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "fresh parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    },
+    {
+      "name": "bread for serving",
+      "food": "wholemeal_bread",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 128.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a wide frying pan over medium heat. Add the onion and red bell pepper and cook for 6 to 8 minutes, stirring often, until softened and starting to turn golden.",
+    "Add the garlic, cumin, paprika, ground coriander, and cayenne. Cook for 30 seconds, stirring, until fragrant.",
+    "Stir in the canned tomatoes, tomato paste, salt, and black pepper. Simmer for 8 to 10 minutes, stirring occasionally, until the sauce has thickened slightly.",
+    "Make 4 small wells in the sauce and crack an egg into each one. Cover the pan and cook for 4 to 6 minutes, until the whites are set but the yolks are still soft, or longer if you prefer firmer yolks.",
+    "Scatter over the parsley and serve immediately with warm bread for dipping."
+  ],
+  "nutrition": {
+    "kcal": 533.1,
+    "protein_g": 25.0,
+    "carbs_g": 51.9,
+    "fat_g": 26.8,
+    "fibre_g": 12.0
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "id": "moroccan-chicken-tagine",
+  "title": "Moroccan Chicken Tagine with Olives and Lemon",
+  "summary": "A fragrant chicken tagine with warm spices, briny olives and bright lemon. It’s comforting, savoury and perfect for a relaxed dinner with rice or flatbread on the side.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [],
+  "total_minutes": 70,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken thighs",
+      "food": "chicken_thigh",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "cinnamon",
+      "food": "cinnamon",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.3
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 250.0,
+      "unit": "ml",
+      "grams": 250.0
+    },
+    {
+      "name": "green olives, pitted",
+      "food": "olives",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "lemon, cut into thin wedges",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "fresh parsley, chopped",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Pat the chicken thighs dry and season with a little of the salt and black pepper.",
+    "Heat the olive oil in a wide pan over medium-high heat. Brown the chicken on both sides for 3 to 4 minutes per side, then transfer to a plate.",
+    "Lower the heat to medium and add the onion. Cook for 5 to 6 minutes until softened and lightly golden, then stir in the garlic, cumin, paprika, ground coriander, turmeric and cinnamon for 30 seconds.",
+    "Add the canned tomatoes, water, remaining salt and the browned chicken. Stir well, bring to a gentle simmer, cover and cook for 30 minutes.",
+    "Stir in the olives, lemon wedges and lemon juice. Simmer uncovered for 10 to 15 minutes until the chicken is cooked through and the sauce has thickened.",
+    "Finish with the chopped parsley and serve hot.",
+    "If you like, serve with rice or gluten-free bread to soak up the sauce."
+  ],
+  "nutrition": {
+    "kcal": 395.1,
+    "protein_g": 41.9,
+    "carbs_g": 14.7,
+    "fat_g": 19.3,
+    "fibre_g": 4.8
+  }
+}

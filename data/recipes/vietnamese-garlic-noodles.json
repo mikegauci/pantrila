@@ -1,0 +1,102 @@
+{
+  "id": "vietnamese-garlic-noodles",
+  "title": "Vietnamese-Style Buttery Garlic Noodles with Parmesan",
+  "summary": "A vegetarian take on Vietnamese-American garlic noodles: springy noodles tossed in a glossy butter, garlic and soy sauce coating, finished with savoury parmesan. It is quick, rich and ideal for a comforting weeknight dinner.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk",
+    "soy"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "egg noodles",
+      "food": "egg_noodles",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "garlic cloves, finely minced",
+      "food": "garlic",
+      "quantity": 5.0,
+      "unit": "piece",
+      "grams": 25.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 25.5
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "black pepper, freshly ground",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "parmesan, finely grated",
+      "food": "parmesan",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "salt, for the noodle water",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    }
+  ],
+  "steps": [
+    "Bring a large pan of water to the boil, add the salt, then cook the egg noodles until just tender according to the packet instructions. Reserve 100 ml of the cooking water, then drain well.",
+    "While the noodles cook, melt the butter in a large frying pan over medium-low heat. Add the minced garlic and cook for 1–2 minutes, stirring often, until fragrant and just lightly golden; do not let it brown deeply.",
+    "Stir in the soy sauce, sugar and black pepper. Let the sauce bubble gently for 30 seconds so it becomes glossy.",
+    "Add the drained noodles to the pan and toss well for 1–2 minutes, adding a splash of reserved noodle water if needed, until every strand is coated and shiny.",
+    "Turn the heat to low, add the parmesan and most of the spring onions, then toss until the cheese melts into the sauce and the noodles look creamy rather than dry.",
+    "Divide between bowls and finish with the remaining spring onions and a little extra black pepper if liked. Serve immediately while hot and glossy."
+  ],
+  "nutrition": {
+    "kcal": 687.1,
+    "protein_g": 22.2,
+    "carbs_g": 82.4,
+    "fat_g": 30.5,
+    "fibre_g": 4.2
+  }
+}

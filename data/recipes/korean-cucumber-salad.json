@@ -1,0 +1,110 @@
+{
+  "id": "korean-cucumber-salad",
+  "title": "Spicy Korean Sesame Cucumber Salad",
+  "summary": "A crisp, refreshing cucumber salad inspired by Korean oi muchim, with chilli heat, toasted sesame flavour and a tangy-savoury dressing. It makes a light vegan lunch or a punchy side for rice and tofu.",
+  "cuisine": "korean",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "cucumber, thinly sliced",
+      "food": "cucumber",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "salt, for drawing out moisture",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "spring onions, finely sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "garlic clove, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 25.5
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 3.7
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    }
+  ],
+  "steps": [
+    "Put the sliced cucumber in a bowl, sprinkle with the salt and toss well. Leave for 10 minutes until the cucumber has softened slightly and released some liquid.",
+    "Meanwhile, mix the tamari, rice vinegar, sesame oil, sugar, chilli powder and grated garlic in a large bowl until the sugar dissolves.",
+    "Drain the cucumber well and gently squeeze out excess liquid with clean hands or a tea towel. The slices should still be crisp but not watery.",
+    "Add the cucumber and spring onions to the dressing and toss until every slice is glossy and evenly coated.",
+    "Sprinkle over the sesame seeds, toss once more, then serve immediately for maximum crunch, or chill for 10 minutes for a colder salad."
+  ],
+  "nutrition": {
+    "kcal": 146.5,
+    "protein_g": 4.1,
+    "carbs_g": 14.0,
+    "fat_g": 9.5,
+    "fibre_g": 2.7
+  }
+}

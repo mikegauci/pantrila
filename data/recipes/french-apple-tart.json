@@ -1,0 +1,118 @@
+{
+  "id": "french-apple-tart",
+  "title": "Simple French Apple Tart",
+  "summary": "A classic French-style apple tart with a buttery crust, tender sliced apples, and a light apricot-style sweetness from simple sugar syrup? Actually kept very simple with cinnamon and sugar. Best served warm or at room temperature with cream or custard.",
+  "cuisine": "french",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 70,
+  "servings": 6,
+  "ingredients": [
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "butter, cold and cubed",
+      "food": "butter",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    },
+    {
+      "name": "egg yolk",
+      "food": "egg",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 50.0
+    },
+    {
+      "name": "cold water",
+      "food": "water",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 30.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "apples, peeled, cored and thinly sliced",
+      "food": "apple",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 720.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "cinnamon",
+      "food": "cinnamon",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.6
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "butter, melted",
+      "food": "butter",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Make the pastry by rubbing the cold butter into the plain flour and salt until the mixture looks like fine breadcrumbs.",
+    "Stir in the sugar, then add the egg yolk and cold water and mix just until the dough comes together.",
+    "Shape into a disc, wrap, and chill for 20 minutes.",
+    "Heat the oven to 200°C.",
+    "Roll the pastry out and line a tart tin, then trim the edges and prick the base all over with a fork.",
+    "Toss the apple slices with sugar, cinnamon, and lemon juice.",
+    "Arrange the apples neatly over the tart shell in overlapping circles.",
+    "Brush the apples lightly with melted butter and bake for 35 to 40 minutes, until the pastry is golden and the apples are soft and lightly caramelised.",
+    "Cool for at least 10 minutes before slicing and serving."
+  ],
+  "nutrition": {
+    "kcal": 383.1,
+    "protein_g": 5.0,
+    "carbs_g": 55.1,
+    "fat_g": 16.9,
+    "fibre_g": 4.0
+  }
+}

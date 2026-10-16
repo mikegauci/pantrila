@@ -1,0 +1,129 @@
+{
+  "id": "french-chicken-dijon",
+  "title": "Chicken in Creamy Dijon Mustard Sauce",
+  "summary": "Tender chicken breasts are pan-seared and finished in a silky Dijon cream sauce with shallots and garlic. It’s a classic French-style dinner: savoury, gently tangy, and rich enough to serve with potatoes or rice.",
+  "cuisine": "french",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "milk",
+    "mustard"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken breast",
+      "food": "chicken_breast",
+      "quantity": 700.0,
+      "unit": "g",
+      "grams": 700.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 15.7
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "shallot, finely sliced",
+      "food": "shallot",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "dijon mustard",
+      "food": "mustard",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 31.1
+    },
+    {
+      "name": "double cream",
+      "food": "double_cream",
+      "quantity": 200.0,
+      "unit": "ml",
+      "grams": 200.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 100.0,
+      "unit": "ml",
+      "grams": 100.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Season the chicken breasts with salt and black pepper, then lightly coat them in the cornstarch, shaking off any excess.",
+    "Heat the olive oil and butter in a large frying pan over medium-high heat. Add the chicken and cook for 4–5 minutes on each side, until golden brown. Remove to a plate.",
+    "Lower the heat to medium. Add the shallots and cook for 2–3 minutes until softened, then add the garlic and cook for 30 seconds more.",
+    "Stir in the Dijon mustard, then add the water and scrape up any browned bits from the pan.",
+    "Pour in the double cream and bring the sauce to a gentle simmer. Return the chicken to the pan and cook for 6–8 minutes, turning once, until the chicken is cooked through and the sauce has thickened.",
+    "Stir in the lemon juice and parsley, taste, and adjust with a little more salt or pepper if needed. Serve hot with potatoes, rice, or steamed vegetables."
+  ],
+  "nutrition": {
+    "kcal": 482.7,
+    "protein_g": 41.8,
+    "carbs_g": 9.5,
+    "fat_g": 30.4,
+    "fibre_g": 1.1
+  }
+}

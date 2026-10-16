@@ -1,0 +1,108 @@
+{
+  "id": "italian-panna-cotta",
+  "title": "Vanilla Panna Cotta with Raspberry Sauce",
+  "summary": "A silky Italian-style vanilla cream dessert topped with a bright raspberry sauce. Light, rich and elegant, it’s ideal for ending a dinner party or make-ahead dessert night.",
+  "cuisine": "italian",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "milk"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "double cream",
+      "food": "double_cream",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 400.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 200.0,
+      "unit": "ml",
+      "grams": 206.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 70.0,
+      "unit": "g",
+      "grams": 70.0
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 8.7
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 18.0,
+      "unit": "g",
+      "grams": 18.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "raspberries",
+      "food": "raspberries",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 29.6
+    }
+  ],
+  "steps": [
+    "Make the raspberry sauce first: put the raspberries, sugar, lemon juice and water in a small pan and cook over medium heat for 5 to 7 minutes, stirring occasionally, until the berries break down and the sauce looks glossy.",
+    "Press the sauce through a sieve if you want it smooth, then set aside to cool.",
+    "For the panna cotta, whisk the cornstarch with a splash of the milk until smooth.",
+    "Pour the remaining milk, double cream, sugar, vanilla extract and a pinch of salt into a saucepan and warm over medium heat until steaming, but do not let it boil.",
+    "Whisk in the cornstarch mixture and cook for 1 to 2 minutes, stirring constantly, until slightly thickened and silky.",
+    "Divide the mixture between 4 glasses or ramekins and chill for at least 2 hours, or until set and lightly wobbling.",
+    "Spoon the cooled raspberry sauce over the top just before serving."
+  ],
+  "nutrition": {
+    "kcal": 520.1,
+    "protein_g": 5.2,
+    "carbs_g": 41.2,
+    "fat_g": 38.2,
+    "fibre_g": 4.1
+  }
+}

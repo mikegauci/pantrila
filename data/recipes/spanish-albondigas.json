@@ -1,0 +1,170 @@
+{
+  "id": "spanish-albondigas",
+  "title": "Spanish Beef Meatballs in Tomato Sauce",
+  "summary": "Tender beef meatballs simmered in a rich tomato, garlic and paprika sauce. A comforting Spanish-style dinner that’s good with rice, potatoes or crusty bread.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "beef mince",
+      "food": "beef_mince",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "breadcrumbs",
+      "food": "breadcrumbs",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 50.0
+    },
+    {
+      "name": "onion, finely grated",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "parsley, finely chopped",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, sliced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 16.3
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 100.0,
+      "unit": "ml",
+      "grams": 100.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "parsley, to finish",
+      "food": "parsley",
+      "quantity": 5.0,
+      "unit": "g",
+      "grams": 5.0
+    }
+  ],
+  "steps": [
+    "Put the beef mince, breadcrumbs, egg, grated onion, minced garlic, chopped parsley, salt and black pepper into a bowl. Mix gently until just combined, then shape into about 16 meatballs.",
+    "Heat 1 tablespoon of the olive oil in a large frying pan over medium heat. Brown the meatballs in batches for 4 to 5 minutes, turning them so they colour all over. Transfer to a plate.",
+    "Add the remaining olive oil to the pan and cook the sliced onion for 5 minutes until soft. Add the sliced garlic and paprika and cook for 30 seconds until fragrant.",
+    "Stir in the canned tomatoes, tomato paste, water, sugar, salt and black pepper. Bring to a gentle simmer.",
+    "Return the meatballs to the pan, cover loosely and cook for 15 to 18 minutes, turning once, until the meatballs are cooked through and the sauce has thickened.",
+    "Taste and adjust the seasoning. Scatter over the remaining parsley and serve hot."
+  ],
+  "nutrition": {
+    "kcal": 464.9,
+    "protein_g": 29.0,
+    "carbs_g": 24.7,
+    "fat_g": 28.0,
+    "fibre_g": 4.7
+  }
+}

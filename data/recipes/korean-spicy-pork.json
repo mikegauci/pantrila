@@ -1,0 +1,145 @@
+{
+  "id": "korean-spicy-pork",
+  "title": "Gochujang-Style Spicy Pork Stir Fry with Onions",
+  "summary": "A Korean-inspired dairy-free pork stir fry with sweet onions, garlic, ginger and a spicy chilli-miso sauce standing in for gochujang. It is quick, glossy, savoury-sweet and ideal for a weeknight dinner with rice.",
+  "cuisine": "korean",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "pork mince",
+      "food": "pork_mince",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "onions, thinly sliced",
+      "food": "onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "miso paste, as a gochujang-style fermented base",
+      "food": "miso",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "sriracha",
+      "food": "sriracha",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.8
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    }
+  ],
+  "steps": [
+    "Stir the miso, sriracha, soy sauce, brown sugar, rice vinegar, sesame oil and black pepper together in a small bowl until smooth and glossy.",
+    "Heat the vegetable oil in a large frying pan or wok over medium-high heat. Add the sliced onions with the salt and stir-fry for 4–5 minutes, until softened and lightly browned at the edges.",
+    "Add the pork mince and break it up with a spatula. Cook for 6–8 minutes, stirring often, until no pink remains and the pork is beginning to brown.",
+    "Add the garlic and ginger and stir-fry for 1 minute, until fragrant but not burnt.",
+    "Pour in the spicy miso sauce and toss well to coat the pork and onions. Cook for 2–3 minutes, until the sauce thickens, clings to the meat and looks glossy.",
+    "Stir through most of the spring onions, then remove from the heat. Taste and adjust with a little more salt if needed.",
+    "Serve hot, scattered with sesame seeds and the remaining spring onions."
+  ],
+  "nutrition": {
+    "kcal": 555.8,
+    "protein_g": 29.1,
+    "carbs_g": 18.6,
+    "fat_g": 40.5,
+    "fibre_g": 2.8
+  }
+}

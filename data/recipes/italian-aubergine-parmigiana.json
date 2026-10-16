@@ -1,0 +1,128 @@
+{
+  "id": "italian-aubergine-parmigiana",
+  "title": "Italian Aubergine, Tomato and Mozzarella Bake",
+  "summary": "A comforting layered vegetarian bake of tender aubergine, rich tomato sauce and melting mozzarella, inspired by melanzane alla parmigiana. It is ideal for a cosy dinner with salad or crusty bread on the side.",
+  "cuisine": "italian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 70,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "aubergines, sliced lengthways into 1 cm slices",
+      "food": "aubergine",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 54.4
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "basil leaves, roughly torn",
+      "food": "basil",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "mozzarella, drained and sliced",
+      "food": "mozzarella",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "parmesan, finely grated",
+      "food": "parmesan",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "breadcrumbs",
+      "food": "breadcrumbs",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    }
+  ],
+  "steps": [
+    "Preheat the oven to 220°C. Lay the aubergine slices on two baking trays, brush with 3 tbsp of the olive oil and season with about half the salt and pepper. Roast for 20–25 minutes, turning once, until softened and lightly golden at the edges.",
+    "Meanwhile, heat the remaining 1 tbsp olive oil in a saucepan over medium heat. Add the onion and cook for 6–8 minutes until soft and translucent.",
+    "Add the garlic and cook for 1 minute until fragrant. Stir in the tomato paste, canned tomatoes and dried oregano. Simmer uncovered for 15–20 minutes, stirring occasionally, until thickened into a rich sauce. Stir in most of the basil and season with the remaining salt and pepper.",
+    "Reduce the oven to 200°C. Spoon a thin layer of tomato sauce into a baking dish, then add a layer of roasted aubergine, followed by mozzarella slices and a little parmesan. Repeat the layers, finishing with tomato sauce, mozzarella and parmesan on top.",
+    "Scatter the breadcrumbs over the top. Bake for 25–30 minutes until bubbling, golden and the mozzarella is melted with browned spots.",
+    "Leave the bake to stand for 10 minutes so the layers settle, then finish with the remaining basil before serving."
+  ],
+  "nutrition": {
+    "kcal": 510.6,
+    "protein_g": 23.5,
+    "carbs_g": 35.9,
+    "fat_g": 32.4,
+    "fibre_g": 11.5
+  }
+}

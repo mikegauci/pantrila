@@ -1,0 +1,114 @@
+{
+  "id": "french-onion-soup",
+  "title": "French Onion Soup with Cheese Toast",
+  "summary": "A classic French-style onion soup with deeply caramelised onions, savoury vegetable stock and golden cheese toasts. Rich, comforting and perfect for a cosy lunch.",
+  "cuisine": "french",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 75,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "onions, thinly sliced",
+      "food": "onion",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 7.8
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 1200.0,
+      "unit": "ml",
+      "grams": 1200.0
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 0.2
+    },
+    {
+      "name": "white bread slices",
+      "food": "white_bread",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 120.0
+    },
+    {
+      "name": "cheddar, grated",
+      "food": "cheddar",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    }
+  ],
+  "steps": [
+    "Melt the butter with the olive oil in a large saucepan over medium heat. Add the onions and salt, then cook for 35 to 40 minutes, stirring often, until the onions are deeply golden and sweet. Lower the heat if they start to catch.",
+    "Stir in the black pepper and flour, and cook for 1 minute to remove the raw flour taste.",
+    "Add the vegetable stock, thyme and bay leaf. Bring to a simmer, then cook gently for 15 to 20 minutes until the soup tastes rich and slightly thickened. Remove the bay leaf and adjust the seasoning.",
+    "While the soup simmers, toast the bread slices until lightly crisp. Top each slice with the grated cheddar and grill until the cheese is melted and bubbling.",
+    "Ladle the soup into bowls and serve immediately with a cheese toast on top or alongside each bowl."
+  ],
+  "nutrition": {
+    "kcal": 389.4,
+    "protein_g": 12.8,
+    "carbs_g": 39.5,
+    "fat_g": 21.0,
+    "fibre_g": 4.6
+  }
+}

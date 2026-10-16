@@ -1,0 +1,159 @@
+{
+  "id": "indian-fish-curry-goan",
+  "title": "Goan-Style Cod Curry with Lime",
+  "summary": "A bright, coconut-rich Goan-inspired fish curry with gentle heat, warm spices and tamarind-like sourness from fresh lime. It makes a fragrant pescatarian dinner with rice or flatbread.",
+  "cuisine": "indian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "fish"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "cod fillets, cut into large chunks",
+      "food": "cod",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 388.0
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, crushed",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "red chilli, finely chopped",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "tomato, chopped",
+      "food": "tomato",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 240.0
+    },
+    {
+      "name": "lime juice, plus extra to taste",
+      "food": "lime_juice",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 45.7
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 3.9
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 3.4
+    },
+    {
+      "name": "cayenne pepper",
+      "food": "cayenne",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Pat the cod chunks dry and season them with 0.25 tsp of the salt, the black pepper and 1 tbsp of the lime juice. Set aside while you start the curry base.",
+    "Heat the vegetable oil in a wide saucepan over a medium heat. Add the onion and cook for 6–8 minutes, stirring often, until soft and lightly golden at the edges.",
+    "Add the garlic, ginger and chilli and cook for 1 minute until fragrant, taking care not to let the garlic brown.",
+    "Stir in the cumin, ground coriander, turmeric, paprika and cayenne. Cook for 30 seconds, then add the chopped tomatoes and remaining 0.75 tsp salt. Cook for 5 minutes until the tomatoes have softened and the oil begins to separate slightly from the paste.",
+    "Pour in the coconut milk and 2 tbsp lime juice. Stir well, bring to a gentle simmer, then cook uncovered for 5 minutes so the sauce thickens slightly and turns a deep golden orange.",
+    "Nestle the cod chunks into the sauce in a single layer. Simmer gently for 6–8 minutes, spooning sauce over the fish once or twice, until the cod is opaque and flakes easily; avoid boiling hard or the fish may break up.",
+    "Taste the curry and add an extra squeeze of lime if you want a sharper, tamarind-like tang. Scatter with chopped coriander and serve hot."
+  ],
+  "nutrition": {
+    "kcal": 425.6,
+    "protein_g": 30.6,
+    "carbs_g": 14.1,
+    "fat_g": 29.2,
+    "fibre_g": 2.8
+  }
+}

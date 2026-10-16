@@ -1,0 +1,159 @@
+{
+  "id": "korean-japchae",
+  "title": "Korean Beef and Sweet Potato Glass Noodle Stir-Fry",
+  "summary": "A dairy-free Korean-style japchae-inspired lunch with springy sweet potato-style glass noodles, savoury beef, mushrooms and colourful vegetables. It is lightly sweet, garlicky and glossy with sesame and soy flavours.",
+  "cuisine": "korean",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "rice noodles, used in place of sweet potato glass noodles",
+      "food": "rice_noodles",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "beef steak, thinly sliced",
+      "food": "beef_steak",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 5.0,
+      "unit": "tbsp",
+      "grams": 85.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 20.6
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, thinly sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "carrot, cut into thin matchsticks",
+      "food": "carrot",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "red bell pepper, thinly sliced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "shiitake mushrooms, sliced",
+      "food": "shiitake",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "spinach",
+      "food": "spinach",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    }
+  ],
+  "steps": [
+    "Cook the rice noodles according to the packet instructions until just tender and springy, then drain and rinse briefly under cool water. Snip the noodles a few times with scissors if they are very long, then set aside.",
+    "In a bowl, mix the beef with 2 tbsp soy sauce, 1 tsp sesame oil, 0.5 tbsp brown sugar, half the garlic, the ginger and the black pepper. Leave to marinate while you prepare the vegetables.",
+    "Stir together the remaining soy sauce, remaining sesame oil, remaining brown sugar and remaining garlic to make the finishing sauce.",
+    "Heat 1 tbsp vegetable oil in a large frying pan or wok over medium-high heat. Add the onion, carrot and red pepper with the salt, then stir-fry for 3–4 minutes until the vegetables are bright and just beginning to soften. Transfer to a large bowl.",
+    "Add the shiitake mushrooms to the pan and stir-fry for 2–3 minutes until softened and lightly browned, then add them to the bowl with the vegetables.",
+    "Add the spinach to the pan with a splash of water and cook for 1 minute until just wilted. Squeeze off any excess liquid if needed, then add to the bowl.",
+    "Heat the remaining 1 tbsp vegetable oil in the pan. Add the marinated beef in a single layer and stir-fry for 2–3 minutes until browned on the outside and just cooked through.",
+    "Add the cooked noodles, vegetables and finishing sauce to the pan with the beef. Toss over medium heat for 2–3 minutes until everything is hot, glossy and evenly coated.",
+    "Remove from the heat, toss through the spring onions and sesame seeds, then taste and adjust with a little more soy sauce or sesame oil if desired before serving."
+  ],
+  "nutrition": {
+    "kcal": 624.2,
+    "protein_g": 24.2,
+    "carbs_g": 72.6,
+    "fat_g": 26.5,
+    "fibre_g": 6.1
+  }
+}
