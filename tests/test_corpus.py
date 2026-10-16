@@ -74,8 +74,9 @@ def test_briefs_are_unique_slugs():
     briefs = load_briefs()
     assert len(briefs) == 300
     assert len({b.id for b in briefs}) == 300
-    assert all(re.fullmatch(r"[a-z0-9_]+(-[a-z0-9_]+)*", b.id) for b in briefs)
-    assert all(b.id.startswith(b.cuisine + "-") for b in briefs)
+    # Same pattern as Recipe.id, so every brief can become a recipe.
+    assert all(re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", b.id) for b in briefs)
+    assert all(b.id.startswith(b.cuisine.replace("_", "-") + "-") for b in briefs)
 
 
 def test_committed_corpus_is_consistent():

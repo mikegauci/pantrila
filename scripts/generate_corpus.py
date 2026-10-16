@@ -20,7 +20,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 
-from openai import AsyncOpenAI
+from openai import APIError, AsyncOpenAI
 
 from pantrio import config
 from pantrio.corpus import (
@@ -124,7 +124,13 @@ async def run(
 
     async def worker(brief: Brief) -> None:
         async with sem:
-            recipe = await generate_one(client, brief, model, effort, usage)
+            try:
+                recipe = await generate_one(client, brief, model, effort, usage)
+            except APIError as exc:
+                # Record and move on so the manifest is still written for the whole run.
+                print(f"  {brief.id}: API error: {exc}", file=sys.stderr)
+                usage.failures.append(brief.id)
+                return
         if recipe:
             save_recipe(recipe)
             done.append(recipe)

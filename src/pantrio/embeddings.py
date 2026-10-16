@@ -20,8 +20,8 @@ from pantrio.schema import Recipe
 
 CACHE_DIR = Path(__file__).resolve().parents[2] / ".cache" / "embeddings"
 BATCH_SIZE = 128
-# Seasoning and fats tell you little about what a dish is.
-MINOR_AISLES = {"spices", "oils_condiments", "baking"}
+# Seasoning, fats and water tell you little about what a dish is.
+MINOR_AISLES = {"spices", "oils_condiments", "baking", "tap"}
 KEY_INGREDIENTS = 10
 
 EmbedFn = Callable[[Sequence[str]], tuple[list[list[float]], int]]
