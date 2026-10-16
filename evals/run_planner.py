@@ -202,9 +202,14 @@ def upload_to_langsmith(rows: list[dict], meta: dict) -> None:
             ],
         )
     by_id = {r["profile_id"]: r for r in rows}
+    # Only the profiles this run planned (all of them unless --only), so partial runs
+    # don't leave empty rows in the experiment.
+    examples = [
+        e for e in client.list_examples(dataset_name=name) if e.inputs["profile_id"] in by_id
+    ]
 
     def target(inputs: dict) -> dict:
-        return by_id.get(inputs["profile_id"], {"ok": False})
+        return by_id[inputs["profile_id"]]
 
     def metric(key: str):
         def evaluator(outputs: dict) -> dict:
@@ -216,13 +221,13 @@ def upload_to_langsmith(rows: list[dict], meta: dict) -> None:
 
     evaluate(
         target,
-        data=client.list_examples(dataset_name=name),
+        data=examples,
         evaluators=[metric(k) for k in METRIC_KEYS],
         experiment_prefix=f"planner-{meta['model']}",
         metadata=meta,
         client=client,
     )
-    print(f"uploaded dataset {name} and one experiment to LangSmith")
+    print(f"uploaded dataset {name} and one {len(examples)}-plan experiment to LangSmith")
 
 
 def main() -> None:
