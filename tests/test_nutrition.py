@@ -24,6 +24,35 @@ def test_nutrition_scales_with_servings():
     assert one.kcal == pytest.approx(four.kcal * 4, abs=0.2)
 
 
+def test_deep_frying_oil_counts_only_what_the_food_absorbs():
+    oil = load_foods()["vegetable_oil"].per_100g
+    fried = Ingredient(
+        name="vegetable oil, for frying",
+        food="vegetable_oil",
+        quantity=700,
+        unit=Unit.ML,
+        grams=644,
+    )
+    n = recipe_nutrition([fried], servings=4)
+    eaten = 15 * 4 + (644 - 15 * 4) * 0.20
+    assert n.fat_g == pytest.approx(round(oil.fat_g * eaten / 100 / 4, 1))
+
+
+def test_pan_frying_oil_and_oil_not_for_frying_count_in_full():
+    pan = Ingredient(
+        name="vegetable oil, for frying",
+        food="vegetable_oil",
+        quantity=2,
+        unit=Unit.TBSP,
+        grams=27.2,
+    )
+    plain = Ingredient(
+        name="vegetable oil", food="vegetable_oil", quantity=700, unit=Unit.ML, grams=644
+    )
+    assert recipe_nutrition([pan], 4) == recipe_nutrition([ing("vegetable_oil", 27.2)], 4)
+    assert recipe_nutrition([plain], 4) == recipe_nutrition([ing("vegetable_oil", 644)], 4)
+
+
 def facts(kcal, protein, carbs):
     return NutritionFacts(kcal=kcal, protein_g=protein, carbs_g=carbs, fat_g=10, fibre_g=2)
 
