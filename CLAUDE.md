@@ -69,6 +69,15 @@ only accepts V2 definitions (`metric_definition` + `filter_definition`). Fixed p
 overflowing at 1280 px. No prompt/model change, so no eval rerun. Paid evals workflow needs
 `OPENAI_API_KEY` and `DATABASE_URL` repository secrets; `LANGSMITH_API_KEY` is set locally
 (EU endpoint), so local eval runs upload LangSmith experiments.
+User recipes (this PR): cookbook per user (migration 0005: `user_recipes`, usage kind `import`;
+applied on Supabase), import from photos (shrunk to JPEG in the browser, not stored) or a link
+(SSRF-guarded fetch, schema.org JSON-LD first, else page text), or typed in; one review form
+for all three. Unknown foods get a model estimate (marked "Estimated"; the person can edit its
+allergens); everything else is derived in code on every read. Not used by the planner (owner's
+decision). Imports run at reasoning effort medium. `evals/reports/import-2026-10-16T185930Z.md`:
+0 missed allergens, food matching 99%, $0.006 per import, p50 6.5 s / p95 11.5 s (effort low:
+2 of 12 drafts missed an allergen; the named-food safety net fixed one, medium the other).
+Bot-blocking sites (Allrecipes) refuse the fetch; the app suggests a screenshot.
 
 ## Stack
 
@@ -142,13 +151,23 @@ overflowing at 1280 px. No prompt/model change, so no eval rerun. Paid evals wor
   audience `authenticated`, issuer `SUPABASE_URL/auth/v1`); returns the user id.
 - `src/pantrio/records.py`: saved plans and the usage log per user (`Records` protocol,
   `DbRecords` on `meal_plans`/`usage_events`, `MemoryRecords` for tests).
+- `src/pantrio/cookbook.py`: the person's own recipes. `CookbookRecipeIn` (what is stored:
+  lines with a table `food` or a `FoodEstimate`), `derive` (grams, nutrition, allergens, diets
+  in code; estimates join the food table for that recipe only), `problems_for`, the `Cookbook`
+  protocol (`DbCookbook` on `user_recipes`, `MemoryCookbook`), 200 recipes per user.
+- `src/pantrio/recipe_import.py`: `Importer` (one structured-output call, effort medium,
+  `store=False`) `from_link` / `from_html` / `from_photos` / `estimate`; `fetch_page` with SSRF
+  guards; `jsonld_recipe`, `page_text`; `to_draft` checks every line in code and returns notes;
+  `with_named_allergens` adds the allergens of table foods an estimated line names.
 - `src/pantrio/api.py`: FastAPI app (`create_app(backend, verify)`; tests pass an in-memory
   backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
   `/me/usage`, `/recipes` (search or browse, profile rules as filters unless `safe=false`),
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
-  `/plans/latest`, `/plans/latest/grocery`, `POST /chat`. Every recipe returned carries the hard
-  rules it breaks for the person's current profile. Paid calls are capped per user per day
-  (`PANTRIO_DAILY_PLANS`, `PANTRIO_DAILY_CHATS`) and in total (`PANTRIO_DAILY_BUDGET_USD`).
+  `/plans/latest`, `/plans/latest/grocery`, `POST /chat`, `/me/recipes` (cookbook CRUD,
+  `/preview`, `/import/link`, `/import/photos`, `/estimate`). Every recipe returned carries the
+  hard rules it breaks for the person's current profile. Paid calls are capped per user per
+  day (`PANTRIO_DAILY_PLANS`, `PANTRIO_DAILY_CHATS`, `PANTRIO_DAILY_IMPORTS`) and in total
+  (`PANTRIO_DAILY_BUDGET_USD`).
 - `render.yaml`: Render Blueprint for the API.
 - `data/`: `ingredients.csv` (hand-curated), `usda_foods.csv` (built by
   `scripts/build_usda_table.py`), `dish_briefs.csv` (300 fixed briefs), `recipes/*.json`
@@ -160,8 +179,9 @@ overflowing at 1280 px. No prompt/model change, so no eval rerun. Paid evals wor
 - `supabase/migrations/`: SQL migrations.
 - `evals/`: `retrieval_queries.py` (deterministic query generator) -> `data/retrieval_queries.json`,
   `plan_profiles.py` (16 eval profiles) -> `data/plan_profiles.json`, `chat_cases.py` (24
-  assistant cases) -> `data/chat_cases.json`, `metrics.py`, `run_retrieval.py`,
-  `run_planner.py`, `run_assistant.py`, `reports/`.
+  assistant cases) -> `data/chat_cases.json`, `import_cases.py` (12 synthetic recipe pages)
+  -> `data/import_cases.json`, `metrics.py`, `run_retrieval.py`, `run_planner.py`,
+  `run_assistant.py`, `run_import.py`, `reports/`.
 - `.github/workflows/evals.yml`: manual paid evals (needs `OPENAI_API_KEY`, `DATABASE_URL`
   repository secrets).
 - `tests/`: offline tests; OpenAI is mocked. DB tests run when `PANTRIO_TEST_DATABASE_URL` is
@@ -170,7 +190,8 @@ overflowing at 1280 px. No prompt/model change, so no eval rerun. Paid evals wor
   see `web/DESIGN_SYSTEM.md` (tokens live in `src/app/globals.css`). Signed-in screens are
   client components under `src/app/(app)/` fetching the API with SWR (`src/lib/hooks.ts`,
   `src/lib/api.ts`, types in `src/lib/types.ts` mirror `api.py`); Supabase is used only for
-  sign-in (magic link or anonymous guest). Read `web/AGENTS.md`: this Next.js differs from
+  sign-in (magic link or anonymous guest). The cookbook lives under `recipes/mine` (list,
+  `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`. Read `web/AGENTS.md`: this Next.js differs from
   older versions (e.g. `proxy.ts` replaces middleware; check `node_modules/next/dist/docs/`).
 
 ## Commands
@@ -199,6 +220,8 @@ uv run pantrio pantry add eggs 6 piece | remove eggs | list [--user me]   # or P
 uv run pantrio chat [--user me] [--message "..."]  # cooking assistant (paid)
 uv run python -m evals.chat_cases        # regenerate the assistant eval cases
 uv run python -m evals.run_assistant [--only ids] # assistant eval (paid; ~$0.002/turn)
+uv run python -m evals.import_cases      # regenerate the recipe-import eval pages
+uv run python -m evals.run_import [--only ids]    # recipe-import eval (paid; ~$0.006/import)
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # LangSmith dashboard
 uv run uvicorn pantrio.api:app --env-file .env --reload   # API on :8000 (SUPABASE_URL, DATABASE_URL)

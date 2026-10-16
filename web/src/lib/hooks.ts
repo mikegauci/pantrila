@@ -4,7 +4,8 @@ import useSWR, { type SWRConfiguration } from "swr"
 
 import { api, ApiError } from "@/lib/api"
 import type {
-  Food, GroceryList, Me, Meta, PantryItem, Plan, Profile, RecipeDetail, Usage,
+  CookbookCard, CookbookDetail, Food, GroceryList, Me, Meta, PantryItem, Plan, Profile, RecipeDetail,
+  Usage,
 } from "@/lib/types"
 
 const fetcher = <T,>(path: string) => api<T>(path)
@@ -22,6 +23,9 @@ export const useProfile = () => useApi<Profile>("/me/profile")
 export const usePantry = () => useApi<PantryItem[]>("/me/pantry")
 export const useUsage = () => useApi<Usage>("/me/usage")
 export const useRecipe = (id: string | null) => useApi<RecipeDetail>(id ? `/recipes/${id}` : null)
+export const useCookbook = () => useApi<CookbookCard[]>("/me/recipes")
+export const useCookbookRecipe = (id: string | null) =>
+  useApi<CookbookDetail>(id ? `/me/recipes/${id}` : null)
 
 /** The latest plan; a 404 (no plan yet) comes back as null, not an error. */
 export function usePlan() {

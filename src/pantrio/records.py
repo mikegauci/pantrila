@@ -1,7 +1,8 @@
 """What the web app remembers per user besides the kitchen: saved plans and a usage log.
 
-The usage log has one event per paid call (a plan or a chat turn) with tokens, cost and
-latency. The API counts events for its daily limits and shows them on the Insights page.
+The usage log has one event per paid call (a plan, a chat turn or a recipe import) with
+tokens, cost and latency. The API counts events for its daily limits and shows them on the
+Insights page.
 """
 
 from __future__ import annotations
@@ -16,7 +17,7 @@ import psycopg
 from pantrio.planner import Usage
 from pantrio.schema import MealPlan
 
-Kind = Literal["plan", "chat"]
+Kind = Literal["plan", "chat", "import"]
 
 
 @dataclass

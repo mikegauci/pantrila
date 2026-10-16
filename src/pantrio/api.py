@@ -1,4 +1,4 @@
-"""HTTP API for the web app: recipes, profile, pantry, plans, grocery list and chat.
+"""HTTP API for the web app: recipes, profile, pantry, plans, grocery list, chat and cookbook.
 
 Every route except /health needs a Supabase Auth access token; its user id scopes all data.
 The same safety rules as the CLI apply: search filters run in SQL, plans come out of the
@@ -7,6 +7,10 @@ against the person's current profile so a later allergy change shows up loudly.
 
 Planning takes 10 to 90 seconds, so POST /plans streams server-sent events: one `step` per
 LangGraph node as it finishes, then `plan` (the saved plan) or `error`.
+
+The cookbook (/me/recipes) holds recipes people add from a photo, a link or by hand. Imports
+return a draft for the person to review; nothing is saved until they post it back. Grams,
+nutrition, allergens and diets are derived in code on every read, like the corpus.
 
 Run: uv run uvicorn pantrio.api:app --env-file .env --reload
 """
@@ -34,11 +38,24 @@ from pantrio import config
 from pantrio.assistant import Assistant
 from pantrio.auth import AuthError, User, verifier
 from pantrio.constraints import day_nutrition, recipe_problems
+from pantrio.cookbook import (
+    Cookbook,
+    CookbookError,
+    CookbookFull,
+    CookbookRecipeIn,
+    Derived,
+    LineView,
+    SavedRecipe,
+    Source,
+    derive,
+    problems_for,
+)
 from pantrio.foods import UnitError, load_foods
 from pantrio.grocery import grocery_list
 from pantrio.pantry import Kitchen, UnknownFood, make_item, resolve_food
 from pantrio.planner import Planner, PlanningError, RecipeStore
-from pantrio.records import Records, SavedPlan, UsageEvent
+from pantrio.recipe_import import MAX_IMAGES, Importer, ImportFailed, NamedEstimate
+from pantrio.records import Kind, Records, SavedPlan, UsageEvent
 from pantrio.schema import (
     Allergen,
     DietTag,
@@ -73,6 +90,7 @@ class Session:
     store: Catalog
     kitchen: Kitchen
     records: Records
+    cookbook: Cookbook
 
 
 class Backend(Protocol):
@@ -98,13 +116,14 @@ class DbBackend:
 
     @contextmanager
     def session(self, user_id: str) -> Iterator[Session]:
+        from pantrio.cookbook import DbCookbook
         from pantrio.pantry import DbKitchen
         from pantrio.planner import DbStore
         from pantrio.records import DbRecords
 
         with self.pool.connection() as conn:
             yield Session(DbStore(conn, self.embed_query), DbKitchen(conn, user_id),
-                          DbRecords(conn, user_id))  # fmt: skip
+                          DbRecords(conn, user_id), DbCookbook(conn, user_id))  # fmt: skip
 
     def close(self) -> None:
         self.pool.close()
@@ -198,6 +217,8 @@ class LimitsView(BaseModel):
     plans_left: int
     chats_per_day: int
     chats_left: int
+    imports_per_day: int
+    imports_left: int
 
 
 class Me(BaseModel):
@@ -265,6 +286,77 @@ class ChatReply(BaseModel):
     latency_ms: float
 
 
+class CookbookCard(BaseModel):
+    id: int
+    title: str
+    summary: str
+    cuisine: str
+    meal_types: list[MealType]
+    total_minutes: int
+    servings: int
+    source: Source
+    source_url: str | None
+    created_at: datetime
+    updated_at: datetime
+    ingredient_count: int
+    # Derived in code; empty with `invalid` set when the stored lines no longer check out
+    # (e.g. a food was removed from the ingredient table).
+    nutrition: NutritionFacts | None
+    allergens: list[Allergen]
+    diet_tags: list[DietTag]
+    estimated: bool
+    invalid: list[str]
+    pantry_foods: list[str]
+    problems: list[str] = Field(description="Hard rules it breaks for the person; empty if none.")
+
+
+class CookbookLine(LineView):
+    in_pantry: bool
+
+
+class CookbookDetail(CookbookCard):
+    ingredients: list[CookbookLine]
+    steps: list[str]
+    recipe: CookbookRecipeIn = Field(description="As stored, for the edit form.")
+
+
+class CookbookPreview(BaseModel):
+    ingredients: list[LineView]
+    nutrition: NutritionFacts
+    allergens: list[Allergen]
+    diet_tags: list[DietTag]
+    estimated: bool
+    problems: list[str]
+
+
+class LinkImport(BaseModel):
+    url: str = Field(min_length=4, max_length=2000)
+
+
+class PhotoImport(BaseModel):
+    images: list[str] = Field(
+        min_length=1, max_length=MAX_IMAGES, description="Data URLs: JPEG, PNG or WebP, < 4 MB."
+    )
+
+
+class EstimateRequest(BaseModel):
+    names: list[Annotated[str, Field(min_length=1, max_length=120)]] = Field(
+        min_length=1, max_length=10
+    )
+
+
+class ImportView(BaseModel):
+    draft: CookbookRecipeIn
+    notes: list[str] = Field(description="What to check or fix before saving.")
+    cost_usd: float | None
+    latency_ms: float
+
+
+class EstimateView(BaseModel):
+    estimates: list[NamedEstimate]
+    cost_usd: float | None
+
+
 class UsageEventView(BaseModel):
     kind: str
     model: str
@@ -321,6 +413,34 @@ def swap_view(s: Swap) -> SwapView:
     )  # fmt: skip
 
 
+def cookbook_detail(saved: SavedRecipe, profile: UserProfile) -> CookbookDetail:
+    r, pantry = saved.recipe, set(profile.pantry)
+    try:
+        d: Derived | None = derive(r)
+        invalid: list[str] = []
+    except CookbookError as exc:
+        d, invalid = None, exc.problems
+    lines = d.ingredients if d else [LineView(**i.model_dump(), grams=0) for i in r.ingredients]
+    return CookbookDetail(
+        id=saved.id, title=r.title, summary=r.summary, cuisine=r.cuisine,
+        meal_types=r.meal_types, total_minutes=r.total_minutes, servings=r.servings,
+        source=r.source, source_url=r.source_url, created_at=saved.created_at,
+        updated_at=saved.updated_at, ingredient_count=len(r.ingredients),
+        nutrition=d.nutrition if d else None, allergens=d.allergens if d else [],
+        diet_tags=d.diet_tags if d else [], estimated=d.estimated if d else False,
+        invalid=invalid, pantry_foods=sorted(set(d.foods) & pantry) if d else [],
+        problems=problems_for(r, d, profile) if d else [],
+        ingredients=[CookbookLine(**line.model_dump(), in_pantry=line.food in pantry)
+                     for line in lines],
+        steps=r.steps, recipe=r,
+    )  # fmt: skip
+
+
+def cookbook_card(saved: SavedRecipe, profile: UserProfile) -> CookbookCard:
+    detail = cookbook_detail(saved, profile)
+    return CookbookCard(**detail.model_dump(include=set(CookbookCard.model_fields)))
+
+
 def plan_view(saved: SavedPlan, store: RecipeStore, profile: UserProfile) -> PlanView:
     recipes = store.get({m.recipe_id for _, m in saved.plan.meals})
     days, problems = [], []
@@ -372,20 +492,27 @@ def today_start() -> datetime:
     return datetime.combine(datetime.now(UTC).date(), dtime.min, tzinfo=UTC)
 
 
+def daily_cap(kind: Kind) -> int:
+    lim = config.limits()
+    return {"plan": lim.plans_per_user, "chat": lim.chats_per_user,
+            "import": lim.imports_per_user}[kind]  # fmt: skip
+
+
 def limits_view(records: Records) -> LimitsView:
-    lim, since = config.limits(), today_start()
+    since = today_start()
+    left = {k: max(0, daily_cap(k) - records.count_since(k, since))
+            for k in ("plan", "chat", "import")}  # fmt: skip
     return LimitsView(
-        plans_per_day=lim.plans_per_user,
-        plans_left=max(0, lim.plans_per_user - records.count_since("plan", since)),
-        chats_per_day=lim.chats_per_user,
-        chats_left=max(0, lim.chats_per_user - records.count_since("chat", since)),
-    )
+        plans_per_day=daily_cap("plan"), plans_left=left["plan"],
+        chats_per_day=daily_cap("chat"), chats_left=left["chat"],
+        imports_per_day=daily_cap("import"), imports_left=left["import"],
+    )  # fmt: skip
 
 
-def check_quota(records: Records, kind: Literal["plan", "chat"]) -> None:
+def check_quota(records: Records, kind: Kind) -> None:
     """Refuse a paid call over the user's daily cap or the demo's daily budget."""
     lim, since = config.limits(), today_start()
-    cap = lim.plans_per_user if kind == "plan" else lim.chats_per_user
+    cap = daily_cap(kind)
     if records.count_since(kind, since) >= cap:
         raise HTTPException(429, f"You have used today's {cap} {kind}s. Try again tomorrow.")
     if records.spend_since(since) >= lim.budget_usd:
@@ -564,6 +691,104 @@ def create_app(
         except UnknownFood as exc:
             raise HTTPException(422, str(exc)) from exc
         return SwapList(recipe_id=r.id, food=key, swaps=[swap_view(o) for o in options])
+
+    # --- Cookbook: the person's own recipes ---
+
+    def get_saved(s: Session, recipe_id: int) -> SavedRecipe:
+        saved = s.cookbook.get(recipe_id)
+        if saved is None:
+            raise HTTPException(404, "No such recipe in your cookbook.")
+        return saved
+
+    def checked(recipe: CookbookRecipeIn) -> CookbookRecipeIn:
+        """Only recipes whose every line derives cleanly are saved."""
+        try:
+            derive(recipe)
+        except CookbookError as exc:
+            raise HTTPException(422, {"message": "Fix these first.", "problems": exc.problems}
+                                ) from exc  # fmt: skip
+        return recipe
+
+    def paid_import(s: Session, request: Request, work: Callable[[Importer], Any]) -> tuple:
+        """Run one paid import or estimate under the daily cap and log its usage.
+        Returns (work's result, the importer, latency in ms)."""
+        check_quota(s.records, "import")
+        model = config.model()
+        importer = Importer(client=request.app.state.backend.client, model=model)
+        start = time.perf_counter()
+
+        def logged(ok: bool) -> float:
+            ms = (time.perf_counter() - start) * 1000
+            if importer.usage.llm_calls:  # a bad link fails before any paid call
+                s.records.log(UsageEvent.from_usage("import", model, importer.usage, ms, ok=ok))
+            return ms
+
+        try:
+            result = work(importer)
+        except ImportFailed as exc:
+            logged(ok=False)
+            raise HTTPException(422, str(exc)) from exc
+        except Exception as exc:
+            logged(ok=False)
+            log.exception("recipe import failed")
+            raise HTTPException(502, "Could not read that. Try again.") from exc
+        return result, importer, logged(ok=True)
+
+    def import_view(s: Session, request: Request, work: Callable[[Importer], Any]) -> ImportView:
+        result, importer, ms = paid_import(s, request, work)
+        return ImportView(draft=result.draft, notes=result.notes,
+                          cost_usd=importer.usage.cost(), latency_ms=round(ms))  # fmt: skip
+
+    @app.get("/me/recipes")
+    def my_recipes(s: SessionDep) -> list[CookbookCard]:
+        profile = s.kitchen.profile()
+        return [cookbook_card(r, profile) for r in s.cookbook.list()]
+
+    @app.post("/me/recipes", status_code=201)
+    def add_recipe(body: CookbookRecipeIn, s: SessionDep) -> CookbookDetail:
+        try:
+            saved = s.cookbook.add(checked(body))
+        except CookbookFull as exc:
+            raise HTTPException(409, str(exc)) from exc
+        return cookbook_detail(saved, s.kitchen.profile())
+
+    @app.post("/me/recipes/preview")
+    def preview_recipe(body: CookbookRecipeIn, s: SessionDep) -> CookbookPreview:
+        """What saving would derive, so the form can show nutrition and warnings live."""
+        d = derive(checked(body))
+        return CookbookPreview(**d.model_dump(exclude={"foods"}),
+                               problems=problems_for(body, d, s.kitchen.profile()))  # fmt: skip
+
+    @app.post("/me/recipes/import/link")
+    def import_link(body: LinkImport, request: Request, s: SessionDep) -> ImportView:
+        return import_view(s, request, lambda i: i.from_link(body.url))
+
+    @app.post("/me/recipes/import/photos")
+    def import_photos(body: PhotoImport, request: Request, s: SessionDep) -> ImportView:
+        return import_view(s, request, lambda i: i.from_photos(body.images))
+
+    @app.post("/me/recipes/estimate")
+    def estimate_foods(body: EstimateRequest, request: Request, s: SessionDep) -> EstimateView:
+        """Nutrition and allergen estimates for foods the ingredient table lacks."""
+        estimates, importer, _ = paid_import(s, request, lambda i: i.estimate(body.names))
+        return EstimateView(estimates=estimates, cost_usd=importer.usage.cost())
+
+    @app.get("/me/recipes/{recipe_id}")
+    def my_recipe(recipe_id: int, s: SessionDep) -> CookbookDetail:
+        return cookbook_detail(get_saved(s, recipe_id), s.kitchen.profile())
+
+    @app.put("/me/recipes/{recipe_id}")
+    def update_recipe(recipe_id: int, body: CookbookRecipeIn, s: SessionDep) -> CookbookDetail:
+        saved = s.cookbook.update(recipe_id, checked(body))
+        if saved is None:
+            raise HTTPException(404, "No such recipe in your cookbook.")
+        return cookbook_detail(saved, s.kitchen.profile())
+
+    @app.delete("/me/recipes/{recipe_id}", status_code=204)
+    def delete_recipe(recipe_id: int, s: SessionDep) -> Response:
+        if not s.cookbook.delete(recipe_id):
+            raise HTTPException(404, "No such recipe in your cookbook.")
+        return Response(status_code=204)
 
     @app.get("/plans/latest")
     def latest_plan(s: SessionDep) -> PlanView:

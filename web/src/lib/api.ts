@@ -7,6 +7,7 @@ export class ApiError extends Error {
     public status: number,
     message: string,
     public suggestions: string[] = [],
+    public problems: string[] = [],
   ) {
     super(message)
   }
@@ -22,13 +23,18 @@ async function token(): Promise<string> {
 async function errorFrom(res: Response): Promise<ApiError> {
   let detail = res.statusText || "Request failed"
   let suggestions: string[] = []
+  let problems: string[] = []
   try {
     const body = await res.json()
     if (typeof body.detail === "string") detail = body.detail
     else if (Array.isArray(body.detail)) detail = body.detail.map((d: { msg: string }) => d.msg).join("; ")
+    else if (body.detail?.problems) {
+      detail = body.detail.message
+      problems = body.detail.problems
+    }
     suggestions = body.suggestions ?? []
   } catch {}
-  return new ApiError(res.status, detail, suggestions)
+  return new ApiError(res.status, detail, suggestions, problems)
 }
 
 /** Call the Pantrio API with the signed-in user's token. */

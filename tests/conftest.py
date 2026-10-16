@@ -167,7 +167,7 @@ def conn():
         c.autocommit = True
         c.execute(
             "drop table if exists recipe_embeddings, recipe_ingredients, recipes, pantry_items,"
-            " user_profiles, meal_plans, usage_events, pantrio_migrations cascade"
+            " user_profiles, meal_plans, usage_events, user_recipes, pantrio_migrations cascade"
         )
         c.autocommit = False
         db.migrate(c)

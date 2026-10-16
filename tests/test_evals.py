@@ -104,3 +104,33 @@ def test_chat_cases_point_at_real_recipes_tools_and_foods():
         assert set(e.get("pantry_has", []) + e.get("pantry_lacks", [])) <= set(foods), c["id"]
         assert set(CITED_IN_MESSAGE.findall(c["message"])) <= ids, c["id"]
         assert set(e.get("allow_flagged", [])) <= ids, c["id"]
+
+
+def test_committed_import_cases_match_generator_and_use_real_foods():
+    from evals.import_cases import OUT as IMPORTS
+    from evals.import_cases import generate
+    from evals.import_cases import render as render_imports
+    from pantrio.foods import load_foods
+
+    assert IMPORTS.read_text() == render_imports(generate())
+    foods = load_foods()
+    for case in generate():
+        for line in case["expect"]["lines"]:
+            assert line["foods"] is None or set(line["foods"]) <= set(foods), case["id"]
+
+
+def test_import_scoring_counts_estimates_and_missed_allergens():
+    from evals.import_cases import load_cases
+    from evals.run_import import score
+    from pantrio.cookbook import CookbookRecipeIn
+
+    case = next(c for c in load_cases() if c["id"] == "graph-tteokbokki")
+    lines = [{"name": li["text"], "quantity": 1, "unit": "g", "food": (li["foods"] or [None])[0]}
+             for li in case["expect"]["lines"]]  # fmt: skip
+    draft = CookbookRecipeIn(title="T", meal_types=["dinner"], total_minutes=24, servings=2,
+                             ingredients=lines, steps=["Cook."])  # fmt: skip
+    row = score(case, draft, [])
+    # Two foods should have been estimated and were left blank: those lines miss, and the
+    # gochujang's gluten is still covered by the soy sauce, but nothing else is lost.
+    assert row["lines_matched"] == 5 and row["missed_allergens"] == []
+    assert row["servings_ok"] and row["time_ok"]

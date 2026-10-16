@@ -133,3 +133,23 @@ def test_db_records_keep_plans_and_usage_per_user(conn):
     events = alice.events()
     assert [(e.kind, e.ok, e.cost_usd) for e in events] == [("chat", False, None),
                                                              ("plan", True, 0.02)]  # fmt: skip
+
+
+def test_db_cookbook_is_per_user_and_import_is_a_usage_kind(conn):
+    from pantrio.cookbook import CookbookRecipeIn, DbCookbook
+    from pantrio.records import DbRecords, UsageEvent
+
+    recipe = CookbookRecipeIn.model_validate({
+        "title": "Toast", "meal_types": ["breakfast"], "total_minutes": 5, "servings": 1,
+        "ingredients": [{"name": "bread", "quantity": 2, "unit": "piece", "food": "white_bread"}],
+        "steps": ["Toast it."], "source": "manual",
+    })  # fmt: skip
+    alice, bob = DbCookbook(conn, "alice"), DbCookbook(conn, "bob")
+    saved = alice.add(recipe)
+    assert alice.get(saved.id).recipe == recipe and bob.get(saved.id) is None
+    assert [r.id for r in alice.list()] == [saved.id] and bob.list() == []
+    renamed = recipe.model_copy(update={"title": "Hot toast"})
+    assert bob.update(saved.id, renamed) is None and not bob.delete(saved.id)
+    assert alice.update(saved.id, renamed).recipe.title == "Hot toast"
+    assert alice.delete(saved.id) and alice.list() == []
+    DbRecords(conn, "alice").log(UsageEvent("import", "m", 900, llm_calls=1))

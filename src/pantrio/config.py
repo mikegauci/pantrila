@@ -127,6 +127,7 @@ class Limits:
 
     plans_per_user: int
     chats_per_user: int
+    imports_per_user: int  # recipe imports from photos or links, and food estimates
     budget_usd: float  # all users together
 
 
@@ -134,6 +135,7 @@ def limits() -> Limits:
     return Limits(
         plans_per_user=int(os.environ.get("PANTRIO_DAILY_PLANS") or 5),
         chats_per_user=int(os.environ.get("PANTRIO_DAILY_CHATS") or 50),
+        imports_per_user=int(os.environ.get("PANTRIO_DAILY_IMPORTS") or 20),
         budget_usd=float(os.environ.get("PANTRIO_DAILY_BUDGET_USD") or 2.0),
     )
 
