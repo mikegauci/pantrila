@@ -35,6 +35,7 @@ jobs:
       - run: uv run pytest -m live -s
       - run: uv run python -m evals.run_retrieval
       - run: uv run python -m evals.run_planner
+      - run: uv run python -m evals.run_assistant
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -79,3 +79,28 @@ def test_every_plan_profile_is_feasible():
         for slot in p.meals:
             safe = sum(not recipe_violations(r, p, slot) for r in recipes)
             assert safe >= math.ceil(p.days / MAX_REPEATS), (pid, slot)
+
+
+def test_committed_chat_cases_match_generator():
+    from evals.chat_cases import OUT as CASES
+    from evals.chat_cases import generate
+    from evals.chat_cases import render as render_cases
+
+    assert CASES.read_text() == render_cases(generate())
+
+
+def test_chat_cases_point_at_real_recipes_tools_and_foods():
+    from evals.chat_cases import CITED_IN_MESSAGE, load_cases
+    from evals.run_assistant import kitchen_for
+    from pantrio.assistant import TOOL_ARGS
+    from pantrio.foods import load_foods
+
+    ids = {r.id for r in load_corpus()}
+    foods = load_foods()
+    for c in load_cases():
+        e = c["expect"]
+        kitchen_for(c)  # every pantry food and amount is valid
+        assert set(e.get("tools_all", []) + e.get("tools_any", [])) <= set(TOOL_ARGS), c["id"]
+        assert set(e.get("pantry_has", []) + e.get("pantry_lacks", [])) <= set(foods), c["id"]
+        assert set(CITED_IN_MESSAGE.findall(c["message"])) <= ids, c["id"]
+        assert set(e.get("allow_flagged", [])) <= ids, c["id"]
