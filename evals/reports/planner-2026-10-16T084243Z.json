@@ -1,0 +1,2752 @@
+{
+  "meta": {
+    "finished_at": "2026-10-16T084243Z",
+    "plans": 16,
+    "model": "gpt-5.4-mini",
+    "effort": "low",
+    "embed_model": "text-embedding-3-small",
+    "concurrency": 4
+  },
+  "summary": {
+    "plans": 16,
+    "failed": 0,
+    "hard_violations": 0,
+    "plans_with_first_draft_hard": 0,
+    "plans_with_first_draft_soft": 6,
+    "plans_clean": 13,
+    "soft_violations": 0.75,
+    "kcal_error": 0.0033363926506607446,
+    "protein_days_met": 0.9350649350649352,
+    "carb_days_met": 1.0,
+    "pantry_use": 0.9375,
+    "variety": 0.78125,
+    "repairs": 0.75,
+    "fallbacks": 0.0,
+    "llm_calls": 2.375,
+    "tool_calls": 1.0,
+    "input_tokens": 7903.0,
+    "output_tokens": 3892.75,
+    "cost_per_plan_usd": 0.02344577375,
+    "latency_p50_ms": 19236.102630005917,
+    "latency_p95_ms": 83730.22522998508
+  },
+  "results": [
+    {
+      "profile_id": "omnivore-balanced",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 0,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {},
+      "kcal_error": 0.0018357142857143053,
+      "protein_days_met": 1.0,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 0.9523809523809523,
+      "repairs": 0,
+      "fallbacks": 0,
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "input_tokens": 2413,
+      "output_tokens": 1812,
+      "cost_usd": 0.00996447,
+      "latency_ms": 16789.245491992915,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-protein-oats",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "greek-avgolemono",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "japanese-chicken-yakitori",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-full-english-lite",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "mexican-burrito-bowl",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "italian-chicken-cacciatore",
+                "portions": 2.0
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "japanese-salmon-rice-bowl",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "korean-chicken-ginseng-style-soup",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-bbq-chicken-traybake",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-huevos-rancheros",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-cobb-salad",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "chinese-beef-broccoli",
+                "portions": 1.25
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-turkey-club",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-turkey-chilli",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "japanese-miso-soup-breakfast",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "thai-pad-see-ew-vegetable",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "british-roast-chicken-veg",
+                "portions": 2.0
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-protein-oats",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-chickpea-salad-sandwich",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-stuffed-peppers",
+                "portions": 1.0
+              }
+            ]
+          }
+        ],
+        "notes": "This plan uses the pantry items early in the week: white rice on day 1, chicken thighs on day 1, and broccoli on day 4. It keeps protein high each day by pairing at least one substantial chicken- or egg-based meal with other balanced meals, while mixing cuisines across the week for variety."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "vegan-high-protein",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 2,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {
+        "protein": 2
+      },
+      "kcal_error": 0.0025974025974025974,
+      "protein_days_met": 1.0,
+      "carb_days_met": null,
+      "pantry_use": 0.6666666666666666,
+      "variety": 0.7142857142857143,
+      "repairs": 2,
+      "fallbacks": 0,
+      "llm_calls": 4,
+      "tool_calls": 3,
+      "input_tokens": 11574,
+      "output_tokens": 3388,
+      "cost_usd": 0.0239278,
+      "latency_ms": 30679.329237987986,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "italian-minestrone",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-palak-tofu",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "chinese-tofu-scramble-bowl",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "vietnamese-tofu-noodle-salad",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "thai-red-curry-tofu",
+                "portions": 2.0
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "japanese-miso-soup-breakfast",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-chickpea-salad-sandwich",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "korean-tofu-bulgogi",
+                "portions": 1.25
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "chinese-tofu-scramble-bowl",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "japanese-soba-salad",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "vietnamese-mushroom-pho",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "japanese-miso-soup-breakfast",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "indian-palak-tofu",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "japanese-tofu-donburi",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "japanese-tofu-donburi",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "chinese-sweet-sour-tofu",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "middle-eastern-ful-medames",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "italian-minestrone",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "korean-doenjang-stew",
+                "portions": 2.0
+              }
+            ]
+          }
+        ],
+        "notes": "This plan uses the pantry ingredients tofu and kale early in the week, and tempeh is not available in the candidate lists so the rest of the week leans on other vegan proteins. It keeps meals varied across cuisines while emphasizing higher-protein tofu dishes to support the daily protein target alongside roughly calorie-appropriate portions."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "vegetarian-nut-allergy",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 2,
+      "soft_violations": 1,
+      "violation_rules": {
+        "protein": 1
+      },
+      "first_draft_rules": {
+        "protein": 2
+      },
+      "kcal_error": 0.002345864661654156,
+      "protein_days_met": 0.8571428571428571,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 0.7619047619047619,
+      "repairs": 2,
+      "fallbacks": 0,
+      "llm_calls": 3,
+      "tool_calls": 0,
+      "input_tokens": 8014,
+      "output_tokens": 3584,
+      "cost_usd": 0.02213946,
+      "latency_ms": 25872.936255007517,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "greek-spinach-feta-omelette",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "indian-chana-chaat",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-palak-tofu",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "greek-orzo-style-pasta-salad",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-chana-masala",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "chinese-tofu-scramble-bowl",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "middle-eastern-halloumi-style-traybake",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "greek-spanakopita-pie",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "indian-masala-omelette",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-chickpea-salad-sandwich",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-dal-tadka",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-avocado-toast-egg",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "indian-chana-chaat",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "middle-eastern-halloumi-style-traybake",
+                "portions": 1.25
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-huevos-rancheros",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "moroccan-harira",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-palak-tofu",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "greek-spinach-feta-omelette",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "greek-gigantes-beans",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "greek-orzo-style-pasta-salad",
+                "portions": 1.25
+              }
+            ]
+          }
+        ],
+        "notes": "This plan keeps the Greek and Indian preferences prominent while using the pantry items chickpeas, feta, and spinach early in the week. The only change boosts day 5 protein by swapping in a higher-protein dinner while preserving the overall 7-day structure and variety."
+      },
+      "warnings": [
+        "day 5: 80 g protein, need 80"
+      ]
+    },
+    {
+      "profile_id": "coeliac",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 0,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {},
+      "kcal_error": 0.0007959183673469573,
+      "protein_days_met": null,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 0.7619047619047619,
+      "repairs": 0,
+      "fallbacks": 0,
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "input_tokens": 2363,
+      "output_tokens": 1951,
+      "cost_usd": 0.01055229,
+      "latency_ms": 17860.52229598863,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-kedgeree",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "french-nicoise-salad",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-cajun-salmon",
+                "portions": 0.5
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "vietnamese-caramel-salmon",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-bbq-chicken-traybake",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-kedgeree",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "french-lentil-salad",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "vietnamese-caramel-salmon",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-huevos-rancheros",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "japanese-sushi-bowl",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "british-roast-chicken-veg",
+                "portions": 2.0
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "greek-spinach-feta-omelette",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "french-lentil-salad",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-buddha-bowl",
+                "portions": 1.25
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "moroccan-baked-eggs-merguez-style",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "british-jacket-potato-tuna",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "korean-salmon-rice-bowl",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "french-omelette-herbs",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "japanese-sushi-bowl",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-cajun-salmon",
+                "portions": 0.75
+              }
+            ]
+          }
+        ],
+        "notes": "This plan uses the pantry early with salmon and egg on day 1 and sweet potato on day 2, then keeps the week varied across cuisines and main proteins. Most days land near the energy target with balanced protein from salmon, eggs, chicken, tuna, and legumes, while keeping repeated recipes to a minimum."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "dairy-and-egg-allergy",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 2,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {
+        "variety": 2
+      },
+      "kcal_error": 0.003607142857142841,
+      "protein_days_met": 1.0,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 0.6190476190476191,
+      "repairs": 2,
+      "fallbacks": 0,
+      "llm_calls": 3,
+      "tool_calls": 0,
+      "input_tokens": 8161,
+      "output_tokens": 3124,
+      "cost_usd": 0.02017965,
+      "latency_ms": 22716.51593199931,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "mexican-chicken-tortilla-soup",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-stuffed-peppers",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "japanese-miso-soup-breakfast",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-turkey-chilli",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-black-bean-soup",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "chinese-tofu-scramble-bowl",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "mexican-pork-carnitas",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-vegan-chilli",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-stuffed-sweet-potato",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-chicken-tortilla-soup",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "vietnamese-pho-breakfast",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "mexican-black-bean-soup",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-pork-carnitas",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "japanese-miso-soup-breakfast",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "mexican-beef-chilli",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-sweet-potato-black-bean-tacos",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "chinese-tofu-scramble-bowl",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "mexican-stuffed-peppers",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-beef-chilli",
+                "portions": 1.5
+              }
+            ]
+          }
+        ],
+        "notes": "This plan keeps the Mexican dishes front and center while using the pantry items early in the week through avocado, black beans, and corn tortillas. The meals stay anchored by higher-protein lunches and dinners to support the 2000 kcal and 85 g protein daily target."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "low-carb",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 2,
+      "soft_violations": 2,
+      "violation_rules": {
+        "variety": 2
+      },
+      "first_draft_rules": {
+        "carbs": 1,
+        "kcal": 1
+      },
+      "kcal_error": 0.001714285714285689,
+      "protein_days_met": 1.0,
+      "carb_days_met": 1.0,
+      "pantry_use": 0.6666666666666666,
+      "variety": 0.47619047619047616,
+      "repairs": 2,
+      "fallbacks": 0,
+      "llm_calls": 6,
+      "tool_calls": 3,
+      "input_tokens": 30929,
+      "output_tokens": 15228,
+      "cost_usd": 0.09172407,
+      "latency_ms": 83730.22522998508,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "italian-frittata-courgette",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-cobb-salad",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-chicken-tikka-traybake",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "italian-frittata-courgette",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-cobb-salad",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-chicken-tikka-traybake",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "vietnamese-chicken-salad",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "french-chicken-dijon",
+                "portions": 2.0
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-full-english-lite",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-cobb-salad",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "chinese-kung-pao-chicken",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-full-english-lite",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "vietnamese-chicken-salad",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "chinese-kung-pao-chicken",
+                "portions": 1.25
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "moroccan-baked-eggs-merguez-style",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-cobb-salad",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "french-chicken-dijon",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-full-english-lite",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-cobb-salad",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-turkey-chilli",
+                "portions": 1.25
+              }
+            ]
+          }
+        ],
+        "notes": "This plan keeps the courgette dish early in the week and uses the chicken-based pantry recipes across several days. It also swaps in lower-carb, high-protein meals to stay close to the calorie target while keeping daily carbs under the limit."
+      },
+      "warnings": [
+        "american-cobb-salad appears 5 times (limit 2)",
+        "british-full-english-lite appears 3 times (limit 2)"
+      ]
+    },
+    {
+      "profile_id": "pescatarian-mediterranean",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 0,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {},
+      "kcal_error": 0.001057142857142854,
+      "protein_days_met": 1.0,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 0.6190476190476191,
+      "repairs": 0,
+      "fallbacks": 0,
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "input_tokens": 2365,
+      "output_tokens": 2532,
+      "cost_usd": 0.01316871,
+      "latency_ms": 19236.102630005917,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "italian-baked-cod-tomatoes",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "greek-prawn-saganaki",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-avocado-toast-egg",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "italian-tuna-white-bean-salad",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "british-fish-chips-baked",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "italian-caprese-salad",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "british-fish-chips-baked",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-huevos-rancheros",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "italian-baked-cod-tomatoes",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "greek-prawn-saganaki",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-avocado-toast-egg",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "italian-tuna-white-bean-salad",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "moroccan-fish-chermoula",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-protein-oats",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "greek-orzo-style-pasta-salad",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "spanish-cod-with-peppers",
+                "portions": 0.5
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-protein-oats",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "spanish-tuna-empanada-style-salad",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "spanish-cod-with-peppers",
+                "portions": 1.75
+              }
+            ]
+          }
+        ],
+        "notes": "The first day uses the pantry items immediately with cherry tomato, cod, and olives, then the rest of the week keeps leaning on Greek, Italian, and Spanish dishes. The menu emphasizes higher-protein seafood and egg-based meals so the days can be portioned to land near the 2000 kcal target while staying comfortably above 90 g protein."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "quick-weeknights",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 0,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {},
+      "kcal_error": 0.001246753246753235,
+      "protein_days_met": null,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 0.8571428571428571,
+      "repairs": 0,
+      "fallbacks": 0,
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "input_tokens": 2323,
+      "output_tokens": 1212,
+      "cost_usd": 0.00719715,
+      "latency_ms": 12007.719036017079,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "greek-spinach-feta-omelette",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "italian-pasta-pomodoro",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-burger",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-full-english-lite",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "british-coronation-chicken",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "greek-prawn-saganaki",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-huevos-rancheros",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-tomato-soup-grilled-cheese",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "italian-spaghetti-carbonara",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-huevos-rancheros",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "italian-panzanella",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "chinese-prawn-stir-fry",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "italian-tomato-bruschetta-eggs",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "british-coronation-chicken",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "french-salmon-en-papillote",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-full-english-lite",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "italian-caprese-salad",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "chinese-chow-mein",
+                "portions": 1.25
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "greek-yoghurt-honey-walnuts",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-turkey-club",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "greek-orzo-style-pasta-salad",
+                "portions": 1.5
+              }
+            ]
+          }
+        ],
+        "notes": "This plan uses spinach, canned tomatoes, and pasta early in the week, then keeps meals simple with quick mix-and-match recipes. It stays varied across cuisines while leaning on a few higher-energy lunches and dinners to help reach the daily target."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "seafood-sesame-soy-allergy",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 0,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {},
+      "kcal_error": 0.00045714285714284743,
+      "protein_days_met": null,
+      "carb_days_met": null,
+      "pantry_use": 0.6666666666666666,
+      "variety": 0.8095238095238095,
+      "repairs": 0,
+      "fallbacks": 0,
+      "llm_calls": 4,
+      "tool_calls": 3,
+      "input_tokens": 12994,
+      "output_tokens": 1470,
+      "cost_usd": 0.01636214,
+      "latency_ms": 21347.569453006145,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "thai-coconut-rice-porridge",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "spanish-pork-paprika-stew",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "spanish-romesco-chicken",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "mexican-pork-carnitas",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-turkey-chilli",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "vietnamese-coconut-coffee-oats",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "greek-avgolemono",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-stuffed-peppers",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-full-english-lite",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "indian-dal-tadka",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "spanish-pork-paprika-stew",
+                "portions": 2.0
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "thai-banana-pancake",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "spanish-romesco-chicken",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-bbq-chicken-traybake",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-avocado-toast-egg",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "indian-raita-chicken-wrap",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-pork-carnitas",
+                "portions": 1.25
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "middle-eastern-shakshuka",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "mexican-stuffed-peppers",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-egg-curry",
+                "portions": 0.75
+              }
+            ]
+          }
+        ],
+        "notes": "This plan leans on higher-protein lunches and dinners to stay close to the 2000 kcal target while keeping daily carbs balanced. It uses the pantry items early in the week through the pork and red pepper dishes, and it favors Thai, Vietnamese, and nearby flavor profiles where available."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "bulking",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 1,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {
+        "protein": 1
+      },
+      "kcal_error": 0.000299999999999987,
+      "protein_days_met": 1.0,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 0.8571428571428571,
+      "repairs": 2,
+      "fallbacks": 0,
+      "llm_calls": 3,
+      "tool_calls": 0,
+      "input_tokens": 9611,
+      "output_tokens": 6615,
+      "cost_usd": 0.03697695,
+      "latency_ms": 41674.547803006135,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-protein-oats",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "mexican-burrito-bowl",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "moroccan-kefta-tagine",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "indian-mango-lassi-bowl",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-cobb-salad",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-chicken-tikka-traybake",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "korean-seaweed-free-rice-rolls",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-protein-oats",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-turkey-club",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-beef-chilli",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "chinese-sesame-edamame",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "greek-chicken-souvlaki-pita",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "greek-lemon-potatoes-chicken",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "american-trail-mix",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "greek-spinach-feta-omelette",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "mexican-burrito-bowl",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "greek-turkey-meatballs",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "greek-tzatziki",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "greek-yoghurt-honey-walnuts",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "thai-larb-chicken",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "middle-eastern-beef-kebab-rice",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "mexican-spiced-pumpkin-seeds",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "greek-moussaka",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-stuffed-peppers",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "chinese-sesame-edamame",
+                "portions": 1.0
+              }
+            ]
+          }
+        ],
+        "notes": "This plan uses the pantry items across the week with beef mince, Greek yogurt, and rolled oats showing up early and repeatedly in different meals. It keeps protein high each day by leaning on the higher-protein mains and snacks while still giving good calorie coverage for the 3000 kcal target."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "cutting",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 7,
+      "soft_violations": 9,
+      "violation_rules": {
+        "protein": 4,
+        "kcal": 1,
+        "variety": 4
+      },
+      "first_draft_rules": {
+        "kcal": 1,
+        "protein": 5,
+        "variety": 1
+      },
+      "kcal_error": 0.02629464285714288,
+      "protein_days_met": 0.42857142857142855,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 0.5238095238095238,
+      "repairs": 2,
+      "fallbacks": 0,
+      "llm_calls": 3,
+      "tool_calls": 0,
+      "input_tokens": 8089,
+      "output_tokens": 11688,
+      "cost_usd": 0.05866353,
+      "latency_ms": 63404.130996001186,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "chinese-tofu-scramble-bowl",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "french-nicoise-salad",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "thai-basil-chicken",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-cobb-salad",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-chicken-tikka-traybake",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "chinese-tofu-scramble-bowl",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-turkey-chilli",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "thai-basil-chicken",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-turkey-chilli",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-chicken-tikka-traybake",
+                "portions": 2.0
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-protein-oats",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-turkey-chilli",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "greek-turkey-meatballs",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "chinese-tofu-scramble-bowl",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "thai-larb-chicken",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-chicken-tikka-traybake",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-cobb-salad",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-jambalaya",
+                "portions": 0.5
+              }
+            ]
+          }
+        ],
+        "notes": "This plan keeps the original structure where possible while boosting the lower-protein days with more protein-dense meals. It also uses the pantry items early in the week, including egg on day 1 and green beans in the day 1 lunch."
+      },
+      "warnings": [
+        "day 1: 126 g protein, need 130",
+        "day 3: 130 g protein, need 130",
+        "day 5: 126 g protein, need 130",
+        "day 7: 1772 kcal, target 1600 +/-10%",
+        "day 7: 116 g protein, need 130",
+        "chinese-tofu-scramble-bowl appears 3 times (limit 2)",
+        "mexican-breakfast-burrito appears 3 times (limit 2)",
+        "indian-chicken-tikka-traybake appears 3 times (limit 2)",
+        "american-turkey-chilli appears 3 times (limit 2)"
+      ]
+    },
+    {
+      "profile_id": "big-pantry",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 0,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {},
+      "kcal_error": 0.0007428571428571656,
+      "protein_days_met": null,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 1.0,
+      "repairs": 0,
+      "fallbacks": 0,
+      "llm_calls": 2,
+      "tool_calls": 2,
+      "input_tokens": 5956,
+      "output_tokens": 1805,
+      "cost_usd": 0.01259134,
+      "latency_ms": 17851.090706011746,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "greek-spinach-feta-omelette",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "french-nicoise-salad",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "greek-lemon-potatoes-chicken",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "french-croque-madame",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "italian-tuna-white-bean-salad",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "moroccan-stuffed-squash",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "french-leek-potato-soup",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "british-roast-chicken-veg",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "indian-dal-tadka",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-jambalaya",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-full-english-lite",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "british-ploughmans-salad",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "british-cottage-pie-lentil",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-huevos-rancheros",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "greek-avgolemono",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "chinese-beef-broccoli",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "vietnamese-banh-mi-eggs",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "british-jacket-potato-tuna",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "french-mushroom-bourguignon",
+                "portions": 1.25
+              }
+            ]
+          }
+        ],
+        "notes": "This week uses the pantry early and across multiple meals: spinach, egg, tuna, chicken thigh, leek, butternut squash, red lentils, mushroom, potato, and cheddar all appear by midweek. The plan keeps protein strong with chicken, tuna, eggs, and lentils while mixing lighter and richer meals so daily energy stays near target."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "picky-eater",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 0,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {},
+      "kcal_error": 0.0007278911564626035,
+      "protein_days_met": 1.0,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 1.0,
+      "repairs": 0,
+      "fallbacks": 0,
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "input_tokens": 2348,
+      "output_tokens": 978,
+      "cost_usd": 0.00616278,
+      "latency_ms": 12227.601035003318,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "british-sausage-mash",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-turkey-chilli",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "french-croque-madame",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "british-jacket-potato-tuna",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "british-fish-pie",
+                "portions": 1.25
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-protein-oats",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "french-lentil-salad",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-bbq-chicken-traybake",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-beans-on-toast",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "spanish-pork-paprika-stew",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-jambalaya",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-avocado-toast-egg",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-tomato-soup-grilled-cheese",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "british-roast-chicken-veg",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "british-ploughmans-salad",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-burger",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "french-omelette-herbs",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "french-cassoulet-bean",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "british-fish-chips-baked",
+                "portions": 1.25
+              }
+            ]
+          }
+        ],
+        "notes": "This plan uses the pantry items right away on day 1 and then spreads out the remaining meals with a strong mix of British, French, and American options. Each day lands comfortably around the calorie target while keeping protein well above 80 g, with most dinners and several lunches doing the heavy lifting."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "vegan-gluten-free",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 0,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {},
+      "kcal_error": 0.0026214285714285745,
+      "protein_days_met": 1.0,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 0.6190476190476191,
+      "repairs": 0,
+      "fallbacks": 0,
+      "llm_calls": 3,
+      "tool_calls": 5,
+      "input_tokens": 14510,
+      "output_tokens": 5071,
+      "cost_usd": 0.0337043,
+      "latency_ms": 38335.50468398607,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-buddha-bowl",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-palak-tofu",
+                "portions": 2.0
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "japanese-miso-soup-breakfast",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "french-lentil-salad",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "japanese-tofu-donburi",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "indian-poha-style-rice",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "japanese-tofu-donburi",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-chana-masala",
+                "portions": 2.0
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "middle-eastern-ful-medames",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-buddha-bowl",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-palak-tofu",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "indian-poha-style-rice",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "indian-sweet-potato-lentil-curry",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "vietnamese-tofu-noodle-salad",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "japanese-miso-soup-breakfast",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "vietnamese-tofu-noodle-salad",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-vegan-chilli",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "indian-chana-chaat",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-sweet-potato-lentil-curry",
+                "portions": 0.75
+              }
+            ]
+          }
+        ],
+        "notes": "This week uses chickpeas, coconut milk, and quinoa early in the plan, while keeping meals varied across cuisines and main ingredients. The combinations lean on higher-protein lunches and dinners so each day can land near the calorie target and clear the protein goal."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "with-snacks-and-spice",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 0,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {},
+      "kcal_error": 0.00023809523809523807,
+      "protein_days_met": 1.0,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 0.9285714285714286,
+      "repairs": 0,
+      "fallbacks": 0,
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "input_tokens": 2959,
+      "output_tokens": 1358,
+      "cost_usd": 0.008331930000000001,
+      "latency_ms": 14956.602457998088,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "thai-tom-yum-soup",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "thai-pad-thai-prawn",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "chinese-sesame-edamame",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-avocado-toast-egg",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "mexican-prawn-tacos",
+                "portions": 1.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "thai-basil-chicken",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "thai-satay-tofu-skewers",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "thai-omelette-rice",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "indian-prawn-coconut-curry",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "korean-fried-chicken",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "mexican-spiced-pumpkin-seeds",
+                "portions": 0.75
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-huevos-rancheros",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "thai-larb-chicken",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-burrito-bowl",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "indian-roasted-spiced-chickpeas",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.5
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "vietnamese-summer-rolls-prawn",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "spanish-garlic-prawns",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "indian-mango-lassi-bowl",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "korean-japchae",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "moroccan-prawn-tomato",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "thai-satay-tofu-skewers",
+                "portions": 1.0
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "korean-gyeran-bap",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "korean-salmon-rice-bowl",
+                "portions": 0.5
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-stuffed-peppers",
+                "portions": 2.0
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "thai-spring-rolls-fresh",
+                "portions": 1.0
+              }
+            ]
+          }
+        ],
+        "notes": "This plan uses the chilli, lime, and prawns right at the start of the week and leans into Thai, Korean, and Mexican flavors throughout. It keeps daily calories in a solid range while prioritizing high-protein lunches and dinners to stay above the protein target."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "weekend-lunch-dinner",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 0,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {},
+      "kcal_error": 0.00679999999999998,
+      "protein_days_met": null,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 1.0,
+      "repairs": 0,
+      "fallbacks": 0,
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "input_tokens": 1839,
+      "output_tokens": 468,
+      "cost_usd": 0.00348581,
+      "latency_ms": 8086.663293011952,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "lunch",
+                "recipe_id": "greek-lamb-kleftiko",
+                "portions": 1.0
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "moroccan-chicken-tagine",
+                "portions": 1.5
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "lunch",
+                "recipe_id": "moroccan-couscous-salad",
+                "portions": 0.75
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "middle-eastern-chicken-freekeh-style",
+                "portions": 1.75
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "lunch",
+                "recipe_id": "middle-eastern-beef-kebab-rice",
+                "portions": 1.25
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "moroccan-fish-chermoula",
+                "portions": 1.25
+              }
+            ]
+          }
+        ],
+        "notes": "This plan uses lamb shoulder on day 1 and couscous on day 2, while leaning into Moroccan and Middle Eastern flavors throughout. The meals are varied in proteins and keep each day in a reasonable calorie range for the 1500 kcal target."
+      },
+      "warnings": []
+    }
+  ]
+}
