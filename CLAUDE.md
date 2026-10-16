@@ -33,18 +33,16 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
-Step 1 on `feat/recipe-search`; code committed, no PR yet. Remaining, in order (the corpus
-comes first because the labelled queries and the eval numbers are generated from it):
+Step 1 merged (PR #1): 300-recipe corpus, Supabase seeded and embedded, 65 labelled queries,
+hybrid recall@10 0.843, MRR 0.922 (`evals/reports/retrieval-2026-10-15T195536Z.md`).
 
-1. Done: corpus complete (300 recipes). The first 144 came from `gpt-5.5` (no manifest entry;
-   that run crashed before writing it); the rest, plus 13 regenerated after `water` was added
-   to the ingredient table, from `gpt-5.4-mini` at about $0.008 per recipe ($1 total) to fit
-   the budget. The manifest records the model per run.
-2. Done: `pantrio corpus check` is clean (after the frying-oil rule in `nutrition.py`).
-3. Done: Supabase seeded (300 recipes) and embedded (`pantrio ingest`, $0.0006).
-4. Done: 65 labelled queries; first eval in `evals/reports/retrieval-2026-10-15T195536Z.md`
-   (hybrid recall@10 0.843, MRR 0.922; vague queries weakest at 0.55).
-5. Next: commit the corpus, manifest, queries and report; open the PR with the eval numbers.
+Step 2 on `feat/meal-planner`: LangGraph planner, `constraints.py`, 16 eval profiles. First
+eval `evals/reports/planner-2026-10-16T084243Z.md` on `gpt-5.4-mini` (reasoning low, chosen
+for budget; `gpt-5.5` not yet run because its prices are not in `.env`): 16/16 plans, 0 hard
+violations, 13/16 meet every target, protein days 94%, pantry use 94%, $0.023 per plan,
+p50 19s / p95 84s. Weakest: `cutting` (130 g protein in 1600 kcal, 43% of days met).
+Migration 0002 widened `recipe_ingredients.quantity` to 3 decimals (applied and reseeded on
+Supabase). Next: step 3 (pantry, grocery list, chat agent); add RLS before user tables.
 
 ## Stack
 
@@ -68,9 +66,9 @@ comes first because the labelled queries and the eval numbers are generated from
 ## Layout (keep this section current as code lands)
 
 - `src/pantrio/schema.py`: Pydantic models (Recipe, Ingredient, NutritionFacts; enums for the
-  14 EU allergens, diet tags, meal types, units). Planned: UserProfile, PantryItem, MealPlan,
-  GroceryList. Models sent as structured outputs carry field descriptions, which are part of
-  the prompt.
+  14 EU allergens, diet tags, meal types, units; UserProfile, NutritionTargets, MealPlan).
+  Planned: PantryItem, GroceryList. Models sent as structured outputs carry field
+  descriptions, which are part of the prompt.
 - `src/pantrio/foods.py`: the ingredient table (`data/ingredients.csv` joined to
   `data/usda_foods.csv`): unit conversion to grams, allergens and diet class per food,
   allergen and diet derivation.
@@ -84,18 +82,29 @@ comes first because the labelled queries and the eval numbers are generated from
   reciprocal rank fusion) with hard SQL filters for allergens, diets, time, meal, cuisine and
   excluded foods; optional LLM query parser.
 - `src/pantrio/config.py`: settings and prices from the environment.
-- `src/pantrio/db.py`: connections, migrations (`pantrio_migrations` table), seeding.
-- `src/pantrio/cli.py`: `pantrio db migrate|seed`, `ingest`, `search`, `corpus check`.
-- Planned: `constraints.py` (deterministic plan checks, the single source of truth for "is
-  this plan safe and valid"), `planner.py` (LangGraph meal-planning graph), `assistant.py`
-  (chat agent), `api.py`.
+- `src/pantrio/constraints.py`: deterministic plan checks, the single source of truth for "is
+  this plan safe and valid". Hard rules (allergens and diets re-derived from ingredients,
+  excluded foods, time, meal slot, structure, unknown ids) vs soft goals (daily kcal +/-10%,
+  protein minimum, carb limit, repeats); `fit_portions` sets 0.5-2 servings per meal in code.
+- `src/pantrio/planner.py`: LangGraph graph profile -> retrieve -> draft -> check -> repair
+  (max 2) -> finalise; one `search_recipes` tool (max 4 rounds), `PlanDraft` structured output,
+  `store=False`. Finalise replaces any meal still breaking a hard rule with a safe candidate
+  or raises; it never returns an unsafe plan. `RecipeStore` protocol (`DbStore` in prod,
+  `tests.conftest.CorpusStore` offline).
+- `src/pantrio/db.py`: connections, migrations (`pantrio_migrations` table), seeding,
+  `load_recipes` (the trusted recipe source for the checker).
+- `src/pantrio/cli.py`: `pantrio db migrate|seed`, `ingest`, `search`, `plan`, `corpus check`.
+- Planned: `assistant.py` (chat agent), `api.py`.
 - `data/`: `ingredients.csv` (hand-curated), `usda_foods.csv` (built by
   `scripts/build_usda_table.py`), `dish_briefs.csv` (300 fixed briefs), `recipes/*.json`
   (generated corpus, one file per recipe), `corpus_manifest.json` (generation runs and cost).
 - `scripts/`: `generate_corpus.py`, `build_usda_table.py`.
 - `supabase/migrations/`: SQL migrations.
 - `evals/`: `retrieval_queries.py` (deterministic query generator) -> `data/retrieval_queries.json`,
-  `metrics.py`, `run_retrieval.py`, `reports/`.
+  `plan_profiles.py` (16 eval profiles) -> `data/plan_profiles.json`, `metrics.py`,
+  `run_retrieval.py`, `run_planner.py`, `reports/`.
+- `.github/workflows/evals.yml`: manual paid evals (needs `OPENAI_API_KEY`, `DATABASE_URL`
+  repository secrets).
 - `tests/`: offline tests; OpenAI is mocked. DB tests run when `PANTRIO_TEST_DATABASE_URL` is
   set. Paid tests are marked `live`.
 - `web/`: frontend; see `web/DESIGN_SYSTEM.md`.
@@ -117,6 +126,9 @@ uv run python scripts/generate_corpus.py [--sample | --only ids | --force | --li
 uv run python scripts/build_usda_table.py           # rebuild data/usda_foods.csv
 uv run python -m evals.retrieval_queries # regenerate labelled queries from the corpus
 uv run python -m evals.run_retrieval     # retrieval eval (vector vs full text vs hybrid)
+uv run pantrio plan vegan-high-protein   # plan for an eval profile id or a UserProfile JSON file
+uv run python -m evals.plan_profiles     # regenerate the planner eval profiles
+uv run python -m evals.run_planner [--only ids]   # planner eval (paid; ~$0.03/plan on mini)
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 uv run uvicorn pantrio.api:app --env-file .env --reload   # from step 4
 cd web && npm ci && npm run dev          # :3000, from step 4

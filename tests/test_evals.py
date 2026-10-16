@@ -53,3 +53,29 @@ def test_committed_queries_never_label_filter_breakers_relevant():
         f = SearchFilters.model_validate(q["filters"])
         assert q["relevant_ids"]
         assert all(not f.violations(recipes[rid]) for rid in q["relevant_ids"]), q["id"]
+
+
+def test_committed_plan_profiles_match_generator():
+    from evals.plan_profiles import OUT as PROFILES
+    from evals.plan_profiles import generate
+    from evals.plan_profiles import render as render_profiles
+
+    assert PROFILES.read_text() == render_profiles(generate())
+
+
+def test_every_plan_profile_is_feasible():
+    """Each slot has enough safe recipes to fill the plan without breaking the repeat limit,
+    and every pantry and excluded food is in the ingredient table."""
+    import math
+
+    from evals.plan_profiles import load_profiles
+    from pantrio.constraints import MAX_REPEATS, recipe_violations
+    from pantrio.foods import load_foods
+
+    recipes = load_corpus()
+    foods = load_foods()
+    for pid, p in load_profiles():
+        assert set(p.pantry) | set(p.exclude_foods) <= set(foods), pid
+        for slot in p.meals:
+            safe = sum(not recipe_violations(r, p, slot) for r in recipes)
+            assert safe >= math.ceil(p.days / MAX_REPEATS), (pid, slot)

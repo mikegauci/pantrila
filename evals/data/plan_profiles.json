@@ -1,0 +1,502 @@
+[
+  {
+    "id": "omnivore-balanced",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 2000.0,
+        "min_protein_g": 90.0,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "chicken_thigh",
+        "broccoli",
+        "white_rice"
+      ],
+      "cuisines": [],
+      "notes": ""
+    }
+  },
+  {
+    "id": "vegan-high-protein",
+    "profile": {
+      "allergies": [],
+      "diets": [
+        "vegan"
+      ],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 2200.0,
+        "min_protein_g": 110.0,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "tofu",
+        "tempeh",
+        "kale"
+      ],
+      "cuisines": [],
+      "notes": ""
+    }
+  },
+  {
+    "id": "vegetarian-nut-allergy",
+    "profile": {
+      "allergies": [
+        "peanuts",
+        "tree_nuts"
+      ],
+      "diets": [
+        "vegetarian"
+      ],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 1900.0,
+        "min_protein_g": 80.0,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "spinach",
+        "feta",
+        "chickpeas"
+      ],
+      "cuisines": [
+        "greek",
+        "indian"
+      ],
+      "notes": ""
+    }
+  },
+  {
+    "id": "coeliac",
+    "profile": {
+      "allergies": [
+        "gluten"
+      ],
+      "diets": [
+        "gluten_free"
+      ],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 2100.0,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "sweet_potato",
+        "egg",
+        "salmon"
+      ],
+      "cuisines": [],
+      "notes": ""
+    }
+  },
+  {
+    "id": "dairy-and-egg-allergy",
+    "profile": {
+      "allergies": [
+        "milk",
+        "eggs"
+      ],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 2000.0,
+        "min_protein_g": 85.0,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "black_beans",
+        "avocado",
+        "corn_tortilla"
+      ],
+      "cuisines": [
+        "mexican"
+      ],
+      "notes": ""
+    }
+  },
+  {
+    "id": "low-carb",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 1800.0,
+        "min_protein_g": 120.0,
+        "max_carbs_g": 100.0
+      },
+      "pantry": [
+        "cauliflower",
+        "chicken_breast",
+        "courgette"
+      ],
+      "cuisines": [],
+      "notes": ""
+    }
+  },
+  {
+    "id": "pescatarian-mediterranean",
+    "profile": {
+      "allergies": [],
+      "diets": [
+        "pescatarian"
+      ],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 2000.0,
+        "min_protein_g": 90.0,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "cod",
+        "cherry_tomato",
+        "olives"
+      ],
+      "cuisines": [
+        "greek",
+        "italian",
+        "spanish"
+      ],
+      "notes": ""
+    }
+  },
+  {
+    "id": "quick-weeknights",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": 30,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 2200.0,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "pasta",
+        "canned_tomatoes",
+        "spinach"
+      ],
+      "cuisines": [],
+      "notes": "Busy; keep it simple."
+    }
+  },
+  {
+    "id": "seafood-sesame-soy-allergy",
+    "profile": {
+      "allergies": [
+        "fish",
+        "crustaceans",
+        "molluscs",
+        "sesame",
+        "soy"
+      ],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 2000.0,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "pork_loin",
+        "red_bell_pepper",
+        "rice_noodles"
+      ],
+      "cuisines": [
+        "thai",
+        "chinese",
+        "vietnamese"
+      ],
+      "notes": ""
+    }
+  },
+  {
+    "id": "bulking",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner",
+        "snack"
+      ],
+      "targets": {
+        "kcal": 3000.0,
+        "min_protein_g": 160.0,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "rolled_oats",
+        "greek_yogurt",
+        "beef_mince"
+      ],
+      "cuisines": [],
+      "notes": ""
+    }
+  },
+  {
+    "id": "cutting",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 1600.0,
+        "min_protein_g": 130.0,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "turkey_mince",
+        "egg",
+        "green_beans"
+      ],
+      "cuisines": [],
+      "notes": ""
+    }
+  },
+  {
+    "id": "big-pantry",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 2000.0,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "chicken_thigh",
+        "red_lentils",
+        "butternut_squash",
+        "spinach",
+        "egg",
+        "potato",
+        "leek",
+        "canned_tuna",
+        "cheddar",
+        "mushroom"
+      ],
+      "cuisines": [],
+      "notes": ""
+    }
+  },
+  {
+    "id": "picky-eater",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [
+        "mushroom",
+        "shiitake",
+        "coriander",
+        "aubergine",
+        "olives",
+        "capers"
+      ],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 2100.0,
+        "min_protein_g": 80.0,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "pork_sausage",
+        "potato"
+      ],
+      "cuisines": [
+        "british",
+        "american",
+        "french"
+      ],
+      "notes": ""
+    }
+  },
+  {
+    "id": "vegan-gluten-free",
+    "profile": {
+      "allergies": [
+        "gluten"
+      ],
+      "diets": [
+        "vegan",
+        "gluten_free"
+      ],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 2000.0,
+        "min_protein_g": 70.0,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "quinoa",
+        "chickpeas",
+        "coconut_milk"
+      ],
+      "cuisines": [],
+      "notes": ""
+    }
+  },
+  {
+    "id": "with-snacks-and-spice",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner",
+        "snack"
+      ],
+      "targets": {
+        "kcal": 2400.0,
+        "min_protein_g": 100.0,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "chilli",
+        "prawns",
+        "lime"
+      ],
+      "cuisines": [
+        "thai",
+        "korean",
+        "mexican"
+      ],
+      "notes": "Loves spicy food."
+    }
+  },
+  {
+    "id": "weekend-lunch-dinner",
+    "profile": {
+      "allergies": [
+        "mustard",
+        "celery",
+        "sulphites"
+      ],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 3,
+      "meals": [
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": 1500.0,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "lamb_shoulder",
+        "couscous"
+      ],
+      "cuisines": [
+        "moroccan",
+        "middle_eastern"
+      ],
+      "notes": ""
+    }
+  }
+]

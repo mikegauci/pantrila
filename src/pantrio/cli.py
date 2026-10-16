@@ -1,4 +1,4 @@
-"""Command line: `pantrio db migrate|seed`, `pantrio ingest`, `pantrio search`, `pantrio corpus`."""
+"""Command line: `pantrio db migrate|seed`, `ingest`, `search`, `plan`, `corpus check`."""
 
 from __future__ import annotations
 
@@ -106,6 +106,54 @@ def search(
         )
     if not result.ids:
         typer.echo("no recipes match those filters")
+
+
+@app.command()
+def plan(
+    profile: Annotated[str, typer.Argument(help="JSON file with a UserProfile, or an eval id")],
+    effort: Annotated[str, typer.Option(help="reasoning effort")] = "low",
+) -> None:
+    """Plan meals, e.g. pantrio plan vegan-high-protein (ids from evals/data/plan_profiles.json)."""
+    from pathlib import Path
+
+    from pantrio import db
+    from pantrio.planner import DbStore, Planner
+    from pantrio.schema import UserProfile
+    from pantrio.search import openai_query_embedder
+
+    path = Path(profile)
+    if path.exists():
+        user = UserProfile.model_validate_json(path.read_text())
+    else:
+        import json
+
+        evals = Path(__file__).resolve().parents[2] / "evals" / "data" / "plan_profiles.json"
+        by_id = {p["id"]: p["profile"] for p in json.loads(evals.read_text())}
+        if profile not in by_id:
+            raise typer.BadParameter(f"no file or eval profile called {profile!r}")
+        user = UserProfile.model_validate(by_id[profile])
+
+    with db.connect(config.database_url()) as conn:
+        store = DbStore(conn, openai_query_embedder(config.embed_model()))
+        result = Planner(store, effort=effort).plan(user)
+    for day, n in zip(result.plan.days, result.nutrition, strict=True):
+        typer.echo(
+            f"Day {day.day}  {n.kcal:.0f} kcal, protein {n.protein_g:.0f} g, "
+            f"carbs {n.carbs_g:.0f} g, fat {n.fat_g:.0f} g"
+        )
+        for m in day.meals:
+            r = result.recipes[m.recipe_id]
+            typer.echo(f"  {m.meal_type:<9} {r.title} x{m.portions:g}  ({r.total_minutes} min)")
+    typer.echo(f"\n{result.plan.notes}")
+    for w in result.warnings:
+        typer.echo(f"warning: {w}")
+    u = result.usage
+    typer.echo(
+        f"\npantry use {result.pantry_use:.0%}, {result.repairs} repairs, "
+        f"{u.llm_calls} LLM calls, {u.tool_calls} tool calls, "
+        f"{u.input_tokens:,} + {u.output_tokens:,} tokens, cost {config.fmt_cost(u.cost())}, "
+        f"{result.latency_ms / 1000:.1f}s"
+    )
 
 
 @corpus_app.command("check")

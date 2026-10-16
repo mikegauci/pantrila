@@ -80,3 +80,39 @@ def seed(conn: psycopg.Connection, recipes: Iterable[Recipe]) -> int:
             )
         cur.execute("delete from recipes where not (id = any(%s))", ([r.id for r in recipes],))
     return len(recipes)
+
+
+def load_recipes(conn: psycopg.Connection, ids: Iterable[str]) -> dict[str, Recipe]:
+    """Recipes by id, rebuilt from the recipe tables. Unknown ids are left out."""
+    ids = sorted(set(ids))
+    rows = conn.execute(
+        "select id, title, summary, cuisine, meal_types, diet_tags, allergens, total_minutes,"
+        " servings, steps, kcal, protein_g, carbs_g, fat_g, fibre_g"
+        " from recipes where id = any(%s)",
+        (ids,),
+    ).fetchall()
+    ingredients: dict[str, list[dict]] = {}
+    for rid, name, food, quantity, unit, grams in conn.execute(
+        "select recipe_id, name, food, quantity, unit, grams from recipe_ingredients"
+        " where recipe_id = any(%s) order by recipe_id, position",
+        (ids,),
+    ):
+        ingredients.setdefault(rid, []).append(
+            {"name": name, "food": food, "quantity": float(quantity), "unit": unit,
+             "grams": float(grams)}
+        )  # fmt: skip
+    out = {}
+    for row in rows:
+        rid, title, summary, cuisine, meals, diets, allergens, minutes, servings, steps = row[:10]
+        kcal, protein, carbs, fat, fibre = (float(v) for v in row[10:])
+        out[rid] = Recipe.model_validate(
+            {
+                "id": rid, "title": title, "summary": summary, "cuisine": cuisine,
+                "meal_types": meals, "diet_tags": diets, "allergens": allergens,
+                "total_minutes": minutes, "servings": servings, "steps": steps,
+                "ingredients": ingredients.get(rid, []),
+                "nutrition": {"kcal": kcal, "protein_g": protein, "carbs_g": carbs,
+                              "fat_g": fat, "fibre_g": fibre},
+            }
+        )  # fmt: skip
+    return out

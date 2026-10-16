@@ -1,0 +1,41 @@
+name: Paid evals
+
+# Manual only: these call OpenAI and read the deployed database. Needs repository secrets
+# OPENAI_API_KEY and DATABASE_URL; LANGSMITH_API_KEY is optional.
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: Chat model for the planner
+        default: gpt-5.4-mini
+      price_input:
+        description: USD per million input tokens for that model
+        default: "0.75"
+      price_output:
+        description: USD per million output tokens for that model
+        default: "4.50"
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
+      LANGSMITH_PROJECT: pantrio
+      PANTRIO_MODEL: ${{ inputs.model }}
+      PANTRIO_PRICE_INPUT_PER_MTOK: ${{ inputs.price_input }}
+      PANTRIO_PRICE_OUTPUT_PER_MTOK: ${{ inputs.price_output }}
+      PANTRIO_PRICE_EMBED_PER_MTOK: "0.02"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked
+      - run: uv run pytest -m live -s
+      - run: uv run python -m evals.run_retrieval
+      - run: uv run python -m evals.run_planner
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eval-reports
+          path: evals/reports/
