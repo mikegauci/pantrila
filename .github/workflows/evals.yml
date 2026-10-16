@@ -23,6 +23,7 @@ jobs:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
       LANGSMITH_PROJECT: pantrio
+      LANGSMITH_ENDPOINT: https://eu.api.smith.langchain.com
       PANTRIO_MODEL: ${{ inputs.model }}
       PANTRIO_PRICE_INPUT_PER_MTOK: ${{ inputs.price_input }}
       PANTRIO_PRICE_OUTPUT_PER_MTOK: ${{ inputs.price_output }}

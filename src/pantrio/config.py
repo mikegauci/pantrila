@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DEFAULT_MODEL = "gpt-5.5"
+DEFAULT_MODEL = "gpt-5.4-mini"
 DEFAULT_EMBED_MODEL = "text-embedding-3-small"
 EMBED_DIM = 1536
 
