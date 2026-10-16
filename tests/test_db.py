@@ -83,3 +83,12 @@ def test_hard_filters_hold_in_every_mode(seeded, corpus, mode):
 
 def test_no_match_returns_empty(seeded):
     assert run(seeded, "pasta", require_diets=[DietTag.VEGAN], meal_types=[MealType.DESSERT]) == []
+
+
+def test_load_recipes_round_trips(conn, corpus):
+    first = corpus[0]
+    eighth = first.ingredients[0].model_copy(update={"quantity": 0.125})  # 1/8 tsp
+    corpus[0] = first.model_copy(update={"ingredients": [eighth, *first.ingredients[1:]]})
+    db.seed(conn, corpus)
+    loaded = db.load_recipes(conn, [r.id for r in corpus] + ["missing"])
+    assert loaded == {r.id: r for r in corpus}
