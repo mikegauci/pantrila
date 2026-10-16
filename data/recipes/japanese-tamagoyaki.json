@@ -1,0 +1,76 @@
+{
+  "id": "japanese-tamagoyaki",
+  "title": "Japanese Rolled Omelette with Soy and Sugar",
+  "summary": "A dairy-free tamagoyaki-style rolled omelette, lightly sweet and savoury with soy sauce. It is quick enough for breakfast and works well with rice or as part of a Japanese-style morning plate.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "soy"
+  ],
+  "total_minutes": 15,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 11.3
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 8.4
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "vegetable oil, for the pan",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    }
+  ],
+  "steps": [
+    "Crack the eggs into a bowl and whisk gently with the soy sauce, sugar and salt until the whites and yolks are combined but not overly frothy.",
+    "Heat a small non-stick frying pan over medium-low heat. Add a little of the vegetable oil and wipe it around the pan so there is only a thin, even coating.",
+    "Pour in about one quarter of the egg mixture and tilt the pan to make a thin layer. Cook for 30–45 seconds, until the surface is mostly set but still slightly glossy.",
+    "Roll the egg from one side of the pan to the other using a spatula. Push the roll back to the starting side and lightly oil the exposed pan again.",
+    "Add another quarter of the egg mixture, lifting the existing roll slightly so the raw egg flows underneath. Cook until mostly set, then roll the omelette up again around the first roll.",
+    "Repeat with the remaining egg mixture in two more layers, keeping the heat moderate so the omelette stays golden rather than browned.",
+    "Turn the finished roll seam-side down and cook for 30 seconds to set. Transfer to a board, rest for 1 minute, then slice into thick pieces and serve warm."
+  ],
+  "nutrition": {
+    "kcal": 222.4,
+    "protein_g": 13.0,
+    "carbs_g": 5.2,
+    "fat_g": 16.3,
+    "fibre_g": 0.0
+  }
+}

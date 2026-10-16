@@ -1,0 +1,167 @@
+{
+  "id": "spanish-pisto-eggs",
+  "title": "Spanish Vegetable Stew with Baked Eggs",
+  "summary": "A rustic Spanish-style vegetable stew with smoky paprika, tomatoes and potatoes, finished with eggs baked on top. It’s hearty, comforting and ideal for a simple vegetarian dinner.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "eggs"
+  ],
+  "total_minutes": 50,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "red bell pepper, diced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "green bell pepper, diced",
+      "food": "green_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "potatoes, diced",
+      "food": "potato",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "courgette, diced",
+      "food": "courgette",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 300.0,
+      "unit": "ml",
+      "grams": 300.0
+    },
+    {
+      "name": "smoked paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 0.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "chickpeas, drained",
+      "food": "chickpeas",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large ovenproof pan over medium heat. Add the onion and both peppers with a pinch of salt, and cook for 6 to 8 minutes until softened.",
+    "Stir in the garlic, then add the potatoes and courgette. Cook for 3 minutes, stirring often, so the vegetables start to pick up some colour.",
+    "Add the canned tomatoes, tomato paste, vegetable stock, smoked paprika, oregano, bay leaf, black pepper and chickpeas. Bring to a gentle simmer.",
+    "Cook uncovered for 18 to 20 minutes, stirring occasionally, until the potatoes are tender and the stew has thickened. Add a splash of water if it looks too dry.",
+    "Preheat the oven to 200°C.",
+    "Taste the stew and adjust the seasoning. Make 4 small hollows in the stew and crack an egg into each one.",
+    "Transfer the pan to the oven and bake for 8 to 10 minutes, until the egg whites are set and the yolks are still a little soft, or longer if you prefer them firmer.",
+    "Scatter over the chopped parsley and serve straight from the pan with crusty bread, if desired."
+  ],
+  "nutrition": {
+    "kcal": 357.0,
+    "protein_g": 15.4,
+    "carbs_g": 46.4,
+    "fat_g": 14.0,
+    "fibre_g": 10.9
+  }
+}

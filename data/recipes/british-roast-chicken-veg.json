@@ -1,0 +1,111 @@
+{
+  "id": "british-roast-chicken-veg",
+  "title": "Roast Chicken Thighs with Root Vegetables",
+  "summary": "A simple British-style traybake with crisp chicken thighs and sweet, caramelised root vegetables. It’s hearty, savoury and ideal for an easy dinner.",
+  "cuisine": "british",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [],
+  "total_minutes": 75,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken thighs",
+      "food": "chicken_thigh",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 880.0
+    },
+    {
+      "name": "potatoes, cut into chunks",
+      "food": "potato",
+      "quantity": 700.0,
+      "unit": "g",
+      "grams": 700.0
+    },
+    {
+      "name": "carrots, cut into chunky pieces",
+      "food": "carrot",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "beetroot, peeled and cut into wedges",
+      "food": "beetroot",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "red onion, cut into wedges",
+      "food": "red_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "garlic cloves, lightly crushed",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "rosemary",
+      "food": "rosemary",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Put the potatoes, carrots, beetroot and red onion into a large roasting tin with the garlic, olive oil, thyme, rosemary, salt and black pepper. Toss well so everything is lightly coated.",
+    "Roast the vegetables for 20 minutes, stirring once halfway through, until they start to soften and take on a little colour.",
+    "Pat the chicken thighs dry, season them with a little extra salt and pepper, then nestle them on top of the vegetables, skin-side up.",
+    "Return the tray to the oven and roast for 35 to 40 minutes more, until the chicken skin is golden and crisp and the thighs are cooked through.",
+    "If needed, roast for an extra 5 minutes to deepen the colour. Rest for 5 minutes before serving so the juices settle."
+  ],
+  "nutrition": {
+    "kcal": 590.2,
+    "protein_g": 49.8,
+    "carbs_g": 53.4,
+    "fat_g": 19.9,
+    "fibre_g": 9.4
+  }
+}

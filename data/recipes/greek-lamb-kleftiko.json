@@ -1,0 +1,106 @@
+{
+  "id": "greek-lamb-kleftiko",
+  "title": "Slow-Roasted Greek Lamb Shoulder with Garlic and Lemon",
+  "summary": "Tender lamb shoulder roasted low and slow with garlic, lemon, oregano and rosemary for a classic Greek-style dinner. The meat turns deeply savoury and fragrant, with bright citrus cutting through the richness.",
+  "cuisine": "greek",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [],
+  "total_minutes": 255,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "lamb shoulder",
+      "food": "lamb_shoulder",
+      "quantity": 1200.0,
+      "unit": "g",
+      "grams": 1200.0
+    },
+    {
+      "name": "garlic cloves, crushed",
+      "food": "garlic",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 40.0
+    },
+    {
+      "name": "lemon, zested and juiced",
+      "food": "lemon",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 120.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "rosemary",
+      "food": "rosemary",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 11.8
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "onion, sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 250.0,
+      "unit": "ml",
+      "grams": 250.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 160°C. Pat the lamb shoulder dry and place it in a roasting tin or deep baking dish.",
+    "Make small slits all over the lamb with a sharp knife. Push the garlic into the slits, then rub the meat with olive oil, lemon zest, lemon juice, oregano, rosemary, salt and black pepper.",
+    "Scatter the sliced onion around the lamb and pour the water into the base of the tin. Cover tightly with foil or a lid.",
+    "Roast for 3 hours, basting once or twice with the juices, until the lamb is very tender and starting to pull apart.",
+    "Remove the foil, increase the oven to 220°C, and roast for 20 to 30 minutes more until the outside is browned and lightly crisp.",
+    "Rest the lamb for 15 minutes before carving or shredding. Spoon the pan juices over the meat and serve hot with potatoes, rice or a Greek salad if you like."
+  ],
+  "nutrition": {
+    "kcal": 924.0,
+    "protein_g": 51.2,
+    "carbs_g": 10.4,
+    "fat_g": 74.8,
+    "fibre_g": 2.1
+  }
+}

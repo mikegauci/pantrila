@@ -1,0 +1,94 @@
+{
+  "id": "mexican-spiced-pumpkin-seeds",
+  "title": "Chilli Lime Roasted Pumpkin Seeds",
+  "summary": "A crunchy Mexican-inspired vegan snack with toasted pumpkin seeds, smoky chilli, cumin and bright lime. Make a batch for grazing, packed lunches or topping soups and salads.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [],
+  "total_minutes": 20,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "pumpkin seeds",
+      "food": "pumpkin_seeds",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "lime, finely zested and juiced",
+      "food": "lime",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "smoked paprika",
+      "food": "paprika",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.1
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "cayenne pepper, optional for extra heat",
+      "food": "cayenne",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Preheat the oven to 180°C. Line a baking tray with baking paper or use a clean, dry tray.",
+    "Pat the pumpkin seeds dry if they feel damp, then put them in a bowl with the olive oil, finely grated lime zest, chilli powder, cumin, paprika, salt and cayenne. Toss until the seeds are evenly coated.",
+    "Spread the seeds in a single layer on the baking tray. Roast for 10 minutes, then stir and spread them out again.",
+    "Roast for another 4–6 minutes, until the seeds smell nutty, look lightly golden and are crisp at the edges. Watch closely near the end so the spices do not burn.",
+    "Remove from the oven and immediately squeeze over 1 tablespoon of lime juice. Toss well, then leave to cool on the tray; they will crisp further as they cool.",
+    "Taste and add a little more salt or lime juice if you like. Store completely cooled seeds in an airtight container for up to 1 week."
+  ],
+  "nutrition": {
+    "kcal": 317.1,
+    "protein_g": 15.4,
+    "carbs_g": 7.2,
+    "fat_g": 28.2,
+    "fibre_g": 3.7
+  }
+}

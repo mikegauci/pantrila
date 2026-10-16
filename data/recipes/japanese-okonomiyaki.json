@@ -1,0 +1,126 @@
+{
+  "id": "japanese-okonomiyaki",
+  "title": "Japanese Cabbage Pancake with Bacon and Mayonnaise",
+  "summary": "A home-style okonomiyaki-inspired cabbage pancake, crisp at the edges and tender inside, topped with savoury bacon and a creamy mayonnaise drizzle. It makes a satisfying Japanese-style dinner with simple pantry ingredients.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "eggs",
+    "mustard",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 35,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "cabbage, finely shredded",
+      "food": "cabbage",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 120.0,
+      "unit": "ml",
+      "grams": 120.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "bacon rashers",
+      "food": "bacon",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "mayonnaise",
+      "food": "mayonnaise",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    }
+  ],
+  "steps": [
+    "Put the shredded cabbage and sliced spring onions in a large bowl. Toss to loosen the cabbage so it will mix evenly into the batter.",
+    "In a second bowl, whisk the plain flour, eggs, vegetable stock, soy sauce, salt and black pepper until you have a thick but pourable batter with no dry patches.",
+    "Pour the batter over the cabbage and spring onions, then fold well until all the cabbage is lightly coated.",
+    "Heat 1 tablespoon of vegetable oil in a large non-stick frying pan over a medium heat. Add half the cabbage mixture and press it into a round pancake about 2 cm thick.",
+    "Lay half the bacon over the top of the pancake. Cook for 5–6 minutes, until the underside is deep golden and the edges look set.",
+    "Carefully flip the pancake so the bacon side is down. Cook for another 5–6 minutes, pressing gently with a spatula, until the bacon is browned and crisp and the pancake is cooked through in the centre.",
+    "Transfer to a plate and keep warm. Repeat with the remaining oil, cabbage mixture and bacon to make the second pancake.",
+    "Drizzle the pancakes with mayonnaise, scatter over sesame seeds, and serve hot, cut into wedges."
+  ],
+  "nutrition": {
+    "kcal": 826.7,
+    "protein_g": 23.8,
+    "carbs_g": 51.2,
+    "fat_g": 58.9,
+    "fibre_g": 6.4
+  }
+}

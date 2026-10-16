@@ -1,0 +1,82 @@
+{
+  "id": "french-omelette-herbs",
+  "title": "Soft French Omelette with Herbs",
+  "summary": "A tender, silky French-style omelette flavoured with fresh herbs and a little spring onion. It’s quick, light, and perfect for a simple breakfast.",
+  "cuisine": "french",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 10,
+  "servings": 1,
+  "ingredients": [
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "spring onion, finely sliced",
+      "food": "spring_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "parsley, finely chopped",
+      "food": "parsley",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 1.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Crack the eggs into a bowl, add the salt and pepper, and beat just until combined without overwhisking.",
+    "Stir in the spring onion and parsley.",
+    "Warm the butter in a small non-stick pan over medium-low heat until melted and foaming but not browned.",
+    "Pour in the eggs and stir gently with a spatula for a few seconds, scraping the base as the curds start to form.",
+    "Tilt the pan and keep the omelette soft and slightly creamy on top, then stop cooking before it dries out.",
+    "Fold the omelette into a neat oval and slide it onto a plate immediately. Serve right away.",
+    ""
+  ],
+  "nutrition": {
+    "kcal": 328.4,
+    "protein_g": 19.3,
+    "carbs_g": 2.5,
+    "fat_g": 26.5,
+    "fibre_g": 0.5
+  }
+}

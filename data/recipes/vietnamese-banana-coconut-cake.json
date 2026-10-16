@@ -1,0 +1,94 @@
+{
+  "id": "vietnamese-banana-coconut-cake",
+  "title": "Vietnamese-Style Baked Banana Coconut Cake",
+  "summary": "A tender baked banana cake inspired by Vietnamese chuối nướng, with ripe bananas, coconut milk and a softly chewy, golden top. Serve warm or at room temperature as a comforting vegetarian dessert.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 75,
+  "servings": 8,
+  "ingredients": [
+    {
+      "name": "ripe bananas, sliced",
+      "food": "banana",
+      "quantity": 650.0,
+      "unit": "g",
+      "grams": 650.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 388.0
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "butter, melted, plus extra for greasing",
+      "food": "butter",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "desiccated coconut",
+      "food": "desiccated_coconut",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Heat the oven to 180°C. Grease a 20 cm square or similar baking dish with a little of the melted butter.",
+    "Put the coconut milk, sugar, melted butter, vanilla extract and salt in a large bowl and whisk until the sugar starts to dissolve.",
+    "Whisk in the plain flour until you have a smooth, thick batter with no dry patches, then stir in the desiccated coconut.",
+    "Fold in most of the sliced bananas gently, keeping a few attractive slices aside for the top.",
+    "Pour the batter into the prepared dish and smooth the surface. Arrange the reserved banana slices on top in an even layer.",
+    "Bake for 50–60 minutes, until the cake is deep golden at the edges, set in the centre and a skewer inserted into the middle comes out mostly clean with a few moist crumbs.",
+    "Cool in the dish for at least 20 minutes before slicing. Serve warm for a soft pudding-like texture, or fully cooled for cleaner slices."
+  ],
+  "nutrition": {
+    "kcal": 386.5,
+    "protein_g": 4.6,
+    "carbs_g": 50.8,
+    "fat_g": 20.1,
+    "fibre_g": 3.5
+  }
+}

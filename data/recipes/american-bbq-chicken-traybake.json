@@ -1,0 +1,130 @@
+{
+  "id": "american-bbq-chicken-traybake",
+  "title": "BBQ Chicken Thighs with Corn and Sweet Potato",
+  "summary": "Juicy chicken thighs are coated in a simple smoky-sweet barbecue glaze and roasted with tender sweet potato and sweetcorn. It’s a comforting, crowd-pleasing dinner with bold American-style flavour.",
+  "cuisine": "american",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "mustard",
+    "sulphites"
+  ],
+  "total_minutes": 50,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken thighs",
+      "food": "chicken_thigh",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "sweet potatoes",
+      "food": "sweet_potato",
+      "quantity": 700.0,
+      "unit": "g",
+      "grams": 700.0
+    },
+    {
+      "name": "sweetcorn",
+      "food": "sweetcorn",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "garlic powder",
+      "food": "garlic_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.2
+    },
+    {
+      "name": "ketchup",
+      "food": "ketchup",
+      "quantity": 120.0,
+      "unit": "ml",
+      "grams": 138.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.5
+    },
+    {
+      "name": "cider vinegar",
+      "food": "cider_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "mustard",
+      "food": "mustard",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 29.6
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C. Line a large baking tray with baking paper if you have it.",
+    "Cut the sweet potatoes into bite-sized chunks. Toss them with 1 tablespoon olive oil, 1/2 teaspoon salt, and 1/2 teaspoon black pepper. Spread them on the tray and roast for 15 minutes.",
+    "Meanwhile, mix the ketchup, brown sugar, cider vinegar, mustard, water, paprika, garlic powder, and a pinch of salt in a bowl to make the barbecue sauce.",
+    "Pat the chicken thighs dry, season with the remaining salt and pepper, then toss with the barbecue sauce until well coated.",
+    "Remove the tray from the oven, add the sweetcorn and chicken thighs, and turn the sweet potatoes. Drizzle the sweetcorn with the remaining olive oil.",
+    "Return to the oven and roast for 20 to 25 minutes, until the chicken is cooked through, the juices run clear, and the sweet potatoes are browned at the edges.",
+    "If you want a stickier glaze, brush the chicken with any extra sauce and roast for 3 to 5 minutes more. Serve the chicken with the roasted sweet potato and sweetcorn."
+  ],
+  "nutrition": {
+    "kcal": 650.0,
+    "protein_g": 47.7,
+    "carbs_g": 80.9,
+    "fat_g": 17.3,
+    "fibre_g": 8.8
+  }
+}

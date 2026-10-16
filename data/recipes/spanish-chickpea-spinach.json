@@ -1,0 +1,116 @@
+{
+  "id": "spanish-chickpea-spinach",
+  "title": "Espinacas con Garbanzos",
+  "summary": "A classic Spanish-style spinach and chickpea stew scented with cumin and paprika. It’s hearty, savoury, and ideal for a quick vegan lunch with crusty bread or rice.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "canned chickpeas, drained and rinsed",
+      "food": "chickpeas",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 150.0,
+      "unit": "ml",
+      "grams": 150.0
+    },
+    {
+      "name": "spinach",
+      "food": "spinach",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large frying pan or shallow saucepan over medium heat.",
+    "Add the onion and cook for 5 minutes, stirring often, until softened and translucent.",
+    "Stir in the garlic, cumin, and paprika, and cook for 30 seconds until fragrant.",
+    "Add the chickpeas, canned tomatoes, and vegetable stock. Season with salt and black pepper, then simmer for 5 minutes.",
+    "Add the spinach in handfuls, stirring until it wilts and turns dark green, about 2 to 3 minutes.",
+    "Cook for 1 to 2 minutes more until the sauce is lightly thickened and the chickpeas are well coated. Serve hot."
+  ],
+  "nutrition": {
+    "kcal": 494.7,
+    "protein_g": 19.8,
+    "carbs_g": 64.5,
+    "fat_g": 20.5,
+    "fibre_g": 19.4
+  }
+}

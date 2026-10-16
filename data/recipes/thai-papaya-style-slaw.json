@@ -1,0 +1,130 @@
+{
+  "id": "thai-papaya-style-slaw",
+  "title": "Thai-Style Crunchy Carrot, Cucumber and Peanut Slaw",
+  "summary": "A bright vegan Thai-inspired lunch salad with crisp carrot and cucumber, fresh lime, chilli and crunchy peanuts. It is light, zesty and quick to make, perfect on its own or alongside rice or tofu.",
+  "cuisine": "thai",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free"
+  ],
+  "allergens": [
+    "peanuts",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "carrots, julienned or coarsely grated",
+      "food": "carrot",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "cucumber, deseeded and cut into thin matchsticks",
+      "food": "cucumber",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "red chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "spring onions, finely sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "fresh coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "roasted peanuts, roughly chopped",
+      "food": "peanuts",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 45.7
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 6.5
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 9.1
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "garlic clove, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Put the lime juice, tamari, maple syrup, sesame oil, grated ginger, grated garlic and a pinch of salt in a large bowl. Whisk until glossy and well combined.",
+    "Add the julienned carrots, cucumber matchsticks, sliced chilli and spring onions to the bowl. Toss thoroughly so the vegetables are coated in the dressing.",
+    "Let the slaw sit for 10 minutes, tossing once halfway through, until the vegetables soften very slightly but remain crunchy.",
+    "Add most of the chopped coriander and peanuts, then toss again. Taste and adjust with a little more lime juice or salt if needed.",
+    "Serve immediately, topped with the remaining coriander and peanuts for extra crunch."
+  ],
+  "nutrition": {
+    "kcal": 284.7,
+    "protein_g": 10.1,
+    "carbs_g": 28.0,
+    "fat_g": 17.4,
+    "fibre_g": 7.1
+  }
+}

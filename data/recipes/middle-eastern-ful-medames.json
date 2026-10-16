@@ -1,0 +1,100 @@
+{
+  "id": "middle-eastern-ful-medames",
+  "title": "Warm Lemon Garlic Mashed Beans",
+  "summary": "A simple Middle Eastern-style vegan breakfast of warm mashed beans brightened with lemon, garlic, and cumin. It’s creamy, savoury, and comforting, great with bread or flatbread.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery"
+  ],
+  "total_minutes": 15,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "cannellini beans, drained and rinsed",
+      "food": "cannellini_beans",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 60.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 1.5
+    }
+  ],
+  "steps": [
+    "Warm the olive oil in a small saucepan over medium heat. Add the garlic and cumin and cook for about 30 seconds, just until fragrant.",
+    "Add the cannellini beans, lemon juice, vegetable stock, salt, and black pepper. Cook for 3 to 4 minutes, stirring often, until the beans are hot.",
+    "Mash the beans with a fork or potato masher, leaving some texture. If they seem too thick, add a splash more stock and stir.",
+    "Taste and adjust with more lemon or salt if needed. Spoon into bowls and finish with chopped parsley. Serve warm."
+  ],
+  "nutrition": {
+    "kcal": 305.9,
+    "protein_g": 15.2,
+    "carbs_g": 46.1,
+    "fat_g": 7.8,
+    "fibre_g": 10.0
+  }
+}

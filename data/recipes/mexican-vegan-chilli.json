@@ -1,0 +1,179 @@
+{
+  "id": "mexican-vegan-chilli",
+  "title": "Three Bean Vegan Chilli with Cocoa and Cumin",
+  "summary": "A hearty Mexican-inspired vegan chilli packed with black beans, kidney beans and chickpeas, warmed with cumin, chilli and a little cocoa for smoky depth. It is ideal for a comforting dinner and works well with rice or tortillas.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "red bell pepper, diced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "carrot, finely diced",
+      "food": "carrot",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 70.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "smoked-style paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "cocoa powder",
+      "food": "cocoa_powder",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 6.2
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "black beans, drained and rinsed",
+      "food": "black_beans",
+      "quantity": 240.0,
+      "unit": "g",
+      "grams": 240.0
+    },
+    {
+      "name": "kidney beans, drained and rinsed",
+      "food": "kidney_beans",
+      "quantity": 240.0,
+      "unit": "g",
+      "grams": 240.0
+    },
+    {
+      "name": "chickpeas, drained and rinsed",
+      "food": "chickpeas",
+      "quantity": 240.0,
+      "unit": "g",
+      "grams": 240.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 250.0,
+      "unit": "ml",
+      "grams": 250.0
+    },
+    {
+      "name": "sweetcorn",
+      "food": "sweetcorn",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large saucepan over a medium heat. Add the onion, red bell pepper and carrot, then cook for 8–10 minutes, stirring often, until softened and the onion is translucent.",
+    "Add the garlic, cumin, chilli powder and paprika. Cook for 1 minute, stirring, until fragrant.",
+    "Stir in the cocoa powder and tomato paste, coating the vegetables well, and cook for 1–2 minutes until the paste darkens slightly.",
+    "Add the canned tomatoes, black beans, kidney beans, chickpeas, vegetable stock, sweetcorn, salt and black pepper. Stir well and bring to a gentle boil.",
+    "Reduce the heat and simmer uncovered for 25–30 minutes, stirring occasionally, until the chilli is thick and the vegetables are tender. If it gets too thick, add a splash of water.",
+    "Stir in the lime juice, taste and adjust the salt or chilli powder if needed. Scatter with chopped coriander before serving."
+  ],
+  "nutrition": {
+    "kcal": 400.5,
+    "protein_g": 18.0,
+    "carbs_g": 64.3,
+    "fat_g": 11.3,
+    "fibre_g": 19.7
+  }
+}

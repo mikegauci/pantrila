@@ -1,0 +1,122 @@
+{
+  "id": "middle-eastern-fattoush",
+  "title": "Crispy Pita Salad with Radish and Cucumber",
+  "summary": "A fresh Middle Eastern-style salad with crunchy toasted pita, peppery radish, cool cucumber, and lemony herbs. It’s light but satisfying, perfect for a quick vegan lunch.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "pita",
+      "food": "pita",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 120.0
+    },
+    {
+      "name": "cucumber",
+      "food": "cucumber",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "radishes",
+      "food": "radish",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 40.0
+    },
+    {
+      "name": "cherry tomatoes",
+      "food": "cherry_tomato",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "spring onion",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "parsley",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "mint",
+      "food": "mint",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 30.9
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 27.6
+    },
+    {
+      "name": "garlic",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Tear or cut the pita into bite-size pieces, spread them on a tray, and toss with a little olive oil and a pinch of salt.",
+    "Bake for 8 to 10 minutes, turning once, until crisp and golden. Set aside to cool slightly.",
+    "Slice the cucumber, radishes, cherry tomatoes, and spring onion. Roughly chop the parsley and mint.",
+    "In a large bowl, whisk together the lemon juice, olive oil, grated or crushed garlic, salt, and black pepper.",
+    "Add the vegetables and herbs to the bowl and toss well. Fold in the crispy pita just before serving so it stays crunchy.",
+    "Taste and adjust with a little more salt or lemon juice, then serve right away."
+  ],
+  "nutrition": {
+    "kcal": 343.8,
+    "protein_g": 8.1,
+    "carbs_g": 46.5,
+    "fat_g": 15.0,
+    "fibre_g": 4.4
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "id": "mexican-chicken-fajitas",
+  "title": "Chicken Fajitas with Peppers and Onions",
+  "summary": "Sizzling Mexican-style chicken fajitas with tender spiced chicken, sweet peppers and softened onions wrapped in warm flour tortillas. A colourful, quick dinner for sharing at the table.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken breast, sliced into strips",
+      "food": "chicken_breast",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "flour tortillas",
+      "food": "flour_tortilla",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 360.0
+    },
+    {
+      "name": "red bell pepper, sliced",
+      "food": "red_bell_pepper",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 320.0
+    },
+    {
+      "name": "green bell pepper, sliced",
+      "food": "green_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "onion, sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, finely chopped",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 3.7
+    },
+    {
+      "name": "smoked paprika",
+      "food": "paprika",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 3.4
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "sour cream, to serve",
+      "food": "sour_cream",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "salsa, to serve",
+      "food": "salsa",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    }
+  ],
+  "steps": [
+    "Put the chicken strips in a bowl with the lime juice, chilli powder, cumin, paprika, dried oregano, salt, black pepper, chopped garlic and 1 tablespoon of the olive oil. Mix well until the chicken is evenly coated.",
+    "Heat a large frying pan over medium-high heat. Add the remaining 1 tablespoon olive oil, then add the sliced onion and peppers. Cook for 6–8 minutes, stirring often, until softened, lightly charred at the edges and still a little juicy. Transfer to a plate.",
+    "Add the marinated chicken to the same hot pan in a single layer. Cook for 6–8 minutes, turning occasionally, until browned in places and cooked through with no pink remaining.",
+    "Return the peppers and onions to the pan and toss everything together for 1–2 minutes until hot and glossy. Taste and adjust with a little more salt if needed.",
+    "Warm the flour tortillas in a dry pan for about 20 seconds per side, or wrap them in foil and heat in a low oven until soft and pliable.",
+    "Serve the chicken, peppers and onions in the warm tortillas with sour cream and salsa spooned over the top."
+  ],
+  "nutrition": {
+    "kcal": 646.7,
+    "protein_g": 44.7,
+    "carbs_g": 62.0,
+    "fat_g": 24.7,
+    "fibre_g": 8.0
+  }
+}

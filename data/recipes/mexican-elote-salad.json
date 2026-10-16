@@ -1,0 +1,121 @@
+{
+  "id": "mexican-elote-salad",
+  "title": "Mexican Charred Sweetcorn Salad with Feta, Lime and Chilli",
+  "summary": "A bright vegetarian lunch salad with smoky charred sweetcorn, salty feta, fresh coriander, lime and a gentle chilli kick. It is quick to make and works well warm or at room temperature.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "milk"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "sweetcorn kernels, drained if canned",
+      "food": "sweetcorn",
+      "quantity": 320.0,
+      "unit": "g",
+      "grams": 320.0
+    },
+    {
+      "name": "feta, crumbled",
+      "food": "feta",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "red bell pepper, finely diced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "red onion, finely diced",
+      "food": "red_onion",
+      "quantity": 0.5,
+      "unit": "piece",
+      "grams": 75.0
+    },
+    {
+      "name": "fresh chilli, finely chopped",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.1
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Heat a large dry frying pan over a high heat until very hot. Add the sweetcorn in an even layer and cook for 6–8 minutes, stirring only occasionally, until the kernels are blistered and charred in spots.",
+    "While the corn chars, put the diced red bell pepper, red onion, chilli and coriander into a large bowl.",
+    "In a small bowl, whisk together the lime juice, olive oil, cumin, paprika, salt and black pepper to make a bright dressing.",
+    "Tip the hot charred sweetcorn into the bowl with the vegetables. Pour over the dressing and toss well so the corn is glossy and evenly seasoned.",
+    "Let the salad cool for 3–5 minutes, then gently fold through the crumbled feta, keeping some larger pieces intact. Taste and add a little more lime juice or salt if needed.",
+    "Serve warm or at room temperature, with extra coriander scattered over if liked."
+  ],
+  "nutrition": {
+    "kcal": 439.2,
+    "protein_g": 14.1,
+    "carbs_g": 43.2,
+    "fat_g": 27.1,
+    "fibre_g": 6.2
+  }
+}

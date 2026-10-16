@@ -1,0 +1,100 @@
+{
+  "id": "moroccan-carrot-salad",
+  "title": "Moroccan Cumin Carrot Salad with Orange and Mint",
+  "summary": "A bright Moroccan-style salad of tender carrots, sweet orange, fresh mint and warm cumin. It’s light, refreshing and ideal for a vegan lunch or as part of a mezze spread.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 25,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "carrots, peeled",
+      "food": "carrot",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "orange",
+      "food": "orange",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 260.0
+    },
+    {
+      "name": "fresh mint leaves",
+      "food": "mint",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    }
+  ],
+  "steps": [
+    "Bring a saucepan of water to the boil. Add the carrots and cook for 4 to 6 minutes, until just tender but still slightly crisp. Drain well and cool for a few minutes.",
+    "While the carrots cook, zest one orange if you like a stronger citrus flavour, then peel both oranges and cut the segments into bite-sized pieces, catching any juice.",
+    "In a large bowl, whisk together the olive oil, lemon juice, cumin, ground coriander, salt and black pepper.",
+    "Add the warm carrots to the dressing and toss well so they absorb the spices and citrus.",
+    "Fold in the orange pieces and most of the mint. Taste and adjust with a little more salt or lemon juice if needed.",
+    "Transfer to a serving dish and finish with the remaining mint. Serve warm or at room temperature."
+  ],
+  "nutrition": {
+    "kcal": 150.9,
+    "protein_g": 2.2,
+    "carbs_g": 21.1,
+    "fat_g": 7.6,
+    "fibre_g": 5.7
+  }
+}

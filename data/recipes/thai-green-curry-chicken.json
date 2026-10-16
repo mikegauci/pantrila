@@ -1,0 +1,181 @@
+{
+  "id": "thai-green-curry-chicken",
+  "title": "Thai Green Chicken Curry with Aubergine",
+  "summary": "A fragrant Thai-style green curry with tender chicken, silky aubergine and creamy coconut milk. It is warming, fresh and satisfying for a gluten-free weeknight dinner.",
+  "cuisine": "thai",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "mustard",
+    "soy"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken breast, sliced into bite-sized strips",
+      "food": "chicken_breast",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "aubergine, cut into 2 cm chunks",
+      "food": "aubergine",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 388.0
+    },
+    {
+      "name": "green bell pepper, sliced",
+      "food": "green_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "green beans, trimmed and halved",
+      "food": "green_beans",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "onion, thinly sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "green chilli, finely chopped",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "curry powder",
+      "food": "curry_powder",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 3.9
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "cumin",
+      "food": "cumin",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "tamari, gluten-free soy sauce alternative",
+      "food": "tamari",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.6
+    },
+    {
+      "name": "fresh basil leaves",
+      "food": "basil",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "coriander leaves, roughly chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 20.4
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "white rice, to serve",
+      "food": "white_rice",
+      "quantity": 280.0,
+      "unit": "g",
+      "grams": 280.0
+    }
+  ],
+  "steps": [
+    "Rinse the white rice, then cook it according to the packet instructions while you make the curry. Keep warm once tender and fluffy.",
+    "Heat the vegetable oil in a large pan over a medium-high heat. Add the onion and cook for 3–4 minutes until softened and just starting to colour.",
+    "Add the garlic, ginger, green chilli, curry powder, ground coriander and cumin. Stir for 1 minute until fragrant, taking care not to burn the spices.",
+    "Add the chicken strips and salt. Cook for 4–5 minutes, stirring often, until the outside of the chicken is no longer pink.",
+    "Add the aubergine and green bell pepper, stirring to coat them in the spiced oil. Cook for 3 minutes until the aubergine begins to soften at the edges.",
+    "Pour in the coconut milk, tamari, lime juice and brown sugar. Stir well, bring to a gentle simmer, then reduce the heat to medium-low.",
+    "Simmer uncovered for 12–15 minutes, stirring occasionally, until the chicken is cooked through, the aubergine is tender and the sauce has thickened slightly.",
+    "Add the green beans and simmer for a further 3–4 minutes until bright green and tender-crisp.",
+    "Stir through the basil and coriander. Taste and adjust with a little more salt or lime juice if needed, then serve the curry hot with the rice."
+  ],
+  "nutrition": {
+    "kcal": 761.3,
+    "protein_g": 44.9,
+    "carbs_g": 78.4,
+    "fat_g": 31.0,
+    "fibre_g": 7.5
+  }
+}

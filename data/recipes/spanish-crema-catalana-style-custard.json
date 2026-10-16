@@ -1,0 +1,108 @@
+{
+  "id": "spanish-crema-catalana-style-custard",
+  "title": "Crema Catalana",
+  "summary": "A silky Spanish citrus custard scented with lemon and orange, finished with a crisp caramelised sugar crust. It’s a classic vegetarian dessert for when you want something creamy, bright, and elegant.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 500.0,
+      "unit": "ml",
+      "grams": 515.0
+    },
+    {
+      "name": "lemon zest",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "orange zest",
+      "food": "orange",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 130.0
+    },
+    {
+      "name": "cinnamon",
+      "food": "cinnamon",
+      "quantity": 2.0,
+      "unit": "g",
+      "grams": 2.0
+    },
+    {
+      "name": "egg yolks",
+      "food": "egg",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "sugar for caramelising",
+      "food": "sugar",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 50.3
+    }
+  ],
+  "steps": [
+    "Put the milk, lemon zest, orange zest, and cinnamon in a saucepan. Warm over medium heat until steaming, then remove from the heat and let it infuse for 10 minutes.",
+    "In a bowl, whisk the egg yolks, sugar, cornstarch, salt, and vanilla extract until smooth and pale.",
+    "Strain the warm milk into the egg mixture, whisking constantly, then pour everything back into the saucepan.",
+    "Cook over low to medium-low heat, stirring continuously, until the custard thickens and just begins to bubble. Do not let it boil hard.",
+    "Divide the custard between 4 shallow ramekins and smooth the tops. Chill for at least 1 hour, or until fully set.",
+    "Just before serving, sprinkle a thin, even layer of sugar over each custard and caramelise it with a kitchen blowtorch or under a hot grill until golden and crisp. Let the sugar harden for 1 to 2 minutes, then serve."
+  ],
+  "nutrition": {
+    "kcal": 338.5,
+    "protein_g": 10.8,
+    "carbs_g": 54.4,
+    "fat_g": 9.0,
+    "fibre_g": 1.5
+  }
+}

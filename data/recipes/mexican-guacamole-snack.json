@@ -1,0 +1,113 @@
+{
+  "id": "mexican-guacamole-snack",
+  "title": "Chunky Guacamole with Tortilla Chips",
+  "summary": "A fresh Mexican-style chunky guacamole with creamy avocado, lime, coriander, tomato and a little chilli, served with crisp corn tortilla chips. It is quick to make for a vegan snack, party bowl or pre-dinner nibble.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 15,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "ripe avocados",
+      "food": "avocado",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 450.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "red onion, finely diced",
+      "food": "red_onion",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "tomato, deseeded and diced",
+      "food": "tomato",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh chilli, finely chopped",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "corn tortillas, cut into wedges",
+      "food": "corn_tortilla",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 208.0
+    },
+    {
+      "name": "vegetable oil, for brushing the chips",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    }
+  ],
+  "steps": [
+    "Heat the oven to 180°C fan. Cut the corn tortillas into triangles and spread them over a baking tray in a single layer.",
+    "Brush the tortilla wedges lightly with vegetable oil and bake for 8–10 minutes, turning once, until crisp and lightly golden at the edges. Leave to cool; they will crisp a little more as they cool.",
+    "Halve and stone the avocados, then scoop the flesh into a bowl. Add the lime juice and salt, then mash roughly with a fork, leaving plenty of chunks.",
+    "Fold in the red onion, diced tomato, coriander, chilli, garlic and black pepper. Taste and add a little more lime juice or salt if needed.",
+    "Spoon the chunky guacamole into a serving bowl and serve straight away with the crisp tortilla chips."
+  ],
+  "nutrition": {
+    "kcal": 341.3,
+    "protein_g": 5.9,
+    "carbs_g": 37.0,
+    "fat_g": 21.5,
+    "fibre_g": 11.7
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "id": "british-full-english-lite",
+  "title": "Lighter Full English Breakfast",
+  "summary": "A lighter take on a classic British breakfast with crispy bacon, soft eggs, garlicky mushrooms and roasted tomatoes. It feels hearty and satisfying, but uses just enough oil to keep it fresh and not too heavy.",
+  "cuisine": "british",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "eggs"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "bacon rashers",
+      "food": "bacon",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "mushrooms, sliced",
+      "food": "mushroom",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "tomatoes, halved",
+      "food": "tomato",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 480.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "fresh thyme (optional)",
+      "food": "thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 0.5
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Put the tomatoes on a tray cut-side up, drizzle with half the olive oil, and season with a pinch of salt and pepper. Roast for 12–15 minutes until softened and lightly charred.",
+    "While the tomatoes roast, cook the bacon in a large non-stick frying pan over medium heat until browned and crisp at the edges. Remove to a warm plate.",
+    "Add the remaining olive oil to the pan, then cook the mushrooms with the garlic, a pinch of salt and a little pepper for 5–7 minutes until the moisture has cooked off and they are golden.",
+    "In the last few minutes, cook the eggs to your liking in the same pan or a clean non-stick pan: fry, poach, or scramble them lightly.",
+    "Serve the bacon, eggs, mushrooms and roasted tomatoes together while hot, finishing with thyme if using."
+  ],
+  "nutrition": {
+    "kcal": 474.8,
+    "protein_g": 25.6,
+    "carbs_g": 15.1,
+    "fat_g": 35.8,
+    "fibre_g": 4.3
+  }
+}

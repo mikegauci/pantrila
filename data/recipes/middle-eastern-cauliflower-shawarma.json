@@ -1,0 +1,137 @@
+{
+  "id": "middle-eastern-cauliflower-shawarma",
+  "title": "Roasted Spiced Cauliflower with Tahini",
+  "summary": "Golden roasted cauliflower tossed with warm Middle Eastern spices and finished with a creamy tahini-lemon sauce. It makes a satisfying vegan dinner, especially with flatbread or grains on the side.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "sesame"
+  ],
+  "total_minutes": 40,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "cauliflower, cut into florets",
+      "food": "cauliflower",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 600.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "garlic powder",
+      "food": "garlic_powder",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "tahini",
+      "food": "tahini",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 44.4
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    },
+    {
+      "name": "chilli flakes",
+      "food": "chilli",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C. Line a baking tray with baking paper if needed.",
+    "Put the cauliflower florets in a large bowl with olive oil, cumin, paprika, ground coriander, garlic powder, salt and black pepper. Toss well so the florets are evenly coated.",
+    "Spread the cauliflower out on the tray in a single layer. Roast for 25 to 30 minutes, turning once halfway, until browned at the edges and tender in the centre.",
+    "While the cauliflower roasts, mix the tahini, lemon juice, water and grated garlic in a bowl. Stir until smooth and creamy. Add a little more water if needed for a drizzleable consistency.",
+    "Transfer the roasted cauliflower to a serving plate. Drizzle over the tahini sauce, then finish with parsley and chilli flakes.",
+    "Serve hot as a main dish, with pita, rice or a simple salad if you like."
+  ],
+  "nutrition": {
+    "kcal": 395.8,
+    "protein_g": 11.8,
+    "carbs_g": 25.8,
+    "fat_g": 31.3,
+    "fibre_g": 10.0
+  }
+}

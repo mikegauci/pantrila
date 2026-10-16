@@ -1,0 +1,63 @@
+{
+  "id": "moroccan-orange-cinnamon",
+  "title": "Moroccan Orange Slices with Cinnamon and Mint",
+  "summary": "A simple Moroccan-style dessert of juicy orange slices finished with warming cinnamon and fresh mint. It’s light, fragrant, and best served chilled after a meal.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 10,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "oranges",
+      "food": "orange",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 390.0
+    },
+    {
+      "name": "ground cinnamon",
+      "food": "cinnamon",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.6
+    },
+    {
+      "name": "fresh mint leaves",
+      "food": "mint",
+      "quantity": 4.0,
+      "unit": "g",
+      "grams": 4.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 12.6
+    }
+  ],
+  "steps": [
+    "Cut away the peel and white pith from the oranges, then slice the flesh into rounds or half-moons and arrange on a plate.",
+    "Sprinkle the orange slices with sugar, if using, then dust evenly with cinnamon.",
+    "Tear the mint leaves and scatter them over the top just before serving.",
+    "Serve immediately, or chill for 10 minutes for a colder, more refreshing dessert."
+  ],
+  "nutrition": {
+    "kcal": 120.1,
+    "protein_g": 2.0,
+    "carbs_g": 30.4,
+    "fat_g": 0.3,
+    "fibre_g": 5.5
+  }
+}

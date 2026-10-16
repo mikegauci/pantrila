@@ -1,0 +1,100 @@
+{
+  "id": "greek-baked-honey-figs-style-pears",
+  "title": "Greek Baked Pears with Honey Yogurt",
+  "summary": "Soft baked pears are drizzled with honey and served with cool Greek-style yogurt for a simple, fragrant dessert. Warm cinnamon and lemon make it feel classic and comforting.",
+  "cuisine": "greek",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free"
+  ],
+  "allergens": [
+    "milk",
+    "tree_nuts"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "pears",
+      "food": "pear",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 720.0
+    },
+    {
+      "name": "honey",
+      "food": "honey",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 63.0
+    },
+    {
+      "name": "plain yogurt",
+      "food": "plain_yogurt",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "ground cinnamon",
+      "food": "cinnamon",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.6
+    },
+    {
+      "name": "walnuts, roughly chopped",
+      "food": "walnuts",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "olive oil, for greasing",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Heat the oven to 190°C and lightly grease a baking dish with the olive oil.",
+    "Halve the pears lengthways and scoop out the cores with a teaspoon. Place them cut-side up in the dish.",
+    "Mix 1 tablespoon of the honey with the lemon juice, cinnamon, vanilla extract and a pinch of salt. Spoon this over the pears.",
+    "Add a small splash of water to the dish, then bake for 20 to 25 minutes until the pears are tender and lightly caramelised at the edges.",
+    "Stir the yogurt with the remaining honey until smooth.",
+    "Serve the warm pears with a spoonful of honey yogurt and scatter over the chopped walnuts."
+  ],
+  "nutrition": {
+    "kcal": 269.5,
+    "protein_g": 4.4,
+    "carbs_g": 45.6,
+    "fat_g": 9.9,
+    "fibre_g": 6.6
+  }
+}

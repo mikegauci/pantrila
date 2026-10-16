@@ -1,0 +1,122 @@
+{
+  "id": "italian-baked-cod-tomatoes",
+  "title": "Italian Baked Cod with Cherry Tomatoes, Capers and Olives",
+  "summary": "A light Italian-style dinner of tender cod baked in a bright cherry tomato sauce with briny capers, olives, garlic and herbs. It is quick enough for a weeknight but feels fresh and Mediterranean.",
+  "cuisine": "italian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "fish"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "cod fillets",
+      "food": "cod",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "cherry tomatoes, halved",
+      "food": "cherry_tomato",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "olives, pitted and halved",
+      "food": "olives",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "capers, drained",
+      "food": "capers",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 17.7
+    },
+    {
+      "name": "garlic cloves, thinly sliced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "red onion, thinly sliced",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "fresh basil leaves, torn",
+      "food": "basil",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    }
+  ],
+  "steps": [
+    "Preheat the oven to 200°C. Put the cherry tomatoes, olives, capers, garlic and red onion in a baking dish large enough to hold the cod in one layer.",
+    "Add the olive oil, lemon juice, dried oregano, half the salt and half the black pepper. Toss well, then bake for 12 minutes until the tomatoes start to soften and release their juices.",
+    "Pat the cod fillets dry and season them with the remaining salt and black pepper. Nestle the cod into the tomato mixture, spooning a little of the juices over the top.",
+    "Return the dish to the oven and bake for 12–15 minutes, until the cod is opaque, flakes easily with a fork and the tomatoes are saucy.",
+    "Scatter over the torn basil and spoon the tomato, caper and olive juices over the fish before serving."
+  ],
+  "nutrition": {
+    "kcal": 279.6,
+    "protein_g": 28.7,
+    "carbs_g": 11.0,
+    "fat_g": 13.7,
+    "fibre_g": 2.6
+  }
+}

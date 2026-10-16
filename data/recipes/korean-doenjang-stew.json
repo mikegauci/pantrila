@@ -1,0 +1,140 @@
+{
+  "id": "korean-doenjang-stew",
+  "title": "Korean-Style Miso Tofu Stew with Courgette and Potato",
+  "summary": "A warming vegan stew inspired by Korean doenjang jjigae, using miso as the fermented soybean paste substitute. It is savoury, earthy and gently spicy, with soft potato, tender courgette and tofu for a comforting dinner.",
+  "cuisine": "korean",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "firm tofu, cut into 2 cm cubes",
+      "food": "tofu",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "potatoes, peeled and cut into bite-size chunks",
+      "food": "potato",
+      "quantity": 450.0,
+      "unit": "g",
+      "grams": 450.0
+    },
+    {
+      "name": "courgette, halved lengthways and sliced",
+      "food": "courgette",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "onion, thinly sliced",
+      "food": "onion",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "miso paste, as a substitute for Korean fermented soybean paste",
+      "food": "miso",
+      "quantity": 70.0,
+      "unit": "g",
+      "grams": 70.0
+    },
+    {
+      "name": "gochugaru-style chilli powder, using chilli powder",
+      "food": "chilli_powder",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 3.7
+    },
+    {
+      "name": "toasted sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 800.0,
+      "unit": "ml",
+      "grams": 800.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Heat the vegetable oil and sesame oil in a large saucepan over a medium heat. Add the onion and cook for 4–5 minutes, stirring often, until softened and lightly golden at the edges.",
+    "Add the garlic, ginger and chilli powder. Stir for 30 seconds until fragrant, taking care not to burn the spices.",
+    "Add the potato chunks and vegetable stock. Bring to a boil, then reduce to a steady simmer and cook for 12–15 minutes, until the potatoes are just tender when pierced with a knife.",
+    "Ladle a little hot broth into a bowl and whisk in the miso until smooth. Stir this mixture back into the pan so the paste disperses evenly.",
+    "Add the tofu and courgette. Simmer gently for 6–8 minutes, until the courgette is tender but still green and the tofu is heated through.",
+    "Taste and season with salt and black pepper. The stew should be savoury and earthy, with a lightly spicy broth.",
+    "Stir in most of the spring onions, then ladle into bowls and finish with the remaining spring onions on top. Serve hot."
+  ],
+  "nutrition": {
+    "kcal": 378.3,
+    "protein_g": 24.3,
+    "carbs_g": 37.9,
+    "fat_g": 17.3,
+    "fibre_g": 7.8
+  }
+}

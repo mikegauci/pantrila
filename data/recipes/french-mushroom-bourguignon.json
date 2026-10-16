@@ -1,0 +1,152 @@
+{
+  "id": "french-mushroom-bourguignon",
+  "title": "French Mushroom and Lentil Red Wine Stew",
+  "summary": "A rich, earthy vegan stew with mushrooms, lentils and red wine, finished with thyme and parsley. It’s hearty enough for dinner and perfect with crusty bread or mashed potatoes.",
+  "cuisine": "french",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "sulphites"
+  ],
+  "total_minutes": 55,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "carrot, diced",
+      "food": "carrot",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 140.0
+    },
+    {
+      "name": "celery, diced",
+      "food": "celery",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 80.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "mushrooms, sliced",
+      "food": "mushroom",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 0.2
+    },
+    {
+      "name": "green lentils, rinsed",
+      "food": "green_lentils",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "red wine",
+      "food": "red_wine",
+      "quantity": 250.0,
+      "unit": "ml",
+      "grams": 247.5
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 500.0,
+      "unit": "ml",
+      "grams": 500.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large saucepan over medium heat. Add the onion, carrot and celery with a pinch of salt, then cook for 6 to 8 minutes until softened.",
+    "Stir in the garlic and mushrooms, and cook for 8 to 10 minutes until the mushrooms have released their liquid and started to brown.",
+    "Add the tomato paste, thyme and bay leaf, then cook for 1 minute to deepen the flavour.",
+    "Pour in the red wine and let it bubble for 2 to 3 minutes, scraping up any browned bits from the pan.",
+    "Add the lentils, canned tomatoes and water. Bring to a simmer, then reduce the heat and cook uncovered for 25 to 30 minutes, stirring occasionally, until the lentils are tender and the stew is thick.",
+    "Season with salt and black pepper to taste. Remove the bay leaf, stir through the parsley, and serve hot."
+  ],
+  "nutrition": {
+    "kcal": 373.3,
+    "protein_g": 17.8,
+    "carbs_g": 50.8,
+    "fat_g": 8.2,
+    "fibre_g": 10.9
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "id": "italian-mushroom-risotto",
+  "title": "Creamy Mushroom Risotto with Parmesan and Thyme",
+  "summary": "A classic Italian-style vegetarian risotto with golden mushrooms, fragrant thyme and a creamy parmesan finish. It is comforting enough for a cosy dinner but still elegant for guests.",
+  "cuisine": "italian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "milk",
+    "sulphites"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "risotto rice",
+      "food": "risotto_rice",
+      "quantity": 320.0,
+      "unit": "g",
+      "grams": 320.0
+    },
+    {
+      "name": "mushrooms, sliced",
+      "food": "mushroom",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "white wine",
+      "food": "white_wine",
+      "quantity": 150.0,
+      "unit": "ml",
+      "grams": 148.5
+    },
+    {
+      "name": "vegetable stock, hot",
+      "food": "vegetable_stock",
+      "quantity": 1.0,
+      "unit": "l",
+      "grams": 1000.0
+    },
+    {
+      "name": "parmesan, finely grated",
+      "food": "parmesan",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "fresh thyme leaves",
+      "food": "thyme",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "black pepper, freshly ground",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "parsley, chopped, to finish",
+      "food": "parsley",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    }
+  ],
+  "steps": [
+    "Heat the vegetable stock in a saucepan and keep it at a gentle simmer while you cook the risotto.",
+    "Heat 1 tablespoon of olive oil and half the butter in a wide pan over medium-high heat. Add the sliced mushrooms and cook for 6–8 minutes, stirring occasionally, until browned and any released liquid has evaporated. Season with a pinch of salt, then transfer the mushrooms to a plate.",
+    "Reduce the heat to medium. Add the remaining olive oil and butter to the same pan, then add the onion. Cook for 4–5 minutes until soft and translucent but not browned.",
+    "Stir in the garlic and thyme and cook for 1 minute until fragrant.",
+    "Add the risotto rice and stir for 1–2 minutes until the grains are glossy and lightly toasted around the edges.",
+    "Pour in the white wine and stir until it has mostly evaporated and the pan smells mellow rather than sharp.",
+    "Add a ladleful of hot stock and stir until mostly absorbed. Continue adding stock a ladleful at a time, stirring often, for 18–22 minutes until the rice is creamy and tender with a slight bite.",
+    "Stir the browned mushrooms back into the risotto. Add a little more stock if needed so the texture is loose and creamy, not stiff.",
+    "Take the pan off the heat and stir in the parmesan and black pepper. Taste and adjust with the remaining salt if needed.",
+    "Rest for 2 minutes, then serve sprinkled with chopped parsley and extra black pepper if you like."
+  ],
+  "nutrition": {
+    "kcal": 571.5,
+    "protein_g": 15.4,
+    "carbs_g": 77.5,
+    "fat_g": 19.5,
+    "fibre_g": 3.0
+  }
+}

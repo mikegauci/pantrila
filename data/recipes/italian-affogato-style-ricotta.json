@@ -1,0 +1,78 @@
+{
+  "id": "italian-affogato-style-ricotta",
+  "title": "Whipped Ricotta with Honey and Pistachios",
+  "summary": "A simple Italian-inspired dessert of creamy whipped ricotta topped with floral honey, crunchy pistachios and a little lemon zest. It is quick to make and ideal after a relaxed dinner.",
+  "cuisine": "italian",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free"
+  ],
+  "allergens": [
+    "milk",
+    "tree_nuts"
+  ],
+  "total_minutes": 10,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "ricotta",
+      "food": "ricotta",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "honey",
+      "food": "honey",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 63.0
+    },
+    {
+      "name": "pistachios, roughly chopped",
+      "food": "pistachios",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "lemon, zested",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Put the ricotta, vanilla extract, a pinch of salt and 1 tablespoon of the honey into a mixing bowl.",
+    "Whip with an electric whisk for 2–3 minutes, or beat vigorously by hand for 4–5 minutes, until the ricotta looks smooth, light and creamy.",
+    "Spoon the whipped ricotta into a shallow serving bowl and swirl the surface with the back of a spoon.",
+    "Drizzle over the remaining honey, then scatter with the chopped pistachios and lemon zest.",
+    "Serve straight away, or chill for up to 1 hour before serving if you prefer it colder."
+  ],
+  "nutrition": {
+    "kcal": 312.8,
+    "protein_g": 12.2,
+    "carbs_g": 27.0,
+    "fat_g": 18.4,
+    "fibre_g": 1.8
+  }
+}

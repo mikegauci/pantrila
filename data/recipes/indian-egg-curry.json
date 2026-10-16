@@ -1,0 +1,162 @@
+{
+  "id": "indian-egg-curry",
+  "title": "Boiled Egg Curry in Tomato Onion Masala",
+  "summary": "A comforting Indian-style dinner of hard-boiled eggs simmered in a rich tomato and onion masala. It is warmly spiced, lightly tangy, and perfect with rice or flatbread.",
+  "cuisine": "indian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "celery",
+    "eggs",
+    "mustard"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 400.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onions, finely chopped",
+      "food": "onion",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "green chilli, finely chopped",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 16.3
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 3.9
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "garam masala substitute: curry powder",
+      "food": "curry_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 200.0,
+      "unit": "ml",
+      "grams": 200.0
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Place the eggs in a saucepan, cover with cold water, bring to the boil, then simmer for 9 minutes. Transfer to cold water, cool, peel, and lightly score each egg with shallow cuts so the sauce can cling to them.",
+    "Heat the vegetable oil in a wide pan over medium heat. Add the chopped onions and cook for 10–12 minutes, stirring often, until soft and deep golden at the edges.",
+    "Add the garlic, ginger, and green chilli. Cook for 1–2 minutes until fragrant and the raw smell has gone.",
+    "Stir in the cumin, ground coriander, turmeric, paprika, chilli powder, curry powder, and salt. Cook for 30 seconds, adding a splash of water if the spices start to catch.",
+    "Add the canned tomatoes and tomato paste. Cook for 8–10 minutes, stirring regularly, until the masala thickens, darkens slightly, and the oil begins to separate at the edges.",
+    "Pour in the vegetable stock, bring to a gentle simmer, and cook for 5 minutes until the sauce is glossy and spoon-coating. Add a little more water if you prefer a looser curry.",
+    "Add the boiled eggs and simmer gently for 5 minutes, turning them once or twice to coat them in the masala.",
+    "Finish with chopped fresh coriander and serve hot with rice or flatbread."
+  ],
+  "nutrition": {
+    "kcal": 279.3,
+    "protein_g": 15.5,
+    "carbs_g": 17.2,
+    "fat_g": 17.3,
+    "fibre_g": 4.8
+  }
+}

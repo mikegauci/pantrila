@@ -1,0 +1,95 @@
+{
+  "id": "chinese-scallion-egg-pancake",
+  "title": "Chinese Egg and Spring Onion Pancake",
+  "summary": "A quick savoury Chinese-style breakfast pancake with soft egg, fragrant spring onion and lightly crisp golden edges. It is simple, comforting and ideal for a fast morning meal.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "eggs",
+    "sesame"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "spring onions, finely sliced",
+      "food": "spring_onion",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 120.0,
+      "unit": "ml",
+      "grams": 120.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "vegetable oil, for frying",
+      "food": "vegetable_oil",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 20.4
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Put the plain flour and salt in a mixing bowl. Whisk in the vegetable stock gradually until you have a smooth, pourable batter with no dry patches.",
+    "Beat in the eggs, sesame oil and black pepper until evenly combined, then stir through most of the sliced spring onions, saving a small handful for garnish if you like.",
+    "Heat half the vegetable oil in a non-stick frying pan over medium heat. Pour in half the batter and tilt the pan so it spreads into a thin, even pancake.",
+    "Cook for 3–4 minutes until the underside is golden and the top is mostly set, then flip carefully and cook for another 2–3 minutes until cooked through and lightly crisp at the edges.",
+    "Transfer to a board and repeat with the remaining oil and batter. Slice the pancakes into wedges, scatter over any reserved spring onion and serve hot."
+  ],
+  "nutrition": {
+    "kcal": 449.1,
+    "protein_g": 16.3,
+    "carbs_g": 49.3,
+    "fat_g": 20.3,
+    "fibre_g": 2.5
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "id": "british-pea-mint-soup",
+  "title": "Pea and Mint Soup",
+  "summary": "A light, bright British soup made with sweet peas, fresh mint, and a little potato for body. It’s fresh and comforting, ideal for a quick vegan lunch.",
+  "cuisine": "british",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery"
+  ],
+  "total_minutes": 25,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "potato, peeled and diced",
+      "food": "potato",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 750.0,
+      "unit": "ml",
+      "grams": 750.0
+    },
+    {
+      "name": "frozen peas",
+      "food": "peas",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "fresh mint leaves",
+      "food": "mint",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a saucepan over medium heat. Add the onion and cook for 5 minutes, stirring often, until soft but not browned.",
+    "Add the diced potato and vegetable stock. Bring to a simmer and cook for about 10 minutes, until the potato is tender.",
+    "Add the peas and cook for 2 to 3 minutes, just until bright green and hot.",
+    "Stir in the mint, salt, black pepper, and lemon juice, then remove from the heat.",
+    "Blend the soup until smooth, then taste and adjust the seasoning if needed. Serve hot."
+  ],
+  "nutrition": {
+    "kcal": 173.3,
+    "protein_g": 7.3,
+    "carbs_g": 28.4,
+    "fat_g": 4.1,
+    "fibre_g": 6.6
+  }
+}

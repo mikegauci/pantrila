@@ -1,0 +1,144 @@
+{
+  "id": "chinese-kung-pao-chicken",
+  "title": "Kung Pao Chicken with Peanuts and Chilli",
+  "summary": "A dairy-free Chinese-inspired stir-fry with tender chicken, crunchy peanuts and a glossy chilli-soy sauce. It is quick enough for a weeknight dinner and best served with rice or noodles.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "peanuts",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken breast, cut into bite-size pieces",
+      "food": "chicken_breast",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 51.0
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 15.7
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 29.9
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.8
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "garlic, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, finely chopped",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh chilli, sliced",
+      "food": "chilli",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "red bell pepper, diced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "roasted peanuts",
+      "food": "peanuts",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Toss the chicken with 1 tbsp soy sauce, 1 tbsp cornstarch, the salt and black pepper. Leave to marinate while you prepare the remaining ingredients.",
+    "In a small bowl, mix the remaining 2 tbsp soy sauce, rice vinegar, brown sugar, sesame oil and 1 tbsp cornstarch with 3 tbsp water until smooth.",
+    "Heat the vegetable oil in a large wok or frying pan over high heat. Add the chicken in a single layer and stir-fry for 5–6 minutes, until browned outside and cooked through.",
+    "Add the garlic, ginger, sliced chilli and red bell pepper. Stir-fry for 2–3 minutes, until fragrant and the pepper is just tender but still bright.",
+    "Pour in the sauce and toss quickly. Cook for 1–2 minutes, until the sauce turns glossy and thick enough to coat the chicken.",
+    "Stir in the spring onions and peanuts, cook for 30 seconds to warm through, then remove from the heat and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 448.3,
+    "protein_g": 41.1,
+    "carbs_g": 17.3,
+    "fat_g": 24.3,
+    "fibre_g": 3.4
+  }
+}

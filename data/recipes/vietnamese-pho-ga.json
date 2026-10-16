@@ -1,0 +1,172 @@
+{
+  "id": "vietnamese-pho-ga",
+  "title": "Vietnamese-Style Chicken Pho with Ginger and Star Anise",
+  "summary": "A fragrant dairy-free chicken noodle soup inspired by Vietnamese pho, with ginger, cinnamon and star-anise-style warmth. It is light but satisfying for dinner, with tender chicken, rice noodles and fresh herbs.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "fish"
+  ],
+  "total_minutes": 55,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken thighs, boneless and skinless",
+      "food": "chicken_thigh",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "rice noodles",
+      "food": "rice_noodles",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "chicken stock",
+      "food": "chicken_stock",
+      "quantity": 1.5,
+      "unit": "l",
+      "grams": 1500.0
+    },
+    {
+      "name": "fresh ginger, sliced",
+      "food": "ginger",
+      "quantity": 35.0,
+      "unit": "g",
+      "grams": 35.0
+    },
+    {
+      "name": "onion, halved",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, lightly crushed",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "cinnamon stick substitute, ground cinnamon",
+      "food": "cinnamon",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.3
+    },
+    {
+      "name": "star anise style spice substitute, fennel seeds",
+      "food": "fennel_seeds",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "fish sauce",
+      "food": "fish_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 35.5
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "bean sprouts",
+      "food": "bean_sprouts",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "fresh coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "mint leaves",
+      "food": "mint",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "lime, cut into wedges",
+      "food": "lime",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 90.0
+    },
+    {
+      "name": "red chilli, thinly sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Put the chicken stock, ginger, halved onion, garlic, cinnamon, fennel seeds and ground coriander in a large saucepan. Bring to a boil, then reduce to a gentle simmer for 10 minutes until fragrant.",
+    "Add the chicken thighs to the broth. Simmer gently for 18–22 minutes, until the chicken is cooked through and tender with no pink in the centre.",
+    "Lift the chicken onto a board. Strain the broth through a sieve into a clean pan, discarding the aromatics. Stir in the fish sauce, brown sugar, salt and black pepper, then keep the broth hot over a low heat.",
+    "Shred the chicken into bite-sized pieces using two forks. Return it to the hot broth for 2–3 minutes to warm through and soak up the flavour.",
+    "Cook the rice noodles according to the packet instructions, usually soaking or simmering for 4–6 minutes until tender but still slightly springy. Drain and divide between four deep bowls.",
+    "Ladle the hot broth and shredded chicken over the noodles. Top with bean sprouts, spring onions, coriander, mint and chilli.",
+    "Serve immediately with lime wedges for squeezing over the soup."
+  ],
+  "nutrition": {
+    "kcal": 608.0,
+    "protein_g": 45.7,
+    "carbs_g": 77.9,
+    "fat_g": 11.6,
+    "fibre_g": 4.5
+  }
+}

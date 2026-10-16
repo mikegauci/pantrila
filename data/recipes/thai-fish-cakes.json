@@ -1,0 +1,159 @@
+{
+  "id": "thai-fish-cakes",
+  "title": "Thai-Style Cod Fish Cakes with Green Beans and Sweet Chilli Dip",
+  "summary": "Fragrant Thai-inspired cod fish cakes flecked with green beans, chilli, ginger and coriander, pan-fried until golden and served with a quick sweet chilli-lime dip. A light but satisfying pescatarian dinner with bright heat and fresh herbs.",
+  "cuisine": "thai",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "eggs",
+    "fish"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "cod fillet, skinless and boneless, roughly chopped",
+      "food": "cod",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "green beans, finely sliced",
+      "food": "green_beans",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "spring onions, finely sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "red chilli, deseeded and finely chopped",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "garlic cloves, grated",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "egg, beaten",
+      "food": "egg",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 50.0
+    },
+    {
+      "name": "fish sauce",
+      "food": "fish_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.7
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 15.7
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "vegetable oil, for frying",
+      "food": "vegetable_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "sriracha",
+      "food": "sriracha",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 48.8
+    },
+    {
+      "name": "honey",
+      "food": "honey",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 31.5
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "lime, cut into wedges to serve",
+      "food": "lime",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 45.0
+    }
+  ],
+  "steps": [
+    "Blanch the sliced green beans in boiling water for 1 minute, then drain and rinse under cold water. Pat dry so they do not make the fish cake mixture watery.",
+    "Put the chopped cod in a food processor with the ginger, garlic, egg, fish sauce, 1 tablespoon lime juice, cornstarch and salt. Pulse until the fish is finely minced and sticky, but not completely smooth.",
+    "Scrape the mixture into a bowl and fold in the green beans, spring onions, coriander and chopped chilli. Chill for 10 minutes to firm up.",
+    "Meanwhile, make the dip by stirring together the sriracha, honey, rice vinegar and the remaining 1 tablespoon lime juice until glossy and pourable.",
+    "With damp hands, shape the fish mixture into 12 small patties, about 1.5 cm thick.",
+    "Heat the vegetable oil in a large non-stick frying pan over medium heat. Fry the fish cakes for 3–4 minutes on each side, in batches if needed, until deep golden outside and cooked through in the centre.",
+    "Drain briefly on kitchen paper, then serve hot with the sweet chilli dip and lime wedges."
+  ],
+  "nutrition": {
+    "kcal": 315.2,
+    "protein_g": 30.3,
+    "carbs_g": 20.3,
+    "fat_g": 12.7,
+    "fibre_g": 2.4
+  }
+}

@@ -1,0 +1,141 @@
+{
+  "id": "moroccan-couscous-salad",
+  "title": "Herby Couscous Salad with Chickpeas and Raisins",
+  "summary": "A bright Moroccan-style couscous salad with chickpeas, herbs, lemon, and sweet raisins. It’s light but satisfying, perfect for a vegan lunch and easy to pack ahead.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "couscous",
+      "food": "couscous",
+      "quantity": 140.0,
+      "unit": "g",
+      "grams": 140.0
+    },
+    {
+      "name": "boiling water",
+      "food": "water",
+      "quantity": 180.0,
+      "unit": "ml",
+      "grams": 180.0
+    },
+    {
+      "name": "chickpeas, drained and rinsed",
+      "food": "chickpeas",
+      "quantity": 240.0,
+      "unit": "g",
+      "grams": 240.0
+    },
+    {
+      "name": "raisins",
+      "food": "raisins",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "red onion, finely diced",
+      "food": "red_onion",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "cucumber, diced",
+      "food": "cucumber",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "cherry tomatoes, halved",
+      "food": "cherry_tomato",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "fresh parsley, chopped",
+      "food": "parsley",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh mint, chopped",
+      "food": "mint",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 30.9
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 27.6
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    }
+  ],
+  "steps": [
+    "Put the couscous in a large bowl, add the boiling water, cover, and leave for 5 minutes until the grains are tender and have absorbed the liquid.",
+    "Fluff the couscous with a fork, then stir in the olive oil, lemon juice, cumin, paprika, salt, and black pepper so the grains are evenly seasoned.",
+    "Add the chickpeas, raisins, red onion, cucumber, cherry tomatoes, parsley, and mint. Toss well until everything is combined.",
+    "Taste and adjust with a little more salt or lemon juice if needed, then serve immediately or chill for 15 minutes for a fresher salad."
+  ],
+  "nutrition": {
+    "kcal": 664.9,
+    "protein_g": 20.4,
+    "carbs_g": 108.7,
+    "fat_g": 18.5,
+    "fibre_g": 15.2
+  }
+}

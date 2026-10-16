@@ -1,0 +1,107 @@
+{
+  "id": "vietnamese-coconut-coffee-oats",
+  "title": "Vietnamese-Style Coconut Banana Overnight Oats",
+  "summary": "Creamy vegan overnight oats inspired by Vietnamese coconut desserts, with sweet banana, coconut milk and a hint of cinnamon. Prepare them the night before for a cool, spoonable breakfast.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten"
+  ],
+  "total_minutes": 485,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "rolled oats",
+      "food": "rolled_oats",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 200.0,
+      "unit": "ml",
+      "grams": 194.0
+    },
+    {
+      "name": "banana, mashed",
+      "food": "banana",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 120.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 19.5
+    },
+    {
+      "name": "desiccated coconut",
+      "food": "desiccated_coconut",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "chia seeds",
+      "food": "chia_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 9.6
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "cinnamon",
+      "food": "cinnamon",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.7
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "banana, sliced, to serve",
+      "food": "banana",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 120.0
+    }
+  ],
+  "steps": [
+    "In a mixing bowl or lidded container, combine the rolled oats, coconut milk, mashed banana, maple syrup, desiccated coconut, chia seeds, vanilla extract, cinnamon and salt.",
+    "Stir very well until the banana is evenly mixed through and there are no dry pockets of oats or chia seeds.",
+    "Cover and refrigerate for at least 8 hours, or overnight, until the oats are soft and the mixture is thick and creamy.",
+    "In the morning, stir the oats. If they are thicker than you like, loosen with a small splash of water or extra coconut milk if available.",
+    "Spoon into bowls or jars and top with the sliced banana before serving chilled."
+  ],
+  "nutrition": {
+    "kcal": 609.1,
+    "protein_g": 11.3,
+    "carbs_g": 75.5,
+    "fat_g": 32.3,
+    "fibre_g": 11.6
+  }
+}

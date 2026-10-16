@@ -1,0 +1,142 @@
+{
+  "id": "french-quiche-lorraine",
+  "title": "Bacon and Cheese Quiche",
+  "summary": "A classic French-style quiche with crisp bacon, a rich egg and cream custard, and plenty of melted cheese. It’s hearty enough for dinner and best served warm with a simple green salad.",
+  "cuisine": "french",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 85,
+  "servings": 6,
+  "ingredients": [
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "butter, cold and diced",
+      "food": "butter",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 50.0
+    },
+    {
+      "name": "cold water",
+      "food": "water",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 29.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "bacon, chopped",
+      "food": "bacon",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "onion, finely sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "double cream",
+      "food": "double_cream",
+      "quantity": 200.0,
+      "unit": "ml",
+      "grams": 200.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 100.0,
+      "unit": "ml",
+      "grams": 103.0
+    },
+    {
+      "name": "cheddar, grated",
+      "food": "cheddar",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "nutmeg",
+      "food": "nutmeg",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Make the pastry: rub the cold butter into the plain flour and salt until the mixture looks like fine breadcrumbs. Stir in the egg and cold water, then bring together into a dough without overworking it.",
+    "Shape the dough into a disc, wrap it, and chill for 20 minutes. Heat the oven to 190°C.",
+    "Roll out the pastry and line a 23 cm tart tin. Prick the base with a fork, line with baking paper and baking beans if you have them, then blind bake for 15 minutes. Remove the paper and beans and bake for 5 minutes more until pale and dry.",
+    "While the pastry bakes, cook the bacon in a dry pan over medium heat until browned and crisp. Add the onion and olive oil, then cook for 5 to 7 minutes until soft and lightly golden. Set aside.",
+    "In a bowl, whisk together the eggs, double cream, milk, black pepper, salt, and nutmeg. Stir in the grated cheddar.",
+    "Spread the bacon and onion over the baked pastry case, then pour over the custard mixture.",
+    "Bake for 30 to 35 minutes until the filling is just set with a slight wobble in the centre and the top is golden. Rest for 10 minutes before slicing and serving."
+  ],
+  "nutrition": {
+    "kcal": 654.7,
+    "protein_g": 19.8,
+    "carbs_g": 31.0,
+    "fat_g": 50.3,
+    "fibre_g": 1.4
+  }
+}

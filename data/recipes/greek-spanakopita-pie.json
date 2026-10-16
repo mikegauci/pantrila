@@ -1,0 +1,137 @@
+{
+  "id": "greek-spanakopita-pie",
+  "title": "Spinach and Feta Pie",
+  "summary": "A Greek-style savoury pie with tender spinach, salty feta and herbs in a buttery crust. It’s comforting and golden, ideal for a relaxed vegetarian dinner.",
+  "cuisine": "greek",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 80,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "butter, cold and cubed",
+      "food": "butter",
+      "quantity": 125.0,
+      "unit": "g",
+      "grams": 125.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 50.0
+    },
+    {
+      "name": "cold water",
+      "food": "water",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 60.0
+    },
+    {
+      "name": "spinach",
+      "food": "spinach",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "feta",
+      "food": "feta",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "dill, chopped",
+      "food": "dill",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    },
+    {
+      "name": "nutmeg",
+      "food": "nutmeg",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    }
+  ],
+  "steps": [
+    "Make the pastry first: rub the cold butter into the flour with your fingertips until it looks like fine crumbs. Stir in the egg and cold water, then bring it together into a dough. Wrap and chill for 20 minutes.",
+    "While the dough chills, heat the olive oil in a pan over medium heat. Cook the onion for 5 to 6 minutes until soft and translucent, then add the garlic and cook for 1 minute more.",
+    "Add the spinach in batches and cook until wilted. If there is a lot of liquid in the pan, keep cooking until it has evaporated. Set aside to cool slightly.",
+    "Squeeze any excess moisture from the spinach, then mix it with the feta, dill, parsley, nutmeg, black pepper and salt.",
+    "Heat the oven to 200°C. Roll out two-thirds of the pastry and use it to line a pie dish, leaving a little overhang.",
+    "Spoon in the spinach and feta filling. Roll out the remaining pastry, cover the pie and pinch the edges to seal. Cut a small steam hole in the top.",
+    "Bake for 35 to 40 minutes until the pastry is deep golden and crisp. Leave to rest for 10 minutes before slicing and serving."
+  ],
+  "nutrition": {
+    "kcal": 676.4,
+    "protein_g": 18.9,
+    "carbs_g": 58.3,
+    "fat_g": 41.8,
+    "fibre_g": 4.8
+  }
+}

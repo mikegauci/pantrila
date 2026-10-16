@@ -1,0 +1,108 @@
+{
+  "id": "british-jacket-potato-tuna",
+  "title": "Jacket Potato with Tuna and Sweetcorn",
+  "summary": "A classic British lunch of crisp-skinned baked potato piled with a creamy tuna and sweetcorn filling. It’s simple, comforting, and filling, with a bright lemony finish.",
+  "cuisine": "british",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "eggs",
+    "fish",
+    "mustard"
+  ],
+  "total_minutes": 70,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "large baking potatoes",
+      "food": "potato",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 400.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 9.1
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "canned tuna, drained",
+      "food": "canned_tuna",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "sweetcorn, drained",
+      "food": "sweetcorn",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "mayonnaise",
+      "food": "mayonnaise",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "Dijon mustard",
+      "food": "mustard",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "spring onion, finely sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Scrub the potatoes, prick them all over with a fork, rub with olive oil, and sprinkle with salt.",
+    "Bake the potatoes directly on the oven rack for 50 to 60 minutes, until the skins are crisp and the insides are soft when squeezed.",
+    "Meanwhile, mix the drained tuna, sweetcorn, mayonnaise, Dijon mustard, lemon juice, spring onion, and black pepper in a bowl.",
+    "Split the hot potatoes open, fluff the insides with a fork, and season lightly with a little more salt if needed.",
+    "Spoon the tuna and sweetcorn mixture into the potatoes and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 462.9,
+    "protein_g": 22.3,
+    "carbs_g": 48.5,
+    "fat_g": 21.7,
+    "fibre_g": 6.1
+  }
+}

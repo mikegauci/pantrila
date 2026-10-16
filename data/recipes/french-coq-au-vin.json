@@ -1,0 +1,139 @@
+{
+  "id": "french-coq-au-vin",
+  "title": "French Red Wine Chicken with Mushrooms and Bacon",
+  "summary": "A rustic French-style braise of chicken, bacon, mushrooms and onions simmered in red wine until rich and glossy. It’s hearty, savoury and ideal for a comforting dinner.",
+  "cuisine": "french",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "sulphites"
+  ],
+  "total_minutes": 85,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken thighs",
+      "food": "chicken_thigh",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "bacon lardons",
+      "food": "bacon",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "button mushrooms",
+      "food": "mushroom",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "onion, sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "red wine",
+      "food": "red_wine",
+      "quantity": 300.0,
+      "unit": "ml",
+      "grams": 297.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 200.0,
+      "unit": "ml",
+      "grams": 200.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 16.3
+    },
+    {
+      "name": "thyme",
+      "food": "thyme",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 0.4
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Pat the chicken thighs dry and season them lightly with salt and black pepper.",
+    "Heat the olive oil in a large deep pan over medium-high heat. Brown the bacon for 3 to 4 minutes, then remove it to a plate.",
+    "In the same pan, brown the chicken on both sides until well coloured, about 4 minutes per side. Remove and set aside.",
+    "Add the onion to the pan and cook for 5 minutes until softened. Stir in the garlic and cook for 30 seconds.",
+    "Add the mushrooms and cook until they release their liquid and start to brown, about 6 minutes.",
+    "Stir in the tomato paste, then pour in the red wine and water, scraping up any browned bits from the pan.",
+    "Add the thyme, bay leaves, bacon and chicken. Bring to a gentle simmer, then cover and cook on low heat for 35 to 40 minutes until the chicken is tender and cooked through.",
+    "Uncover and simmer for another 5 to 10 minutes to reduce the sauce until glossy and lightly thickened. Taste and adjust with salt and pepper.",
+    "Discard the bay leaves, scatter over the parsley, and serve hot with potatoes, rice or crusty bread if desired."
+  ],
+  "nutrition": {
+    "kcal": 522.6,
+    "protein_g": 47.4,
+    "carbs_g": 10.1,
+    "fat_g": 25.9,
+    "fibre_g": 1.8
+  }
+}

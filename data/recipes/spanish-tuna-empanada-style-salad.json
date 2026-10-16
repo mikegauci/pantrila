@@ -1,0 +1,124 @@
+{
+  "id": "spanish-tuna-empanada-style-salad",
+  "title": "Spanish Tuna, Pepper and Egg Salad",
+  "summary": "A bright Spanish-style lunch salad with tuna, sweet peppers, boiled eggs and a simple olive oil dressing. It’s fresh, savoury and satisfying, with a little tang from vinegar and lemon.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "eggs",
+    "fish",
+    "sulphites"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "canned tuna, drained",
+      "food": "canned_tuna",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "red bell pepper",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "green bell pepper",
+      "food": "green_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "red onion, thinly sliced",
+      "food": "red_onion",
+      "quantity": 0.5,
+      "unit": "piece",
+      "grams": 75.0
+    },
+    {
+      "name": "tomato, chopped",
+      "food": "tomato",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 240.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "red wine vinegar",
+      "food": "red_wine_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Place the eggs in a saucepan, cover with water, and bring to a boil. Cook for 9–10 minutes until hard-boiled, then drain and cool under cold water before peeling.",
+    "While the eggs cook, char the peppers in a hot dry pan or under a grill until blistered and softened. Let them cool slightly, then slice into strips.",
+    "In a large bowl, combine the tuna, sliced peppers, red onion, and tomato.",
+    "Whisk together the olive oil, vinegar, lemon juice, salt, and black pepper. Pour over the salad and toss gently.",
+    "Slice the peeled eggs into wedges and arrange on top. Finish with chopped parsley and serve immediately or chill briefly before serving."
+  ],
+  "nutrition": {
+    "kcal": 374.1,
+    "protein_g": 28.0,
+    "carbs_g": 18.1,
+    "fat_g": 22.2,
+    "fibre_g": 5.3
+  }
+}

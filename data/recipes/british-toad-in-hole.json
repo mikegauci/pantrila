@@ -1,0 +1,85 @@
+{
+  "id": "british-toad-in-hole",
+  "title": "Toad in the Hole",
+  "summary": "Classic British sausages baked in a light Yorkshire pudding batter until puffed and golden. Best served straight from the oven with onion gravy and vegetables.",
+  "cuisine": "british",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk",
+    "sulphites"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "pork sausages",
+      "food": "pork_sausage",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 560.0
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 140.0,
+      "unit": "g",
+      "grams": 140.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 200.0,
+      "unit": "ml",
+      "grams": 206.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C. Put the vegetable oil in a roasting tin or ovenproof dish and add the sausages in a single layer. Bake for 15 minutes, turning once, until the sausages are lightly browned and the tin is very hot.",
+    "While the sausages bake, make the batter. Whisk the plain flour, milk, eggs, salt and black pepper together until smooth and free of lumps. Let the batter rest for 10 minutes if you have time.",
+    "Carefully take the hot tin from the oven and quickly pour the batter around the sausages.",
+    "Return the tin to the oven and bake for 20 to 25 minutes without opening the door, until the batter is well risen, crisp and deeply golden.",
+    "Serve immediately while the batter is puffed and the sausages are juicy."
+  ],
+  "nutrition": {
+    "kcal": 678.9,
+    "protein_g": 29.4,
+    "carbs_g": 33.7,
+    "fat_g": 46.4,
+    "fibre_g": 1.0
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "id": "british-ploughmans-salad",
+  "title": "Cheddar, Apple and Quick-Pickle Salad Plate",
+  "summary": "A crisp British-style lunch plate with sharp cheddar, sweet apple and tangy quick-pickled cucumber and onion. It’s fresh, savoury, and easy to assemble when you want something light but satisfying.",
+  "cuisine": "british",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "milk",
+    "mustard",
+    "sulphites"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "cheddar",
+      "food": "cheddar",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "apple",
+      "food": "apple",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 180.0
+    },
+    {
+      "name": "cucumber",
+      "food": "cucumber",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "red onion",
+      "food": "red_onion",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "rocket",
+      "food": "rocket",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "lettuce",
+      "food": "lettuce",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "wholemeal bread",
+      "food": "wholemeal_bread",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 128.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "cider vinegar",
+      "food": "cider_vinegar",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 29.9
+    },
+    {
+      "name": "mustard",
+      "food": "mustard",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "honey",
+      "food": "honey",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 7.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Thinly slice the cucumber and red onion, then toss them with the cider vinegar, honey and a pinch of salt. Set aside for 10 minutes so they soften and become lightly pickled.",
+    "Wash and dry the rocket and lettuce, then spread them over two plates.",
+    "Core and thinly slice the apple. Slice or shave the cheddar into bite-sized pieces.",
+    "Toast the wholemeal bread if you like, then arrange the cheddar, apple, quick-pickled cucumber and onion on the plates.",
+    "Whisk the olive oil, mustard and a pinch of black pepper together, then drizzle over the salad just before serving."
+  ],
+  "nutrition": {
+    "kcal": 555.2,
+    "protein_g": 23.6,
+    "carbs_g": 51.4,
+    "fat_g": 29.6,
+    "fibre_g": 7.8
+  }
+}

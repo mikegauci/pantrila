@@ -1,0 +1,123 @@
+{
+  "id": "chinese-garlic-green-beans",
+  "title": "Chinese Dry-Fried Green Beans with Garlic and Chilli",
+  "summary": "A vegan Chinese-style green bean dish with blistered, smoky beans tossed in fragrant garlic, ginger, chilli and soy sauce. Serve it with rice or tofu for a quick, punchy dinner.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "green beans, trimmed",
+      "food": "green_beans",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh ginger, finely chopped",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 25.5
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 2.1
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Pat the green beans very dry with a clean tea towel; this helps them blister rather than steam.",
+    "Heat a large wok or frying pan over high heat until very hot. Add the vegetable oil, then the green beans and salt. Stir-fry for 8–10 minutes, tossing often, until the beans are wrinkled, blistered in places and tender-crisp.",
+    "Reduce the heat to medium. Add the garlic, ginger, chilli and the white parts of the spring onions. Stir-fry for 1–2 minutes until fragrant, taking care not to burn the garlic.",
+    "Add the soy sauce, rice vinegar, sugar and black pepper. Toss for 1 minute until the beans are glossy and the sauce has mostly evaporated.",
+    "Turn off the heat and stir through the sesame oil and remaining spring onions. Serve hot as part of a Chinese-style dinner."
+  ],
+  "nutrition": {
+    "kcal": 242.8,
+    "protein_g": 5.9,
+    "carbs_g": 22.2,
+    "fat_g": 16.5,
+    "fibre_g": 6.4
+  }
+}

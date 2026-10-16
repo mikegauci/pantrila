@@ -1,0 +1,110 @@
+{
+  "id": "spanish-gazpacho",
+  "title": "Chilled Tomato, Cucumber and Pepper Soup",
+  "summary": "A bright Spanish-style chilled soup with ripe tomato, cucumber and red pepper, finished with olive oil and vinegar. Fresh, light and ideal for a hot lunch.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "sulphites"
+  ],
+  "total_minutes": 20,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "ripe tomatoes, chopped",
+      "food": "tomato",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "cucumber, peeled and chopped",
+      "food": "cucumber",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "red bell pepper, deseeded and chopped",
+      "food": "red_bell_pepper",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "red onion, roughly chopped",
+      "food": "red_onion",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "garlic clove",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 27.6
+    },
+    {
+      "name": "sherry vinegar",
+      "food": "red_wine_vinegar",
+      "quantity": 20.0,
+      "unit": "ml",
+      "grams": 20.2
+    },
+    {
+      "name": "cold water",
+      "food": "water",
+      "quantity": 100.0,
+      "unit": "ml",
+      "grams": 100.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    }
+  ],
+  "steps": [
+    "Put the tomatoes, cucumber, red pepper, red onion and garlic into a blender.",
+    "Add the olive oil, vinegar, water, salt and black pepper.",
+    "Blend until completely smooth, or leave slightly textured if you prefer.",
+    "Taste and adjust with a little more salt or vinegar if needed.",
+    "Chill the soup in the fridge for at least 30 minutes, until cold and refreshing.",
+    "Serve in bowls or glasses straight from the fridge."
+  ],
+  "nutrition": {
+    "kcal": 123.6,
+    "protein_g": 2.7,
+    "carbs_g": 13.9,
+    "fat_g": 7.5,
+    "fibre_g": 3.8
+  }
+}

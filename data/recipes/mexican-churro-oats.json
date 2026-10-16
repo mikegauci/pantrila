@@ -1,0 +1,103 @@
+{
+  "id": "mexican-churro-oats",
+  "title": "Baked Cinnamon Sugar Churro Bites",
+  "summary": "A lighter oven-baked take on Mexican-style churros: crisp-edged, tender little dough bites tossed in buttery cinnamon sugar. They are perfect for a vegetarian dessert or sweet party snack.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "snack",
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 240.0,
+      "unit": "ml",
+      "grams": 247.2
+    },
+    {
+      "name": "butter, divided",
+      "food": "butter",
+      "quantity": 85.0,
+      "unit": "g",
+      "grams": 85.0
+    },
+    {
+      "name": "sugar, divided",
+      "food": "sugar",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 125.0,
+      "unit": "g",
+      "grams": 125.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "cinnamon",
+      "food": "cinnamon",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "vegetable oil, for greasing",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    }
+  ],
+  "steps": [
+    "Preheat the oven to 200°C. Lightly grease a baking tray with the vegetable oil, or grease a mini muffin tin if you want neater round bites.",
+    "Put the milk, 55 g of the butter, 20 g of the sugar and the salt in a saucepan. Heat over a medium heat until the butter melts and the mixture just comes to a simmer.",
+    "Tip in the plain flour all at once and stir vigorously with a wooden spoon for 1–2 minutes, until the dough pulls away from the sides of the pan and forms a smooth ball with a light film on the base of the pan.",
+    "Transfer the dough to a mixing bowl and let it cool for 5 minutes so the eggs do not scramble. Beat in the eggs one at a time, mixing well after each addition, then beat in the vanilla extract until the dough is smooth and glossy.",
+    "Spoon or pipe small walnut-sized mounds of dough onto the prepared tray, leaving a little space between them. Bake for 18–22 minutes, until puffed, golden and crisp at the edges.",
+    "Meanwhile, melt the remaining 30 g butter. In a separate shallow bowl, mix the remaining 80 g sugar with the cinnamon.",
+    "While the churro bites are still warm, brush them with the melted butter, then roll them in the cinnamon sugar until evenly coated. Serve warm."
+  ],
+  "nutrition": {
+    "kcal": 472.7,
+    "protein_g": 8.5,
+    "carbs_g": 53.2,
+    "fat_g": 25.3,
+    "fibre_g": 1.5
+  }
+}

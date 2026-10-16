@@ -1,0 +1,162 @@
+{
+  "id": "indian-chicken-tikka-traybake",
+  "title": "Yoghurt-Marinated Chicken Tikka Traybake with Peppers",
+  "summary": "Juicy chicken breast is marinated in spiced yoghurt, then roasted with sweet peppers and onions until lightly charred. It is an easy Indian-inspired high-protein dinner for busy evenings.",
+  "cuisine": "indian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "milk"
+  ],
+  "total_minutes": 55,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken breast, cut into large bite-size pieces",
+      "food": "chicken_breast",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "Greek yogurt",
+      "food": "greek_yogurt",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 3.9
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.25,
+      "unit": "tsp",
+      "grams": 7.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "red bell peppers, cut into thick strips",
+      "food": "red_bell_pepper",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 320.0
+    },
+    {
+      "name": "green bell pepper, cut into thick strips",
+      "food": "green_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "red onion, cut into wedges",
+      "food": "red_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "fresh coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "lemon, cut into wedges to serve",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    }
+  ],
+  "steps": [
+    "Mix the Greek yogurt, lemon juice, garlic, ginger, cumin, ground coriander, paprika, turmeric, chilli powder, salt, black pepper and 1 tablespoon of the vegetable oil in a large bowl to make a thick tikka marinade.",
+    "Add the chicken pieces and turn until fully coated. Cover and marinate in the fridge for at least 20 minutes, or up to overnight for deeper flavour.",
+    "Heat the oven to 220°C. Put the peppers and red onions on a large baking tray, drizzle with the remaining 1 tablespoon vegetable oil, and toss to coat.",
+    "Spread the marinated chicken over and around the vegetables in a single layer, scraping any extra marinade onto the tray.",
+    "Roast for 25–30 minutes, turning the vegetables once halfway, until the chicken is cooked through, the edges are lightly charred, and the peppers are tender. The chicken should be opaque throughout with no pink in the centre.",
+    "Scatter with fresh coriander and serve with lemon wedges for squeezing over."
+  ],
+  "nutrition": {
+    "kcal": 440.4,
+    "protein_g": 52.8,
+    "carbs_g": 22.8,
+    "fat_g": 15.7,
+    "fibre_g": 5.7
+  }
+}

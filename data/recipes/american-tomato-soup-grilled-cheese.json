@@ -1,0 +1,123 @@
+{
+  "id": "american-tomato-soup-grilled-cheese",
+  "title": "Tomato Soup with Grilled Cheese Sandwich",
+  "summary": "A classic American lunch of smooth, savory tomato soup paired with a crisp, buttery grilled cheese sandwich. Comforting, quick to make, and best served hot with plenty of melted cheese.",
+  "cuisine": "american",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 30,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 500.0,
+      "unit": "ml",
+      "grams": 500.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "white bread",
+      "food": "white_bread",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 120.0
+    },
+    {
+      "name": "cheddar cheese",
+      "food": "cheddar",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a saucepan over medium heat. Add the onion and cook for 5 minutes, stirring often, until soft and translucent.",
+    "Add the garlic and cook for 30 seconds until fragrant.",
+    "Stir in the canned tomatoes, vegetable stock, sugar, oregano, salt, and black pepper. Bring to a simmer and cook for 15 minutes.",
+    "Blend the soup until smooth, then return it to the pan and keep warm. Taste and adjust seasoning if needed.",
+    "Spread butter on one side of each bread slice. Place two slices butter-side down and top with the cheddar. Close with the remaining bread slices, butter-side up.",
+    "Cook the sandwiches in a dry skillet over medium-low heat for 3 to 4 minutes per side, pressing gently, until the bread is golden brown and the cheese is melted.",
+    "Serve the tomato soup hot with the grilled cheese sandwiches on the side or cut into halves for dipping."
+  ],
+  "nutrition": {
+    "kcal": 625.4,
+    "protein_g": 22.5,
+    "carbs_g": 52.2,
+    "fat_g": 37.7,
+    "fibre_g": 7.1
+  }
+}

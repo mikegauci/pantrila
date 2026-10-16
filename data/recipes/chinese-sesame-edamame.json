@@ -1,0 +1,89 @@
+{
+  "id": "chinese-sesame-edamame",
+  "title": "Sesame Chilli Edamame",
+  "summary": "A quick Chinese-inspired vegan snack of tender edamame tossed in fragrant sesame oil, toasted sesame seeds and a warm chilli-garlic seasoning. It is salty, nutty and lightly spicy, perfect for grazing or serving before dinner.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 12,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "frozen edamame beans or pods",
+      "food": "edamame",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "fresh chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "garlic clove, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Bring a pan of salted water to the boil. Add the edamame and cook for 4–5 minutes, until bright green, hot through and tender but still with a little bite.",
+    "Drain the edamame well and shake off excess water so the seasoning will cling.",
+    "Warm the sesame oil in a frying pan over medium-low heat. Add the grated garlic and sliced chilli and cook for 30–45 seconds, stirring, until fragrant but not browned.",
+    "Add the drained edamame to the pan with the salt and black pepper. Toss for 1–2 minutes until the edamame is glossy and evenly coated.",
+    "Sprinkle over the sesame seeds, toss once more, and serve warm. If using pods, eat by popping the beans from the pods and discard the shells."
+  ],
+  "nutrition": {
+    "kcal": 256.6,
+    "protein_g": 17.9,
+    "carbs_g": 14.1,
+    "fat_g": 16.2,
+    "fibre_g": 8.0
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "id": "greek-baked-cod-plaki",
+  "title": "Greek Baked Cod with Tomatoes, Onion and Parsley",
+  "summary": "A simple Greek-style baked cod dish with juicy tomatoes, sweet onion and fresh parsley. Light, fragrant and perfect for an easy weeknight dinner.",
+  "cuisine": "greek",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "fish"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "cod fillets",
+      "food": "cod",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "tomatoes, chopped",
+      "food": "tomato",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "red onion, thinly sliced",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh parsley, chopped",
+      "food": "parsley",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Lightly oil a baking dish large enough to hold the cod in a single layer.",
+    "Spread the tomatoes, onion and garlic in the dish. Drizzle with olive oil, lemon juice and half the parsley, then season with oregano, salt and black pepper.",
+    "Nestle the cod fillets into the tomato mixture and spoon a little of the juices over the top.",
+    "Bake for 18 to 22 minutes, until the cod is opaque and flakes easily and the tomatoes are soft and bubbling.",
+    "Scatter over the remaining parsley and serve hot, ideally with potatoes, rice or crusty bread if desired."
+  ],
+  "nutrition": {
+    "kcal": 231.1,
+    "protein_g": 28.7,
+    "carbs_g": 10.8,
+    "fat_g": 8.2,
+    "fibre_g": 2.6
+  }
+}

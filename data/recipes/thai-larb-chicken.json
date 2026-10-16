@@ -1,0 +1,143 @@
+{
+  "id": "thai-larb-chicken",
+  "title": "Thai-Style Chicken Mince Salad with Mint, Lime and Chilli",
+  "summary": "A bright, punchy Thai-inspired chicken mince salad with fresh mint, lime, chilli and a salty-savoury dressing. It is light but satisfying for lunch, served warm or at room temperature with crisp lettuce.",
+  "cuisine": "thai",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "fish"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "chicken mince",
+      "food": "turkey_mince",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "garlic, finely chopped",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "red chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fish sauce",
+      "food": "fish_sauce",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 26.6
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.6
+    },
+    {
+      "name": "red onion, thinly sliced",
+      "food": "red_onion",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "fresh mint leaves, roughly chopped",
+      "food": "mint",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "lettuce leaves, to serve",
+      "food": "lettuce",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "cucumber, sliced",
+      "food": "cucumber",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Heat the vegetable oil in a large frying pan over medium-high heat. Add the chicken mince substitute and cook for 6–8 minutes, breaking it up with a spoon, until no pink remains and the mince is lightly browned in places.",
+    "Add the garlic, ginger and chilli, then cook for 1–2 minutes until fragrant and the garlic has softened but not browned.",
+    "Stir in the fish sauce, lime juice and brown sugar. Cook for 1 minute, scraping up any browned bits, until the mince is glossy and the dressing smells sharp and savoury.",
+    "Take the pan off the heat and let the mince cool for 3–4 minutes so the herbs stay fresh rather than wilt completely.",
+    "Toss the warm mince with the red onion, mint and coriander. Taste and season with a pinch of salt and black pepper if needed.",
+    "Serve in lettuce leaves with cucumber on the side, spooning over any juices from the pan."
+  ],
+  "nutrition": {
+    "kcal": 356.2,
+    "protein_g": 32.8,
+    "carbs_g": 16.6,
+    "fat_g": 18.8,
+    "fibre_g": 3.4
+  }
+}

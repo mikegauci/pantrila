@@ -1,0 +1,117 @@
+{
+  "id": "british-cauliflower-cheese",
+  "title": "Cauliflower Cheese Bake",
+  "summary": "A classic British cauliflower cheese, baked until bubbling with a golden top. Creamy, savoury and comforting, it makes a simple vegetarian dinner with a crisp salad or steamed greens.",
+  "cuisine": "british",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "milk",
+    "mustard"
+  ],
+  "total_minutes": 50,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "cauliflower florets",
+      "food": "cauliflower",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 600.0
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 500.0,
+      "unit": "ml",
+      "grams": 515.0
+    },
+    {
+      "name": "cheddar, grated",
+      "food": "cheddar",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "Dijon mustard",
+      "food": "mustard",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "nutmeg",
+      "food": "nutmeg",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "breadcrumbs",
+      "food": "breadcrumbs",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Bring a large pan of salted water to the boil and cut the cauliflower into bite-sized florets.",
+    "Boil the cauliflower for 4 to 5 minutes until just tender, then drain well and spread it in a baking dish.",
+    "Melt the butter in a saucepan over medium heat. Stir in the flour and cook for 1 minute, whisking to make a smooth paste.",
+    "Gradually whisk in the milk until smooth, then simmer for 3 to 4 minutes until the sauce thickens.",
+    "Remove from the heat and stir in most of the cheddar, the mustard, salt, black pepper and nutmeg until melted and creamy.",
+    "Pour the cheese sauce over the cauliflower and gently mix so it is evenly coated.",
+    "Mix the breadcrumbs with the olive oil and remaining cheddar, then scatter over the top.",
+    "Bake for 20 to 25 minutes until bubbling and golden brown on top. Rest for 5 minutes before serving."
+  ],
+  "nutrition": {
+    "kcal": 477.1,
+    "protein_g": 19.8,
+    "carbs_g": 30.3,
+    "fat_g": 31.8,
+    "fibre_g": 3.9
+  }
+}

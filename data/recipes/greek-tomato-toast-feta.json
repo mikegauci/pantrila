@@ -1,0 +1,84 @@
+{
+  "id": "greek-tomato-toast-feta",
+  "title": "Greek Grated Tomato Toast with Feta",
+  "summary": "A quick Greek-style breakfast of juicy grated tomato on crisp toast, finished with salty feta, oregano and olive oil. It’s fresh, savoury and best eaten right away while the bread still has some crunch.",
+  "cuisine": "greek",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 10,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "wholemeal bread",
+      "food": "wholemeal_bread",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 128.0
+    },
+    {
+      "name": "ripe tomatoes, grated",
+      "food": "tomato",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "feta",
+      "food": "feta",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Toast the bread until golden and crisp.",
+    "Grate the tomatoes into a bowl, then season with salt, black pepper and the dried oregano. Stir in 1 tablespoon of the olive oil.",
+    "Spoon the grated tomato mixture evenly over the toast.",
+    "Crumble the feta over the top, then drizzle with the remaining olive oil and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 416.6,
+    "protein_g": 15.0,
+    "carbs_g": 35.3,
+    "fat_g": 24.8,
+    "fibre_g": 5.9
+  }
+}

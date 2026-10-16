@@ -1,0 +1,100 @@
+{
+  "id": "american-protein-oats",
+  "title": "Peanut Butter Greek Yogurt Overnight Oats",
+  "summary": "Creamy overnight oats made with Greek yogurt and peanut butter for a thick, satisfying breakfast. It’s make-ahead, lightly sweet, and high in protein.",
+  "cuisine": "american",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "milk",
+    "peanuts"
+  ],
+  "total_minutes": 490,
+  "servings": 1,
+  "ingredients": [
+    {
+      "name": "rolled oats",
+      "food": "rolled_oats",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "Greek yogurt",
+      "food": "greek_yogurt",
+      "quantity": 350.0,
+      "unit": "g",
+      "grams": 350.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 100.0,
+      "unit": "ml",
+      "grams": 103.0
+    },
+    {
+      "name": "peanut butter",
+      "food": "peanut_butter",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "chia seeds",
+      "food": "chia_seeds",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 15.0,
+      "unit": "ml",
+      "grams": 19.8
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 5.0,
+      "unit": "ml",
+      "grams": 4.4
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "banana, sliced",
+      "food": "banana",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 120.0
+    }
+  ],
+  "steps": [
+    "In a bowl or jar, mix the rolled oats, chia seeds, and salt.",
+    "Add the Greek yogurt, milk, peanut butter, maple syrup, and vanilla extract. Stir until fully combined and creamy.",
+    "Fold in the banana slices, or save them for topping if you prefer a fresher texture.",
+    "Cover and refrigerate overnight, or for at least 8 hours, until the oats are soft and thickened.",
+    "Stir before serving. Add a splash of milk if you want a looser consistency."
+  ],
+  "nutrition": {
+    "kcal": 1074.9,
+    "protein_g": 54.0,
+    "carbs_g": 109.2,
+    "fat_g": 49.7,
+    "fibre_g": 15.3
+  }
+}

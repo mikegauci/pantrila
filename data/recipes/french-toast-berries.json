@@ -1,0 +1,93 @@
+{
+  "id": "french-toast-berries",
+  "title": "French Toast with Berries and Maple Syrup",
+  "summary": "Golden, custardy slices of French toast served with juicy berries and maple syrup. It’s a classic comforting breakfast that feels quick but special.",
+  "cuisine": "french",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "white bread",
+      "food": "white_bread",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 120.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 100.0,
+      "unit": "ml",
+      "grams": 103.0
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "strawberries",
+      "food": "strawberries",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "blueberries",
+      "food": "blueberries",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 58.6
+    }
+  ],
+  "steps": [
+    "Whisk the eggs, milk and vanilla extract together in a shallow bowl until smooth.",
+    "Trim the strawberries if needed and mix them with the blueberries in a bowl.",
+    "Dip each slice of bread into the egg mixture, letting it soak for a few seconds on each side.",
+    "Melt the butter in a frying pan over medium heat, then cook the soaked bread for 2–3 minutes per side until golden brown and cooked through.",
+    "Serve the French toast hot with the berries spooned over the top and maple syrup drizzled over the finished plates."
+  ],
+  "nutrition": {
+    "kcal": 469.1,
+    "protein_g": 14.2,
+    "carbs_g": 65.4,
+    "fat_g": 16.9,
+    "fibre_g": 4.3
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "id": "mexican-chia-mango-pot",
+  "title": "Mango Lime Coconut Chia Pudding",
+  "summary": "A bright vegan breakfast inspired by Mexican flavours, with creamy coconut chia pudding, juicy mango and a fresh lime finish. Make it the night before for an easy, refreshing morning meal.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 10,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "chia seeds",
+      "food": "chia_seeds",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 300.0,
+      "unit": "ml",
+      "grams": 291.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 29.3
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "mango, diced",
+      "food": "mango",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "desiccated coconut",
+      "food": "desiccated_coconut",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "In a bowl or jar, whisk together the coconut milk, chia seeds, maple syrup, 1 tablespoon of lime juice and a pinch of salt until the chia seeds are evenly dispersed.",
+    "Let the mixture stand for 5 minutes, then whisk again to break up any clumps. Cover and chill for at least 4 hours, or overnight, until thick and spoonable.",
+    "Toss the diced mango with the remaining 1 tablespoon lime juice.",
+    "Spoon the chia pudding into two bowls or glasses, top with the limey mango and sprinkle with desiccated coconut.",
+    "Serve cold, adding an extra splash of coconut milk if you prefer a looser texture."
+  ],
+  "nutrition": {
+    "kcal": 598.8,
+    "protein_g": 9.5,
+    "carbs_g": 48.3,
+    "fat_g": 45.6,
+    "fibre_g": 13.6
+  }
+}

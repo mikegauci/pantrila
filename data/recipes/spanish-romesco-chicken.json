@@ -1,0 +1,121 @@
+{
+  "id": "spanish-romesco-chicken",
+  "title": "Chicken with Red Pepper Romesco",
+  "summary": "Juicy pan-seared chicken served with a smoky romesco-style sauce made from roasted red peppers, almonds, garlic and tomato. It’s rich, tangy and ideal for a comforting Spanish-style dinner.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "tree_nuts",
+    "sulphites"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken thighs",
+      "food": "chicken_thigh",
+      "quantity": 700.0,
+      "unit": "g",
+      "grams": 700.0
+    },
+    {
+      "name": "red bell pepper",
+      "food": "red_bell_pepper",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 320.0
+    },
+    {
+      "name": "blanched almonds",
+      "food": "almonds",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "garlic cloves",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "red wine vinegar",
+      "food": "red_wine_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 54.4
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 60.0
+    },
+    {
+      "name": "parsley",
+      "food": "parsley",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C. Put the red peppers on a tray, drizzle with 1 tbsp olive oil, and roast for 20 minutes until softened and blistered. Let them cool slightly, then peel off any loose skin and remove the seeds.",
+    "While the peppers roast, toast the almonds in a dry pan over medium heat for 3 to 4 minutes until golden and fragrant. Set aside.",
+    "Blend the roasted peppers, toasted almonds, garlic, canned tomatoes, red wine vinegar, paprika, 2 tbsp olive oil, water, 1 tsp salt and the black pepper until smooth or slightly textured, as you like. Taste and adjust seasoning.",
+    "Season the chicken thighs with the remaining salt. Heat the remaining 1 tbsp olive oil in a large pan over medium-high heat and sear the chicken for 4 to 5 minutes per side until well browned and cooked through.",
+    "Spoon the romesco sauce into the pan or serve it alongside, then warm gently for 2 to 3 minutes. Scatter over the parsley and serve hot with potatoes, rice or bread if you like."
+  ],
+  "nutrition": {
+    "kcal": 487.7,
+    "protein_g": 40.3,
+    "carbs_g": 13.1,
+    "fat_g": 31.4,
+    "fibre_g": 5.8
+  }
+}

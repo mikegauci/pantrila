@@ -1,0 +1,168 @@
+{
+  "id": "greek-chicken-souvlaki-pita",
+  "title": "Chicken Souvlaki Pita with Tzatziki",
+  "summary": "Juicy marinated chicken, cool garlicky tzatziki, and crisp salad tucked into warm pita. Fresh, savoury, and ideal for a relaxed lunch.",
+  "cuisine": "greek",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 35,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "chicken breast, cut into bite-sized pieces",
+      "food": "chicken_breast",
+      "quantity": 350.0,
+      "unit": "g",
+      "grams": 350.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "Greek yogurt",
+      "food": "greek_yogurt",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "cucumber, grated and squeezed dry",
+      "food": "cucumber",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "pita breads",
+      "food": "pita",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 240.0
+    },
+    {
+      "name": "tomato, sliced",
+      "food": "tomato",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 120.0
+    },
+    {
+      "name": "red onion, thinly sliced",
+      "food": "red_onion",
+      "quantity": 0.5,
+      "unit": "piece",
+      "grams": 75.0
+    },
+    {
+      "name": "lettuce, shredded",
+      "food": "lettuce",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    }
+  ],
+  "steps": [
+    "Mix the chicken with olive oil, lemon juice, garlic, oregano, paprika, salt, and black pepper. Let it marinate while you prepare the other ingredients, ideally for 10 to 15 minutes.",
+    "Make the tzatziki by combining Greek yogurt, grated cucumber, garlic, lemon juice, olive oil, oregano, and a pinch of salt. Stir well and chill until needed.",
+    "Heat a large pan over medium-high heat. Cook the chicken for 8 to 10 minutes, turning occasionally, until browned and cooked through with no pink remaining.",
+    "Warm the pita breads in a dry pan or briefly in the oven until soft and pliable.",
+    "Fill each pita with lettuce, tomato, red onion, and chicken. Spoon over plenty of tzatziki and serve right away."
+  ],
+  "nutrition": {
+    "kcal": 880.6,
+    "protein_g": 61.9,
+    "carbs_g": 85.4,
+    "fat_g": 32.1,
+    "fibre_g": 6.4
+  }
+}

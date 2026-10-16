@@ -1,0 +1,142 @@
+{
+  "id": "moroccan-sweet-potato-stew",
+  "title": "Moroccan Sweet Potato and Lentil Stew",
+  "summary": "A warming vegan stew with tender sweet potato, red lentils, cumin and cinnamon in a gently spiced tomato broth. It’s hearty enough for dinner and tastes even better the next day.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "carrot, diced",
+      "food": "carrot",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 70.0
+    },
+    {
+      "name": "sweet potato, peeled and cubed",
+      "food": "sweet_potato",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "ground cinnamon",
+      "food": "cinnamon",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.6
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "red lentils, rinsed",
+      "food": "red_lentils",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 700.0,
+      "unit": "ml",
+      "grams": 700.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large pot over medium heat. Add the onion and carrot with a pinch of salt and cook for 5 minutes, stirring occasionally, until the onion is soft.",
+    "Add the garlic, cumin, cinnamon and paprika. Cook for 1 minute, stirring, until fragrant.",
+    "Stir in the sweet potato, red lentils, canned tomatoes and water. Bring to a boil.",
+    "Reduce the heat to low and simmer uncovered for 20 to 25 minutes, stirring now and then, until the sweet potato is tender and the lentils are soft.",
+    "Season with the salt, black pepper and lemon juice. If the stew is too thick, add a splash more water and simmer for 2 minutes.",
+    "Serve hot, scattered with fresh coriander."
+  ],
+  "nutrition": {
+    "kcal": 400.0,
+    "protein_g": 15.9,
+    "carbs_g": 68.4,
+    "fat_g": 8.7,
+    "fibre_g": 13.0
+  }
+}

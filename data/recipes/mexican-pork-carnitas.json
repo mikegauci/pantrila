@@ -1,0 +1,155 @@
+{
+  "id": "mexican-pork-carnitas",
+  "title": "Mexican Orange and Cumin Pulled Pork",
+  "summary": "Tender slow-cooked pork loin is shredded into a citrusy, cumin-scented sauce with chilli, garlic and onion. Serve it in corn tortillas with salsa or alongside rice and beans for a dairy-free Mexican-style dinner.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [],
+  "total_minutes": 250,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "pork loin, trimmed of excess fat",
+      "food": "pork_loin",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "orange juice and zest from oranges",
+      "food": "orange",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 260.0
+    },
+    {
+      "name": "onion, thinly sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, crushed",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "smoked-style paprika",
+      "food": "paprika",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 3.4
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "cayenne pepper",
+      "food": "cayenne",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.25,
+      "unit": "tsp",
+      "grams": 7.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 16.3
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "corn tortillas, to serve",
+      "food": "corn_tortilla",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 208.0
+    },
+    {
+      "name": "salsa, to serve",
+      "food": "salsa",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    }
+  ],
+  "steps": [
+    "Pat the pork dry. Mix the cumin, paprika, chilli powder, dried oregano, cayenne, salt and black pepper, then rub the mixture all over the pork.",
+    "Heat the olive oil in a heavy casserole or slow-cooker-safe pan over medium-high heat. Sear the pork for 2–3 minutes per side until browned, then transfer it to a plate.",
+    "Add the sliced onion to the same pan and cook for 4–5 minutes until softened and lightly golden. Stir in the garlic for 30 seconds until fragrant.",
+    "Add the canned tomatoes, tomato paste, the zest and juice from the oranges, and lime juice. Scrape up any browned bits, then return the pork to the pan and spoon some sauce over the top.",
+    "Cover and cook very gently on the hob or in a 150°C oven for about 3 hours, turning once or twice, until the pork is fork-tender and pulls apart easily. Add a splash of water if the sauce becomes too thick before the pork is tender.",
+    "Transfer the pork to a board and shred it with two forks. Simmer the sauce uncovered for 5–10 minutes until slightly thickened, then return the shredded pork and stir until glossy and well coated.",
+    "Warm the corn tortillas, then serve the pulled pork with salsa and extra spoonfuls of the orange-cumin sauce."
+  ],
+  "nutrition": {
+    "kcal": 630.1,
+    "protein_g": 48.1,
+    "carbs_g": 42.6,
+    "fat_g": 31.7,
+    "fibre_g": 8.1
+  }
+}

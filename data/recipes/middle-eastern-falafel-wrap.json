@@ -1,0 +1,215 @@
+{
+  "id": "middle-eastern-falafel-wrap",
+  "title": "Baked Falafel Pitas with Tahini Salad",
+  "summary": "Golden baked falafel tucked into warm pitas with crisp salad and a creamy tahini dressing. Fresh, filling, and ideal for a light Middle Eastern lunch.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chickpeas, drained and rinsed",
+      "food": "chickpeas",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "red onion, roughly chopped",
+      "food": "red_onion",
+      "quantity": 0.5,
+      "unit": "piece",
+      "grams": 75.0
+    },
+    {
+      "name": "garlic cloves",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "parsley, packed",
+      "food": "parsley",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 3.7
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "baking powder",
+      "food": "baking_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "tahini",
+      "food": "tahini",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 45.0,
+      "unit": "ml",
+      "grams": 46.4
+    },
+    {
+      "name": "garlic clove, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "cucumber, diced",
+      "food": "cucumber",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "tomatoes, diced",
+      "food": "tomato",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 240.0
+    },
+    {
+      "name": "lettuce, shredded",
+      "food": "lettuce",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "red onion, thinly sliced",
+      "food": "red_onion",
+      "quantity": 0.5,
+      "unit": "piece",
+      "grams": 75.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "pita breads",
+      "food": "pita",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 240.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C and line a baking tray with baking paper.",
+    "Add the chickpeas, red onion, garlic, parsley, cumin, ground coriander, baking powder, flour, salt and black pepper to a food processor. Pulse until the mixture is finely chopped and holds together when pressed; it should still have a little texture.",
+    "Scoop the mixture into 12 to 16 small balls or patties. Place on the tray, brush or drizzle with olive oil, and bake for 20 to 25 minutes, turning halfway, until firm and browned.",
+    "While the falafel bakes, whisk together the tahini, lemon juice, grated garlic, olive oil and salt. It should become a thick, creamy dressing; add a little more lemon juice if you want it looser.",
+    "Mix the cucumber, tomatoes, lettuce and sliced red onion with lemon juice, olive oil, salt and black pepper.",
+    "Warm the pita breads in the oven for the last 2 to 3 minutes of baking.",
+    "Split the pitas and fill with salad and baked falafel, then spoon over plenty of tahini sauce and serve straight away."
+  ],
+  "nutrition": {
+    "kcal": 638.3,
+    "protein_g": 19.4,
+    "carbs_g": 81.1,
+    "fat_g": 28.7,
+    "fibre_g": 12.8
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "id": "french-beef-bourguignon",
+  "title": "French Beef Stew with Red Wine, Carrots and Mushrooms",
+  "summary": "A rustic French-style beef stew with a deep red-wine sauce, sweet carrots and earthy mushrooms. It’s rich, savoury and ideal for a slow, comforting dinner.",
+  "cuisine": "french",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "sulphites"
+  ],
+  "total_minutes": 165,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "beef stewing",
+      "food": "beef_stewing",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, crushed",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "carrots, cut into chunks",
+      "food": "carrot",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 210.0
+    },
+    {
+      "name": "mushrooms, halved",
+      "food": "mushroom",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "red wine",
+      "food": "red_wine",
+      "quantity": 300.0,
+      "unit": "ml",
+      "grams": 297.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 400.0
+    },
+    {
+      "name": "bay leaves",
+      "food": "bay_leaf",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 0.4
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 7.8
+    },
+    {
+      "name": "water, for slurry",
+      "food": "water",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 29.6
+    }
+  ],
+  "steps": [
+    "Pat the beef dry and season it with half the salt and the black pepper.",
+    "Heat the olive oil in a heavy pot over medium-high heat. Brown the beef well in batches, then transfer it to a plate.",
+    "Lower the heat to medium and add the onion. Cook for 5 minutes, stirring, until softened and lightly golden. Add the garlic and tomato paste and cook for 1 minute more.",
+    "Pour in the red wine, scraping up any browned bits from the bottom of the pot. Simmer for 3 minutes.",
+    "Add the beef back to the pot along with the carrots, bay leaves, thyme and water. Bring to a gentle simmer, cover partially and cook for 90 minutes, stirring now and then, until the beef is starting to soften.",
+    "Add the mushrooms and the remaining salt. Cook uncovered for 20 to 30 minutes more, until the beef is tender and the sauce has reduced.",
+    "Mix the cornstarch with the water to make a smooth slurry, then stir it into the stew and simmer for 2 to 3 minutes until the sauce lightly thickens.",
+    "Remove the bay leaves and serve hot with crusty bread or mashed potatoes, if desired."
+  ],
+  "nutrition": {
+    "kcal": 686.0,
+    "protein_g": 42.1,
+    "carbs_g": 18.2,
+    "fat_g": 43.3,
+    "fibre_g": 3.5
+  }
+}

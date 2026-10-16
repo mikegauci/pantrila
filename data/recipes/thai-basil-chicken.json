@@ -1,0 +1,132 @@
+{
+  "id": "thai-basil-chicken",
+  "title": "Thai Basil Chicken Mince with Chilli and Fried Egg",
+  "summary": "A quick Thai-inspired stir-fry of savoury chicken mince, garlic, chilli and basil, served over rice with a crisp-edged fried egg. It is bold, spicy and high in protein, perfect for a fast weeknight dinner.",
+  "cuisine": "thai",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "fish",
+    "molluscs",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "chicken mince, made from finely chopped chicken breast",
+      "food": "chicken_breast",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "red chillies, finely sliced",
+      "food": "chilli",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 25.5
+    },
+    {
+      "name": "fish sauce",
+      "food": "fish_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.7
+    },
+    {
+      "name": "oyster sauce",
+      "food": "oyster_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.7
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.6
+    },
+    {
+      "name": "fresh basil leaves",
+      "food": "basil",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Rinse the rice, then cook it according to the packet instructions until tender and fluffy. Keep warm while you make the stir-fry.",
+    "Mix the soy sauce, fish sauce, oyster sauce and brown sugar in a small bowl until the sugar mostly dissolves.",
+    "Heat 1 tablespoon of vegetable oil in a wok or large frying pan over a high heat. Add the garlic and chillies and stir-fry for 20–30 seconds until fragrant but not browned.",
+    "Add the chicken mince and a pinch of salt and black pepper. Stir-fry for 5–7 minutes, breaking it up with a spoon, until the chicken is opaque, lightly browned in places and cooked through.",
+    "Pour in the sauce mixture and stir-fry for 1–2 minutes until the chicken is glossy and the sauce has reduced slightly. Turn off the heat, add the basil, and toss until just wilted.",
+    "Heat the remaining 1 tablespoon of oil in a separate frying pan over a medium-high heat. Crack in the eggs and fry for 2–3 minutes until the whites are set and crisp at the edges but the yolks are still runny, or cook longer if preferred.",
+    "Divide the rice between bowls, spoon over the basil chilli chicken, and top each serving with a fried egg."
+  ],
+  "nutrition": {
+    "kcal": 767.4,
+    "protein_g": 59.8,
+    "carbs_g": 72.8,
+    "fat_g": 24.4,
+    "fibre_g": 1.8
+  }
+}

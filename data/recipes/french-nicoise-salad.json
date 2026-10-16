@@ -1,0 +1,132 @@
+{
+  "id": "french-nicoise-salad",
+  "title": "Tuna Niçoise Salad",
+  "summary": "A classic French lunch salad with tuna, eggs, green beans, olives, potatoes, and tomatoes. It’s fresh, savoury, and satisfying enough for a light main meal.",
+  "cuisine": "french",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "eggs",
+    "fish",
+    "mustard"
+  ],
+  "total_minutes": 35,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "potatoes",
+      "food": "potato",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 200.0
+    },
+    {
+      "name": "green beans",
+      "food": "green_beans",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "cherry tomatoes",
+      "food": "cherry_tomato",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "tuna, drained",
+      "food": "canned_tuna",
+      "quantity": 240.0,
+      "unit": "g",
+      "grams": 240.0
+    },
+    {
+      "name": "black olives",
+      "food": "olives",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "red onion, thinly sliced",
+      "food": "red_onion",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "rocket",
+      "food": "rocket",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "Dijon-style mustard",
+      "food": "mustard",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    }
+  ],
+  "steps": [
+    "Put the potatoes in a pan of salted water, bring to the boil, and simmer for 12 to 15 minutes until just tender. Drain and let them cool slightly.",
+    "Boil the eggs for 8 to 9 minutes for set yolks, then cool under cold water, peel, and halve.",
+    "While the potatoes cook, blanch the green beans in boiling salted water for 3 to 4 minutes until bright green and tender-crisp. Drain and rinse briefly under cold water.",
+    "Whisk the olive oil, lemon juice, mustard, salt, and black pepper into a simple dressing.",
+    "Arrange the rocket on a large platter or divide between plates. Add the potatoes, green beans, cherry tomatoes, red onion, olives, and tuna.",
+    "Nestle the egg halves on top, drizzle with the dressing, and serve right away.",
+    ""
+  ],
+  "nutrition": {
+    "kcal": 650.1,
+    "protein_g": 43.2,
+    "carbs_g": 44.6,
+    "fat_g": 35.2,
+    "fibre_g": 8.8
+  }
+}

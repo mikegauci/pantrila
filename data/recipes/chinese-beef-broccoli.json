@@ -1,0 +1,126 @@
+{
+  "id": "chinese-beef-broccoli",
+  "title": "Chinese Beef and Broccoli Stir-Fry in Oyster Sauce",
+  "summary": "A quick Chinese-style dinner with tender strips of beef, crisp broccoli and a glossy savoury oyster sauce. It is high in protein and ideal for a fast weeknight meal with rice or noodles on the side.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "molluscs",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "beef steak, thinly sliced against the grain",
+      "food": "beef_steak",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "broccoli, cut into small florets",
+      "food": "broccoli",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "garlic, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "oyster sauce",
+      "food": "oyster_sauce",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 71.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "vegetable oil, for stir-frying",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "cornstarch, for tenderising and thickening",
+      "food": "cornstarch",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.6
+    },
+    {
+      "name": "black pepper, freshly ground",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    }
+  ],
+  "steps": [
+    "Put the sliced beef in a bowl with 1 tablespoon oyster sauce, 1 tablespoon soy sauce, 1 teaspoon cornstarch, the black pepper and the sesame oil. Mix well and leave to marinate while you prepare the broccoli and sauce.",
+    "In a small bowl, mix the remaining 3 tablespoons oyster sauce, remaining 1 tablespoon soy sauce, 1 teaspoon cornstarch, brown sugar and 100 ml water until smooth.",
+    "Bring a pan of water to the boil, add the broccoli and blanch for 2 minutes until bright green and just tender-crisp. Drain well.",
+    "Heat 1 tablespoon vegetable oil in a wok or large frying pan over high heat. Add the beef in a single layer and sear for 1–2 minutes per side until browned but not fully cooked through. Remove to a plate.",
+    "Add the remaining 1 tablespoon vegetable oil to the pan. Stir-fry the garlic and ginger for 20–30 seconds until fragrant but not browned.",
+    "Add the drained broccoli and stir-fry for 1 minute, then return the beef and any juices to the pan.",
+    "Pour in the sauce and toss everything together for 1–2 minutes until the sauce is glossy and thick enough to coat the beef and broccoli, and the beef is just cooked through.",
+    "Taste and add the salt only if needed, then serve hot."
+  ],
+  "nutrition": {
+    "kcal": 486.9,
+    "protein_g": 34.7,
+    "carbs_g": 15.3,
+    "fat_g": 32.2,
+    "fibre_g": 3.6
+  }
+}

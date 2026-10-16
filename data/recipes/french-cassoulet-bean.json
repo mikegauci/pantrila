@@ -1,0 +1,155 @@
+{
+  "id": "french-cassoulet-bean",
+  "title": "Sausage and White Bean Cassoulet",
+  "summary": "A rustic French-style cassoulet with browned sausages, creamy white beans, tomato, garlic and herbs. It’s hearty, savoury and ideal for a comforting dinner.",
+  "cuisine": "french",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "milk",
+    "sulphites"
+  ],
+  "total_minutes": 75,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "pork sausages",
+      "food": "pork_sausage",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 560.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "onion, finely sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "carrot, diced",
+      "food": "carrot",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 140.0
+    },
+    {
+      "name": "garlic cloves, crushed",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "cannellini beans, drained and rinsed",
+      "food": "cannellini_beans",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 250.0,
+      "unit": "ml",
+      "grams": 250.0
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 0.4
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "breadcrumbs",
+      "food": "breadcrumbs",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "parmesan, finely grated",
+      "food": "parmesan",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Warm the olive oil in a large ovenproof casserole over medium heat, then brown the sausages on all sides for 5–7 minutes. Remove and set aside.",
+    "Add the onion and carrot to the casserole and cook for 6–8 minutes until softened and lightly golden. Stir in the garlic, thyme, oregano and paprika and cook for 1 minute more.",
+    "Add the canned tomatoes, cannellini beans, water, bay leaves, salt and black pepper. Stir well and bring to a gentle simmer.",
+    "Nestle the sausages back into the bean mixture. Cover and bake for 35 minutes until the sauce is bubbling and the sausages are cooked through.",
+    "Mix the breadcrumbs with the parmesan and sprinkle over the top. Return to the oven uncovered for 10–12 minutes until the topping is crisp and golden.",
+    "Scatter with chopped parsley and serve hot, making sure each portion gets plenty of beans, sauce and sausage."
+  ],
+  "nutrition": {
+    "kcal": 804.2,
+    "protein_g": 39.9,
+    "carbs_g": 70.1,
+    "fat_g": 41.3,
+    "fibre_g": 14.6
+  }
+}

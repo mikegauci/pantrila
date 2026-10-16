@@ -1,0 +1,116 @@
+{
+  "id": "vietnamese-shaking-beef",
+  "title": "Vietnamese Shaking Beef with Onion and Rocket",
+  "summary": "Tender seared beef cubes are tossed in a savoury-sweet Vietnamese-style garlic, soy and lime glaze, then served over peppery rocket with quick-softened onion. It is a fast, dairy-free dinner with bright, punchy flavours.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "fish",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "beef steak, cut into 2.5 cm cubes",
+      "food": "beef_steak",
+      "quantity": 350.0,
+      "unit": "g",
+      "grams": 350.0
+    },
+    {
+      "name": "red onion, thinly sliced",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "rocket, to serve like watercress",
+      "food": "rocket",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "garlic cloves, finely grated",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 25.5
+    },
+    {
+      "name": "fish sauce",
+      "food": "fish_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.7
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 22.9
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 9.2
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Pat the beef cubes very dry with kitchen paper. In a bowl, mix the garlic, soy sauce, fish sauce, 1 tbsp lime juice, brown sugar and black pepper, then add the beef and toss to coat. Leave to marinate for 10 minutes while you prepare the onion and rocket.",
+    "Put the sliced red onion in a small bowl with the remaining 0.5 tbsp lime juice and a pinch of salt. Toss and set aside so it softens slightly but keeps some crunch.",
+    "Spread the rocket over a serving plate or shallow bowl. Keep it at room temperature so the hot beef wilts it lightly when served.",
+    "Heat a large frying pan or wok over high heat until very hot. Add the vegetable oil, then lift the beef from the marinade, letting excess drip back into the bowl. Sear the beef in one layer for 1–2 minutes without moving, until deeply browned underneath.",
+    "Shake or toss the pan and continue searing for another 1–2 minutes, until the beef is browned on several sides but still juicy. Pour in the reserved marinade and bubble for 30–60 seconds, just until glossy and coating the beef.",
+    "Scatter the softened onion over the rocket, spoon the hot shaking beef and glaze on top, and serve immediately while the beef is sizzling and the rocket is just beginning to wilt."
+  ],
+  "nutrition": {
+    "kcal": 579.2,
+    "protein_g": 38.9,
+    "carbs_g": 18.2,
+    "fat_g": 39.1,
+    "fibre_g": 2.5
+  }
+}

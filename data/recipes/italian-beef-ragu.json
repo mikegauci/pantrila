@@ -1,0 +1,166 @@
+{
+  "id": "italian-beef-ragu",
+  "title": "Slow-Cooked Beef Ragù with Red Wine Pasta",
+  "summary": "A rich Italian-style beef ragù simmered slowly with red wine, tomatoes and herbs until the meat is tender and the sauce is deep and glossy. Serve it tossed through pasta for a comforting dinner.",
+  "cuisine": "italian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "milk",
+    "sulphites"
+  ],
+  "total_minutes": 180,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "beef stewing steak, cut into small chunks",
+      "food": "beef_stewing",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "pasta",
+      "food": "pasta",
+      "quantity": 350.0,
+      "unit": "g",
+      "grams": 350.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "carrot, finely diced",
+      "food": "carrot",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 70.0
+    },
+    {
+      "name": "celery stick, finely diced",
+      "food": "celery",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 40.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "red wine",
+      "food": "red_wine",
+      "quantity": 250.0,
+      "unit": "ml",
+      "grams": 247.5
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "beef stock substitute: chicken stock",
+      "food": "chicken_stock",
+      "quantity": 250.0,
+      "unit": "ml",
+      "grams": 250.0
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 0.2
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 0.7
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "parmesan, finely grated, to serve",
+      "food": "parmesan",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "parsley, chopped, to serve",
+      "food": "parsley",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    }
+  ],
+  "steps": [
+    "Pat the beef dry and season it with half the salt and black pepper. Heat 1 tablespoon of olive oil in a heavy casserole or large saucepan over medium-high heat, then brown the beef in batches for 3–4 minutes per batch until deeply coloured on all sides. Transfer to a plate.",
+    "Reduce the heat to medium and add the remaining olive oil. Add the onion, carrot and celery and cook for 8–10 minutes, stirring often, until softened and lightly golden.",
+    "Stir in the garlic and cook for 1 minute until fragrant. Add the tomato paste and cook for 2 minutes, stirring, until it darkens slightly.",
+    "Pour in the red wine, scraping the base of the pan to lift any browned bits. Simmer for 4–5 minutes until reduced by about a third.",
+    "Return the beef to the pan. Add the canned tomatoes, chicken stock, bay leaf, oregano and thyme. Bring to a gentle simmer, then cover partly with a lid and cook on low heat for 2–2.5 hours, stirring occasionally, until the beef is very tender and the sauce is thick and rich.",
+    "Remove the bay leaf. Shred any larger pieces of beef with two forks, then simmer uncovered for 10–15 minutes if the sauce needs thickening. Taste and adjust seasoning with more salt or pepper if needed.",
+    "Cook the pasta in a large pan of salted boiling water until al dente according to the packet instructions. Reserve a cup of pasta water, then drain.",
+    "Toss the pasta with the ragù, adding a splash of reserved pasta water if needed so the sauce coats the pasta well. Serve topped with grated parmesan and chopped parsley."
+  ],
+  "nutrition": {
+    "kcal": 922.6,
+    "protein_g": 46.9,
+    "carbs_g": 82.9,
+    "fat_g": 39.1,
+    "fibre_g": 6.7
+  }
+}

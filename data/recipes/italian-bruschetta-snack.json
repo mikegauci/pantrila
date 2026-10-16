@@ -1,0 +1,87 @@
+{
+  "id": "italian-bruschetta-snack",
+  "title": "Italian Tomato Basil Garlic Toast",
+  "summary": "Crisp olive-oil garlic toast topped with juicy chopped tomato and fresh basil. It is a simple vegan Italian-style snack, best when tomatoes are ripe and the toast is served while still warm.",
+  "cuisine": "italian",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "gluten"
+  ],
+  "total_minutes": 15,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "wholemeal bread slices",
+      "food": "wholemeal_bread",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 64.0
+    },
+    {
+      "name": "ripe tomatoes, diced",
+      "food": "tomato",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "garlic cloves, 1 for rubbing and 1 finely grated",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "fresh basil leaves, torn",
+      "food": "basil",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "extra virgin olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.125,
+      "unit": "tsp",
+      "grams": 0.3
+    }
+  ],
+  "steps": [
+    "Put the diced tomatoes in a bowl with the grated garlic, 1 tablespoon of olive oil, salt and black pepper. Stir gently and leave to sit for 5 minutes so the tomatoes become juicy.",
+    "Toast the bread until crisp and golden at the edges, either in a toaster or under a hot grill for 2–3 minutes per side.",
+    "While the toast is still hot, rub one side of each slice with the remaining whole garlic clove so the surface picks up the garlic aroma.",
+    "Drizzle the rubbed toast with the remaining 1 tablespoon olive oil.",
+    "Fold the torn basil through the tomato mixture, then spoon it generously over the garlic toast. Serve immediately while the bread is crisp."
+  ],
+  "nutrition": {
+    "kcal": 227.8,
+    "protein_g": 5.4,
+    "carbs_g": 19.4,
+    "fat_g": 15.0,
+    "fibre_g": 3.3
+  }
+}

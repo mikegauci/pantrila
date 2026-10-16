@@ -1,0 +1,130 @@
+{
+  "id": "italian-ricotta-lemon-pancakes",
+  "title": "Fluffy Ricotta Lemon Pancakes with Berries",
+  "summary": "Light, tender Italian-inspired ricotta pancakes scented with lemon and served with warm berries. They make a bright vegetarian breakfast for a weekend morning or special brunch.",
+  "cuisine": "italian",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "ricotta",
+      "food": "ricotta",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "baking powder",
+      "food": "baking_powder",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 25.1
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "eggs, separated",
+      "food": "egg",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 120.0,
+      "unit": "ml",
+      "grams": 123.6
+    },
+    {
+      "name": "lemon zest and juice",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "butter, for frying",
+      "food": "butter",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    },
+    {
+      "name": "blueberries",
+      "food": "blueberries",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "raspberries",
+      "food": "raspberries",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "maple syrup, to serve",
+      "food": "maple_syrup",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 78.1
+    }
+  ],
+  "steps": [
+    "Put the blueberries and raspberries in a small pan with 1 tbsp of the maple syrup and 1 tbsp water. Warm over a low heat for 4–5 minutes until the berries are glossy and just beginning to soften, then keep warm.",
+    "In a large bowl, whisk the ricotta, egg yolks, milk, lemon zest, 1 tbsp lemon juice and vanilla extract until mostly smooth.",
+    "In a separate bowl, mix the flour, baking powder, sugar and salt. Stir the dry ingredients into the ricotta mixture until just combined; the batter should be thick and a little lumpy.",
+    "Whisk the egg whites in a clean bowl until they form soft peaks. Gently fold them into the batter in two additions, keeping as much air in the mixture as possible.",
+    "Heat a large non-stick frying pan over a medium-low heat and melt a little butter. Spoon in small rounds of batter, leaving space between them.",
+    "Cook for 2–3 minutes until bubbles appear on the surface and the undersides are golden. Flip carefully and cook for another 1–2 minutes until puffed and cooked through. Repeat with the remaining butter and batter.",
+    "Serve the pancakes warm, topped with the warm berries and the remaining maple syrup."
+  ],
+  "nutrition": {
+    "kcal": 481.2,
+    "protein_g": 15.5,
+    "carbs_g": 68.2,
+    "fat_g": 16.8,
+    "fibre_g": 4.8
+  }
+}

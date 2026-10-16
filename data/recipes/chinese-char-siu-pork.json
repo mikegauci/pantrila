@@ -1,0 +1,136 @@
+{
+  "id": "chinese-char-siu-pork",
+  "title": "Honey Glazed Char Siu Style Pork Loin",
+  "summary": "A home-friendly Chinese-inspired pork loin with a sticky honey-soy glaze, fragrant ginger and garlic, and lightly charred edges. Serve it for dinner with rice and greens when you want the flavour of char siu without specialist ingredients.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 75,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "pork loin, trimmed",
+      "food": "pork_loin",
+      "quantity": 700.0,
+      "unit": "g",
+      "grams": 700.0
+    },
+    {
+      "name": "honey",
+      "food": "honey",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 63.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 51.0
+    },
+    {
+      "name": "hoisin sauce",
+      "food": "hoisin_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "garlic cloves, finely grated",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "Chinese-style five-spice substitute: ground cinnamon",
+      "food": "cinnamon",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.3
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "vegetable oil, for the tray",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "spring onions, sliced, to serve",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    }
+  ],
+  "steps": [
+    "Pat the pork loin dry and place it in a shallow dish or food bag. In a bowl, mix the honey, soy sauce, hoisin sauce, rice vinegar, sesame oil, garlic, ginger, chilli powder, cinnamon, black pepper and salt until smooth.",
+    "Pour the marinade over the pork and turn to coat well. Marinate for at least 30 minutes at room temperature, or up to overnight in the fridge. If chilled, let it stand for 20 minutes before roasting.",
+    "Heat the oven to 200°C. Lightly oil a roasting tray, lift the pork from the marinade and place it on the tray. Reserve the remaining marinade for glazing.",
+    "Roast for 20 minutes, then brush generously with the reserved marinade. Continue roasting for 20–25 minutes more, glazing every 10 minutes, until the pork is glossy, caramelised at the edges and cooked through.",
+    "For a more charred finish, place the pork under a hot grill for 2–4 minutes, watching closely, until the glaze bubbles and darkens in spots without burning.",
+    "Rest the pork for 10 minutes so the juices settle. Slice thinly across the grain, spoon over any sticky tray juices and scatter with spring onions before serving."
+  ],
+  "nutrition": {
+    "kcal": 498.9,
+    "protein_g": 38.9,
+    "carbs_g": 20.3,
+    "fat_g": 30.0,
+    "fibre_g": 1.0
+  }
+}

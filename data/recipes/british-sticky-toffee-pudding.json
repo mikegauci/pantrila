@@ -1,0 +1,146 @@
+{
+  "id": "british-sticky-toffee-pudding",
+  "title": "Sticky Date Sponge Pudding",
+  "summary": "A classic British dessert with a soft, caramel-scented sponge studded with dates and topped with warm toffee sauce. Best served fresh and hot, with a rich, comforting flavour.",
+  "cuisine": "british",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 55,
+  "servings": 6,
+  "ingredients": [
+    {
+      "name": "dates, pitted and chopped",
+      "food": "dates",
+      "quantity": 175.0,
+      "unit": "g",
+      "grams": 175.0
+    },
+    {
+      "name": "bicarbonate of soda",
+      "food": "baking_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "boiling water",
+      "food": "water",
+      "quantity": 180.0,
+      "unit": "ml",
+      "grams": 180.0
+    },
+    {
+      "name": "unsalted butter, softened",
+      "food": "butter",
+      "quantity": 85.0,
+      "unit": "g",
+      "grams": 85.0
+    },
+    {
+      "name": "light brown sugar",
+      "food": "brown_sugar",
+      "quantity": 140.0,
+      "unit": "g",
+      "grams": 140.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 175.0,
+      "unit": "g",
+      "grams": 175.0
+    },
+    {
+      "name": "baking powder",
+      "food": "baking_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "double cream",
+      "food": "double_cream",
+      "quantity": 150.0,
+      "unit": "ml",
+      "grams": 150.0
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "dark brown sugar",
+      "food": "brown_sugar",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "golden syrup",
+      "food": "honey",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 42.0
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 2.2
+    }
+  ],
+  "steps": [
+    "Heat the oven to 180°C and lightly butter a medium baking dish or 6 individual ramekins.",
+    "Put the chopped dates in a bowl, stir in the bicarbonate of soda, then pour over the boiling water and leave to soften for 10 minutes.",
+    "In a large bowl, beat the softened butter and light brown sugar together until pale and fluffy.",
+    "Beat in the eggs one at a time, then mix in the vanilla extract.",
+    "Fold in the flour, baking powder and salt, then stir in the softened date mixture until evenly combined.",
+    "Spoon the batter into the prepared dish or ramekins and smooth the top.",
+    "Bake for 25 to 30 minutes, until risen, golden, and a skewer inserted into the centre comes out clean.",
+    "While the sponge bakes, make the toffee sauce by heating the double cream, butter, brown sugar, syrup and vanilla in a small pan over low heat, stirring until smooth and glossy.",
+    "Serve the pudding warm, drizzled generously with the toffee sauce."
+  ],
+  "nutrition": {
+    "kcal": 634.3,
+    "protein_g": 6.6,
+    "carbs_g": 90.5,
+    "fat_g": 29.2,
+    "fibre_g": 2.8
+  }
+}

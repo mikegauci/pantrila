@@ -1,0 +1,137 @@
+{
+  "id": "american-cajun-salmon",
+  "title": "Cajun Spiced Salmon with Rice and Green Beans",
+  "summary": "Flaky salmon coated in smoky Cajun spices, served with fluffy rice and crisp-tender green beans. It’s a simple, satisfying dinner with plenty of bold flavour.",
+  "cuisine": "american",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "fish",
+    "milk"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "salmon fillets",
+      "food": "salmon",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 560.0
+    },
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "green beans",
+      "food": "green_beans",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "garlic powder",
+      "food": "garlic_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.2
+    },
+    {
+      "name": "onion powder",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "cayenne",
+      "food": "cayenne",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "lemon",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    }
+  ],
+  "steps": [
+    "Rinse the rice, then cook it according to the package instructions until tender and fluffy.",
+    "Mix the paprika, garlic powder, onion, oregano, thyme, cayenne, black pepper and 1 teaspoon of the salt in a small bowl.",
+    "Pat the salmon dry and rub the Cajun spice mix all over the fillets.",
+    "Bring a pan of salted water to the boil and cook the green beans for 3 to 4 minutes until bright green and just tender. Drain and set aside.",
+    "Heat 1 tablespoon of the olive oil in a large frying pan over medium-high heat. Cook the salmon for 3 to 4 minutes on the first side, then 2 to 3 minutes on the second side, until cooked through and lightly charred at the edges.",
+    "Add the butter and remaining olive oil to the green beans in a pan, then toss for 1 to 2 minutes until glossy and hot. Season with the remaining salt.",
+    "Serve the salmon with the rice and green beans, and finish with lemon wedges or a squeeze of lemon juice."
+  ],
+  "nutrition": {
+    "kcal": 697.6,
+    "protein_g": 36.4,
+    "carbs_g": 70.6,
+    "fat_g": 29.7,
+    "fibre_g": 5.1
+  }
+}

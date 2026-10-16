@@ -1,0 +1,80 @@
+{
+  "id": "spanish-tortilla",
+  "title": "Spanish Potato and Onion Omelette",
+  "summary": "A classic Spanish tortilla made with tender potatoes, softly cooked onion, and just-set eggs. It’s rich, comforting, and perfect for a leisurely breakfast or brunch.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "eggs"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "potatoes, peeled and thinly sliced",
+      "food": "potato",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "onion, thinly sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 6.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 80.0,
+      "unit": "ml",
+      "grams": 73.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large non-stick frying pan over medium-low heat. Add the potatoes and onion, season with the salt, and cook gently for 20 to 25 minutes, stirring occasionally, until the potatoes are tender and the onion is soft but not browned.",
+    "Meanwhile, beat the eggs in a large bowl with the black pepper.",
+    "Lift the potatoes and onion out of the oil with a slotted spoon and let them drain briefly, then stir them into the beaten eggs. Leave for 5 minutes so the mixture starts to thicken slightly.",
+    "Pour off most of the oil from the pan, leaving a thin coating. Return the pan to medium-low heat and add the egg, potato, and onion mixture, spreading it evenly.",
+    "Cook for 4 to 5 minutes until the edges are set and the base is golden. Place a large plate over the pan, carefully flip the tortilla, and slide it back into the pan to cook the other side for 3 to 4 minutes more, until just set in the centre.",
+    "Slide onto a plate and rest for 2 to 3 minutes before slicing and serving warm or at room temperature."
+  ],
+  "nutrition": {
+    "kcal": 400.8,
+    "protein_g": 12.9,
+    "carbs_g": 30.4,
+    "fat_g": 25.7,
+    "fibre_g": 3.8
+  }
+}

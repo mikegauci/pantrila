@@ -1,0 +1,117 @@
+{
+  "id": "japanese-pork-ginger-stir-fry",
+  "title": "Shogayaki Ginger Pork with Cabbage",
+  "summary": "A Japanese-style dinner of thin pork slices quickly fried in a savoury ginger-soy glaze, served with crisp shredded cabbage. It is fast, punchy and dairy-free, ideal for a weeknight meal with rice if you like.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "soy",
+    "sulphites"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "pork loin, thinly sliced",
+      "food": "pork_loin",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "cabbage, finely shredded",
+      "food": "cabbage",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "onion, thinly sliced",
+      "food": "onion",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    },
+    {
+      "name": "garlic clove, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 51.0
+    },
+    {
+      "name": "mirin substitute: white wine",
+      "food": "white_wine",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 29.3
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Put the shredded cabbage in a bowl of cold water for 5 minutes to crisp, then drain very well and pile it onto serving plates.",
+    "Mix the grated ginger, grated garlic, soy sauce, white wine and sugar in a small bowl until the sugar dissolves.",
+    "Pat the pork slices dry and season lightly with a pinch of salt and black pepper.",
+    "Heat the vegetable oil in a large frying pan over medium-high heat. Add the sliced onion and cook for 2–3 minutes, stirring, until just softened and starting to colour at the edges.",
+    "Add the pork in a single layer as much as possible. Fry for 2–3 minutes, turning once, until the pork loses its pink colour and begins to brown lightly.",
+    "Pour in the ginger-soy sauce and toss the pork and onion through it. Cook for 2–3 minutes more, until the sauce is glossy, slightly reduced and coating the pork.",
+    "Serve the hot ginger pork and onions immediately alongside the crisp shredded cabbage, spooning any extra pan sauce over the pork."
+  ],
+  "nutrition": {
+    "kcal": 460.7,
+    "protein_g": 36.4,
+    "carbs_g": 18.8,
+    "fat_g": 26.7,
+    "fibre_g": 4.5
+  }
+}

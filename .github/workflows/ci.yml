@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: pantrio
+          POSTGRES_PASSWORD: pantrio
+          POSTGRES_DB: pantrio_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U pantrio"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      PANTRIO_TEST_DATABASE_URL: postgresql://pantrio:pantrio@localhost:5432/pantrio_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run pytest

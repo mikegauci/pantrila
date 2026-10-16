@@ -1,0 +1,159 @@
+{
+  "id": "greek-avgolemono",
+  "title": "Greek Lemon Chicken Rice Soup",
+  "summary": "A bright, comforting Greek chicken and rice soup finished with egg and lemon for a silky, tangy broth. It’s light enough for lunch but still satisfying and warming.",
+  "cuisine": "greek",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "eggs"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken breast",
+      "food": "chicken_breast",
+      "quantity": 350.0,
+      "unit": "g",
+      "grams": 350.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "carrot, diced",
+      "food": "carrot",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 140.0
+    },
+    {
+      "name": "celery, diced",
+      "food": "celery",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 80.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "chicken stock",
+      "food": "chicken_stock",
+      "quantity": 1.5,
+      "unit": "l",
+      "grams": 1500.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 500.0,
+      "unit": "ml",
+      "grams": 500.0
+    },
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 80.0,
+      "unit": "ml",
+      "grams": 82.4
+    },
+    {
+      "name": "lemon, zest",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 0.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large pot over medium heat. Add the onion, carrot and celery with a pinch of salt, and cook for 6 to 8 minutes until softened.",
+    "Stir in the garlic and oregano for 30 seconds until fragrant.",
+    "Add the chicken breast, chicken stock, water, bay leaf and rice. Bring to a boil, then reduce to a simmer and cook for 15 to 18 minutes until the rice is tender and the chicken is cooked through.",
+    "Remove the chicken to a plate. Shred it with two forks, then return it to the pot.",
+    "In a bowl, whisk the eggs with the lemon juice and lemon zest until smooth.",
+    "Ladle about 250 ml of hot broth into the egg mixture slowly, whisking constantly to temper it. Pour the tempered mixture back into the soup while stirring gently.",
+    "Cook over the lowest heat for 1 to 2 minutes, stirring, just until the soup thickens slightly. Do not let it boil or the egg may scramble.",
+    "Remove the bay leaf, season with black pepper and more salt if needed, and stir through the parsley before serving hot."
+  ],
+  "nutrition": {
+    "kcal": 479.8,
+    "protein_g": 37.3,
+    "carbs_g": 49.0,
+    "fat_g": 14.2,
+    "fibre_g": 3.1
+  }
+}

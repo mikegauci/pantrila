@@ -1,0 +1,153 @@
+{
+  "id": "chinese-mapo-tofu",
+  "title": "Mapo Tofu with Pork Mince",
+  "summary": "A Chinese-inspired mapo tofu with silky tofu, savoury pork mince, chilli heat and a fermented bean-style depth using miso and soy sauce. It is a fast, warming dinner to serve with rice when you want bold, spicy comfort food.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "firm tofu, cut into 2 cm cubes",
+      "food": "tofu",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "pork mince",
+      "food": "pork_mince",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "garlic, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, finely chopped",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "spring onions, sliced, whites and greens separated",
+      "food": "spring_onion",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "red chilli, finely chopped",
+      "food": "chilli",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "miso, to mimic fermented chilli bean paste depth",
+      "food": "miso",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "chicken stock",
+      "food": "chicken_stock",
+      "quantity": 250.0,
+      "unit": "ml",
+      "grams": 250.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "cornstarch, mixed with 2 tbsp cold water",
+      "food": "cornstarch",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Bring a pan of water to a gentle simmer with a pinch of salt. Add the tofu cubes and simmer for 2 minutes, then drain carefully. This firms the tofu slightly and helps it stay intact.",
+    "Heat the vegetable oil in a wok or large frying pan over medium-high heat. Add the pork mince and cook for 4–5 minutes, breaking it up, until browned and any liquid has evaporated.",
+    "Add the garlic, ginger, spring onion whites and chopped chillies. Stir-fry for 1–2 minutes until fragrant but not burnt.",
+    "Stir in the miso, chilli powder, soy sauce, chicken stock and sugar. Mix until the miso dissolves and the sauce is bubbling.",
+    "Gently slide in the tofu and spoon the sauce over it. Simmer for 5–6 minutes, shaking the pan occasionally rather than stirring hard, until the tofu is hot through and the sauce tastes savoury and spicy.",
+    "Stir the cornstarch slurry again, then drizzle it into the pan while gently moving the tofu. Simmer for 1–2 minutes until the sauce turns glossy and lightly thickened.",
+    "Finish with sesame oil, black pepper and the spring onion greens. Taste and add a little more salt only if needed, then serve hot with rice."
+  ],
+  "nutrition": {
+    "kcal": 523.2,
+    "protein_g": 40.7,
+    "carbs_g": 15.6,
+    "fat_g": 35.8,
+    "fibre_g": 5.0
+  }
+}

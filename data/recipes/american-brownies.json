@@ -1,0 +1,104 @@
+{
+  "id": "american-brownies",
+  "title": "Fudgy Chocolate Brownies",
+  "summary": "Rich, dense chocolate brownies with a crackly top and a soft, fudgy centre. Best served warm with coffee, ice cream, or on their own as an easy dessert.",
+  "cuisine": "american",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk",
+    "soy"
+  ],
+  "total_minutes": 45,
+  "servings": 9,
+  "ingredients": [
+    {
+      "name": "dark chocolate",
+      "food": "dark_chocolate",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "caster sugar",
+      "food": "sugar",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 75.0,
+      "unit": "g",
+      "grams": 75.0
+    },
+    {
+      "name": "cocoa powder",
+      "food": "cocoa_powder",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "dark chocolate chunks",
+      "food": "dark_chocolate",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 180°C and line a 20 cm square baking tin with baking paper.",
+    "Melt the dark chocolate and butter together gently in a heatproof bowl over a pan of barely simmering water, then stir until smooth. Leave to cool for a few minutes.",
+    "Whisk the sugar, eggs, and vanilla extract together in a large bowl until pale and slightly thickened.",
+    "Pour in the melted chocolate mixture and stir until fully combined.",
+    "Sift in the plain flour, cocoa powder, and salt, then fold gently until no dry streaks remain. Stir in the chocolate chunks.",
+    "Scrape the batter into the prepared tin and smooth the top.",
+    "Bake for 22 to 25 minutes, until the top looks set and crackly but the centre still has a slight wobble.",
+    "Cool completely in the tin before lifting out and slicing into squares."
+  ],
+  "nutrition": {
+    "kcal": 359.8,
+    "protein_g": 4.6,
+    "carbs_g": 38.3,
+    "fat_g": 21.8,
+    "fibre_g": 3.7
+  }
+}

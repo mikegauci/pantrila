@@ -1,0 +1,174 @@
+{
+  "id": "indian-sweet-potato-lentil-curry",
+  "title": "Sweet Potato and Green Lentil Coconut Curry",
+  "summary": "A hearty Indian-inspired vegan curry with tender sweet potato, earthy green lentils and a creamy coconut milk sauce. It is warming, gently spiced and ideal for a comforting weeknight dinner.",
+  "cuisine": "indian",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "mustard"
+  ],
+  "total_minutes": 50,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "green lentils, rinsed",
+      "food": "green_lentils",
+      "quantity": 220.0,
+      "unit": "g",
+      "grams": 220.0
+    },
+    {
+      "name": "sweet potato, peeled and cut into 2 cm cubes",
+      "food": "sweet_potato",
+      "quantity": 650.0,
+      "unit": "g",
+      "grams": 650.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 388.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 500.0,
+      "unit": "ml",
+      "grams": 500.0
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "curry powder",
+      "food": "curry_powder",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 11.8
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "cayenne pepper",
+      "food": "cayenne",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "spinach",
+      "food": "spinach",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    }
+  ],
+  "steps": [
+    "Heat the vegetable oil in a large saucepan over a medium heat. Add the chopped onion and cook for 6–8 minutes, stirring often, until soft and lightly golden.",
+    "Add the garlic and ginger and cook for 1 minute until fragrant. Stir in the curry powder, cumin, ground coriander, turmeric and cayenne, and cook for 30 seconds to toast the spices.",
+    "Add the rinsed green lentils, sweet potato cubes, canned tomatoes, vegetable stock, salt and black pepper. Stir well, bring to a boil, then reduce to a gentle simmer.",
+    "Cover partly with a lid and simmer for 25–30 minutes, stirring occasionally, until the lentils are tender and the sweet potato is soft but still holding its shape.",
+    "Pour in the coconut milk and simmer uncovered for 5–8 minutes, until the curry is creamy and slightly thickened. If it becomes too thick, add a splash of water.",
+    "Stir in the spinach and cook for 2 minutes until wilted. Turn off the heat and stir through the lime juice.",
+    "Taste and adjust the seasoning if needed. Scatter with chopped fresh coriander and serve hot."
+  ],
+  "nutrition": {
+    "kcal": 657.1,
+    "protein_g": 21.6,
+    "carbs_g": 85.1,
+    "fat_g": 29.4,
+    "fibre_g": 16.4
+  }
+}

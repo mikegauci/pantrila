@@ -1,0 +1,80 @@
+{
+  "id": "thai-mango-sticky-rice",
+  "title": "Thai Mango with Coconut Sticky Rice",
+  "summary": "A classic Thai-style dessert of tender sweet rice soaked with coconut milk and served with ripe mango. It is creamy, fragrant, lightly salty-sweet, and perfect after a spicy meal.",
+  "cuisine": "thai",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "sesame"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "sushi rice, rinsed well",
+      "food": "sushi_rice",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 388.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "ripe mangoes, peeled and sliced",
+      "food": "mango",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 400.0
+    },
+    {
+      "name": "sesame seeds, toasted",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    }
+  ],
+  "steps": [
+    "Rinse the sushi rice in several changes of cold water until the water runs mostly clear, then drain well.",
+    "Put the rice in a saucepan with 360 ml water. Bring to a boil, then cover, reduce the heat to very low, and cook for 15 minutes until the water is absorbed and the rice is tender. Remove from the heat and let it stand, covered, for 10 minutes.",
+    "While the rice rests, warm the coconut milk, sugar, and salt in a small saucepan over medium-low heat, stirring until the sugar dissolves. Do not let it boil.",
+    "Reserve about 120 ml of the sweet coconut sauce for serving. Pour the rest over the hot rice and fold gently. Cover and leave for 10 minutes so the rice absorbs the coconut milk and becomes glossy and sticky.",
+    "Spoon the coconut sticky rice onto plates, arrange the sliced mango alongside, drizzle with the reserved coconut sauce, and sprinkle with toasted sesame seeds."
+  ],
+  "nutrition": {
+    "kcal": 618.7,
+    "protein_g": 8.3,
+    "carbs_g": 99.5,
+    "fat_g": 22.6,
+    "fibre_g": 4.0
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "id": "korean-tofu-soup",
+  "title": "Korean Spicy Soft Tofu Stew with Pork and Egg",
+  "summary": "A warming Korean-style soondubu jjigae inspired stew with silky tofu, savoury pork, chilli heat and a softly set egg. It is quick enough for lunch but tastes deeply comforting and rich.",
+  "cuisine": "korean",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "eggs",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "pork mince",
+      "food": "pork_mince",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "onion, finely sliced",
+      "food": "onion",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "spring onions, sliced, whites and greens separated",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 400.0
+    },
+    {
+      "name": "tofu, cut into large spoonfuls",
+      "food": "tofu",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "shiitake mushrooms, sliced",
+      "food": "shiitake",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Heat the vegetable oil in a medium saucepan over medium-high heat. Add the pork mince and cook for 4–5 minutes, breaking it up, until browned and no pink remains.",
+    "Add the onion, garlic, ginger and the white parts of the spring onions. Cook for 3 minutes until the onion softens and smells aromatic.",
+    "Stir in the chilli powder and cook for 30 seconds, then add the soy sauce and sesame oil, scraping the bottom of the pan.",
+    "Pour in the vegetable stock and bring to a lively simmer. Add the shiitake mushrooms and simmer for 5 minutes until tender.",
+    "Gently add the tofu in large spoonfuls so it stays soft and silky. Simmer for 4–5 minutes until piping hot, then season with salt and black pepper to taste.",
+    "Crack the eggs directly into the bubbling stew, one on each side. Cover and simmer for 2–4 minutes, until the whites are set and the yolks are still soft, or longer if preferred.",
+    "Scatter over the green parts of the spring onions and serve hot, ideally with rice if you like."
+  ],
+  "nutrition": {
+    "kcal": 642.6,
+    "protein_g": 48.9,
+    "carbs_g": 20.5,
+    "fat_g": 43.7,
+    "fibre_g": 7.3
+  }
+}

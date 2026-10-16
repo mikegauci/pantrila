@@ -1,0 +1,121 @@
+{
+  "id": "italian-tuna-white-bean-salad",
+  "title": "Italian Tuna, Cannellini Bean and Red Onion Salad",
+  "summary": "A quick Italian-style lunch salad with flaky tuna, creamy cannellini beans, sharp red onion, parsley and a bright lemon-olive oil dressing. It is fresh, filling and ideal for a no-cook weekday meal.",
+  "cuisine": "italian",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "fish"
+  ],
+  "total_minutes": 15,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "canned tuna, drained",
+      "food": "canned_tuna",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "cannellini beans, drained and rinsed",
+      "food": "cannellini_beans",
+      "quantity": 240.0,
+      "unit": "g",
+      "grams": 240.0
+    },
+    {
+      "name": "red onion, thinly sliced",
+      "food": "red_onion",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "cherry tomatoes, halved",
+      "food": "cherry_tomato",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "fresh parsley, chopped",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "extra virgin olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "capers, drained",
+      "food": "capers",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 0.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "rocket leaves",
+      "food": "rocket",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    }
+  ],
+  "steps": [
+    "Put the sliced red onion in a small bowl with 1 tablespoon of the lemon juice and a pinch of the salt. Toss and leave for 5 minutes to soften its sharpness.",
+    "In a large bowl, whisk the olive oil with the remaining lemon juice, dried oregano, salt and black pepper until glossy and combined.",
+    "Add the cannellini beans, cherry tomatoes, capers and parsley to the dressing. Toss gently so the beans stay mostly whole and everything is coated.",
+    "Flake in the drained tuna in large pieces and add the softened red onion with its lemony juices. Fold gently to combine without breaking up the tuna too much.",
+    "Arrange the rocket on plates or in shallow bowls, spoon the tuna and bean salad over the top, and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 371.3,
+    "protein_g": 26.6,
+    "carbs_g": 35.3,
+    "fat_g": 15.3,
+    "fibre_g": 8.4
+  }
+}

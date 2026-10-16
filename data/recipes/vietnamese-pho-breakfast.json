@@ -1,0 +1,158 @@
+{
+  "id": "vietnamese-pho-breakfast",
+  "title": "Quick Beef Pho with Rice Noodles and Herbs",
+  "summary": "A fast Vietnamese-style beef pho with fragrant ginger, coriander, lime and tender steak over rice noodles. It is light but satisfying, perfect for a savoury dairy-free breakfast or brunch.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "fish",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "rice noodles",
+      "food": "rice_noodles",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "beef steak, very thinly sliced",
+      "food": "beef_steak",
+      "quantity": 220.0,
+      "unit": "g",
+      "grams": 220.0
+    },
+    {
+      "name": "beef-style broth made with vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 900.0,
+      "unit": "ml",
+      "grams": 900.0
+    },
+    {
+      "name": "fresh ginger, sliced",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "garlic cloves, lightly crushed",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "onion, halved and thinly sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "fish sauce",
+      "food": "fish_sauce",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 26.6
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.6
+    },
+    {
+      "name": "lime, cut into wedges",
+      "food": "lime",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "fresh coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh mint leaves",
+      "food": "mint",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "red chilli, thinly sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "bean sprouts",
+      "food": "bean_sprouts",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    }
+  ],
+  "steps": [
+    "Soak or cook the rice noodles according to the packet instructions until just tender, then drain and rinse briefly under warm water to stop them sticking.",
+    "Put the vegetable stock, ginger, garlic and half the sliced onion in a saucepan. Bring to a boil, then simmer for 12 minutes until fragrant.",
+    "Stir in the fish sauce, soy sauce, brown sugar, black pepper and salt. Taste the broth; it should be savoury, aromatic and lightly salty. Remove the ginger and garlic if you prefer a clearer bowl.",
+    "Divide the warm noodles between two deep bowls. Top with the thinly sliced raw beef steak and the remaining sliced onion.",
+    "Ladle the boiling-hot broth over the beef so it cooks in the bowl; the slices should turn from red to pale brown within 1 minute. If your slices are thicker, add them to the simmering broth for 30–60 seconds first.",
+    "Top with bean sprouts, spring onions, coriander, mint and chilli. Serve immediately with lime wedges for squeezing over."
+  ],
+  "nutrition": {
+    "kcal": 643.7,
+    "protein_g": 32.6,
+    "carbs_g": 89.3,
+    "fat_g": 17.0,
+    "fibre_g": 5.4
+  }
+}

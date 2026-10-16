@@ -1,0 +1,122 @@
+{
+  "id": "indian-dal-tadka",
+  "title": "Red Lentil Dal with Garlic, Chilli and Cumin",
+  "summary": "A simple Indian-style red lentil dal with a warm cumin tempering, garlic and chilli. Comforting, lightly spiced and ideal for a filling vegan lunch.",
+  "cuisine": "indian",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "red lentils",
+      "food": "red_lentils",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "red chilli, finely chopped",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 900.0,
+      "unit": "ml",
+      "grams": 900.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "fresh coriander",
+      "food": "coriander",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Rinse the red lentils under cold water until the water runs mostly clear.",
+    "Heat the vegetable oil in a medium saucepan over medium heat. Add the onion and cook for 5 to 6 minutes, stirring, until softened and lightly golden.",
+    "Add the garlic, chilli, ground cumin and turmeric. Cook for 30 to 60 seconds until fragrant.",
+    "Stir in the canned tomatoes, red lentils, water and salt. Bring to a boil, then reduce to a gentle simmer.",
+    "Cook for 18 to 22 minutes, stirring occasionally, until the lentils are soft and the dal has thickened. Add a splash more water if it becomes too thick.",
+    "Stir in the lemon juice. Taste and adjust the salt.",
+    "Serve hot, finished with fresh coriander on top."
+  ],
+  "nutrition": {
+    "kcal": 323.8,
+    "protein_g": 16.5,
+    "carbs_g": 48.0,
+    "fat_g": 8.7,
+    "fibre_g": 8.8
+  }
+}

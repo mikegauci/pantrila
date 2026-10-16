@@ -1,0 +1,78 @@
+{
+  "id": "chinese-mango-sago-style-pudding",
+  "title": "Chinese Mango Coconut Pudding",
+  "summary": "A silky, chilled mango pudding inspired by Chinese dim sum desserts, made vegan with coconut milk and chia seeds for a gentle set. It is creamy, fruity and refreshing after a meal.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 255,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "ripe mango flesh, diced",
+      "food": "mango",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 388.0
+    },
+    {
+      "name": "chia seeds",
+      "food": "chia_seeds",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 35.0,
+      "unit": "g",
+      "grams": 35.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "desiccated coconut, to garnish",
+      "food": "desiccated_coconut",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Put 400 g of the mango, the coconut milk, sugar and lime juice in a blender. Blend until completely smooth and creamy.",
+    "Pour the mango mixture into a bowl and stir in the chia seeds thoroughly, making sure there are no clumps.",
+    "Leave the mixture for 10 minutes, then stir again to evenly distribute the chia seeds as they start to thicken.",
+    "Divide between 4 small bowls or glasses. Cover and chill for at least 4 hours, until softly set and spoonable.",
+    "Top with the remaining diced mango and a sprinkle of desiccated coconut just before serving."
+  ],
+  "nutrition": {
+    "kcal": 374.3,
+    "protein_g": 4.9,
+    "carbs_g": 35.6,
+    "fat_g": 26.7,
+    "fibre_g": 6.1
+  }
+}

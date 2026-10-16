@@ -1,0 +1,119 @@
+{
+  "id": "french-tartiflette-style-bake",
+  "title": "French Potato, Bacon and Cheese Bake",
+  "summary": "A rich, comforting potato bake with smoky bacon, onions and a golden cheese topping. It’s hearty, savoury and ideal for a cosy dinner.",
+  "cuisine": "french",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "milk"
+  ],
+  "total_minutes": 85,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "potatoes, peeled and sliced",
+      "food": "potato",
+      "quantity": 900.0,
+      "unit": "g",
+      "grams": 900.0
+    },
+    {
+      "name": "bacon, chopped",
+      "food": "bacon",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "onion, thinly sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, crushed",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "double cream",
+      "food": "double_cream",
+      "quantity": 200.0,
+      "unit": "ml",
+      "grams": 200.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 100.0,
+      "unit": "ml",
+      "grams": 103.0
+    },
+    {
+      "name": "cheddar, grated",
+      "food": "cheddar",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "parmesan, grated",
+      "food": "parmesan",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Grease a medium baking dish with a little butter.",
+    "Bring a large pan of salted water to the boil, add the sliced potatoes and simmer for 8 minutes until just starting to soften. Drain well.",
+    "Meanwhile, cook the bacon in a dry frying pan over medium heat for 4 to 5 minutes until lightly browned. Add the onion and cook for another 5 minutes until softened. Stir in the garlic and thyme for 1 minute.",
+    "Layer half the potatoes in the baking dish, then spread over half the bacon and onion mixture. Season lightly. Repeat with the remaining potatoes and bacon mixture.",
+    "Mix the double cream and milk with the black pepper. Pour evenly over the potatoes, then scatter over the cheddar and parmesan.",
+    "Bake for 35 to 40 minutes until the top is golden brown and the potatoes are tender when pierced with a knife. Rest for 10 minutes before serving."
+  ],
+  "nutrition": {
+    "kcal": 836.0,
+    "protein_g": 27.5,
+    "carbs_g": 49.9,
+    "fat_g": 59.6,
+    "fibre_g": 5.7
+  }
+}

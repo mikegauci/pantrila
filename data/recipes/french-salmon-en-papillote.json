@@ -1,0 +1,82 @@
+{
+  "id": "french-salmon-en-papillote",
+  "title": "Salmon Parcels with Lemon and Dill",
+  "summary": "Tender salmon is baked in parchment with lemon, dill, and a little olive oil for a light French-style dinner. The parcels keep the fish juicy and give it a fresh, bright flavour.",
+  "cuisine": "french",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "fish"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "salmon fillets",
+      "food": "salmon",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 280.0
+    },
+    {
+      "name": "lemon",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "fresh dill",
+      "food": "dill",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Cut two large pieces of baking paper or foil and place each on a tray.",
+    "Put one salmon fillet in the centre of each piece. Season with salt and black pepper, then drizzle over the olive oil.",
+    "Slice the lemon into thin rounds. Top each fillet with lemon slices and sprinkle over the dill.",
+    "Fold the paper or foil over the salmon and crimp the edges tightly to seal the parcels.",
+    "Bake for 12 to 15 minutes, until the salmon is just cooked through and flakes easily.",
+    "Serve the parcels straight from the oven, opening them carefully so the steam escapes.",
+    ""
+  ],
+  "nutrition": {
+    "kcal": 421.5,
+    "protein_g": 29.0,
+    "carbs_g": 3.1,
+    "fat_g": 32.5,
+    "fibre_g": 0.9
+  }
+}

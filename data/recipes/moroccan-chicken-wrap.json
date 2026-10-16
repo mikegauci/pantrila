@@ -1,0 +1,163 @@
+{
+  "id": "moroccan-chicken-wrap",
+  "title": "Moroccan Spiced Chicken Wraps with Yoghurt",
+  "summary": "Juicy chicken is rubbed with ras el hanout-style spices, then tucked into warm wraps with a cool yoghurt sauce. It’s a fast, fragrant lunch with a balance of spice, freshness, and creaminess.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken breast",
+      "food": "chicken_breast",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "flour tortillas",
+      "food": "flour_tortilla",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 180.0
+    },
+    {
+      "name": "greek yogurt",
+      "food": "greek_yogurt",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "red onion, thinly sliced",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "cucumber, diced",
+      "food": "cucumber",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "tomato, diced",
+      "food": "tomato",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 240.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "cinnamon",
+      "food": "cinnamon",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.3
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "mint, chopped",
+      "food": "mint",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Mix the chicken with olive oil, garlic, cumin, paprika, ground coriander, cinnamon, turmeric, black pepper, salt, and half the lemon juice. Let it sit while you prepare the vegetables.",
+    "Stir the Greek yoghurt with the remaining lemon juice and half the chopped mint. Taste and season with a little salt if needed.",
+    "Heat a large frying pan over medium-high heat and cook the chicken for 6 to 8 minutes, turning occasionally, until browned outside and cooked through.",
+    "Remove the chicken from the pan and rest for 2 minutes, then slice into strips.",
+    "Warm the tortillas in a dry pan for a few seconds on each side until pliable.",
+    "Fill each tortilla with chicken, red onion, cucumber, and tomato. Spoon over the yoghurt sauce and finish with the remaining mint and parsley.",
+    "Roll up the wraps tightly and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 447.5,
+    "protein_g": 38.3,
+    "carbs_g": 35.8,
+    "fat_g": 16.8,
+    "fibre_g": 4.3
+  }
+}

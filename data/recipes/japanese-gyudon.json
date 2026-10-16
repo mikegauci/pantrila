@@ -1,0 +1,106 @@
+{
+  "id": "japanese-gyudon",
+  "title": "Japanese Beef and Onion Rice Bowl",
+  "summary": "A comforting gyudon-style rice bowl with thin beef and sweet onions simmered in a savoury soy-sugar sauce. It is quick enough for a weeknight dairy-free dinner and served over hot white rice.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "beef steak, very thinly sliced",
+      "food": "beef_steak",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "onion, thinly sliced",
+      "food": "onion",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 120.0,
+      "unit": "ml",
+      "grams": 120.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 51.0
+    },
+    {
+      "name": "white sugar",
+      "food": "sugar",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 18.9
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "spring onion, finely sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Rinse the rice until the water runs mostly clear, then cook it according to the packet instructions until tender and fluffy, about 15–18 minutes. Keep warm.",
+    "While the rice cooks, heat the vegetable oil in a frying pan or shallow saucepan over medium heat. Add the sliced onion with a pinch of salt and cook for 5–6 minutes, stirring often, until softened and lightly golden at the edges.",
+    "Add the grated ginger, vegetable stock, soy sauce and sugar to the pan. Stir until the sugar dissolves, then simmer for 3 minutes so the onion becomes sweet and glossy.",
+    "Add the thinly sliced beef, separating the pieces with tongs. Simmer gently for 3–5 minutes, turning once or twice, until the beef is just cooked through and the sauce is slightly reduced but still spoonable.",
+    "Divide the hot rice between bowls. Spoon the beef, onions and sauce over the top, then finish with sliced spring onion and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 754.0,
+    "protein_g": 34.9,
+    "carbs_g": 93.6,
+    "fat_g": 25.6,
+    "fibre_g": 3.4
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "id": "korean-kimchi-style-pancake",
+  "title": "Spicy Korean Cabbage and Spring Onion Pancake",
+  "summary": "A crisp-edged, savoury Korean-style pancake packed with cabbage, spring onions and chilli heat. It makes a quick vegan breakfast with a tender centre and golden, crunchy outside.",
+  "cuisine": "korean",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "cold vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 180.0,
+      "unit": "ml",
+      "grams": 180.0
+    },
+    {
+      "name": "cabbage, finely shredded",
+      "food": "cabbage",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "spring onions, cut into 5 cm lengths",
+      "food": "spring_onion",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "fresh chilli, thinly sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "vegetable oil, for frying",
+      "food": "vegetable_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "tamari, for dipping",
+      "food": "tamari",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "rice vinegar, for dipping",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "sesame oil, for dipping",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "sesame seeds, for dipping",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Whisk the plain flour, cornstarch, salt and chilli powder in a large bowl until evenly mixed.",
+    "Add the cold vegetable stock and whisk to a smooth, fairly loose batter. Fold in the shredded cabbage, spring onions and sliced chilli until the vegetables are well coated.",
+    "Stir the tamari, rice vinegar, sesame oil and sesame seeds together in a small bowl to make the dipping sauce.",
+    "Heat 1.5 tbsp vegetable oil in a large non-stick frying pan over medium-high heat. Add half the batter and spread it into a thin pancake, pressing the vegetables down so they make contact with the pan.",
+    "Cook for 4–5 minutes until the underside is deep golden and crisp and the top looks mostly set around the edges.",
+    "Flip carefully, add another small drizzle of oil around the edge if the pan looks dry, and cook for 3–4 minutes more until crisp, browned and cooked through.",
+    "Repeat with the remaining oil and batter to make a second pancake. Slice and serve hot with the dipping sauce."
+  ],
+  "nutrition": {
+    "kcal": 481.8,
+    "protein_g": 10.5,
+    "carbs_g": 65.8,
+    "fat_g": 20.1,
+    "fibre_g": 5.6
+  }
+}

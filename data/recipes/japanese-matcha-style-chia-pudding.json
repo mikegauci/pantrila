@@ -1,0 +1,94 @@
+{
+  "id": "japanese-matcha-style-chia-pudding",
+  "title": "Japanese-Style Coconut Matcha Chia Pudding",
+  "summary": "A creamy vegan chia pudding made with coconut milk, maple syrup and a gentle matcha-inspired green tea flavour using pantry-friendly ingredients. It is a cool, lightly sweet dessert that works well made ahead.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "dessert"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "sesame"
+  ],
+  "total_minutes": 250,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chia seeds",
+      "food": "chia_seeds",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 388.0
+    },
+    {
+      "name": "desiccated coconut",
+      "food": "desiccated_coconut",
+      "quantity": 25.0,
+      "unit": "g",
+      "grams": 25.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 78.1
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "strawberries, sliced, to serve",
+      "food": "strawberries",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "toasted sesame seeds, to serve",
+      "food": "sesame_seeds",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 5.9
+    }
+  ],
+  "steps": [
+    "Put the chia seeds, coconut milk, desiccated coconut, maple syrup, vanilla extract and salt in a bowl or jug. Whisk very thoroughly for about 1 minute so the chia seeds are evenly suspended.",
+    "Leave for 10 minutes, then whisk again to break up any clumps and make the texture smooth.",
+    "Cover and refrigerate for at least 4 hours, or overnight, until thick, creamy and spoonable.",
+    "Stir the pudding before serving. If it is thicker than you like, loosen it with a small splash of water or extra coconut milk.",
+    "Spoon into 4 small bowls and top with sliced strawberries and sesame seeds."
+  ],
+  "nutrition": {
+    "kcal": 403.9,
+    "protein_g": 6.2,
+    "carbs_g": 29.1,
+    "fat_g": 31.7,
+    "fibre_g": 8.8
+  }
+}

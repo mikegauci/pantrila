@@ -1,0 +1,120 @@
+{
+  "id": "indian-chana-chaat",
+  "title": "Indian Spiced Chickpea, Tomato and Lime Salad",
+  "summary": "A bright vegan chickpea salad with juicy tomatoes, sharp onion, lime and warm Indian-style spices. It is quick to make for lunch and tastes even better after a short rest.",
+  "cuisine": "indian",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 15,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "cooked chickpeas, drained and rinsed",
+      "food": "chickpeas",
+      "quantity": 480.0,
+      "unit": "g",
+      "grams": 480.0
+    },
+    {
+      "name": "tomatoes, diced",
+      "food": "tomato",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "red onion, finely diced",
+      "food": "red_onion",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 30.5
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.7
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Put the drained chickpeas in a mixing bowl and lightly crush a few with the back of a spoon so the dressing clings, leaving most chickpeas whole.",
+    "Add the diced tomatoes, finely diced red onion and chopped coriander to the bowl.",
+    "In a small bowl, whisk together the lime juice, olive oil, cumin, ground coriander, turmeric, chilli powder, salt and black pepper until well combined.",
+    "Pour the spiced lime dressing over the chickpea mixture and toss thoroughly until everything is evenly coated.",
+    "Taste and adjust with a little more salt or lime juice if needed. Let the salad sit for 5 minutes before serving so the onion softens slightly and the flavours mingle."
+  ],
+  "nutrition": {
+    "kcal": 448.1,
+    "protein_g": 19.1,
+    "carbs_g": 65.9,
+    "fat_g": 14.3,
+    "fibre_g": 18.6
+  }
+}

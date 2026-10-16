@@ -1,0 +1,178 @@
+{
+  "id": "american-jambalaya",
+  "title": "Chicken, Sausage and Prawn Jambalaya",
+  "summary": "A hearty American rice dish packed with chicken, sausage and prawns in a smoky tomato sauce. It’s savoury, gently spicy and perfect for a filling weeknight dinner.",
+  "cuisine": "american",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "crustaceans",
+    "sulphites"
+  ],
+  "total_minutes": 50,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken breast, diced",
+      "food": "chicken_breast",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "pork sausage, sliced",
+      "food": "pork_sausage",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "prawns, peeled",
+      "food": "prawns",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "onion, diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "red bell pepper, diced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "celery, diced",
+      "food": "celery",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 80.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "chicken stock",
+      "food": "chicken_stock",
+      "quantity": 750.0,
+      "unit": "ml",
+      "grams": 750.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "cayenne",
+      "food": "cayenne",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 0.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "spring onion, sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a large deep pan over medium-high heat. Brown the chicken pieces for 4–5 minutes, then add the sausage and cook for another 2 minutes until lightly coloured. Remove both to a plate.",
+    "Add the onion, red bell pepper and celery to the pan with a pinch of salt. Cook for 5–6 minutes, stirring, until softened. Add the garlic, paprika, thyme, cayenne and tomato paste, and cook for 1 minute until fragrant.",
+    "Stir in the rice, then add the canned tomatoes, chicken stock, bay leaf, black pepper and most of the salt. Return the chicken and sausage to the pan. Bring to a simmer, cover, and cook on low for 18–20 minutes until the rice is tender and the liquid is absorbed.",
+    "Stir in the prawns, cover again, and cook for 3–4 minutes until they turn pink and opaque. Remove the bay leaf, taste and adjust the seasoning.",
+    "Finish with spring onion and parsley, then serve hot straight from the pan."
+  ],
+  "nutrition": {
+    "kcal": 822.2,
+    "protein_g": 56.6,
+    "carbs_g": 83.3,
+    "fat_g": 28.4,
+    "fibre_g": 6.0
+  }
+}

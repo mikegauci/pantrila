@@ -1,0 +1,144 @@
+{
+  "id": "middle-eastern-stuffed-aubergine",
+  "title": "Spiced Chickpea and Tomato Stuffed Aubergines",
+  "summary": "Soft roasted aubergines filled with a warmly spiced chickpea and tomato mixture, finished with herbs and lemon. It’s a comforting Middle Eastern-style vegan dinner that’s hearty enough on its own or with flatbread and salad.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 50,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "aubergines",
+      "food": "aubergine",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 600.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, crushed",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 3.9
+    },
+    {
+      "name": "smoked paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "chilli flakes",
+      "food": "chilli",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "canned chickpeas, drained and rinsed",
+      "food": "chickpeas",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 16.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Line a baking tray with parchment or lightly oil it.",
+    "Slice the aubergines in half lengthways and score the flesh in a crosshatch pattern without cutting through the skin. Brush with 1 tablespoon of the olive oil and season lightly with salt.",
+    "Place the aubergines cut-side up on the tray and roast for 25 to 30 minutes, until the flesh is soft and lightly golden.",
+    "Meanwhile, heat the remaining olive oil in a frying pan over medium heat. Cook the onion for 5 minutes until softened, then add the garlic, cumin, coriander, paprika and chilli flakes and cook for 1 minute until fragrant.",
+    "Stir in the chickpeas, canned tomatoes and tomato paste. Season with salt and black pepper, then simmer for 10 to 12 minutes, stirring occasionally, until the sauce has thickened.",
+    "Once the aubergines are tender, gently scoop out some of the flesh, leaving a sturdy shell. Chop the scooped flesh and stir it into the chickpea mixture.",
+    "Spoon the filling into the aubergine shells and return them to the oven for 8 to 10 minutes, until hot through and slightly browned on top.",
+    "Finish with lemon juice and chopped parsley, then serve hot."
+  ],
+  "nutrition": {
+    "kcal": 318.8,
+    "protein_g": 10.7,
+    "carbs_g": 42.4,
+    "fat_g": 14.1,
+    "fibre_g": 14.6
+  }
+}

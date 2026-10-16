@@ -1,0 +1,163 @@
+{
+  "id": "greek-turkey-meatballs",
+  "title": "Greek Turkey Meatballs in Tomato Herb Sauce",
+  "summary": "Juicy turkey meatballs simmered in a garlicky tomato sauce with oregano and parsley. It’s a hearty, high-protein dinner that feels bright and Mediterranean.",
+  "cuisine": "greek",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "eggs"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "turkey mince",
+      "food": "turkey_mince",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "egg",
+      "food": "egg",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 50.0
+    },
+    {
+      "name": "red onion, finely grated",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "parsley, finely chopped",
+      "food": "parsley",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic, sliced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "canned tomatoes",
+      "food": "canned_tomatoes",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 150.0,
+      "unit": "ml",
+      "grams": 150.0
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "fresh parsley, to finish",
+      "food": "parsley",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    }
+  ],
+  "steps": [
+    "In a large bowl, mix the turkey mince, egg, grated red onion, minced garlic, parsley, oregano, cumin, salt and black pepper until just combined. Form into 16 small meatballs.",
+    "Heat 1 tablespoon of the olive oil in a large deep pan over medium heat. Brown the meatballs in batches for 5 to 6 minutes, turning so they colour on several sides. Transfer them to a plate; they do not need to be cooked through.",
+    "Add the remaining olive oil to the same pan. Cook the chopped onion for 5 minutes until soft and lightly golden, then add the sliced garlic for 30 seconds.",
+    "Stir in the canned tomatoes, tomato paste, water and thyme. Bring to a simmer, scraping up any browned bits from the pan.",
+    "Return the meatballs to the sauce, cover partially, and simmer gently for 12 to 15 minutes until the meatballs are cooked through and the sauce has thickened.",
+    "Stir in the lemon juice and sprinkle over the fresh parsley. Serve hot, with rice, potatoes or crusty bread if desired."
+  ],
+  "nutrition": {
+    "kcal": 464.7,
+    "protein_g": 44.7,
+    "carbs_g": 20.3,
+    "fat_g": 24.2,
+    "fibre_g": 6.3
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "id": "american-tofu-breakfast-tacos",
+  "title": "Tofu Scramble Breakfast Tacos",
+  "summary": "Soft, savoury tofu scramble tucked into warm tortillas with peppers, onion and a little spice. A quick vegan breakfast that feels hearty and fresh.",
+  "cuisine": "american",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "soy"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "corn tortillas",
+      "food": "corn_tortilla",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 104.0
+    },
+    {
+      "name": "firm tofu",
+      "food": "tofu",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "red onion, finely diced",
+      "food": "red_onion",
+      "quantity": 0.5,
+      "unit": "piece",
+      "grams": 75.0
+    },
+    {
+      "name": "red bell pepper, diced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "cumin",
+      "food": "cumin",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "spinach",
+      "food": "spinach",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "salsa",
+      "food": "salsa",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 62.1
+    },
+    {
+      "name": "avocado, sliced",
+      "food": "avocado",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    }
+  ],
+  "steps": [
+    "Warm the corn tortillas in a dry pan over medium heat for 20 to 30 seconds per side, then keep them wrapped so they stay soft.",
+    "Crumble the tofu into a bowl with your hands or a fork so it looks like small curds.",
+    "Heat the olive oil in a non-stick frying pan over medium heat. Add the onion and red pepper and cook for 3 to 4 minutes until softened.",
+    "Add the garlic, turmeric, paprika and cumin, then cook for 30 seconds until fragrant.",
+    "Stir in the tofu, salt and black pepper. Cook for 4 to 5 minutes, stirring often, until the tofu is hot and lightly golden in spots.",
+    "Add the spinach and cook for 1 minute until just wilted. Finish with the lime juice.",
+    "Divide the scramble between the tortillas, top with salsa and avocado, and serve straight away."
+  ],
+  "nutrition": {
+    "kcal": 578.0,
+    "protein_g": 33.5,
+    "carbs_g": 49.0,
+    "fat_g": 33.1,
+    "fibre_g": 16.1
+  }
+}

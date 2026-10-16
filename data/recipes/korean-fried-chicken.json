@@ -1,0 +1,149 @@
+{
+  "id": "korean-fried-chicken",
+  "title": "Korean-Style Crispy Chicken with Sweet Spicy Glaze",
+  "summary": "Crisp, golden chicken pieces tossed in a sticky Korean-inspired sweet chilli glaze with garlic, ginger and sesame. It is a satisfying dinner to serve with rice and quick vegetables.",
+  "cuisine": "korean",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "boneless chicken thighs, cut into bite-size pieces",
+      "food": "chicken_thigh",
+      "quantity": 700.0,
+      "unit": "g",
+      "grams": 700.0
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 90.0,
+      "unit": "g",
+      "grams": 90.0
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "vegetable oil, for shallow frying",
+      "food": "vegetable_oil",
+      "quantity": 250.0,
+      "unit": "ml",
+      "grams": 230.0
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "ginger, finely grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "sriracha",
+      "food": "sriracha",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 48.8
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 51.0
+    },
+    {
+      "name": "honey",
+      "food": "honey",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 63.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.8
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    }
+  ],
+  "steps": [
+    "Pat the chicken dry with kitchen paper. In a large bowl, mix the cornstarch, plain flour, salt and black pepper, then toss in the chicken until every piece is well coated.",
+    "Heat the vegetable oil in a wide frying pan over medium-high heat until shimmering. Fry the chicken in batches for 5–7 minutes, turning occasionally, until deep golden, crisp and cooked through. Drain on kitchen paper or a wire rack.",
+    "While the chicken cooks, put the garlic, ginger, sriracha, soy sauce, honey, brown sugar, rice vinegar and sesame oil in a small saucepan. Simmer for 3–4 minutes, stirring, until glossy and slightly thickened.",
+    "Tip the crispy chicken into a large clean bowl. Pour over the hot glaze and toss quickly until the pieces are evenly coated but still crisp at the edges.",
+    "Scatter with sesame seeds and sliced spring onions, then serve immediately, ideally with steamed rice."
+  ],
+  "nutrition": {
+    "kcal": 696.3,
+    "protein_g": 38.3,
+    "carbs_g": 55.0,
+    "fat_g": 35.6,
+    "fibre_g": 1.8
+  }
+}

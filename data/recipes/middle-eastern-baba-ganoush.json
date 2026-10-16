@@ -1,0 +1,109 @@
+{
+  "id": "middle-eastern-baba-ganoush",
+  "title": "Smoky Aubergine Tahini Dip",
+  "summary": "A silky Middle Eastern-style aubergine dip with nutty tahini, lemon and garlic. It’s smoky, creamy and perfect as a snack with flatbread or vegetables.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "sesame"
+  ],
+  "total_minutes": 40,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "aubergine",
+      "food": "aubergine",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 600.0
+    },
+    {
+      "name": "tahini",
+      "food": "tahini",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 30.9
+    },
+    {
+      "name": "garlic",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 27.6
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "smoked paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 30.0
+    },
+    {
+      "name": "parsley",
+      "food": "parsley",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C. Prick the aubergines all over, place them on a tray, and roast for 30 to 35 minutes until the skins are wrinkled and the flesh is very soft. For extra smokiness, finish them directly over a gas flame or under a hot grill until blackened in spots.",
+    "Leave the aubergines to cool slightly, then split them open and scoop the flesh into a bowl, discarding the skins.",
+    "Add the tahini, lemon juice, crushed garlic, olive oil, cumin, smoked paprika, salt and water. Stir until smooth and creamy, adding a little more water if needed.",
+    "Taste and adjust with a little more lemon or salt if needed, then spoon into a bowl.",
+    "Finish with chopped parsley and a drizzle of olive oil before serving."
+  ],
+  "nutrition": {
+    "kcal": 198.0,
+    "protein_g": 4.5,
+    "carbs_g": 14.1,
+    "fat_g": 15.5,
+    "fibre_g": 6.3
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "id": "spanish-marinated-olives-almonds",
+  "title": "Marinated Olives with Toasted Almonds",
+  "summary": "A simple Spanish-style tapas snack of briny olives and crunchy toasted almonds, brightened with lemon, garlic and parsley. Best served at room temperature with a drink before dinner.",
+  "cuisine": "spanish",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "low_carb"
+  ],
+  "allergens": [
+    "tree_nuts"
+  ],
+  "total_minutes": 15,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "mixed olives, drained",
+      "food": "olives",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "whole almonds",
+      "food": "almonds",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "parsley, finely chopped",
+      "food": "parsley",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 1.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Tip the almonds into a dry frying pan and toast over medium heat for 3 to 5 minutes, shaking often, until golden and fragrant. Transfer to a bowl to cool slightly.",
+    "In a mixing bowl, combine the olives, olive oil, garlic, lemon juice, parsley, paprika, salt and black pepper. Stir well so the olives are evenly coated.",
+    "Add the warm toasted almonds and toss again.",
+    "Leave to marinate for 5 minutes, then serve at room temperature.",
+    "If you like, spoon the olives and almonds into a small dish and drizzle over any remaining dressing before serving."
+  ],
+  "nutrition": {
+    "kcal": 419.3,
+    "protein_g": 7.6,
+    "carbs_g": 14.7,
+    "fat_g": 39.7,
+    "fibre_g": 5.9
+  }
+}

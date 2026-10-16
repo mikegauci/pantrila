@@ -1,0 +1,131 @@
+{
+  "id": "japanese-miso-aubergine",
+  "title": "Miso-Glazed Roasted Aubergine with Rice",
+  "summary": "A vegan Japanese-inspired dinner of tender roasted aubergine brushed with a sweet-savoury miso glaze, served over fluffy white rice. It is comforting, umami-rich and easy enough for a weeknight.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 45,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "aubergines, halved lengthways",
+      "food": "aubergine",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 600.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "miso paste",
+      "food": "miso",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 19.5
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "garlic clove, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Heat the oven to 220°C/200°C fan. Rinse the rice until the water runs mostly clear, then cook according to packet instructions until tender and fluffy; keep warm.",
+    "Score the cut sides of the aubergines in a shallow criss-cross pattern, taking care not to cut through the skin. Place them cut-side up on a baking tray, brush with the vegetable oil and season with a pinch of salt.",
+    "Roast the aubergines for 25 minutes, until the flesh is soft and starting to turn golden at the edges.",
+    "Meanwhile, mix the miso, tamari, maple syrup, rice vinegar, ginger, garlic and sesame oil in a small bowl to make a smooth glaze.",
+    "Brush the glaze generously over the roasted aubergine flesh. Return to the oven for 8–10 minutes, until the glaze is glossy, bubbling and lightly caramelised.",
+    "Spoon the rice into bowls, top with the miso-glazed aubergine, and scatter over sesame seeds and sliced spring onions before serving."
+  ],
+  "nutrition": {
+    "kcal": 602.0,
+    "protein_g": 12.8,
+    "carbs_g": 96.4,
+    "fat_g": 19.5,
+    "fibre_g": 11.9
+  }
+}

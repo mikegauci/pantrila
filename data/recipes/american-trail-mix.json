@@ -1,0 +1,85 @@
+{
+  "id": "american-trail-mix",
+  "title": "Nut, Seed and Raisin Trail Mix",
+  "summary": "A simple American-style trail mix with crunchy nuts, toasty seeds, and sweet raisins. It’s a handy vegan snack for hikes, work, or a quick energy boost between meals.",
+  "cuisine": "american",
+  "meal_types": [
+    "snack"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free"
+  ],
+  "allergens": [
+    "tree_nuts"
+  ],
+  "total_minutes": 10,
+  "servings": 6,
+  "ingredients": [
+    {
+      "name": "almonds",
+      "food": "almonds",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "walnuts",
+      "food": "walnuts",
+      "quantity": 70.0,
+      "unit": "g",
+      "grams": 70.0
+    },
+    {
+      "name": "pumpkin seeds",
+      "food": "pumpkin_seeds",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "sunflower seeds",
+      "food": "sunflower_seeds",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "raisins",
+      "food": "raisins",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "sea salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "ground cinnamon",
+      "food": "cinnamon",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.3
+    }
+  ],
+  "steps": [
+    "If the nuts and seeds are raw, toast the almonds, walnuts, pumpkin seeds, and sunflower seeds in a dry pan over medium heat for 4 to 6 minutes, stirring often, until fragrant and lightly golden. Let them cool completely.",
+    "Combine the cooled nuts and seeds with the raisins in a large bowl.",
+    "Sprinkle over the salt and cinnamon, then toss well so everything is evenly coated.",
+    "Store in an airtight container or portion into small snack bags."
+  ],
+  "nutrition": {
+    "kcal": 308.4,
+    "protein_g": 9.9,
+    "carbs_g": 20.6,
+    "fat_g": 23.5,
+    "fibre_g": 4.6
+  }
+}

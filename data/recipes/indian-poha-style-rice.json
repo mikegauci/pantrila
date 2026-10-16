@@ -1,0 +1,131 @@
+{
+  "id": "indian-poha-style-rice",
+  "title": "Turmeric Poha-Style Rice Flakes with Peas and Peanuts",
+  "summary": "A vegan Indian breakfast inspired by poha, made with fluffy rice flakes, turmeric, sweet peas and crunchy peanuts. It is gently spiced, bright with lemon and quick enough for a weekday morning.",
+  "cuisine": "indian",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free"
+  ],
+  "allergens": [
+    "mustard",
+    "peanuts"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "rice flakes",
+      "food": "white_rice",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "mustard seeds",
+      "food": "mustard_seeds",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "peanuts",
+      "food": "peanuts",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "onion, finely chopped",
+      "food": "onion",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "green chilli, finely chopped",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "peas",
+      "food": "peas",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.75,
+      "unit": "tsp",
+      "grams": 4.4
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 2.1
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 22.9
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    }
+  ],
+  "steps": [
+    "Put the rice flakes in a sieve and rinse briefly under cold water until damp and softened but not mushy. Drain well and leave to sit for 5 minutes while you prepare the aromatics.",
+    "Heat the vegetable oil in a wide frying pan over medium heat. Add the mustard seeds and cook for about 30 seconds, until they start to pop.",
+    "Add the peanuts and fry for 2 to 3 minutes, stirring often, until lightly golden and fragrant.",
+    "Add the onion, green chilli and ginger. Cook for 4 to 5 minutes, until the onion is soft and just starting to turn golden at the edges.",
+    "Stir in the turmeric, then add the peas, salt and sugar. Cook for 2 to 3 minutes, until the peas are hot and tender.",
+    "Add the softened rice flakes and gently fold everything together so the flakes turn evenly yellow. Cook for 3 to 4 minutes over low heat, stirring carefully, until hot and fluffy.",
+    "Turn off the heat and stir through the lemon juice and chopped coriander. Taste and adjust salt or lemon if needed, then serve warm."
+  ],
+  "nutrition": {
+    "kcal": 645.9,
+    "protein_g": 16.7,
+    "carbs_g": 85.8,
+    "fat_g": 27.4,
+    "fibre_g": 7.6
+  }
+}

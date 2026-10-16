@@ -1,0 +1,139 @@
+{
+  "id": "chinese-mushroom-bok-choy",
+  "title": "Shiitake Mushrooms and Bok Choy in Garlic Sauce",
+  "summary": "A quick Chinese-style vegan stir-fry with tender bok choy, savoury shiitake mushrooms and a glossy garlic-soy sauce. It is ideal for a fast weeknight dinner served with rice or noodles.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "shiitake mushrooms, sliced",
+      "food": "shiitake",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "bok choy, leaves separated and halved lengthways",
+      "food": "bok_choy",
+      "quantity": 350.0,
+      "unit": "g",
+      "grams": 350.0
+    },
+    {
+      "name": "garlic cloves, finely chopped",
+      "food": "garlic",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 20.4
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.6
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.6
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 80.0,
+      "unit": "ml",
+      "grams": 80.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Whisk the soy sauce, rice vinegar, sesame oil, brown sugar, cornstarch, black pepper and vegetable stock together in a small bowl until the cornstarch is dissolved.",
+    "Heat the vegetable oil in a large wok or frying pan over medium-high heat. Add the shiitake mushrooms and stir-fry for 4–5 minutes until browned at the edges and softened.",
+    "Add the garlic, ginger and the white parts of the spring onions. Stir-fry for 30–60 seconds until fragrant, taking care not to burn the garlic.",
+    "Add the bok choy stems first and stir-fry for 2 minutes, then add the leafy parts and a pinch of salt. Cook for another 2–3 minutes until the stems are crisp-tender and the leaves are wilted.",
+    "Pour in the sauce and toss everything together for 1–2 minutes until glossy and lightly thickened, coating the mushrooms and bok choy.",
+    "Scatter over the remaining green spring onion slices and serve hot, ideally with steamed rice."
+  ],
+  "nutrition": {
+    "kcal": 227.8,
+    "protein_g": 8.0,
+    "carbs_g": 22.9,
+    "fat_g": 13.7,
+    "fibre_g": 5.8
+  }
+}

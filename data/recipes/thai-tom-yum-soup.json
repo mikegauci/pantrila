@@ -1,0 +1,154 @@
+{
+  "id": "thai-tom-yum-soup",
+  "title": "Thai Hot and Sour Prawn Soup with Mushrooms and Lime",
+  "summary": "A bright, spicy Thai-style soup with juicy prawns, mushrooms, chilli and plenty of lime. It is light but satisfying for lunch, with a sharp-savoury broth and fresh coriander to finish.",
+  "cuisine": "thai",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "crustaceans",
+    "fish",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 700.0,
+      "unit": "ml",
+      "grams": 700.0
+    },
+    {
+      "name": "prawns, peeled and deveined",
+      "food": "prawns",
+      "quantity": 220.0,
+      "unit": "g",
+      "grams": 220.0
+    },
+    {
+      "name": "mushrooms, sliced",
+      "food": "mushroom",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "tomato, cut into wedges",
+      "food": "tomato",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "garlic, finely sliced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "fresh ginger, sliced",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "red chilli, sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 45.7
+    },
+    {
+      "name": "fish sauce",
+      "food": "fish_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 35.5
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "fresh coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Heat the vegetable oil in a medium saucepan over a medium heat. Add the garlic, ginger and chilli and cook for 1 minute, stirring, until fragrant but not browned.",
+    "Pour in the vegetable stock and bring to a gentle boil. Simmer for 8 minutes so the ginger and chilli flavour the broth.",
+    "Add the mushrooms and tomato wedges. Simmer for 5 minutes, until the mushrooms are tender and the tomatoes have softened but still hold their shape.",
+    "Stir in the prawns and cook for 2–3 minutes, until they turn pink, curl slightly and are opaque all the way through.",
+    "Turn the heat to low. Stir in the fish sauce, soy sauce, sugar and lime juice. Taste and adjust with a pinch of salt and black pepper if needed; the soup should be hot, sour and savoury.",
+    "Ladle into bowls and finish with sliced spring onions and chopped coriander. Serve immediately while the prawns are tender and the broth is steaming hot."
+  ],
+  "nutrition": {
+    "kcal": 254.4,
+    "protein_g": 29.2,
+    "carbs_g": 19.8,
+    "fat_g": 8.3,
+    "fibre_g": 3.0
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "id": "british-fish-chips-baked",
+  "title": "Oven-Baked Breaded Cod with Chips and Peas",
+  "summary": "A classic British dinner of crisp oven-baked cod, golden chips, and buttery peas. It’s simple, comforting, and ideal for an easy weeknight meal.",
+  "cuisine": "british",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "fish",
+    "milk"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "cod fillets",
+      "food": "cod",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "potatoes, cut into chips",
+      "food": "potato",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "egg, beaten",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "breadcrumbs",
+      "food": "breadcrumbs",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 11.8
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 45.0,
+      "unit": "ml",
+      "grams": 41.4
+    },
+    {
+      "name": "frozen peas",
+      "food": "peas",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 30.0,
+      "unit": "ml",
+      "grams": 30.0
+    },
+    {
+      "name": "lemon wedges",
+      "food": "lemon",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 60.0
+    }
+  ],
+  "steps": [
+    "Preheat the oven to 220°C and line two baking trays with baking paper if you have it.",
+    "Toss the potato chips with half the olive oil, 1 teaspoon of salt, and a little black pepper. Spread them out on one tray and bake for 30 to 35 minutes, turning halfway, until golden and crisp at the edges.",
+    "Set up three shallow bowls: one with the flour seasoned with the paprika and a little salt, one with the beaten eggs, and one with the breadcrumbs.",
+    "Pat the cod dry, then coat each fillet in flour, dip in egg, and press into the breadcrumbs so it is evenly covered.",
+    "Place the breaded cod on the second tray, drizzle or brush with the remaining olive oil, and bake for 12 to 15 minutes until the coating is crisp and the fish flakes easily.",
+    "Put the peas in a small pan with the water and butter. Cook over medium heat for 3 to 4 minutes until hot and tender, then season lightly with salt.",
+    "Serve the cod with the chips, peas, and lemon wedges for squeezing over the top."
+  ],
+  "nutrition": {
+    "kcal": 678.5,
+    "protein_g": 43.8,
+    "carbs_g": 80.5,
+    "fat_g": 20.1,
+    "fibre_g": 10.1
+  }
+}

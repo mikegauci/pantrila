@@ -1,0 +1,118 @@
+{
+  "id": "chinese-egg-fried-rice",
+  "title": "Vegetarian Egg Fried Rice with Peas and Spring Onion",
+  "summary": "A quick Chinese-style egg fried rice with sweet peas, fragrant spring onion and savoury soy sauce. It is ideal for a fast vegetarian lunch, especially when you have leftover rice to use up.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "cooked white rice, chilled",
+      "food": "white_rice",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "eggs, beaten",
+      "food": "egg",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "peas",
+      "food": "peas",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "spring onions, finely sliced",
+      "food": "spring_onion",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "garlic, finely chopped",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "ginger, finely grated",
+      "food": "ginger",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 25.5
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Break up any clumps in the chilled cooked rice with your fingers or a spoon so the grains are loose before cooking.",
+    "Heat 1 tablespoon of vegetable oil in a large wok or frying pan over medium-high heat. Add the beaten eggs with a pinch of salt and stir quickly for 1–2 minutes until just set and softly scrambled, then transfer to a plate.",
+    "Add the remaining 1 tablespoon vegetable oil to the pan. Add the garlic, ginger and the white parts of the spring onions, then stir-fry for about 30 seconds until fragrant but not browned.",
+    "Add the peas and stir-fry for 2 minutes until bright green and hot through.",
+    "Add the rice and stir-fry for 3–4 minutes, tossing and pressing it against the pan, until the grains are hot and separate.",
+    "Return the scrambled egg to the pan. Add the soy sauce, sesame oil, black pepper and the green parts of the spring onions, then toss for 1 minute until evenly mixed and steaming hot.",
+    "Taste and add a little more salt if needed, then serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 866.6,
+    "protein_g": 25.2,
+    "carbs_g": 133.5,
+    "fat_g": 24.4,
+    "fibre_g": 5.7
+  }
+}

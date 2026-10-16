@@ -1,0 +1,93 @@
+{
+  "id": "italian-tomato-bruschetta-eggs",
+  "title": "Italian Tomato Toast with Soft Egg",
+  "summary": "Crisp toasted bread topped with garlicky crushed tomatoes, basil and a soft-cooked egg. It’s a simple vegetarian Italian-style breakfast that feels fresh, savoury and satisfying.",
+  "cuisine": "italian",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs"
+  ],
+  "total_minutes": 15,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "wholemeal bread slices",
+      "food": "wholemeal_bread",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "ripe tomatoes",
+      "food": "tomato",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "garlic clove, peeled",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "extra virgin olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "fresh basil leaves, torn",
+      "food": "basil",
+      "quantity": 6.0,
+      "unit": "g",
+      "grams": 6.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Bring a small saucepan of water to a gentle boil. Lower in the eggs and cook for 6 minutes for soft, jammy yolks, then transfer to cold water for 1 minute and peel carefully.",
+    "Meanwhile, grate the tomatoes on the coarse side of a box grater into a bowl, discarding the skins. Crush or finely grate half the garlic clove into the tomatoes, then stir in the olive oil, salt, black pepper and torn basil.",
+    "Toast the wholemeal bread until deeply golden and crisp at the edges. Rub the hot toast lightly with the remaining garlic clove.",
+    "Spoon the crushed tomato mixture generously over the toast. Halve the soft eggs and place one on each serving, seasoning with a little extra black pepper if liked.",
+    "Serve immediately while the toast is still crisp and the eggs are warm."
+  ],
+  "nutrition": {
+    "kcal": 315.0,
+    "protein_g": 15.4,
+    "carbs_g": 32.9,
+    "fat_g": 14.0,
+    "fibre_g": 5.6
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "id": "middle-eastern-lentil-soup",
+  "title": "Lemony Red Lentil Soup with Cumin",
+  "summary": "A bright, comforting Middle Eastern-style soup with earthy red lentils, warm cumin, and plenty of lemon. It’s simple, nourishing, and ideal for a quick vegan lunch.",
+  "cuisine": "middle_eastern",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "carrot, diced",
+      "food": "carrot",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 140.0
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 4.9
+    },
+    {
+      "name": "ground turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "red lentils, rinsed",
+      "food": "red_lentils",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 1200.0,
+      "unit": "ml",
+      "grams": 1200.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 61.8
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    }
+  ],
+  "steps": [
+    "Heat the olive oil in a pot over medium heat. Add the onion and carrot and cook for 5 to 6 minutes, stirring now and then, until softened.",
+    "Add the garlic, cumin, and turmeric and cook for 1 minute until fragrant.",
+    "Stir in the red lentils, vegetable stock, salt, and black pepper. Bring to a boil, then reduce to a simmer and cook for 18 to 20 minutes, stirring occasionally, until the lentils are very soft.",
+    "Blend the soup partially with an immersion blender for a creamier texture, or leave it chunky if you prefer.",
+    "Stir in the lemon juice and parsley. Taste and adjust with more salt, pepper, or lemon if needed, then serve hot."
+  ],
+  "nutrition": {
+    "kcal": 346.2,
+    "protein_g": 17.1,
+    "carbs_g": 52.9,
+    "fat_g": 8.9,
+    "fibre_g": 9.0
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "id": "vietnamese-crispy-pancake",
+  "title": "Crispy Turmeric Rice Pancake with Prawns and Pork",
+  "summary": "A Vietnamese-style banh xeo inspired pancake with a lacy, crisp turmeric batter, savoury pork and prawns, and fresh herbs on the side. Best eaten hot and folded into lettuce leaves with a tangy dipping sauce.",
+  "cuisine": "vietnamese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "crustaceans",
+    "milk"
+  ],
+  "total_minutes": 45,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "turmeric",
+      "food": "turmeric",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 260.0,
+      "unit": "ml",
+      "grams": 260.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 120.0,
+      "unit": "ml",
+      "grams": 123.6
+    },
+    {
+      "name": "pork loin, thinly sliced",
+      "food": "pork_loin",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "prawns, peeled and deveined",
+      "food": "prawns",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "onion, thinly sliced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "spring onion, sliced",
+      "food": "spring_onion",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "bean sprouts",
+      "food": "bean_sprouts",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "lettuce leaves",
+      "food": "lettuce",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 2400.0
+    },
+    {
+      "name": "mint leaves",
+      "food": "mint",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "coriander leaves",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 61.8
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 25.1
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "red chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Make the batter by whisking together the plain flour, cornstarch, turmeric, salt, vegetable stock and milk until smooth. Set aside for 15 minutes.",
+    "Mix the lime juice, sugar, garlic, chilli and a pinch of salt in a small bowl until the sugar dissolves. Add a splash of water if you want a lighter dipping sauce.",
+    "Heat 1 tablespoon of oil in a non-stick frying pan over medium-high heat. Add a quarter of the onion and cook for 1 minute until starting to soften.",
+    "Add a quarter of the pork and cook for 1 to 2 minutes until no longer pink. Add a quarter of the prawns and cook just until they turn pink. Remove to a plate and repeat with the remaining filling.",
+    "Wipe the pan if needed, then add a little oil and pour in a thin layer of batter, swirling quickly to cover the base. Scatter over some bean sprouts and spring onion, then spoon some of the pork and prawn filling over one half.",
+    "Cook for 3 to 4 minutes until the underside is deep golden and crisp and the edges lift easily. Fold the pancake in half and slide onto a warm plate. Repeat with the remaining batter.",
+    "Serve immediately with lettuce, mint and coriander, and let everyone wrap pieces of pancake in the leaves with the dipping sauce."
+  ],
+  "nutrition": {
+    "kcal": 564.3,
+    "protein_g": 34.6,
+    "carbs_g": 68.1,
+    "fat_g": 20.3,
+    "fibre_g": 15.9
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "id": "greek-stuffed-peppers-gemista",
+  "title": "Greek Stuffed Peppers with Herby Tomato Rice",
+  "summary": "Sweet peppers baked with a savoury tomato, onion and herb rice filling. Light, comforting and full of sunny Mediterranean flavour, it makes an easy vegan dinner.",
+  "cuisine": "greek",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 65,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "red bell peppers",
+      "food": "red_bell_pepper",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 640.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, finely diced",
+      "food": "onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic cloves, minced",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "tomato, finely chopped",
+      "food": "tomato",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 360.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 450.0,
+      "unit": "ml",
+      "grams": 450.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "mint, chopped",
+      "food": "mint",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Halve the peppers lengthwise and remove the seeds and white membranes. Arrange them cut-side up in a baking dish.",
+    "Warm 1 tablespoon of the olive oil in a saucepan over medium heat. Add the onion and cook for 5 minutes until soft and translucent. Add the garlic and cook for 30 seconds more.",
+    "Stir in the rice, chopped tomatoes, tomato paste, oregano, salt and black pepper. Pour in the water and bring to a gentle simmer. Cook for 12 to 15 minutes, stirring occasionally, until the rice has absorbed most of the liquid but is still slightly underdone.",
+    "Remove from the heat and stir through the parsley, mint, lemon juice and the remaining olive oil. Taste and adjust the seasoning.",
+    "Spoon the rice mixture into the peppers, packing it in neatly. Add a small splash of water to the dish around the peppers to help them steam.",
+    "Cover tightly with foil and bake for 30 minutes. Uncover and bake for 10 to 15 minutes more, until the peppers are tender and lightly browned at the edges.",
+    "Let the peppers rest for 5 minutes before serving. Spoon any juices from the dish over the top."
+  ],
+  "nutrition": {
+    "kcal": 314.8,
+    "protein_g": 6.9,
+    "carbs_g": 56.7,
+    "fat_g": 7.9,
+    "fibre_g": 6.7
+  }
+}

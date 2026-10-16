@@ -1,0 +1,159 @@
+{
+  "id": "chinese-chow-mein",
+  "title": "Chicken Chow Mein with Egg Noodles and Vegetables",
+  "summary": "A quick Chinese-inspired stir-fry of tender chicken, springy egg noodles and crisp vegetables in a savoury soy and oyster sauce. It is ideal for a fast weeknight dinner with plenty of texture and flavour.",
+  "cuisine": "chinese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "molluscs",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "egg noodles",
+      "food": "egg_noodles",
+      "quantity": 300.0,
+      "unit": "g",
+      "grams": 300.0
+    },
+    {
+      "name": "chicken breast, thinly sliced",
+      "food": "chicken_breast",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "garlic, finely chopped",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "fresh ginger, finely grated",
+      "food": "ginger",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "carrot, cut into thin matchsticks",
+      "food": "carrot",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "red bell pepper, thinly sliced",
+      "food": "red_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "green bell pepper, thinly sliced",
+      "food": "green_bell_pepper",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 160.0
+    },
+    {
+      "name": "cabbage, finely shredded",
+      "food": "cabbage",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "bean sprouts",
+      "food": "bean_sprouts",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "soy sauce",
+      "food": "soy_sauce",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 68.0
+    },
+    {
+      "name": "oyster sauce",
+      "food": "oyster_sauce",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 35.5
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "sugar",
+      "food": "sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.2
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    }
+  ],
+  "steps": [
+    "Cook the egg noodles according to the packet instructions until just tender, then drain and rinse briefly under cold water. Toss with a little of the vegetable oil if needed to stop them sticking.",
+    "In a small bowl, mix the soy sauce, oyster sauce, sesame oil, sugar and black pepper until the sugar dissolves.",
+    "Heat 1 tablespoon vegetable oil in a large wok or frying pan over high heat. Add the sliced chicken with the salt and stir-fry for 4–5 minutes, until lightly golden and cooked through. Transfer to a plate.",
+    "Add the remaining vegetable oil to the wok. Stir-fry the garlic and ginger for 30 seconds until fragrant, then add the carrot, red pepper, green pepper and cabbage. Cook for 3–4 minutes, stirring constantly, until the vegetables are bright and slightly softened but still crisp.",
+    "Return the chicken to the wok, then add the cooked noodles, bean sprouts and most of the spring onions. Pour over the sauce and toss everything together for 2–3 minutes, until the noodles are hot, glossy and evenly coated.",
+    "Taste and adjust with a little more salt if needed. Serve immediately, scattered with the remaining spring onions."
+  ],
+  "nutrition": {
+    "kcal": 618.4,
+    "protein_g": 43.8,
+    "carbs_g": 72.7,
+    "fat_g": 17.4,
+    "fibre_g": 7.8
+  }
+}

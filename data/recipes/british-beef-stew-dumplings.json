@@ -1,0 +1,195 @@
+{
+  "id": "british-beef-stew-dumplings",
+  "title": "British Beef and Red Wine Stew with Dumplings",
+  "summary": "A hearty British-style beef stew with carrots, onions and a rich, malty-tasting gravy made using red wine in place of ale. Topped with soft, fluffy dumplings and perfect for a cold dinner.",
+  "cuisine": "british",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "milk",
+    "sulphites"
+  ],
+  "total_minutes": 165,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "beef stewing",
+      "food": "beef_stewing",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "plain flour, for dusting",
+      "food": "plain_flour",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 15.7
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "onion, sliced",
+      "food": "onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "carrots, cut into chunks",
+      "food": "carrot",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 210.0
+    },
+    {
+      "name": "celery sticks, sliced",
+      "food": "celery",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 80.0
+    },
+    {
+      "name": "garlic cloves, crushed",
+      "food": "garlic",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "tomato paste",
+      "food": "tomato_paste",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 32.5
+    },
+    {
+      "name": "red wine",
+      "food": "red_wine",
+      "quantity": 250.0,
+      "unit": "ml",
+      "grams": 247.5
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 750.0,
+      "unit": "ml",
+      "grams": 750.0
+    },
+    {
+      "name": "bay leaf",
+      "food": "bay_leaf",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 0.4
+    },
+    {
+      "name": "dried thyme",
+      "food": "dried_thyme",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.5,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "potatoes, peeled and diced",
+      "food": "potato",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 400.0
+    },
+    {
+      "name": "mushrooms, quartered",
+      "food": "mushroom",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "baking powder",
+      "food": "baking_powder",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "butter, cold and cubed",
+      "food": "butter",
+      "quantity": 50.0,
+      "unit": "g",
+      "grams": 50.0
+    },
+    {
+      "name": "salt, for dumplings",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    },
+    {
+      "name": "black pepper, for dumplings",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "cold water",
+      "food": "water",
+      "quantity": 90.0,
+      "unit": "ml",
+      "grams": 90.0
+    }
+  ],
+  "steps": [
+    "Preheat the oven to 170°C. Toss the beef with the 2 tablespoons of flour so it is lightly coated.",
+    "Heat the olive oil in a large casserole over medium-high heat. Brown the beef in batches until well coloured on all sides, then set aside.",
+    "Lower the heat to medium and cook the onion, carrots and celery for 8 minutes until the onion softens. Add the garlic and tomato paste and cook for 1 minute.",
+    "Pour in the red wine and scrape up any sticky browned bits from the bottom of the pan. Let it bubble for 2 minutes.",
+    "Return the beef to the casserole. Add the vegetable stock, bay leaves, thyme, salt and black pepper. Stir in the potatoes. Bring to a simmer, cover and transfer to the oven for 1 hour 30 minutes.",
+    "Stir in the mushrooms for the last 20 minutes of cooking so they stay tender but not mushy.",
+    "For the dumplings, mix the flour, baking powder, salt and black pepper in a bowl. Rub in the cold butter with your fingertips until the mixture looks like coarse crumbs.",
+    "Add the cold water and bring the dough together gently. Do not overmix; shape into 8 small dumplings.",
+    "Take the stew out of the oven, remove the lid and place the dumplings on top of the bubbling stew. Return to the oven uncovered for 20 to 25 minutes, until the dumplings are puffed and cooked through.",
+    "Serve hot, with the stew thickened and the dumplings lightly golden on top."
+  ],
+  "nutrition": {
+    "kcal": 1036.8,
+    "protein_g": 49.9,
+    "carbs_g": 76.7,
+    "fat_g": 54.1,
+    "fibre_g": 7.8
+  }
+}

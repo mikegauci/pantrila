@@ -1,0 +1,107 @@
+{
+  "id": "american-turkey-club",
+  "title": "Turkey Bacon and Tomato Club Sandwich",
+  "summary": "A classic American club sandwich with toasted bread, turkey, crisp bacon, juicy tomato and lettuce, layered with creamy mayonnaise and a little mustard. It’s salty, fresh and satisfying for a quick lunch.",
+  "cuisine": "american",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk",
+    "mustard"
+  ],
+  "total_minutes": 20,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "white bread",
+      "food": "white_bread",
+      "quantity": 6.0,
+      "unit": "piece",
+      "grams": 180.0
+    },
+    {
+      "name": "turkey slices",
+      "food": "turkey_mince",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "bacon",
+      "food": "bacon",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "tomato, sliced",
+      "food": "tomato",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 240.0
+    },
+    {
+      "name": "lettuce",
+      "food": "lettuce",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 1200.0
+    },
+    {
+      "name": "mayonnaise",
+      "food": "mayonnaise",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 54.4
+    },
+    {
+      "name": "mustard",
+      "food": "mustard",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.5
+    },
+    {
+      "name": "butter",
+      "food": "butter",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 2.0,
+      "unit": "pinch",
+      "grams": 0.8
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Cook the bacon in a dry frying pan over medium heat until browned and crisp, then drain on kitchen paper.",
+    "If needed, warm the turkey in the pan for 1 to 2 minutes just until heated through, then season lightly with a pinch of salt and pepper.",
+    "Toast the bread slices until golden on the outside and still soft inside.",
+    "Spread butter on one side of each slice, then spread mayonnaise and mustard on the slices that will sit in the middle and top.",
+    "Build each sandwich with lettuce and tomato on the first slice, then add turkey and bacon, then another slice of bread. Repeat the layers and finish with the final slice of bread.",
+    "Press the sandwich gently, cut each one into triangles, and serve straight away while the bacon is still crisp."
+  ],
+  "nutrition": {
+    "kcal": 1008.6,
+    "protein_g": 44.9,
+    "carbs_g": 69.6,
+    "fat_g": 63.7,
+    "fibre_g": 16.8
+  }
+}

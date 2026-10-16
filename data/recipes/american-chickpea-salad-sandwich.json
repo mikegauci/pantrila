@@ -1,0 +1,123 @@
+{
+  "id": "american-chickpea-salad-sandwich",
+  "title": "Smashed Chickpea Salad Sandwich",
+  "summary": "A creamy, tangy vegan sandwich filling made with chickpeas, lemon and crisp vegetables. It’s quick to make, satisfying for lunch, and works well cold or lightly toasted.",
+  "cuisine": "american",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "mustard"
+  ],
+  "total_minutes": 15,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "chickpeas, drained and rinsed",
+      "food": "chickpeas",
+      "quantity": 240.0,
+      "unit": "g",
+      "grams": 240.0
+    },
+    {
+      "name": "avocado",
+      "food": "avocado",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "red onion, finely diced",
+      "food": "red_onion",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "celery, finely diced",
+      "food": "celery",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "lemon juice",
+      "food": "lemon_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "mustard",
+      "food": "mustard",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.2
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    },
+    {
+      "name": "wholemeal bread",
+      "food": "wholemeal_bread",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 128.0
+    },
+    {
+      "name": "lettuce leaves",
+      "food": "lettuce",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 1200.0
+    },
+    {
+      "name": "tomato, sliced",
+      "food": "tomato",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 120.0
+    }
+  ],
+  "steps": [
+    "Put the chickpeas in a bowl and roughly mash them with a fork, leaving some whole for texture.",
+    "Add the avocado, red onion, celery, lemon juice, mustard, olive oil, salt and black pepper. Mix until the filling is creamy and well combined.",
+    "Toast the bread lightly if you like.",
+    "Layer lettuce and tomato on two slices of bread, then spoon over the smashed chickpea mixture.",
+    "Top with the remaining bread slices, press gently, and serve right away."
+  ],
+  "nutrition": {
+    "kcal": 635.5,
+    "protein_g": 26.3,
+    "carbs_g": 86.1,
+    "fat_g": 25.4,
+    "fibre_g": 30.7
+  }
+}

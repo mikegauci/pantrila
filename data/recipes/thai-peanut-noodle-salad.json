@@ -1,0 +1,165 @@
+{
+  "id": "thai-peanut-noodle-salad",
+  "title": "Thai Rice Noodle Salad with Peanut Lime Dressing",
+  "summary": "A bright, crunchy vegan Thai-style lunch with soft rice noodles, fresh vegetables and a creamy peanut-lime dressing. It is refreshing, tangy and lightly spicy, ideal for meal prep or a quick warm-weather meal.",
+  "cuisine": "thai",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free"
+  ],
+  "allergens": [
+    "peanuts",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 25,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "rice noodles",
+      "food": "rice_noodles",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "carrot, julienned",
+      "food": "carrot",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "cucumber, thinly sliced",
+      "food": "cucumber",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "red bell pepper, thinly sliced",
+      "food": "red_bell_pepper",
+      "quantity": 160.0,
+      "unit": "g",
+      "grams": 160.0
+    },
+    {
+      "name": "red cabbage, finely shredded",
+      "food": "red_cabbage",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 60.0
+    },
+    {
+      "name": "fresh coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "fresh mint leaves, roughly chopped",
+      "food": "mint",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "peanuts, roasted and roughly chopped",
+      "food": "peanuts",
+      "quantity": 60.0,
+      "unit": "g",
+      "grams": 60.0
+    },
+    {
+      "name": "peanut butter",
+      "food": "peanut_butter",
+      "quantity": 90.0,
+      "unit": "g",
+      "grams": 90.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 61.8
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 51.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 29.3
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "garlic clove, grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "red chilli, finely sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Cook the rice noodles according to the packet instructions until tender but still slightly springy. Drain, rinse under cold water until cool, then drain very well.",
+    "Whisk the peanut butter, lime juice, tamari, maple syrup, sesame oil, grated ginger, grated garlic, chilli and salt in a large bowl. Add 2 to 4 tbsp cold water as needed until the dressing is smooth and pourable.",
+    "Add the cooled noodles, carrot, cucumber, red pepper, red cabbage and spring onions to the bowl. Toss thoroughly until everything is evenly coated in the dressing.",
+    "Fold through most of the coriander, mint and chopped peanuts, keeping a little back for garnish.",
+    "Taste and adjust with extra lime juice or salt if needed. Serve topped with the remaining herbs and peanuts."
+  ],
+  "nutrition": {
+    "kcal": 566.6,
+    "protein_g": 16.3,
+    "carbs_g": 78.1,
+    "fat_g": 23.2,
+    "fibre_g": 7.4
+  }
+}

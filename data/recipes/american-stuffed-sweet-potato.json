@@ -1,0 +1,122 @@
+{
+  "id": "american-stuffed-sweet-potato",
+  "title": "Vegan Stuffed Sweet Potatoes with Black Beans and Salsa",
+  "summary": "Baked sweet potatoes are filled with warm spiced black beans and finished with fresh salsa for a simple, hearty dinner. It’s savoury, lightly smoky, and bright with a fresh finish.",
+  "cuisine": "american",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [],
+  "total_minutes": 50,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "sweet potatoes",
+      "food": "sweet_potato",
+      "quantity": 4.0,
+      "unit": "piece",
+      "grams": 720.0
+    },
+    {
+      "name": "black beans, drained and rinsed",
+      "food": "black_beans",
+      "quantity": 800.0,
+      "unit": "g",
+      "grams": 800.0
+    },
+    {
+      "name": "salsa",
+      "food": "salsa",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "red onion, finely diced",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "garlic, minced",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "fresh coriander, chopped",
+      "food": "coriander",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Scrub the sweet potatoes, prick them a few times with a fork, and rub them with a little olive oil and salt.",
+    "Place the sweet potatoes on a baking tray and bake for 35 to 45 minutes, until they are very tender when pierced with a knife.",
+    "While the sweet potatoes bake, heat the remaining olive oil in a pan over medium heat. Add the red onion and cook for 3 to 4 minutes until softened.",
+    "Stir in the garlic, cumin, and chilli powder, then add the black beans, salt, and black pepper. Cook for 4 to 5 minutes, stirring, until the beans are hot and lightly seasoned.",
+    "Warm the salsa in a small pan or microwave if you want a hotter filling, then stir in the lime juice and chopped coriander.",
+    "Split open each sweet potato and fluff the insides with a fork. Spoon the black bean mixture into the centres and top with salsa.",
+    "Serve immediately while hot, with any extra salsa on the side."
+  ],
+  "nutrition": {
+    "kcal": 406.1,
+    "protein_g": 16.5,
+    "carbs_g": 78.1,
+    "fat_g": 4.4,
+    "fibre_g": 21.2
+  }
+}

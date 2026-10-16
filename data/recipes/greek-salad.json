@@ -1,0 +1,107 @@
+{
+  "id": "greek-salad",
+  "title": "Classic Greek Salad",
+  "summary": "A fresh, salty Greek salad with cucumber, tomatoes, feta, and olives in a simple olive oil dressing. Crisp, bright, and ideal for a light lunch.",
+  "cuisine": "greek",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "milk",
+    "sulphites"
+  ],
+  "total_minutes": 15,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "cucumber",
+      "food": "cucumber",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "tomatoes",
+      "food": "tomato",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 360.0
+    },
+    {
+      "name": "red onion",
+      "food": "red_onion",
+      "quantity": 0.5,
+      "unit": "piece",
+      "grams": 75.0
+    },
+    {
+      "name": "feta",
+      "food": "feta",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "black olives",
+      "food": "olives",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "red wine vinegar",
+      "food": "red_wine_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "dried oregano",
+      "food": "dried_oregano",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 1.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    }
+  ],
+  "steps": [
+    "Cut the cucumber into chunky half-moons and chop the tomatoes into bite-sized wedges.",
+    "Thinly slice the red onion and add it to a serving bowl with the cucumber, tomatoes, and olives.",
+    "Crumble the feta over the top.",
+    "Whisk the olive oil, red wine vinegar, oregano, salt, and black pepper together, then drizzle over the salad.",
+    "Toss gently and serve immediately, while the vegetables are crisp and the feta is still distinct."
+  ],
+  "nutrition": {
+    "kcal": 399.0,
+    "protein_g": 11.9,
+    "carbs_g": 21.3,
+    "fat_g": 31.4,
+    "fibre_g": 4.5
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "id": "thai-banana-pancake",
+  "title": "Thai Banana Pancakes with Honey Coconut Drizzle",
+  "summary": "A Thai-inspired vegetarian breakfast of soft banana pancakes with a sweet condensed-style drizzle made from coconut milk and honey. They are fragrant, lightly caramelised, and ideal for a relaxed weekend morning.",
+  "cuisine": "thai",
+  "meal_types": [
+    "breakfast"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "milk"
+  ],
+  "total_minutes": 30,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "ripe bananas, mashed",
+      "food": "banana",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 360.0
+    },
+    {
+      "name": "plain flour",
+      "food": "plain_flour",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "baking powder",
+      "food": "baking_powder",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 8.9
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "milk",
+      "food": "milk",
+      "quantity": 180.0,
+      "unit": "ml",
+      "grams": 185.4
+    },
+    {
+      "name": "vanilla extract",
+      "food": "vanilla_extract",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.3
+    },
+    {
+      "name": "coconut oil, melted, plus extra for frying",
+      "food": "coconut_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 200.0,
+      "unit": "ml",
+      "grams": 194.0
+    },
+    {
+      "name": "honey",
+      "food": "honey",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 63.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.8
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 15.2
+    },
+    {
+      "name": "desiccated coconut, toasted",
+      "food": "desiccated_coconut",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    }
+  ],
+  "steps": [
+    "Make the drizzle first. Put the coconut milk, honey and brown sugar in a small saucepan over medium heat. Simmer for 8–10 minutes, stirring often, until glossy and lightly thickened like a loose condensed milk.",
+    "Stir the lime juice into the drizzle, then remove from the heat. It will thicken a little more as it cools.",
+    "In a large bowl, whisk together the plain flour, baking powder and salt.",
+    "In a second bowl, mash the bananas until mostly smooth, then whisk in the eggs, milk, vanilla extract and melted coconut oil.",
+    "Pour the wet mixture into the dry ingredients and fold gently until just combined. Stop when no dry patches remain; a few small lumps are fine.",
+    "Heat a non-stick frying pan over medium heat and lightly grease with a little coconut oil. Spoon in small rounds of batter, about 3 tablespoons each.",
+    "Cook for 2–3 minutes, until bubbles appear on the surface and the edges look set. Flip and cook for another 1–2 minutes, until golden brown and cooked through. Repeat with the remaining batter, greasing the pan as needed.",
+    "Stack the pancakes on plates, spoon over the warm honey coconut drizzle, and finish with toasted desiccated coconut."
+  ],
+  "nutrition": {
+    "kcal": 563.3,
+    "protein_g": 11.6,
+    "carbs_g": 77.3,
+    "fat_g": 24.9,
+    "fibre_g": 4.4
+  }
+}

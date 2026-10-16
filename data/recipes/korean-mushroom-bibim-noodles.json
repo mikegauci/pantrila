@@ -1,0 +1,137 @@
+{
+  "id": "korean-mushroom-bibim-noodles",
+  "title": "Korean-Style Cold Spicy Mushroom Noodles",
+  "summary": "Chilled noodles tossed in a punchy Korean-inspired chilli, tamari and sesame dressing with savoury mushrooms and crisp cucumber. It is refreshing, spicy and satisfying for a quick vegan dinner.",
+  "cuisine": "korean",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 30,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "soba noodles",
+      "food": "soba_noodles",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "mushrooms, sliced",
+      "food": "mushroom",
+      "quantity": 250.0,
+      "unit": "g",
+      "grams": 250.0
+    },
+    {
+      "name": "cucumber, julienned",
+      "food": "cucumber",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "garlic clove, grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "sriracha",
+      "food": "sriracha",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 24.4
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 22.4
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 19.5
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "vegetable oil",
+      "food": "vegetable_oil",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 13.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    }
+  ],
+  "steps": [
+    "Bring a pan of water to the boil. Cook the soba noodles according to the packet instructions until just tender, then drain and rinse under cold running water until completely cool. Drain very well.",
+    "Heat the vegetable oil in a frying pan over medium-high heat. Add the sliced mushrooms and cook for 6–8 minutes, stirring occasionally, until browned at the edges and any released liquid has evaporated. Season with the salt, then set aside to cool slightly.",
+    "In a large bowl, whisk together the grated garlic, grated ginger, tamari, sriracha, rice vinegar, sesame oil and maple syrup until smooth and glossy.",
+    "Add the cold drained noodles, cooked mushrooms, julienned cucumber and most of the spring onions to the bowl. Toss thoroughly until the noodles are evenly coated in the spicy dressing.",
+    "Divide between bowls and scatter over the sesame seeds and remaining spring onions. Serve immediately, or chill for 10 minutes for an extra-cold noodle bowl."
+  ],
+  "nutrition": {
+    "kcal": 552.1,
+    "protein_g": 20.8,
+    "carbs_g": 88.5,
+    "fat_g": 17.2,
+    "fibre_g": 3.2
+  }
+}

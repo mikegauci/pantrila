@@ -1,0 +1,129 @@
+{
+  "id": "thai-coconut-soup-chicken",
+  "title": "Gluten-Free Tom Kha Chicken Coconut Soup",
+  "summary": "A fragrant Thai-inspired coconut chicken soup with ginger, lime, chilli and coriander standing in for harder-to-source galangal and lemongrass. It is creamy, tangy and gently spicy, ideal for a quick warming dinner.",
+  "cuisine": "thai",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "low_carb",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "soy"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "chicken thighs, boneless and skinless, thinly sliced",
+      "food": "chicken_thigh",
+      "quantity": 500.0,
+      "unit": "g",
+      "grams": 500.0
+    },
+    {
+      "name": "coconut milk",
+      "food": "coconut_milk",
+      "quantity": 400.0,
+      "unit": "ml",
+      "grams": 388.0
+    },
+    {
+      "name": "gluten-free chicken stock",
+      "food": "chicken_stock",
+      "quantity": 500.0,
+      "unit": "ml",
+      "grams": 500.0
+    },
+    {
+      "name": "ginger, thinly sliced",
+      "food": "ginger",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "garlic cloves, lightly crushed",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "red chilli, sliced",
+      "food": "chilli",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 15.0
+    },
+    {
+      "name": "mushrooms, sliced",
+      "food": "mushroom",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 45.7
+    },
+    {
+      "name": "tamari, gluten-free",
+      "food": "tamari",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "brown sugar",
+      "food": "brown_sugar",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.6
+    },
+    {
+      "name": "cherry tomatoes, halved",
+      "food": "cherry_tomato",
+      "quantity": 150.0,
+      "unit": "g",
+      "grams": 150.0
+    },
+    {
+      "name": "fresh coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Put the chicken stock, coconut milk, sliced ginger, crushed garlic and chilli into a large saucepan. Bring just to a simmer over medium heat, stirring so the coconut milk does not catch.",
+    "Add the sliced chicken thighs and simmer gently for 8–10 minutes, until the chicken is opaque and cooked through with no pink in the centre.",
+    "Add the mushrooms and cherry tomatoes. Simmer for another 5 minutes, until the mushrooms are tender and the tomatoes have softened but still hold their shape.",
+    "Stir in the lime juice, tamari, brown sugar and salt. Taste and adjust with a little more lime juice for sharpness or salt if needed.",
+    "Remove the large garlic pieces if desired, then ladle the soup into bowls and finish with chopped coriander. Serve hot."
+  ],
+  "nutrition": {
+    "kcal": 429.5,
+    "protein_g": 32.9,
+    "carbs_g": 15.4,
+    "fat_g": 27.7,
+    "fibre_g": 1.4
+  }
+}

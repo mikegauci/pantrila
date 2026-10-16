@@ -1,0 +1,158 @@
+{
+  "id": "moroccan-stuffed-squash",
+  "title": "Moroccan Stuffed Butternut Squash",
+  "summary": "Sweet roasted butternut squash halves are filled with spiced couscous, herbs, and crumbled feta. It’s a comforting vegetarian dinner with warm Moroccan-inspired flavours.",
+  "cuisine": "moroccan",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "nut_free"
+  ],
+  "allergens": [
+    "gluten",
+    "milk"
+  ],
+  "total_minutes": 60,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "butternut squash",
+      "food": "butternut_squash",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 1000.0
+    },
+    {
+      "name": "couscous",
+      "food": "couscous",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "feta",
+      "food": "feta",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "red onion",
+      "food": "red_onion",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 150.0
+    },
+    {
+      "name": "garlic",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "carrot",
+      "food": "carrot",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 70.0
+    },
+    {
+      "name": "raisins",
+      "food": "raisins",
+      "quantity": 30.0,
+      "unit": "g",
+      "grams": 30.0
+    },
+    {
+      "name": "parsley",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "ground coriander",
+      "food": "ground_coriander",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.0
+    },
+    {
+      "name": "cinnamon",
+      "food": "cinnamon",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.3
+    },
+    {
+      "name": "chilli",
+      "food": "chilli",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 0.6
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 180.0,
+      "unit": "ml",
+      "grams": 180.0
+    }
+  ],
+  "steps": [
+    "Heat the oven to 200°C. Halve the butternut squash lengthways and scoop out the seeds. Brush the cut sides with 1 tablespoon of olive oil, season with a little salt, and place cut-side down on a baking tray.",
+    "Roast for 30 to 35 minutes, until the flesh is tender and the edges are starting to caramelise.",
+    "While the squash roasts, rinse the couscous and put it in a bowl with 180 ml boiling water, a pinch of salt, and a drizzle of the remaining olive oil. Cover and leave for 5 minutes, then fluff with a fork.",
+    "Finely dice the red onion, grate or finely chop the carrot, and mince the garlic. Warm the remaining olive oil in a pan over medium heat, then cook the onion and carrot for 5 minutes until softened.",
+    "Add the garlic, cumin, paprika, ground coriander, cinnamon, chilli, black pepper, and the remaining salt. Cook for 1 minute until fragrant.",
+    "Stir in the fluffed couscous, raisins, and chopped parsley. Remove from the heat and crumble in half of the feta.",
+    "Turn the roasted squash cut-side up and fill the hollows generously with the couscous mixture. Top with the remaining feta and return to the oven for 5 to 10 minutes, until heated through.",
+    "Serve hot, with the squash soft and the filling lightly golden on top."
+  ],
+  "nutrition": {
+    "kcal": 789.6,
+    "protein_g": 21.1,
+    "carbs_g": 133.3,
+    "fat_g": 24.0,
+    "fibre_g": 17.7
+  }
+}

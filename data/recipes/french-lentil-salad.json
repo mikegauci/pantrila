@@ -1,0 +1,132 @@
+{
+  "id": "french-lentil-salad",
+  "title": "French Green Lentil Salad with Mustard Vinaigrette",
+  "summary": "A fresh French-style lentil salad with a sharp mustard dressing, herbs, and crunchy vegetables. It’s hearty enough for lunch but still light and bright.",
+  "cuisine": "french",
+  "meal_types": [
+    "lunch"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free"
+  ],
+  "allergens": [
+    "celery",
+    "mustard",
+    "sulphites"
+  ],
+  "total_minutes": 35,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "green lentils",
+      "food": "green_lentils",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "water",
+      "food": "water",
+      "quantity": 700.0,
+      "unit": "ml",
+      "grams": 700.0
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "carrot, finely diced",
+      "food": "carrot",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 70.0
+    },
+    {
+      "name": "celery, finely diced",
+      "food": "celery",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 40.0
+    },
+    {
+      "name": "red onion, finely diced",
+      "food": "red_onion",
+      "quantity": 0.5,
+      "unit": "piece",
+      "grams": 75.0
+    },
+    {
+      "name": "parsley, chopped",
+      "food": "parsley",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "olive oil",
+      "food": "olive_oil",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 40.8
+    },
+    {
+      "name": "cider vinegar",
+      "food": "cider_vinegar",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 29.9
+    },
+    {
+      "name": "wholegrain mustard",
+      "food": "mustard",
+      "quantity": 1.5,
+      "unit": "tbsp",
+      "grams": 23.3
+    },
+    {
+      "name": "garlic, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.25,
+      "unit": "tsp",
+      "grams": 1.5
+    }
+  ],
+  "steps": [
+    "Rinse the lentils well. Put them in a saucepan with the water and 1 tsp salt, then bring to a boil and simmer for 18 to 22 minutes, until tender but still holding their shape.",
+    "Drain the lentils well and spread them out for a few minutes so excess steam escapes and they cool slightly.",
+    "Whisk together the olive oil, cider vinegar, mustard, garlic, black pepper, and 1/4 tsp salt to make the vinaigrette.",
+    "Combine the lentils with the carrot, celery, red onion, and parsley in a bowl.",
+    "Pour over the vinaigrette and toss well. Taste and adjust with a little more salt or vinegar if needed.",
+    "Serve warm or at room temperature, letting the salad sit for 5 to 10 minutes for the flavours to meld."
+  ],
+  "nutrition": {
+    "kcal": 547.3,
+    "protein_g": 23.9,
+    "carbs_g": 67.0,
+    "fat_g": 22.0,
+    "fibre_g": 12.5
+  }
+}

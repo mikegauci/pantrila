@@ -1,0 +1,134 @@
+{
+  "id": "japanese-udon-style-noodle-soup",
+  "title": "Japanese Mushroom, Egg and Spring Onion Noodle Soup",
+  "summary": "A soothing vegetarian Japanese-style noodle soup with savoury miso broth, tender mushrooms, soft egg and fresh spring onion. It is quick enough for a weeknight dinner but still feels warming and satisfying.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegetarian",
+    "pescatarian",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "celery",
+    "gluten",
+    "eggs",
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 25,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "soba noodles",
+      "food": "soba_noodles",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "mushrooms, sliced",
+      "food": "mushroom",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "shiitake mushrooms, sliced",
+      "food": "shiitake",
+      "quantity": 100.0,
+      "unit": "g",
+      "grams": 100.0
+    },
+    {
+      "name": "eggs",
+      "food": "egg",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 100.0
+    },
+    {
+      "name": "spring onions, thinly sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "miso paste",
+      "food": "miso",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 34.0
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 17.0
+    },
+    {
+      "name": "ginger, finely grated",
+      "food": "ginger",
+      "quantity": 15.0,
+      "unit": "g",
+      "grams": 15.0
+    },
+    {
+      "name": "garlic clove, finely grated",
+      "food": "garlic",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 5.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 2.0,
+      "unit": "tsp",
+      "grams": 9.1
+    },
+    {
+      "name": "vegetable stock",
+      "food": "vegetable_stock",
+      "quantity": 900.0,
+      "unit": "ml",
+      "grams": 900.0
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "pinch",
+      "grams": 0.4
+    }
+  ],
+  "steps": [
+    "Bring a saucepan of water to the boil and cook the soba noodles until just tender, usually 4–5 minutes. Drain, rinse briefly under warm water to remove excess starch, and divide between two deep bowls.",
+    "Meanwhile, heat the sesame oil in a large saucepan over a medium heat. Add the sliced mushrooms and shiitake with a pinch of salt, then cook for 5–6 minutes until softened, glossy and lightly browned at the edges.",
+    "Add the ginger and garlic to the mushrooms and cook for 1 minute, stirring, until fragrant but not browned.",
+    "Pour in the vegetable stock and tamari. Bring to a gentle simmer and cook for 5 minutes so the broth takes on the mushroom flavour.",
+    "Reduce the heat to low. Put the miso in a small bowl, whisk in a ladleful of hot broth until smooth, then stir it back into the pan. Keep the soup hot but do not boil after adding the miso.",
+    "Crack the eggs into the gently steaming broth, spacing them apart. Cover and poach for 3–4 minutes, until the whites are set and the yolks are still slightly soft, or cook longer if preferred.",
+    "Ladle the mushroom broth and one egg over each bowl of noodles. Top with spring onions and sesame seeds, then serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 556.8,
+    "protein_g": 29.1,
+    "carbs_g": 88.0,
+    "fat_g": 14.2,
+    "fibre_g": 4.5
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "id": "mexican-fish-tacos",
+  "title": "Crispy Cod Tacos with Avocado and Lime",
+  "summary": "Mexican-inspired fish tacos with golden crisp cod, creamy avocado, crunchy cabbage and a bright lime-yogurt drizzle. They make a fresh, satisfying pescatarian dinner for weeknights.",
+  "cuisine": "mexican",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "pescatarian",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "gluten",
+    "eggs",
+    "fish",
+    "milk"
+  ],
+  "total_minutes": 35,
+  "servings": 4,
+  "ingredients": [
+    {
+      "name": "cod fillets, cut into thick strips",
+      "food": "cod",
+      "quantity": 600.0,
+      "unit": "g",
+      "grams": 600.0
+    },
+    {
+      "name": "cornmeal, for coating",
+      "food": "cornmeal",
+      "quantity": 80.0,
+      "unit": "g",
+      "grams": 80.0
+    },
+    {
+      "name": "plain flour, for a light crispy coating",
+      "food": "plain_flour",
+      "quantity": 40.0,
+      "unit": "g",
+      "grams": 40.0
+    },
+    {
+      "name": "egg, beaten",
+      "food": "egg",
+      "quantity": 1.0,
+      "unit": "piece",
+      "grams": 50.0
+    },
+    {
+      "name": "paprika",
+      "food": "paprika",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.3
+    },
+    {
+      "name": "ground cumin",
+      "food": "cumin",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.5
+    },
+    {
+      "name": "chilli powder",
+      "food": "chilli_powder",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 5.9
+    },
+    {
+      "name": "black pepper",
+      "food": "black_pepper",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 1.2
+    },
+    {
+      "name": "vegetable oil, for shallow frying",
+      "food": "vegetable_oil",
+      "quantity": 4.0,
+      "unit": "tbsp",
+      "grams": 54.4
+    },
+    {
+      "name": "corn tortillas",
+      "food": "corn_tortilla",
+      "quantity": 8.0,
+      "unit": "piece",
+      "grams": 208.0
+    },
+    {
+      "name": "avocados, sliced",
+      "food": "avocado",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 300.0
+    },
+    {
+      "name": "red cabbage, finely shredded",
+      "food": "red_cabbage",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "spring onions, finely sliced",
+      "food": "spring_onion",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams": 45.0
+    },
+    {
+      "name": "coriander, roughly chopped",
+      "food": "coriander",
+      "quantity": 20.0,
+      "unit": "g",
+      "grams": 20.0
+    },
+    {
+      "name": "lime juice",
+      "food": "lime_juice",
+      "quantity": 3.0,
+      "unit": "tbsp",
+      "grams": 45.7
+    },
+    {
+      "name": "plain yogurt",
+      "food": "plain_yogurt",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "sriracha, optional for heat",
+      "food": "sriracha",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 16.3
+    }
+  ],
+  "steps": [
+    "Pat the cod strips dry with kitchen paper. Mix the cornmeal, plain flour, paprika, cumin, chilli powder, salt and black pepper in a shallow bowl. Put the beaten egg in a second bowl.",
+    "Dip each cod strip into the egg, then press into the cornmeal mixture until evenly coated. Set the coated pieces on a plate while you prepare the toppings.",
+    "Toss the shredded red cabbage with 1 tablespoon of the lime juice and a pinch of the salt from the measured amount if desired. Leave it to soften slightly while the fish cooks.",
+    "Stir the plain yogurt with the remaining lime juice and the sriracha until smooth. Taste and adjust with a little extra salt if needed.",
+    "Heat the vegetable oil in a large frying pan over medium-high heat. Fry the cod in batches for 2–3 minutes per side, until the coating is crisp and golden and the fish flakes easily. Drain briefly on kitchen paper.",
+    "Warm the corn tortillas in a dry frying pan for about 30 seconds per side until pliable and lightly toasted.",
+    "Fill each tortilla with red cabbage, crispy cod, sliced avocado, spring onion and coriander. Drizzle with the lime yogurt sauce and serve immediately."
+  ],
+  "nutrition": {
+    "kcal": 654.0,
+    "protein_g": 37.9,
+    "carbs_g": 61.5,
+    "fat_g": 30.5,
+    "fibre_g": 12.1
+  }
+}

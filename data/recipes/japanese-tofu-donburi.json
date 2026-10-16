@@ -1,0 +1,154 @@
+{
+  "id": "japanese-tofu-donburi",
+  "title": "Crispy Tofu Teriyaki Rice Bowl",
+  "summary": "A vegan Japanese-inspired rice bowl with golden crisp tofu, tender broccoli and carrots, and a glossy sweet-savoury teriyaki-style sauce. It makes a satisfying weeknight dinner with plenty of texture and umami.",
+  "cuisine": "japanese",
+  "meal_types": [
+    "dinner"
+  ],
+  "diet_tags": [
+    "vegan",
+    "vegetarian",
+    "pescatarian",
+    "gluten_free",
+    "dairy_free",
+    "nut_free",
+    "high_protein"
+  ],
+  "allergens": [
+    "sesame",
+    "soy"
+  ],
+  "total_minutes": 40,
+  "servings": 2,
+  "ingredients": [
+    {
+      "name": "firm tofu, pressed and cut into cubes",
+      "food": "tofu",
+      "quantity": 400.0,
+      "unit": "g",
+      "grams": 400.0
+    },
+    {
+      "name": "cornstarch",
+      "food": "cornstarch",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 15.7
+    },
+    {
+      "name": "vegetable oil, for frying",
+      "food": "vegetable_oil",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 27.2
+    },
+    {
+      "name": "white rice",
+      "food": "white_rice",
+      "quantity": 180.0,
+      "unit": "g",
+      "grams": 180.0
+    },
+    {
+      "name": "broccoli, cut into small florets",
+      "food": "broccoli",
+      "quantity": 200.0,
+      "unit": "g",
+      "grams": 200.0
+    },
+    {
+      "name": "carrot, thinly sliced",
+      "food": "carrot",
+      "quantity": 120.0,
+      "unit": "g",
+      "grams": 120.0
+    },
+    {
+      "name": "spring onions, sliced",
+      "food": "spring_onion",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 30.0
+    },
+    {
+      "name": "sesame seeds",
+      "food": "sesame_seeds",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 8.9
+    },
+    {
+      "name": "tamari",
+      "food": "tamari",
+      "quantity": 60.0,
+      "unit": "ml",
+      "grams": 69.0
+    },
+    {
+      "name": "maple syrup",
+      "food": "maple_syrup",
+      "quantity": 2.0,
+      "unit": "tbsp",
+      "grams": 39.0
+    },
+    {
+      "name": "rice vinegar",
+      "food": "rice_vinegar",
+      "quantity": 1.0,
+      "unit": "tbsp",
+      "grams": 14.9
+    },
+    {
+      "name": "fresh ginger, grated",
+      "food": "ginger",
+      "quantity": 10.0,
+      "unit": "g",
+      "grams": 10.0
+    },
+    {
+      "name": "garlic, grated",
+      "food": "garlic",
+      "quantity": 2.0,
+      "unit": "piece",
+      "grams": 10.0
+    },
+    {
+      "name": "sesame oil",
+      "food": "sesame_oil",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 4.5
+    },
+    {
+      "name": "cornstarch, mixed with 2 tbsp water for thickening",
+      "food": "cornstarch",
+      "quantity": 1.0,
+      "unit": "tsp",
+      "grams": 2.6
+    },
+    {
+      "name": "salt",
+      "food": "salt",
+      "quantity": 0.5,
+      "unit": "tsp",
+      "grams": 3.0
+    }
+  ],
+  "steps": [
+    "Rinse the rice until the water runs mostly clear, then cook it with 360 ml water and a pinch of the salt. Bring to a boil, cover, reduce to low and cook for 12 minutes, then turn off the heat and let it steam, covered, for 10 minutes.",
+    "While the rice cooks, pat the pressed tofu very dry. Toss the tofu cubes with 2 tbsp cornstarch and the remaining salt until lightly coated on all sides.",
+    "Heat the vegetable oil in a large non-stick frying pan over medium-high heat. Fry the tofu for 8–10 minutes, turning occasionally, until crisp and golden on several sides. Transfer to a plate.",
+    "In the same pan, add the broccoli and carrot with a splash of water. Cook for 4–5 minutes, stirring, until the broccoli is bright green and just tender and the carrot has softened slightly.",
+    "Make the teriyaki sauce by mixing the tamari, maple syrup, rice vinegar, grated ginger, grated garlic, sesame oil and the 1 tsp cornstarch slurry in a small bowl.",
+    "Pour the sauce into the pan with the vegetables and simmer for 1–2 minutes until glossy and slightly thickened. Return the crispy tofu to the pan and toss gently to coat without breaking it up.",
+    "Divide the rice between bowls. Top with the teriyaki tofu and vegetables, then finish with sliced spring onions and sesame seeds. Serve immediately while the tofu is still crisp at the edges."
+  ],
+  "nutrition": {
+    "kcal": 964.6,
+    "protein_g": 49.5,
+    "carbs_g": 117.9,
+    "fat_g": 36.8,
+    "fibre_g": 11.5
+  }
+}
