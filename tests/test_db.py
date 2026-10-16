@@ -92,3 +92,12 @@ def test_load_recipes_round_trips(conn, corpus):
     db.seed(conn, corpus)
     loaded = db.load_recipes(conn, [r.id for r in corpus] + ["missing"])
     assert loaded == {r.id: r for r in corpus}
+
+
+def test_every_table_has_row_level_security(conn):
+    rows = conn.execute(
+        "select relname, relrowsecurity from pg_class c join pg_namespace n"
+        " on n.oid = c.relnamespace where n.nspname = 'public' and c.relkind = 'r'"
+    ).fetchall()
+    assert {"recipes", "pantry_items", "user_profiles"} <= {name for name, _ in rows}
+    assert [name for name, rls in rows if not rls] == []

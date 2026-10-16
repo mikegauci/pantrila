@@ -87,6 +87,14 @@ def recipe_violations(
     recipe: Recipe, profile: UserProfile, slot: MealType
 ) -> list[tuple[str, str]]:
     """Hard-rule problems, as (rule, message), with putting this recipe in this slot."""
+    out = recipe_problems(recipe, profile)
+    if not set(recipe.meal_types) & set(SLOT_MEALS[slot]):
+        out.append(("meal_type", f"{recipe.id} is not a {slot} recipe"))
+    return out
+
+
+def recipe_problems(recipe: Recipe, profile: UserProfile) -> list[tuple[str, str]]:
+    """Hard-rule problems, as (rule, message), with this person eating this recipe at all."""
     try:
         allergens, diets = recipe_allergens(recipe), recipe_diets(recipe)
     except KeyError as exc:
@@ -102,8 +110,6 @@ def recipe_violations(
         out.append(
             ("time", f"{recipe.id} takes {recipe.total_minutes} min (limit {profile.max_minutes})")
         )
-    if not set(recipe.meal_types) & set(SLOT_MEALS[slot]):
-        out.append(("meal_type", f"{recipe.id} is not a {slot} recipe"))
     return out
 
 

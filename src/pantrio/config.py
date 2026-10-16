@@ -52,6 +52,18 @@ def prices() -> Prices:
     )
 
 
+def openai_client():
+    """OpenAI client, wrapped for LangSmith tracing when LANGSMITH_TRACING is true."""
+    from openai import OpenAI
+
+    client = OpenAI()
+    if os.environ.get("LANGSMITH_TRACING", "").lower() == "true":
+        from langsmith.wrappers import wrap_openai
+
+        client = wrap_openai(client)
+    return client
+
+
 def database_url() -> str:
     url = os.environ.get("DATABASE_URL")
     if not url:

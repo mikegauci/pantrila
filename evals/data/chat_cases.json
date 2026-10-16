@@ -1,0 +1,860 @@
+[
+  {
+    "id": "vegan-chickpea-dinner",
+    "kind": "search",
+    "profile": {
+      "allergies": [],
+      "diets": [
+        "vegan"
+      ],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Quick vegan dinner with chickpeas?",
+    "expect": {
+      "tools_all": [
+        "search_recipes"
+      ],
+      "must_cite": true
+    }
+  },
+  {
+    "id": "nut-allergy-satay",
+    "kind": "search",
+    "profile": {
+      "allergies": [
+        "peanuts",
+        "tree_nuts"
+      ],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "I'd love something like a satay for lunch.",
+    "expect": {
+      "tools_all": [
+        "search_recipes"
+      ],
+      "must_cite": true
+    }
+  },
+  {
+    "id": "coeliac-pasta",
+    "kind": "search",
+    "profile": {
+      "allergies": [
+        "gluten"
+      ],
+      "diets": [
+        "gluten_free"
+      ],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Give me a pasta-style dinner idea.",
+    "expect": {
+      "tools_all": [
+        "search_recipes"
+      ],
+      "must_cite": true
+    }
+  },
+  {
+    "id": "fish-allergy-salmon",
+    "kind": "search",
+    "profile": {
+      "allergies": [
+        "fish",
+        "crustaceans",
+        "molluscs"
+      ],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Any good salmon recipes for dinner?",
+    "expect": {
+      "tools_all": [
+        "search_recipes"
+      ]
+    }
+  },
+  {
+    "id": "dairy-free-protein-breakfast",
+    "kind": "search",
+    "profile": {
+      "allergies": [
+        "milk"
+      ],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": 120.0,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "High-protein breakfast without dairy, please.",
+    "expect": {
+      "tools_all": [
+        "search_recipes"
+      ],
+      "must_cite": true
+    }
+  },
+  {
+    "id": "vegetarian-mushroom-quick",
+    "kind": "search",
+    "profile": {
+      "allergies": [],
+      "diets": [
+        "vegetarian"
+      ],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Something hearty with mushrooms in under 30 minutes.",
+    "expect": {
+      "tools_all": [
+        "search_recipes"
+      ],
+      "must_cite": true
+    }
+  },
+  {
+    "id": "low-carb-dinner",
+    "kind": "search",
+    "profile": {
+      "allergies": [],
+      "diets": [
+        "low_carb"
+      ],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Low-carb dinner that fills me up.",
+    "expect": {
+      "tools_all": [
+        "search_recipes"
+      ],
+      "must_cite": true
+    }
+  },
+  {
+    "id": "quick-breakfast",
+    "kind": "search",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Breakfast I can make in 10 minutes?",
+    "expect": {
+      "tools_all": [
+        "search_recipes"
+      ],
+      "must_cite": true
+    }
+  },
+  {
+    "id": "shellfish-prawn-stir-fry",
+    "kind": "search",
+    "profile": {
+      "allergies": [
+        "crustaceans"
+      ],
+      "diets": [
+        "pescatarian"
+      ],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Prawn stir fry for tonight?",
+    "expect": {
+      "tools_all": [
+        "search_recipes"
+      ]
+    }
+  },
+  {
+    "id": "sesame-soy-stir-fry",
+    "kind": "search",
+    "profile": {
+      "allergies": [
+        "sesame",
+        "soy"
+      ],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "A stir fry for dinner, any ideas?",
+    "expect": {
+      "tools_all": [
+        "search_recipes"
+      ],
+      "must_cite": true
+    }
+  },
+  {
+    "id": "use-my-pantry",
+    "kind": "search",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [
+      {
+        "food": "spinach",
+        "quantity": null,
+        "unit": null
+      },
+      {
+        "food": "feta",
+        "quantity": 200,
+        "unit": "g"
+      },
+      {
+        "food": "egg",
+        "quantity": 6,
+        "unit": "piece"
+      }
+    ],
+    "message": "What can I cook with what I have?",
+    "expect": {
+      "tools_any": [
+        "search_recipes",
+        "check_pantry"
+      ],
+      "must_cite": true
+    }
+  },
+  {
+    "id": "bought-eggs-spinach",
+    "kind": "pantry",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "I just bought 6 eggs and a bag of spinach.",
+    "expect": {
+      "tools_all": [
+        "update_pantry"
+      ],
+      "pantry_has": [
+        "egg",
+        "spinach"
+      ]
+    }
+  },
+  {
+    "id": "used-up-milk",
+    "kind": "pantry",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [
+      {
+        "food": "milk",
+        "quantity": 1,
+        "unit": "l"
+      },
+      {
+        "food": "mushroom",
+        "quantity": null,
+        "unit": null
+      },
+      {
+        "food": "rice",
+        "quantity": null,
+        "unit": null
+      }
+    ],
+    "message": "I used up the milk and threw out the mushrooms.",
+    "expect": {
+      "tools_all": [
+        "update_pantry"
+      ],
+      "pantry_has": [
+        "white_rice"
+      ],
+      "pantry_lacks": [
+        "milk",
+        "mushroom"
+      ]
+    }
+  },
+  {
+    "id": "bought-chicken-courgettes",
+    "kind": "pantry",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Got 500g of chicken thighs and 2 courgettes.",
+    "expect": {
+      "tools_all": [
+        "update_pantry"
+      ],
+      "pantry_has": [
+        "chicken_thigh",
+        "courgette"
+      ]
+    }
+  },
+  {
+    "id": "whats-in-my-pantry",
+    "kind": "pantry",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [
+      {
+        "food": "tofu",
+        "quantity": null,
+        "unit": null
+      },
+      {
+        "food": "kale",
+        "quantity": null,
+        "unit": null
+      }
+    ],
+    "message": "What's in my pantry right now?",
+    "expect": {
+      "tools_any": [
+        "check_pantry"
+      ]
+    }
+  },
+  {
+    "id": "bought-then-search",
+    "kind": "pantry",
+    "profile": {
+      "allergies": [],
+      "diets": [
+        "vegan"
+      ],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "I bought tofu. Find me a dinner that uses it.",
+    "expect": {
+      "tools_all": [
+        "update_pantry",
+        "search_recipes"
+      ],
+      "pantry_has": [
+        "tofu"
+      ],
+      "must_cite": true
+    }
+  },
+  {
+    "id": "what-to-buy",
+    "kind": "recipe",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [
+      {
+        "food": "chicken_thigh",
+        "quantity": null,
+        "unit": null
+      },
+      {
+        "food": "sweet_potato",
+        "quantity": null,
+        "unit": null
+      }
+    ],
+    "message": "What do I still need to buy for the BBQ chicken traybake [american-bbq-chicken-traybake]?",
+    "expect": {
+      "tools_all": [
+        "check_pantry"
+      ]
+    }
+  },
+  {
+    "id": "scale-up",
+    "kind": "recipe",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Scale the BBQ chicken traybake [american-bbq-chicken-traybake] to 6 servings.",
+    "expect": {
+      "tools_all": [
+        "scale_recipe"
+      ]
+    }
+  },
+  {
+    "id": "no-double-cream",
+    "kind": "recipe",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "I have no double cream for the fish pie [british-fish-pie]. What can I use instead?",
+    "expect": {
+      "tools_all": [
+        "swap_ingredient"
+      ],
+      "allow_flagged": [
+        "british-fish-pie"
+      ]
+    }
+  },
+  {
+    "id": "unsafe-swap",
+    "kind": "recipe",
+    "profile": {
+      "allergies": [
+        "crustaceans"
+      ],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Can I use prawns instead of chickpeas in the Buddha bowl [american-buddha-bowl]?",
+    "expect": {
+      "tools_all": [
+        "swap_ingredient"
+      ]
+    }
+  },
+  {
+    "id": "is-it-ok",
+    "kind": "recipe",
+    "profile": {
+      "allergies": [
+        "peanuts",
+        "tree_nuts"
+      ],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Is the peanut butter overnight oats [american-protein-oats] OK for me?",
+    "expect": {
+      "allow_flagged": [
+        "american-protein-oats"
+      ]
+    }
+  },
+  {
+    "id": "what-are-macros",
+    "kind": "knowledge",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "What does 'macros' mean?",
+    "expect": {
+      "no_tools": true
+    }
+  },
+  {
+    "id": "rest-steak",
+    "kind": "knowledge",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "How long should I rest a steak?",
+    "expect": {
+      "no_tools": true
+    }
+  },
+  {
+    "id": "baking-soda-powder",
+    "kind": "knowledge",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Baking soda vs baking powder: what's the difference?",
+    "expect": {
+      "no_tools": true
+    }
+  }
+]

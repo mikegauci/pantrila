@@ -1,0 +1,509 @@
+{
+  "meta": {
+    "finished_at": "2026-10-16T094533Z",
+    "cases": 24,
+    "model": "gpt-5.4-mini",
+    "effort": "low",
+    "embed_model": "text-embedding-3-small",
+    "concurrency": 6
+  },
+  "summary": {
+    "cases": 24,
+    "failed": 0,
+    "unsafe_cites": 0,
+    "made_up_cites": 0,
+    "tools_ok": 1.0,
+    "pantry_ok": 1.0,
+    "cite_ok": 1.0,
+    "tools_ok_by_kind": {
+      "knowledge": 1.0,
+      "pantry": 1.0,
+      "recipe": 1.0,
+      "search": 1.0
+    },
+    "llm_calls": 1.875,
+    "tool_calls": 0.9166666666666666,
+    "input_tokens": 1896.9166666666667,
+    "output_tokens": 177.125,
+    "cost_per_turn_usd": 0.0022198083333333334,
+    "latency_p50_ms": 7966.580954991514,
+    "latency_p95_ms": 16630.667646008078
+  },
+  "results": [
+    {
+      "case_id": "vegan-chickpea-dinner",
+      "kind": "search",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": true,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "search_recipes"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 2078,
+      "output_tokens": 185,
+      "cost_usd": 0.00239114,
+      "latency_ms": 16361.514774005627,
+      "reply": "Here are some vegan dinner options with chickpeas:\n\n- Chickpea Curry in Spiced Tomato-Onion Gravy [indian-chana-masala] \u2014 40 min\n- Spiced Chickpea and Tomato Stuffed Aubergines [middle-eastern-stuffed-aubergine] \u2014 50 min\n- Thick Chickpea and Pasta Soup with Rosemary [italian-pasta-e-ceci] \u2014 45 min\n- Moroccan Pumpkin and Chickpea Stew [moroccan-chickpea-pumpkin-stew] \u2014 45 min\n\nIf you want, I can help you pick the quickest one or check what you already have for a recipe."
+    },
+    {
+      "case_id": "nut-allergy-satay",
+      "kind": "search",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": true,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "search_recipes"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 2103,
+      "output_tokens": 205,
+      "cost_usd": 0.00249989,
+      "latency_ms": 16719.52311100904,
+      "reply": "A few lunch options with a satay-ish vibe from what I found:\n\n- Thai-Style Chicken Mince Salad with Mint, Lime and Chilli [thai-larb-chicken]\n- Cold Soba Noodle Salad with Edamame and Sesame Dressing [japanese-soba-salad]\n- Tandoori Chicken Wraps with Cucumber Raita [indian-raita-chicken-wrap]\n\nIf you want, I can narrow it down to chicken, vegetarian, or the most peanut-free \u201csatay-style\u201d option."
+    },
+    {
+      "case_id": "coeliac-pasta",
+      "kind": "search",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": true,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "search_recipes"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 2071,
+      "output_tokens": 237,
+      "cost_usd": 0.00261983,
+      "latency_ms": 16612.370198010467,
+      "reply": "I didn\u2019t get a true pasta recipe back, but a good pasta-style dinner idea would be a saucy bowl like **Korean-Style Spicy Salmon Rice Bowl [korean-salmon-rice-bowl]** or **South Indian-Style Prawn Coconut Curry [indian-prawn-coconut-curry]**.\n\nIf you want, I can search specifically for a **gluten-free pasta dinner**."
+    },
+    {
+      "case_id": "fish-allergy-salmon",
+      "kind": "search",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "search_recipes"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 2168,
+      "output_tokens": 243,
+      "cost_usd": 0.00271956,
+      "latency_ms": 14577.775393991033,
+      "reply": "I couldn\u2019t find any salmon recipes for you because you\u2019re marked allergic to fish.\n\nIf you want, I can suggest a good non-fish dinner instead \u2014 for example:\n- Chicken in Creamy Dijon Mustard Sauce [french-chicken-dijon]\n- Roast Chicken Thighs with Root Vegetables [british-roast-chicken-veg]\n- Sausages with Creamy Mash and Onion Gravy [british-sausage-mash]"
+    },
+    {
+      "case_id": "dairy-free-protein-breakfast",
+      "kind": "search",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": true,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "search_recipes"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 2078,
+      "output_tokens": 197,
+      "cost_usd": 0.0024451200000000003,
+      "latency_ms": 15350.996911001857,
+      "reply": "Here are some dairy-free high-protein breakfast options:\n\n- Tofu Scramble Breakfast Tacos [american-tofu-breakfast-tacos] \u2014 34 g protein\n- Soy and Sesame Tofu Scramble with Greens [chinese-tofu-scramble-bowl] \u2014 30 g protein\n- Lighter Full English Breakfast [british-full-english-lite] \u2014 26 g protein\n- Homemade Baked Beans on Toast [british-beans-on-toast] \u2014 24 g protein\n\nIf you want, I can narrow these down to the quickest one or the highest-protein one."
+    },
+    {
+      "case_id": "vegetarian-mushroom-quick",
+      "kind": "search",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": true,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "search_recipes"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 2080,
+      "output_tokens": 201,
+      "cost_usd": 0.00246458,
+      "latency_ms": 16630.667646008078,
+      "reply": "Here are a few hearty mushroom recipes under 30 minutes:\n\n- Japanese Mushroom, Egg and Spring Onion Noodle Soup [japanese-udon-style-noodle-soup] \u2014 25 min\n- Korean-Style Cold Spicy Mushroom Noodles [korean-mushroom-bibim-noodles] \u2014 30 min\n- Shiitake Mushrooms and Bok Choy in Garlic Sauce [chinese-mushroom-bok-choy] \u2014 25 min\n- Vegetarian Hot and Sour Tofu Soup [chinese-hot-sour-soup] \u2014 30 min\n\nIf you want, I can narrow it down to the most filling one or the easiest one."
+    },
+    {
+      "case_id": "low-carb-dinner",
+      "kind": "search",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": true,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "search_recipes"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 2091,
+      "output_tokens": 251,
+      "cost_usd": 0.00269791,
+      "latency_ms": 8074.875459016766,
+      "reply": "Here are some filling low-carb dinner options:\n\n- Kung Pao Chicken with Peanuts and Chilli [chinese-kung-pao-chicken] \u2014 30 min, 448 kcal, 41 g protein, 17 g carbs\n- Chinese Beef and Broccoli Stir-Fry in Oyster Sauce [chinese-beef-broccoli] \u2014 30 min, 487 kcal, 35 g protein, 15 g carbs\n- French Beef Stew with Red Wine, Carrots and Mushrooms [french-beef-bourguignon] \u2014 165 min, 686 kcal, 42 g protein, 18 g carbs\n- Slow-Roasted Greek Lamb Shoulder with Garlic and Lemon [greek-lamb-kleftiko] \u2014 255 min, 924 kcal, 51 g protein, 10 g carbs\n\nIf you want, I can narrow this to the quickest option or the most filling one."
+    },
+    {
+      "case_id": "quick-breakfast",
+      "kind": "search",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": true,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "search_recipes"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 2065,
+      "output_tokens": 198,
+      "cost_usd": 0.00243991,
+      "latency_ms": 8738.227597001242,
+      "reply": "Here are some breakfast options you can make in 10 minutes:\n\n- Vegan Berry Oat Porridge [british-porridge-berries]\n- Greek Yogurt with Honey and Walnuts [greek-yoghurt-honey-walnuts]\n- Moroccan Yoghurt with Dates and Almonds [moroccan-spiced-yoghurt-bowl]\n- Pan con Tomate [spanish-pan-con-tomate]\n- Mango Lime Coconut Chia Pudding [mexican-chia-mango-pot]\n- Soft French Omelette with Herbs [french-omelette-herbs]\n\nIf you want, I can narrow these down by sweet vs savory, high-protein, or what you have in your pantry."
+    },
+    {
+      "case_id": "shellfish-prawn-stir-fry",
+      "kind": "search",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "search_recipes"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 2162,
+      "output_tokens": 266,
+      "cost_usd": 0.00281858,
+      "latency_ms": 10294.145241001388,
+      "reply": "I can\u2019t suggest prawn recipes here because you\u2019re allergic to crustaceans.\n\nFor tonight, you could do one of these dinner stir-fry-style options:\n- Thai-Style Wide Rice Noodles with Broccoli, Egg and Soy [thai-pad-see-ew-vegetable]\n- Shiitake Mushrooms and Bok Choy in Garlic Sauce [chinese-mushroom-bok-choy]\n- Korean-Style Spicy Salmon Rice Bowl [korean-salmon-rice-bowl]\n\nIf you want, I can narrow these to the quickest or help you check your pantry for one."
+    },
+    {
+      "case_id": "sesame-soy-stir-fry",
+      "kind": "search",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": true,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "search_recipes"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 2076,
+      "output_tokens": 170,
+      "cost_usd": 0.00232208,
+      "latency_ms": 9312.142598006176,
+      "reply": "Here are a few dinner ideas from your kitchen search:\n\n- Cajun Spiced Salmon with Rice and Green Beans [american-cajun-salmon]\n- Chicken, Sausage and Prawn Jambalaya [american-jambalaya]\n- Provencal Ratatouille [french-ratatouille]\n\nIf you want, I can also narrow it down to the quickest one, the highest-protein one, or help you check what you already have for one of these."
+    },
+    {
+      "case_id": "use-my-pantry",
+      "kind": "search",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": true,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "search_recipes"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 2130,
+      "output_tokens": 254,
+      "cost_usd": 0.00274062,
+      "latency_ms": 9817.20948399743,
+      "reply": "You can make these with what you have:\n\n- Spinach and Feta Pie [greek-spanakopita-pie]\n- Greek Spinach and Feta Omelette [greek-spinach-feta-omelette]\n- Greek Grated Tomato Toast with Feta [greek-tomato-toast-feta]\n- Greek Pasta Salad with Feta, Olives and Peppers [greek-orzo-style-pasta-salad]\n- Italian Tomato Toast with Soft Egg [italian-tomato-bruschetta-eggs]\n- Marinated Olives and Feta with Cucumber [greek-olive-feta-snack-plate]\n\nIf you want, I can also narrow these down to the quickest or best for breakfast, lunch, or dinner."
+    },
+    {
+      "case_id": "bought-eggs-spinach",
+      "kind": "pantry",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": true,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "update_pantry"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 1859,
+      "output_tokens": 150,
+      "cost_usd": 0.00206925,
+      "latency_ms": 6468.756059999578,
+      "reply": "Got it \u2014 I added 6 eggs to your pantry.\n\nFor the spinach, I couldn\u2019t store it as \u201c1 piece\u201d since spinach is tracked by weight. If you want, tell me roughly how much is in the bag in grams, and I\u2019ll add it."
+    },
+    {
+      "case_id": "used-up-milk",
+      "kind": "pantry",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": true,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "update_pantry"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 1830,
+      "output_tokens": 56,
+      "cost_usd": 0.0016245,
+      "latency_ms": 7077.44581301813,
+      "reply": "Done \u2014 I removed milk and mushroom from your pantry."
+    },
+    {
+      "case_id": "bought-chicken-courgettes",
+      "kind": "pantry",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": true,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "update_pantry"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 1862,
+      "output_tokens": 99,
+      "cost_usd": 0.001842,
+      "latency_ms": 6846.642595017329,
+      "reply": "Got it \u2014 I\u2019ve added 500 g of chicken thighs and 2 courgettes to your pantry.\n\nIf you want, I can find a recipe to use them."
+    },
+    {
+      "case_id": "whats-in-my-pantry",
+      "kind": "pantry",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "check_pantry"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 1794,
+      "output_tokens": 33,
+      "cost_usd": 0.001494,
+      "latency_ms": 5560.502689011628,
+      "reply": "You currently have:\n- kale\n- tofu"
+    },
+    {
+      "case_id": "bought-then-search",
+      "kind": "pantry",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": true,
+      "cite_ok": true,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "update_pantry",
+        "search_recipes"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 2,
+      "input_tokens": 2236,
+      "output_tokens": 336,
+      "cost_usd": 0.00318908,
+      "latency_ms": 10089.920328988228,
+      "reply": "Here are some dinner options that use tofu:\n\n- Sweet and Sour Tofu with Pineapple and Peppers [chinese-sweet-sour-tofu]\n- Bulgogi-Style Marinated Tofu with Rice and Greens [korean-tofu-bulgogi]\n- Vegan Spinach Tofu Curry [indian-palak-tofu]\n- Crispy Tofu Teriyaki Rice Bowl [japanese-tofu-donburi]\n- Korean-Style Miso Tofu Stew with Courgette and Potato [korean-doenjang-stew]\n- Vegan Mushroom Pho with Tofu and Herbs [vietnamese-mushroom-pho]\n\nIf you want, I can help you pick one based on fastest, highest protein, or easiest."
+    },
+    {
+      "case_id": "what-to-buy",
+      "kind": "recipe",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "check_pantry"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 1967,
+      "output_tokens": 165,
+      "cost_usd": 0.00221775,
+      "latency_ms": 5606.6320370009635,
+      "reply": "For BBQ Chicken Thighs with Corn and Sweet Potato [american-bbq-chicken-traybake], you already have chicken thigh and sweet potato.\n\nYou still need to buy:\n- sweetcorn \u2014 600 g\n- olive oil \u2014 2 tbsp\n- salt \u2014 2 tsp\n- black pepper \u2014 1 tsp\n- paprika \u2014 1 tsp\n- garlic powder \u2014 1 tsp\n- ketchup \u2014 130 ml\n- brown sugar \u2014 2 tbsp\n- cider vinegar \u2014 3 tsp\n- mustard \u2014 1 tsp\n- water \u2014 2 tbsp"
+    },
+    {
+      "case_id": "scale-up",
+      "kind": "recipe",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "scale_recipe"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 2257,
+      "output_tokens": 206,
+      "cost_usd": 0.00261975,
+      "latency_ms": 6678.78676901455,
+      "reply": "BBQ Chicken Thighs with Corn and Sweet Potato [american-bbq-chicken-traybake] for 6 servings:\n\n- 1200 g chicken thighs\n- 1050 g sweet potatoes\n- 900 g sweetcorn\n- 3 tbsp olive oil\n- 2.25 tsp salt\n- 1.5 tsp black pepper\n- 1.5 tsp paprika\n- 1.5 tsp garlic powder\n- 180 ml ketchup\n- 3 tbsp brown sugar\n- 1.5 tbsp cider vinegar\n- 1.5 tsp mustard\n- 3 tbsp water\n\nPer serving: 650 kcal, protein 48 g, carbs 81 g, fat 17 g. Allergens: mustard, sulphites."
+    },
+    {
+      "case_id": "no-double-cream",
+      "kind": "recipe",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "swap_ingredient"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 1944,
+      "output_tokens": 167,
+      "cost_usd": 0.0022095,
+      "latency_ms": 7159.660007979255,
+      "reply": "You can swap the double cream in Creamy Cod, Smoked Salmon and Prawn Fish Pie [british-fish-pie] for:\n\n- cream cheese \u2014 same weight, +4 kcal and +1 g protein per serving\n- feta \u2014 same weight, -28 kcal and +4 g protein per serving\n- cheddar \u2014 same weight, +24 kcal and +8 g protein per serving\n- sour cream \u2014 same weight, -53 kcal and -0 g protein per serving\n\nIf you want, I can also suggest the best one for keeping it closest to the original texture."
+    },
+    {
+      "case_id": "unsafe-swap",
+      "kind": "recipe",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "swap_ingredient"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 1930,
+      "output_tokens": 118,
+      "cost_usd": 0.0019785,
+      "latency_ms": 6514.553050976247,
+      "reply": "You can, but I wouldn\u2019t recommend it for you: that swap adds crustaceans, so the recipe would no longer suit your crustacean allergy.\n\nIf you want, I can suggest a different substitute for the chickpeas instead."
+    },
+    {
+      "case_id": "is-it-ok",
+      "kind": "recipe",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [
+        "search_recipes"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 2111,
+      "output_tokens": 188,
+      "cost_usd": 0.00242935,
+      "latency_ms": 7966.580954991514,
+      "reply": "I can\u2019t confirm that exact recipe from the tools I have here, but **if it contains peanut butter, it is not OK for you** because you\u2019re allergic to peanuts.\n\nIf you want, I can find you a **nut-free overnight oats** recipe instead."
+    },
+    {
+      "case_id": "what-are-macros",
+      "kind": "knowledge",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [],
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "input_tokens": 877,
+      "output_tokens": 71,
+      "cost_usd": 0.00097725,
+      "latency_ms": 2523.261448019184,
+      "reply": "\u201cMacros\u201d means **macronutrients**: the main nutrients your body uses for energy and structure.\n\nThey are:\n- **Protein**\n- **Carbohydrates**\n- **Fat**\n\nPeople often say \u201ccounting macros\u201d when they\u2019re tracking how much of each they eat."
+    },
+    {
+      "case_id": "rest-steak",
+      "kind": "knowledge",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [],
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "input_tokens": 877,
+      "output_tokens": 99,
+      "cost_usd": 0.00110325,
+      "latency_ms": 2941.500916000223,
+      "reply": "Rest a steak for about **5 to 10 minutes** after cooking.\n\nA good rule:\n- **Small steaks:** 5 minutes\n- **Thicker steaks:** 10 minutes or a bit more\n\nIf it\u2019s very thick, like a roast-style steak, you can go up to **15 minutes**. Rest it loosely tented with foil, not wrapped tight, so it stays warm without steaming."
+    },
+    {
+      "case_id": "baking-soda-powder",
+      "kind": "knowledge",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "tools": [],
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "input_tokens": 880,
+      "output_tokens": 156,
+      "cost_usd": 0.001362,
+      "latency_ms": 2794.665380002698,
+      "reply": "Baking soda is pure sodium bicarbonate. Baking powder is baking soda plus an acid and a drying agent, so it can make things rise on its own.\n\nIn practice:\n- **Baking soda** needs an **acid** in the batter/dough to react with it, like yogurt, buttermilk, lemon juice, vinegar, or brown sugar/molasses.\n- **Baking powder** already contains the acid, so it works in recipes without extra acidic ingredients.\n\nA quick rule:\n- Use **baking soda** when the recipe has acidic ingredients.\n- Use **baking powder** when it doesn\u2019t, or when the recipe specifically calls for it.\n\nIf you want, I can also explain what happens if you swap one for the other."
+    }
+  ]
+}

@@ -42,9 +42,16 @@ default model, chosen as the cheapest; `gpt-5.5` never evaluated): 16/16 plans, 
 violations, 13/16 meet every target, protein days 94%, pantry use 94%, $0.023 per plan,
 p50 19s / p95 84s. Weakest: `cutting` (130 g protein in 1600 kcal, 43% of days met).
 Migration 0002 widened `recipe_ingredients.quantity` to 3 decimals (applied and reseeded on
-Supabase). Next: step 3 (pantry, grocery list, chat agent); add RLS before user tables. Paid evals
-workflow needs `OPENAI_API_KEY` and `DATABASE_URL` repository secrets; `LANGSMITH_API_KEY`
-is unset, so no LangSmith experiments yet.
+Supabase).
+
+Step 3 (PR #6): pantry and profiles per user (migration 0003, RLS on every table, applied on
+Supabase), grocery list, deterministic swaps, LangGraph chat agent with 5 tools and a citation
+guard; 24 chat eval cases. `evals/reports/assistant-2026-10-16T094533Z.md` on `gpt-5.4-mini`:
+right tools 100%, pantry as asked 100%, 0 unsafe and 0 made-up cited recipes, $0.0022 per
+turn, p50 8s / p95 17s (first run before the prompt fix: 96% tools, 50% pantry, 1 made-up id).
+Next: step 4 (FastAPI + Next.js; auth decides `user_id`). Paid evals workflow needs
+`OPENAI_API_KEY` and `DATABASE_URL` repository secrets; `LANGSMITH_API_KEY` is set locally
+(EU endpoint), so local eval runs upload LangSmith experiments.
 
 ## Stack
 
@@ -56,7 +63,9 @@ is unset, so no LangSmith experiments yet.
   with `pantrio db migrate|seed`, not the Supabase CLI, so `pantrio_migrations` stays the
   record. The Supabase MCP server (claude.ai connector) can inspect tables and run SQL there.
   Tables in `public` are exposed by Supabase's REST API: enable row level security before any
-  user data (pantry, profiles) lands.
+  user data (pantry, profiles) lands. Migration 0003 enables RLS with no policies on every
+  table: the REST roles see nothing; the API connects as the owner (`postgres`), which bypasses
+  RLS. Create new tables with RLS enabled in the same migration.
 - OpenAI Python SDK (Responses API, structured outputs, tool calling). Default chat model
   `gpt-5.4-mini`, the cheapest that passes the evals (override `PANTRIO_MODEL`; the first 144
   corpus recipes came from `gpt-5.5`), embeddings `text-embedding-3-small`
@@ -69,8 +78,8 @@ is unset, so no LangSmith experiments yet.
 ## Layout (keep this section current as code lands)
 
 - `src/pantrio/schema.py`: Pydantic models (Recipe, Ingredient, NutritionFacts; enums for the
-  14 EU allergens, diet tags, meal types, units; UserProfile, NutritionTargets, MealPlan).
-  Planned: PantryItem, GroceryList. Models sent as structured outputs carry field
+  14 EU allergens, diet tags, meal types, units; UserProfile, NutritionTargets, MealPlan,
+  PantryItem, GroceryItem, GroceryList). Models sent as structured outputs carry field
   descriptions, which are part of the prompt.
 - `src/pantrio/foods.py`: the ingredient table (`data/ingredients.csv` joined to
   `data/usda_foods.csv`): unit conversion to grams, allergens and diet class per food,
@@ -96,16 +105,30 @@ is unset, so no LangSmith experiments yet.
   `tests.conftest.CorpusStore` offline).
 - `src/pantrio/db.py`: connections, migrations (`pantrio_migrations` table), seeding,
   `load_recipes` (the trusted recipe source for the checker).
-- `src/pantrio/cli.py`: `pantrio db migrate|seed`, `ingest`, `search`, `plan`, `corpus check`.
-- Planned: `assistant.py` (chat agent), `api.py`.
+- `src/pantrio/cli.py`: `pantrio db migrate|seed`, `ingest`, `search`, `plan`, `pantry`,
+  `profile`, `chat`, `corpus check`.
+- `src/pantrio/pantry.py`: `resolve_food` (free text to food key: normalise, plural, aliases,
+  else `UnknownFood` with suggestions), `make_item`, the `Kitchen` protocol (one user's profile
+  and pantry) with `DbKitchen` (`user_profiles`, `pantry_items`) and `MemoryKitchen`.
+- `src/pantrio/grocery.py`: plan needs in grams (portions x people), minus the pantry, by aisle,
+  rounded up to shop amounts.
+- `src/pantrio/swaps.py`: same-weight ingredient swaps re-derived like the corpus (nutrition,
+  allergens, diets) and checked with `constraints.recipe_problems`; suggestions from the same
+  aisle (or any protein) ranked by nutrition distance.
+- `src/pantrio/assistant.py`: LangGraph chat agent agent -> tools (max 4 rounds) -> guard;
+  tools search_recipes, check_pantry, update_pantry, swap_ingredient, scale_recipe; replies
+  cite recipes as `[recipe-id]` and the guard appends a note for any cited recipe that breaks
+  a hard rule or does not exist.
+- Planned: `api.py`.
 - `data/`: `ingredients.csv` (hand-curated), `usda_foods.csv` (built by
   `scripts/build_usda_table.py`), `dish_briefs.csv` (300 fixed briefs), `recipes/*.json`
   (generated corpus, one file per recipe), `corpus_manifest.json` (generation runs and cost).
 - `scripts/`: `generate_corpus.py`, `build_usda_table.py`.
 - `supabase/migrations/`: SQL migrations.
 - `evals/`: `retrieval_queries.py` (deterministic query generator) -> `data/retrieval_queries.json`,
-  `plan_profiles.py` (16 eval profiles) -> `data/plan_profiles.json`, `metrics.py`,
-  `run_retrieval.py`, `run_planner.py`, `reports/`.
+  `plan_profiles.py` (16 eval profiles) -> `data/plan_profiles.json`, `chat_cases.py` (24
+  assistant cases) -> `data/chat_cases.json`, `metrics.py`, `run_retrieval.py`,
+  `run_planner.py`, `run_assistant.py`, `reports/`.
 - `.github/workflows/evals.yml`: manual paid evals (needs `OPENAI_API_KEY`, `DATABASE_URL`
   repository secrets).
 - `tests/`: offline tests; OpenAI is mocked. DB tests run when `PANTRIO_TEST_DATABASE_URL` is
@@ -132,6 +155,12 @@ uv run python -m evals.run_retrieval     # retrieval eval (vector vs full text v
 uv run pantrio plan vegan-high-protein   # plan for an eval profile id or a UserProfile JSON file
 uv run python -m evals.plan_profiles     # regenerate the planner eval profiles
 uv run python -m evals.run_planner [--only ids]   # planner eval (paid; ~$0.03/plan on mini)
+uv run pantrio plan --user me --grocery [--people 2]   # plan from a saved profile + grocery list
+uv run pantrio profile set coeliac --with-pantry [--user me]   # save a profile (file or eval id)
+uv run pantrio pantry add eggs 6 piece | remove eggs | list [--user me]   # or PANTRIO_USER
+uv run pantrio chat [--user me] [--message "..."]  # cooking assistant (paid)
+uv run python -m evals.chat_cases        # regenerate the assistant eval cases
+uv run python -m evals.run_assistant [--only ids] # assistant eval (paid; ~$0.002/turn)
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 uv run uvicorn pantrio.api:app --env-file .env --reload   # from step 4
 cd web && npm ci && npm run dev          # :3000, from step 4
