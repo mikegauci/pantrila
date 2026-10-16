@@ -87,7 +87,7 @@ export default function InsightsPage() {
       </Panel>
 
       <Panel>
-        <PanelTitle>Under the hood: your usage</PanelTitle>
+        <PanelTitle>Under the hood: your AI usage</PanelTitle>
         {isLoading ? <Skeleton className="h-32 rounded-2xl" /> : (
           <div className="grid gap-3">
             <KindStats name="Plan" events={events.filter((e) => e.kind === "plan")} />

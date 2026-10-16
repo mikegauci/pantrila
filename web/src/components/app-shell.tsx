@@ -61,14 +61,6 @@ function Sidebar({ pathname }: { pathname: string }) {
           )
         })}
       </nav>
-      <div className="mt-6 hidden rounded-[20px] bg-yellow-soft p-4 xl:block">
-        <ShieldCheck className="mb-2 size-5 text-foreground" strokeWidth={1.75} />
-        <p className="text-[15px] font-semibold leading-[22px]">Safety is checked in code</p>
-        <p className="mt-1 text-[12px] leading-[18px] text-muted-foreground">
-          The AI suggests; rules decide. Allergens and diets are re-checked from the ingredients
-          before you see any recipe or plan.
-        </p>
-      </div>
     </aside>
   )
 }
