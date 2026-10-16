@@ -14,7 +14,6 @@
 
 from __future__ import annotations
 
-import os
 import time
 from collections import Counter
 from collections.abc import Iterable
@@ -259,15 +258,8 @@ class PlanState(TypedDict, total=False):
 class Planner:
     def __init__(self, store: RecipeStore, client=None, model: str | None = None,
                  effort: str = "low"):  # fmt: skip
-        if client is None:
-            from openai import OpenAI
-
-            client = OpenAI()
-            if os.environ.get("LANGSMITH_TRACING", "").lower() == "true":
-                from langsmith.wrappers import wrap_openai
-
-                client = wrap_openai(client)
-        self.store, self.client, self.effort = store, client, effort
+        self.store, self.effort = store, effort
+        self.client = client or config.openai_client()
         self.model = model or config.model()
         self.usage = Usage()
         self.graph = self._build()
@@ -431,7 +423,7 @@ class Planner:
                 if resp.output_parsed is None:
                     raise PlanningError("the model returned no plan")
                 return resp.output_parsed, recipes
-            items += [_as_input(o) for o in resp.output]
+            items += [as_input(o) for o in resp.output]
             for call in calls:
                 self.usage.tool_calls += 1
                 output = self._search_tool(call.arguments, s["profile"], recipes)
@@ -456,7 +448,7 @@ class Planner:
         return self.store.get(missing) if missing else {}
 
 
-def _as_input(item) -> dict:
+def as_input(item) -> dict:
     """An output item as input for the next call (store=False keeps no server-side state)."""
     d = item.model_dump(exclude_none=True)
     d.pop("parsed_arguments", None)

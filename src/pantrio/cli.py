@@ -1,4 +1,5 @@
-"""Command line: `pantrio db migrate|seed`, `ingest`, `search`, `plan`, `corpus check`."""
+"""Command line: `pantrio db migrate|seed`, `ingest`, `search`, `plan`, `pantry`, `profile`,
+`chat`, `corpus check`."""
 
 from __future__ import annotations
 
@@ -7,13 +8,36 @@ from typing import Annotated
 import typer
 
 from pantrio import config
-from pantrio.schema import Allergen, DietTag, MealType
+from pantrio.schema import Allergen, DietTag, MealType, Unit
 
 app = typer.Typer(no_args_is_help=True, add_completion=False)
 db_app = typer.Typer(no_args_is_help=True, help="Database migrations and seed data.")
 corpus_app = typer.Typer(no_args_is_help=True, help="Inspect the committed recipe corpus.")
+pantry_app = typer.Typer(no_args_is_help=True, help="A user's pantry (foods at home).")
+profile_app = typer.Typer(no_args_is_help=True, help="A user's saved profile.")
 app.add_typer(db_app, name="db")
 app.add_typer(corpus_app, name="corpus")
+app.add_typer(pantry_app, name="pantry")
+app.add_typer(profile_app, name="profile")
+
+User = Annotated[str, typer.Option("--user", envvar="PANTRIO_USER", help="user id")]
+
+
+def load_profile_arg(profile: str):
+    """A UserProfile from a JSON file or an eval profile id."""
+    import json
+    from pathlib import Path
+
+    from pantrio.schema import UserProfile
+
+    path = Path(profile)
+    if path.exists():
+        return UserProfile.model_validate_json(path.read_text())
+    evals = Path(__file__).resolve().parents[2] / "evals" / "data" / "plan_profiles.json"
+    by_id = {p["id"]: p["profile"] for p in json.loads(evals.read_text())}
+    if profile not in by_id:
+        raise typer.BadParameter(f"no file or eval profile called {profile!r}")
+    return UserProfile.model_validate(by_id[profile])
 
 
 @db_app.command("migrate")
@@ -110,32 +134,35 @@ def search(
 
 @app.command()
 def plan(
-    profile: Annotated[str, typer.Argument(help="JSON file with a UserProfile, or an eval id")],
+    profile: Annotated[
+        str | None, typer.Argument(help="JSON file with a UserProfile, or an eval id")
+    ] = None,
+    user: Annotated[
+        str | None, typer.Option(help="plan for this user's saved profile and pantry")
+    ] = None,
     effort: Annotated[str, typer.Option(help="reasoning effort")] = "low",
+    grocery: Annotated[bool, typer.Option(help="print the grocery list too")] = False,
+    people: Annotated[int, typer.Option(help="people the grocery list feeds")] = 1,
 ) -> None:
-    """Plan meals, e.g. pantrio plan vegan-high-protein (ids from evals/data/plan_profiles.json)."""
-    from pathlib import Path
-
+    """Plan meals, e.g. pantrio plan vegan-high-protein (ids from evals/data/plan_profiles.json)
+    or pantrio plan --user me --grocery."""
     from pantrio import db
+    from pantrio.grocery import grocery_list, grocery_text
+    from pantrio.pantry import DbKitchen, make_item
     from pantrio.planner import DbStore, Planner
-    from pantrio.schema import UserProfile
     from pantrio.search import openai_query_embedder
 
-    path = Path(profile)
-    if path.exists():
-        user = UserProfile.model_validate_json(path.read_text())
-    else:
-        import json
-
-        evals = Path(__file__).resolve().parents[2] / "evals" / "data" / "plan_profiles.json"
-        by_id = {p["id"]: p["profile"] for p in json.loads(evals.read_text())}
-        if profile not in by_id:
-            raise typer.BadParameter(f"no file or eval profile called {profile!r}")
-        user = UserProfile.model_validate(by_id[profile])
-
+    if (profile is None) == (user is None):
+        raise typer.BadParameter("give a profile or --user, not both")
     with db.connect(config.database_url()) as conn:
+        if user:
+            kitchen = DbKitchen(conn, user)
+            person, pantry = kitchen.profile(), kitchen.pantry()
+        else:
+            person = load_profile_arg(profile)
+            pantry = [make_item(f) for f in person.pantry]
         store = DbStore(conn, openai_query_embedder(config.embed_model()))
-        result = Planner(store, effort=effort).plan(user)
+        result = Planner(store, effort=effort).plan(person)
     for day, n in zip(result.plan.days, result.nutrition, strict=True):
         typer.echo(
             f"Day {day.day}  {n.kcal:.0f} kcal, protein {n.protein_g:.0f} g, "
@@ -154,6 +181,120 @@ def plan(
         f"{u.input_tokens:,} + {u.output_tokens:,} tokens, cost {config.fmt_cost(u.cost())}, "
         f"{result.latency_ms / 1000:.1f}s"
     )
+    if grocery:
+        g = grocery_list(result.plan, result.recipes, pantry, people)
+        typer.echo(f"\nGrocery list for {people}:\n{grocery_text(g)}")
+
+
+@pantry_app.command("list")
+def pantry_list(user: User = "local") -> None:
+    """Show the pantry."""
+    from pantrio import db
+    from pantrio.pantry import DbKitchen, item_text
+
+    with db.connect(config.database_url()) as conn:
+        items = DbKitchen(conn, user).pantry()
+    typer.echo("\n".join(item_text(i) for i in items) or "pantry is empty")
+
+
+@pantry_app.command("add")
+def pantry_add(
+    food: str,
+    quantity: Annotated[float | None, typer.Argument()] = None,
+    unit: Annotated[Unit | None, typer.Argument()] = None,
+    user: User = "local",
+) -> None:
+    """Add a food, e.g. pantrio pantry add eggs 6 piece (no amount means "some")."""
+    from pantrio import db
+    from pantrio.foods import UnitError
+    from pantrio.pantry import DbKitchen, UnknownFood, item_text, make_item
+
+    try:
+        item = make_item(food, quantity, unit)
+    except (UnknownFood, UnitError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    with db.connect(config.database_url()) as conn:
+        DbKitchen(conn, user).put(item)
+    typer.echo(f"added {item_text(item)}")
+
+
+@pantry_app.command("remove")
+def pantry_remove(food: str, user: User = "local") -> None:
+    """Remove a food."""
+    from pantrio import db
+    from pantrio.pantry import DbKitchen, UnknownFood, resolve_food
+
+    try:
+        key = resolve_food(food)
+    except UnknownFood as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    with db.connect(config.database_url()) as conn:
+        removed = DbKitchen(conn, user).remove(key)
+    typer.echo(f"removed {key}" if removed else f"{key} was not in the pantry")
+
+
+@profile_app.command("set")
+def profile_set(
+    profile: Annotated[str, typer.Argument(help="JSON file with a UserProfile, or an eval id")],
+    user: User = "local",
+    with_pantry: Annotated[bool, typer.Option(help="also put its pantry foods in")] = False,
+) -> None:
+    """Save a profile (allergies, diets, targets...) for a user."""
+    from pantrio import db
+    from pantrio.pantry import DbKitchen, make_item
+
+    person = load_profile_arg(profile)
+    with db.connect(config.database_url()) as conn:
+        kitchen = DbKitchen(conn, user)
+        kitchen.save_profile(person)
+        if with_pantry:
+            for food in person.pantry:
+                kitchen.put(make_item(food))
+    typer.echo(f"saved profile for {user}")
+
+
+@profile_app.command("show")
+def profile_show(user: User = "local") -> None:
+    """Print a user's profile as JSON."""
+    from pantrio import db
+    from pantrio.pantry import DbKitchen
+
+    with db.connect(config.database_url()) as conn:
+        typer.echo(DbKitchen(conn, user).profile().model_dump_json(indent=2))
+
+
+@app.command()
+def chat(
+    user: User = "local",
+    message: Annotated[str | None, typer.Option(help="ask once and exit")] = None,
+    effort: Annotated[str, typer.Option(help="reasoning effort")] = "low",
+) -> None:
+    """Chat with the cooking assistant about recipes and the user's pantry."""
+    from pantrio import db
+    from pantrio.assistant import Assistant
+    from pantrio.pantry import DbKitchen
+    from pantrio.planner import DbStore
+    from pantrio.search import openai_query_embedder
+
+    with db.connect(config.database_url()) as conn:
+        conn.autocommit = True
+        store = DbStore(conn, openai_query_embedder(config.embed_model()))
+        bot = Assistant(store, DbKitchen(conn, user), effort=effort)
+        history: list[dict] = []
+        while True:
+            text = message or typer.prompt("you", prompt_suffix="> ")
+            if text.strip().lower() in {"exit", "quit"}:
+                return
+            result = bot.reply(text, history)
+            history = result.history
+            u = result.usage
+            typer.echo(f"\npantrio> {result.text}\n")
+            typer.echo(
+                f"[{', '.join(c.name for c in result.tool_calls) or 'no tools'}; "
+                f"cost {config.fmt_cost(u.cost())}, {result.latency_ms / 1000:.1f}s]\n"
+            )
+            if message:
+                return
 
 
 @corpus_app.command("check")
