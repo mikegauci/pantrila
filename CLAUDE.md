@@ -36,13 +36,15 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 Step 1 merged (PR #1): 300-recipe corpus, Supabase seeded and embedded, 65 labelled queries,
 hybrid recall@10 0.843, MRR 0.922 (`evals/reports/retrieval-2026-10-15T195536Z.md`).
 
-Step 2 on `feat/meal-planner`: LangGraph planner, `constraints.py`, 16 eval profiles. First
+Step 2 merged (PR #2): LangGraph planner, `constraints.py`, 16 eval profiles. First
 eval `evals/reports/planner-2026-10-16T084243Z.md` on `gpt-5.4-mini` (reasoning low, chosen
 for budget; `gpt-5.5` not yet run because its prices are not in `.env`): 16/16 plans, 0 hard
 violations, 13/16 meet every target, protein days 94%, pantry use 94%, $0.023 per plan,
 p50 19s / p95 84s. Weakest: `cutting` (130 g protein in 1600 kcal, 43% of days met).
 Migration 0002 widened `recipe_ingredients.quantity` to 3 decimals (applied and reseeded on
-Supabase). Next: step 3 (pantry, grocery list, chat agent); add RLS before user tables.
+Supabase). Next: step 3 (pantry, grocery list, chat agent); add RLS before user tables. Paid evals
+workflow needs `OPENAI_API_KEY` and `DATABASE_URL` repository secrets; `LANGSMITH_API_KEY`
+is unset, so no LangSmith experiments yet.
 
 ## Stack
 
