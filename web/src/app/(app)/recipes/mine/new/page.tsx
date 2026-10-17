@@ -3,7 +3,7 @@
 import { ArrowLeft, Camera, Link2, PenLine, Sparkles, X } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useSWRConfig } from "swr"
 
 import { Panel, PanelTitle } from "@/components/bits"
@@ -129,9 +129,21 @@ export default function NewRecipePage() {
   const [method, setMethod] = useState<Method | null>(null)
   const [draft, setDraft] = useState<CookbookRecipeIn | null>(null)
   const [result, setResult] = useState<ImportView | null>(null)
+  const sectionRef = useRef<HTMLDivElement>(null)
 
   // Cache Components keeps a hidden page's state; start fresh each visit.
   useEffect(() => () => { setMethod(null); setDraft(null); setResult(null) }, [])
+
+  // The section under the picker is often below the fold on a phone: bring it into view.
+  useEffect(() => {
+    if (method) sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }, [method])
+
+  const pick = (key: Method) => {
+    setResult(null)
+    setDraft(key === "manual" ? BLANK_RECIPE : null)
+    setMethod(key)
+  }
 
   const imported = (v: ImportView) => {
     setResult(v)
@@ -139,35 +151,38 @@ export default function NewRecipePage() {
     refreshMe()
   }
 
+  const showUpload = method !== null && method !== "manual" && !draft
+
   return (
     <div className="grid gap-5">
       <Link href="/recipes/mine" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "w-fit")}>
         <ArrowLeft /> My recipes
       </Link>
 
-      {!draft && (
-        <>
-          <div className="grid gap-3 sm:grid-cols-3">
-            {METHODS.map(({ key, icon: Icon, title, text }) => (
-              <button
-                key={key}
-                type="button"
-                aria-pressed={method === key}
-                onClick={() => (key === "manual" ? setDraft(BLANK_RECIPE) : setMethod(key))}
-                className={cn(
-                  "flex flex-col items-start gap-2 rounded-[20px] border bg-surface p-5 text-left transition-shadow duration-150 hover:shadow-soft",
-                  method === key && "border-primary bg-primary-soft",
-                )}
-              >
-                <span className="grid size-10 place-items-center rounded-full bg-primary-soft">
-                  <Icon className="size-5 text-primary-text" strokeWidth={1.75} aria-hidden />
-                </span>
-                <span className="text-[15px] font-semibold">{title}</span>
-                <span className="text-[13px] text-muted-foreground">{text}</span>
-              </button>
-            ))}
-          </div>
-          {method && method !== "manual" && (
+      <div className="grid gap-3 sm:grid-cols-3">
+        {METHODS.map(({ key, icon: Icon, title, text }) => (
+          <button
+            key={key}
+            type="button"
+            aria-pressed={method === key}
+            onClick={() => pick(key)}
+            className={cn(
+              "flex flex-col items-start gap-2 rounded-[20px] border bg-surface p-5 text-left transition-shadow duration-150 hover:shadow-soft",
+              method === key && "border-primary bg-primary-soft",
+            )}
+          >
+            <span className="grid size-10 place-items-center rounded-full bg-primary-soft">
+              <Icon className="size-5 text-primary-text" strokeWidth={1.75} aria-hidden />
+            </span>
+            <span className="text-[15px] font-semibold">{title}</span>
+            <span className="text-[13px] text-muted-foreground">{text}</span>
+          </button>
+        ))}
+      </div>
+
+      {(showUpload || draft) && (
+        <div ref={sectionRef} className="grid scroll-mt-24 gap-5">
+          {showUpload && (
             <Panel>
               <PanelTitle>{method === "photo" ? "Upload photos" : "Paste a link"}</PanelTitle>
               {method === "photo" ? <PhotoImport onDone={imported} /> : <LinkImport onDone={imported} />}
@@ -178,33 +193,33 @@ export default function NewRecipePage() {
               )}
             </Panel>
           )}
-        </>
-      )}
 
-      {draft && (
-        <>
-          {result && (
-            <div className="rounded-2xl bg-yellow-soft p-4 text-[13px]">
-              <p className="flex flex-wrap items-center gap-2 font-semibold">
-                <Sparkles className="size-4 text-[#b7860b]" aria-hidden /> Read by AI. Check it before saving.
-                <span className="tabular font-normal text-muted-foreground">
-                  {seconds(result.latency_ms)} · {usd(result.cost_usd)}
-                </span>
-              </p>
-              {result.notes.length > 0 && (
-                <ul className="mt-2 list-disc pl-5">{result.notes.map((n) => <li key={n}>{n}</li>)}</ul>
+          {draft && (
+            <>
+              {result && (
+                <div className="rounded-2xl bg-yellow-soft p-4 text-[13px]">
+                  <p className="flex flex-wrap items-center gap-2 font-semibold">
+                    <Sparkles className="size-4 text-[#b7860b]" aria-hidden /> Read by AI. Check it before saving.
+                    <span className="tabular font-normal text-muted-foreground">
+                      {seconds(result.latency_ms)} · {usd(result.cost_usd)}
+                    </span>
+                  </p>
+                  {result.notes.length > 0 && (
+                    <ul className="mt-2 list-disc pl-5">{result.notes.map((n) => <li key={n}>{n}</li>)}</ul>
+                  )}
+                </div>
               )}
-            </div>
+              <CookbookForm
+                initial={draft}
+                onSaved={(saved) => {
+                  mutate("/me/recipes")
+                  router.push(`/recipes/mine/${saved.id}`)
+                }}
+                onCancel={() => { setMethod(null); setDraft(null); setResult(null) }}
+              />
+            </>
           )}
-          <CookbookForm
-            initial={draft}
-            onSaved={(saved) => {
-              mutate("/me/recipes")
-              router.push(`/recipes/mine/${saved.id}`)
-            }}
-            onCancel={() => { setDraft(null); setResult(null) }}
-          />
-        </>
+        </div>
       )}
     </div>
   )

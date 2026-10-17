@@ -58,8 +58,8 @@ export default function MyRecipesPage() {
   )
   return (
     <div className="grid gap-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="grid justify-items-start gap-1">
           <Link href="/recipes" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
             <ArrowLeft /> Recipes
           </Link>
