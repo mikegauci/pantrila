@@ -21,7 +21,7 @@ async function token(): Promise<string> {
 }
 
 async function errorFrom(res: Response): Promise<ApiError> {
-  let detail = res.statusText || "Request failed"
+  let detail = res.statusText || `Request failed (HTTP ${res.status})`
   let suggestions: string[] = []
   let problems: string[] = []
   try {
@@ -37,9 +37,27 @@ async function errorFrom(res: Response): Promise<ApiError> {
   return new ApiError(res.status, detail, suggestions, problems)
 }
 
+/** fetch that explains a network failure: browsers only say "Load failed" or "Failed to fetch". */
+async function request(path: string, init: RequestInit): Promise<Response> {
+  const start = Date.now()
+  try {
+    return await fetch(`${API_URL}${path}`, init)
+  } catch (e) {
+    if (e instanceof DOMException && e.name === "AbortError") throw e
+    const secs = Math.round((Date.now() - start) / 1000)
+    const sent = typeof init.body === "string" ? ` (${(init.body.length / 1e6).toFixed(1)} MB sent)` : ""
+    throw new ApiError(
+      0,
+      `Could not reach the Pantrio server after ${secs}s${sent}: the connection dropped before it replied` +
+        ` (${e instanceof Error ? e.message : "network error"}). The server may be waking up or the upload` +
+        ` was too slow. Check your connection and try again.`,
+    )
+  }
+}
+
 /** Call the Pantrio API with the signed-in user's token. */
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
+  const res = await request(path, {
     ...init,
     headers: {
       Authorization: `Bearer ${await token()}`,
@@ -59,7 +77,7 @@ export async function streamPlan(
   onEvent: (event: string, data: unknown) => void,
   signal?: AbortSignal,
 ): Promise<void> {
-  const res = await fetch(`${API_URL}/plans`, {
+  const res = await request("/plans", {
     method: "POST",
     headers: { Authorization: `Bearer ${await token()}`, Accept: "text/event-stream" },
     signal,

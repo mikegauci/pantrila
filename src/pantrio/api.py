@@ -566,6 +566,23 @@ def session(request: Request, user: UserDep) -> Iterator[Session]:
 SessionDep = Annotated[Session, Depends(session)]
 
 
+def describe_failure(exc: Exception) -> str:
+    """A plain-language reason for a failed paid import, with the provider's message."""
+    import openai
+
+    if isinstance(exc, openai.APITimeoutError):
+        return "The AI model took too long to read this. Try again, or use fewer or smaller photos."
+    if isinstance(exc, openai.RateLimitError):
+        return "The AI provider is rate-limiting requests right now. Wait a minute and try again."
+    if isinstance(exc, openai.APIConnectionError):
+        return "The server could not reach the AI provider. Try again in a moment."
+    if isinstance(exc, openai.BadRequestError):
+        return f"The AI provider rejected the request: {getattr(exc, 'message', exc)}"
+    if isinstance(exc, openai.APIStatusError):
+        return f"The AI provider returned an error ({exc.status_code}). Try again."
+    return f"Reading the recipe failed ({type(exc).__name__}: {str(exc)[:200]}). Try again."
+
+
 def create_app(
     backend: Backend | None = None, verify: Callable[[str], User] | None = None
 ) -> FastAPI:
@@ -753,7 +770,7 @@ def create_app(
         except Exception as exc:
             logged(ok=False)
             log.exception("recipe import failed")
-            raise HTTPException(502, "Could not read that. Try again.") from exc
+            raise HTTPException(502, describe_failure(exc)) from exc
         return result, importer, logged(ok=True)
 
     def import_view(s: Session, request: Request, work: Callable[[Importer], Any]) -> ImportView:
