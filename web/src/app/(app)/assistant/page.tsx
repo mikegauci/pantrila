@@ -1,27 +1,28 @@
 "use client"
 
-import { Loader2, Refrigerator, Repeat, Scale, Search, Send, Sparkles, Trash2 } from "lucide-react"
+import { History, Loader2, Plus, Refrigerator, Repeat, Scale, Search, Send, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { Fragment, useEffect, useRef, useState } from "react"
+import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
 import { AiBadge } from "@/components/bits"
+import { ChatThreads } from "@/components/chat-threads"
 import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send } from "@/lib/api"
 import { seconds, usd } from "@/lib/format"
-import { useMe } from "@/lib/hooks"
+import { useChat, useChats, useMe } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
-import type { ChatReply, ChatTurn, RecipeCard, ToolCall } from "@/lib/types"
+import type { ChatMessage, ChatReply, ChatThread, ChatThreadSummary, RecipeCard, ToolCall } from "@/lib/types"
 
-interface Message {
-  role: "user" | "assistant"
-  text: string
-  reply?: ChatReply
+/** A saved message, or one only this page knows about: the question in flight or an error. */
+interface Message extends ChatMessage {
   error?: boolean
 }
 
-const STORAGE = "pantrio-chat"
+const LAST_THREAD = "pantrio-chat-thread"
 const STARTERS = [
   "What can I cook tonight with what I have?",
   "I just bought eggs, spinach and feta.",
@@ -122,103 +123,167 @@ function Bubble({ m }: { m: Message }) {
 }
 
 export default function AssistantPage() {
-  // Rendered only on the client after sign-in, so sessionStorage is available here.
-  const [saved] = useState(() => JSON.parse(sessionStorage.getItem(STORAGE) ?? "null"))
-  const [messages, setMessages] = useState<Message[]>(saved?.messages ?? [])
-  const [history, setHistory] = useState<ChatTurn[]>(saved?.history ?? [])
+  // Rendered only on the client after sign-in, so localStorage is available here.
+  const [threadId, setThreadId] = useState<number | null>(() => Number(localStorage.getItem(LAST_THREAD)) || null)
+  const [pending, setPending] = useState<Message[]>([])
   const [text, setText] = useState("")
   const [busy, setBusy] = useState(false)
+  const [drawer, setDrawer] = useState(false)
   const { data: me, mutate: refreshMe } = useMe()
+  const { data: threads, mutate: refreshThreads } = useChats()
+  const { data: thread, error: threadError } = useChat(threadId)
   const { mutate } = useSWRConfig()
   const end = useRef<HTMLDivElement>(null)
+  // A remembered chat that was deleted (here or on another device) means a new chat.
+  const current = threadError?.status === 404 ? null : threadId
+  const messages: Message[] = [...(current ? thread?.messages ?? [] : []), ...pending]
 
   useEffect(() => {
-    sessionStorage.setItem(STORAGE, JSON.stringify({ messages, history }))
+    if (current) localStorage.setItem(LAST_THREAD, String(current))
+    else localStorage.removeItem(LAST_THREAD)
+  }, [current])
+
+  useEffect(() => {
     end.current?.scrollIntoView({ behavior: "smooth", block: "end" })
-  }, [messages, history])
+  }, [messages.length])
+
+  function open(id: number | null) {
+    setThreadId(id)
+    setPending([])
+    setDrawer(false)
+  }
+
+  async function remove(t: ChatThreadSummary) {
+    if (!window.confirm(`Delete the chat “${t.title}”?`)) return
+    try {
+      await send(`/me/chats/${t.id}`, "DELETE")
+      if (t.id === current) open(null)
+      refreshThreads()
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not delete.")
+    }
+  }
 
   async function ask(message: string) {
     if (!message.trim() || busy) return
     setText("")
     setBusy(true)
-    setMessages((m) => [...m, { role: "user", text: message }])
+    const asked: Message = { role: "user", text: message }
+    setPending([asked])
     try {
-      const reply = await send<ChatReply>("/chat", "POST", { message, history })
-      setHistory(reply.history)
-      setMessages((m) => [...m, { role: "assistant", text: reply.text, reply }])
+      const reply = await send<ChatReply>("/chat", "POST", { message, thread_id: current })
+      const answered: Message = { role: "assistant", text: reply.text, reply }
+      // The server saved both messages; put them in the cache instead of fetching the thread again.
+      await mutate<ChatThread>(`/me/chats/${reply.thread_id}`, (t) => ({
+        id: reply.thread_id,
+        title: t?.title ?? message,
+        updated_at: new Date().toISOString(),
+        messages: [...(t?.messages ?? []), asked, answered],
+      }), { revalidate: false })
+      setThreadId(reply.thread_id)
+      setPending([])
+      refreshThreads()
       if (reply.pantry_changed) mutate("/me/pantry")
     } catch (e) {
       const msg = e instanceof ApiError ? e.message : "Could not reach Pantrio. Try again."
-      setMessages((m) => [...m, { role: "assistant", text: msg, error: true }])
+      setPending([asked, { role: "assistant", text: msg, error: true }])
     } finally {
       setBusy(false)
       refreshMe()
     }
   }
 
+  const list = (
+    <ChatThreads threads={threads} current={current} disabled={busy} onSelect={open} onDelete={remove} />
+  )
+
   return (
-    <div className="mx-auto flex h-[calc(100dvh-72px-2.5rem-6rem)] max-w-3xl flex-col md:h-[calc(100dvh-72px-4rem)]">
-      <div className="mb-3 flex items-center gap-2">
-        <AiBadge>Cooking assistant</AiBadge>
-        <span className="text-[12px] text-muted-foreground">
-          Knows your profile and pantry. {me && `${me.limits.chats_left} messages left today.`}
-        </span>
-        {messages.length > 0 && (
-          <Button variant="ghost" size="sm" className="ml-auto" onClick={() => { setMessages([]); setHistory([]) }}>
-            <Trash2 /> Clear
-          </Button>
-        )}
-      </div>
-
-      <div className="flex-1 overflow-y-auto rounded-[20px] border bg-background/60 p-4 shadow-soft" aria-live="polite">
-        {messages.length === 0 ? (
-          <div className="grid h-full place-content-center gap-4 text-center">
-            <p className="text-[18px] font-semibold">Ask about cooking, recipes or your pantry</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {STARTERS.map((s) => (
-                <Button key={s} variant="outline" size="sm" onClick={() => ask(s)}>{s}</Button>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="grid gap-4">
-            {messages.map((m, i) => <Bubble key={i} m={m} />)}
-            {busy && (
-              <p className="flex items-center gap-2 text-[13px] text-muted-foreground">
-                <Loader2 className="size-4 animate-spin" aria-hidden /> Thinking and checking…
-              </p>
-            )}
-            <div ref={end} />
-          </div>
-        )}
-      </div>
-
-      <form
-        className="mt-3 flex items-end gap-2"
-        onSubmit={(e) => {
-          e.preventDefault()
-          ask(text)
-        }}
-      >
-        <Textarea
-          aria-label="Message"
-          placeholder="Ask Pantrio…"
-          value={text}
-          maxLength={2000}
-          rows={1}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault()
-              ask(text)
-            }
-          }}
-          className="max-h-32 min-h-11 resize-none rounded-xl bg-surface"
-        />
-        <Button type="submit" size="icon" className="size-11" disabled={busy || !text.trim()} aria-label="Send">
-          <Send />
+    <div className="mx-auto flex h-[calc(100dvh-72px-2.5rem-6rem)] max-w-5xl gap-4 md:h-[calc(100dvh-72px-4rem)]">
+      <aside className="hidden w-60 shrink-0 flex-col md:flex" aria-label="Chats">
+        <Button variant="outline" size="sm" className="mb-3 justify-start" disabled={busy} onClick={() => open(null)}>
+          <Plus /> New chat
         </Button>
-      </form>
+        <div className="flex-1 overflow-y-auto">{list}</div>
+      </aside>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <AiBadge>Cooking assistant</AiBadge>
+          <div className="ml-auto flex gap-1 md:hidden">
+            <Sheet open={drawer} onOpenChange={setDrawer}>
+              <SheetTrigger render={<Button variant="outline" size="sm" />}>
+                <History /> Chats
+              </SheetTrigger>
+              <SheetContent side="left" className="gap-3 p-4">
+                <SheetHeader className="p-0">
+                  <SheetTitle>Chats</SheetTitle>
+                </SheetHeader>
+                <div className="flex-1 overflow-y-auto">{list}</div>
+              </SheetContent>
+            </Sheet>
+            <Button variant="outline" size="sm" disabled={busy} onClick={() => open(null)}>
+              <Plus /> New
+            </Button>
+          </div>
+          <span className="w-full text-[12px] text-muted-foreground md:w-auto">
+            Knows your profile and pantry. {me && `${me.limits.chats_left} messages left today.`}
+          </span>
+        </div>
+
+        <div className="flex-1 overflow-y-auto rounded-[20px] border bg-background/60 p-4 shadow-soft" aria-live="polite">
+          {current && !thread && !pending.length ? (
+            <p className="flex items-center gap-2 text-[13px] text-muted-foreground">
+              <Loader2 className="size-4 animate-spin" aria-hidden /> Loading chat…
+            </p>
+          ) : messages.length === 0 ? (
+            <div className="grid h-full place-content-center gap-4 text-center">
+              <p className="text-[18px] font-semibold">Ask about cooking, recipes or your pantry</p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {STARTERS.map((s) => (
+                  <Button key={s} variant="outline" size="sm" onClick={() => ask(s)}>{s}</Button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="grid gap-4">
+              {messages.map((m, i) => <Bubble key={i} m={m} />)}
+              {busy && (
+                <p className="flex items-center gap-2 text-[13px] text-muted-foreground">
+                  <Loader2 className="size-4 animate-spin" aria-hidden /> Thinking and checking…
+                </p>
+              )}
+              <div ref={end} />
+            </div>
+          )}
+        </div>
+
+        <form
+          className="mt-3 flex items-end gap-2"
+          onSubmit={(e) => {
+            e.preventDefault()
+            ask(text)
+          }}
+        >
+          <Textarea
+            aria-label="Message"
+            placeholder="Ask Pantrio…"
+            value={text}
+            maxLength={2000}
+            rows={1}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault()
+                ask(text)
+              }
+            }}
+            className="max-h-32 min-h-11 resize-none rounded-xl bg-surface"
+          />
+          <Button type="submit" size="icon" className="size-11" disabled={busy || !text.trim()} aria-label="Send">
+            <Send />
+          </Button>
+        </form>
+      </div>
     </div>
   )
 }

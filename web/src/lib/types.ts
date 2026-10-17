@@ -196,11 +196,6 @@ export interface GroceryList {
   covered: GroceryItem[]
 }
 
-export interface ChatTurn {
-  role: "user" | "assistant"
-  content: string
-}
-
 export interface ToolCall {
   name: string
   arguments: Record<string, unknown>
@@ -208,14 +203,34 @@ export interface ToolCall {
 }
 
 export interface ChatReply {
+  thread_id: number
   text: string
-  history: ChatTurn[]
   cited: RecipeCard[]
   flagged: string[]
   tool_calls: ToolCall[]
   pantry_changed: boolean
   cost_usd: number | null
   latency_ms: number
+}
+
+export interface ChatMessage {
+  role: "user" | "assistant"
+  text: string
+  reply?: ChatReply | null
+}
+
+export interface ChatThreadSummary {
+  id: number
+  title: string
+  messages: number
+  updated_at: string
+}
+
+export interface ChatThread {
+  id: number
+  title: string
+  messages: ChatMessage[]
+  updated_at: string
 }
 
 export interface UsageEvent {
