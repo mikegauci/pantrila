@@ -55,7 +55,7 @@ export function AllergenBadge({ allergen, danger = false }: { allergen: Allergen
 
 export function AiBadge({ children = "AI-generated" }: { children?: React.ReactNode }) {
   return (
-    <span className="inline-flex h-6 items-center gap-1 rounded-full bg-yellow-soft px-2.5 text-[12px] font-medium text-foreground">
+    <span className="inline-flex h-6 shrink-0 items-center gap-1 whitespace-nowrap rounded-full bg-yellow-soft px-2.5 text-[12px] font-medium text-foreground">
       <Sparkles className="size-3 text-[#b7860b]" aria-hidden /> {children}
     </span>
   )
