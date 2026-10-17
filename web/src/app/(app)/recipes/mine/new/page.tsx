@@ -3,7 +3,7 @@
 import { ArrowLeft, Camera, Link2, PenLine, Sparkles, X } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useSWRConfig } from "swr"
 
 import { Panel, PanelTitle } from "@/components/bits"
@@ -129,6 +129,9 @@ export default function NewRecipePage() {
   const [method, setMethod] = useState<Method | null>(null)
   const [draft, setDraft] = useState<CookbookRecipeIn | null>(null)
   const [result, setResult] = useState<ImportView | null>(null)
+
+  // Cache Components keeps a hidden page's state; start fresh each visit.
+  useEffect(() => () => { setMethod(null); setDraft(null); setResult(null) }, [])
 
   const imported = (v: ImportView) => {
     setResult(v)
