@@ -108,6 +108,10 @@ re-derived and re-checked) and `scale_recipe`. Replies cite recipes as `[recipe-
 guard checks every cited id against the person's rules and adds a note for any that breaks
 one or does not exist, so a made-up recipe can't reach the user without a warning.
 
+Conversations are saved as threads per user (table `chat_threads`), so each topic keeps its
+own context. The server keeps each thread's model history (the last 20 turns) and sends it
+with the next message; the browser only says which thread it is in.
+
 | | |
 |---|---|
 | ![Assistant answering from the pantry with cited recipes](docs/screenshots/assistant.png) | ![Recipe search showing only recipes that suit the profile](docs/screenshots/recipes.png) |
@@ -199,7 +203,7 @@ The paid evals are a manual GitHub Actions workflow.
 | `src/pantrio/planner.py` | Planner graph |
 | `src/pantrio/assistant.py`, `swaps.py`, `pantry.py`, `grocery.py` | Assistant graph and its tools |
 | `src/pantrio/cookbook.py`, `recipe_import.py` | Your own recipes: derivation, storage, import from photos and links |
-| `src/pantrio/api.py`, `auth.py`, `records.py` | FastAPI app, Supabase token check, saved plans and usage log |
+| `src/pantrio/api.py`, `auth.py`, `records.py`, `chats.py` | FastAPI app, Supabase token check, saved plans, usage log and chat threads |
 | `supabase/migrations/` | SQL migrations (pgvector, full text, RLS) |
 | `evals/` | Eval generators, runners, committed reports |
 | `web/` | Next.js app ([`web/DESIGN_SYSTEM.md`](web/DESIGN_SYSTEM.md)) |

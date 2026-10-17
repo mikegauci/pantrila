@@ -78,6 +78,10 @@ decision). Imports run at reasoning effort medium. `evals/reports/import-2026-10
 0 missed allergens, food matching 99%, $0.006 per import, p50 6.5 s / p95 11.5 s (effort low:
 2 of 12 drafts missed an allergen; the named-food safety net fixed one, medium the other).
 Bot-blocking sites (Allrecipes) refuse the fetch; the app suggests a screenshot.
+Chat threads (this PR): migration 0006 (`chat_threads`, RLS; applied on Supabase), `/me/chats`
+routes, `POST /chat` takes `thread_id` instead of client-sent history. Assistant page has a
+thread list (left column on desktop, "Chats" drawer on mobile) and "New chat". No prompt,
+tool or model change, so no eval rerun.
 
 ## Stack
 
@@ -151,6 +155,9 @@ Bot-blocking sites (Allrecipes) refuse the fetch; the app suggests a screenshot.
   audience `authenticated`, issuer `SUPABASE_URL/auth/v1`); returns the user id.
 - `src/pantrio/records.py`: saved plans and the usage log per user (`Records` protocol,
   `DbRecords` on `meal_plans`/`usage_events`, `MemoryRecords` for tests).
+- `src/pantrio/chats.py`: saved assistant threads per user (`Chats` protocol, `DbChats` on
+  `chat_threads`, `MemoryChats`): model `history` plus the `messages` the app shows; titled
+  from the first message; 100 threads per user, least recently used dropped.
 - `src/pantrio/cookbook.py`: the person's own recipes. `CookbookRecipeIn` (what is stored:
   lines with a table `food` or a `FoodEstimate`), `derive` (grams, nutrition, allergens, diets
   in code; estimates join the food table for that recipe only), `problems_for`, the `Cookbook`
@@ -163,7 +170,9 @@ Bot-blocking sites (Allrecipes) refuse the fetch; the app suggests a screenshot.
   backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
   `/me/usage`, `/recipes` (search or browse, profile rules as filters unless `safe=false`),
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
-  `/plans/latest`, `/plans/latest/grocery`, `POST /chat`, `/me/recipes` (cookbook CRUD,
+  `/plans/latest`, `/plans/latest/grocery`, `POST /chat` (continues `thread_id` or starts a
+  thread; the server supplies the thread's history), `/me/chats` (list, get, delete),
+  `/me/recipes` (cookbook CRUD,
   `/preview`, `/import/link`, `/import/photos`, `/estimate`). Every recipe returned carries the
   hard rules it breaks for the person's current profile. Paid calls are capped per user per
   day (`PANTRIO_DAILY_PLANS`, `PANTRIO_DAILY_CHATS`, `PANTRIO_DAILY_IMPORTS`) and in total
@@ -191,7 +200,8 @@ Bot-blocking sites (Allrecipes) refuse the fetch; the app suggests a screenshot.
   client components under `src/app/(app)/` fetching the API with SWR (`src/lib/hooks.ts`,
   `src/lib/api.ts`, types in `src/lib/types.ts` mirror `api.py`); Supabase is used only for
   sign-in (magic link or anonymous guest). The cookbook lives under `recipes/mine` (list,
-  `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`. Read `web/AGENTS.md`: this Next.js differs from
+  `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`. The assistant's
+  thread list is `src/components/chat-threads.tsx`. Read `web/AGENTS.md`: this Next.js differs from
   older versions (e.g. `proxy.ts` replaces middleware; check `node_modules/next/dist/docs/`).
 
 ## Commands
