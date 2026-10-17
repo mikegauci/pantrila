@@ -10,11 +10,13 @@ import { useEffect, useSyncExternalStore } from "react"
 
 import { useAuth } from "@/components/auth-provider"
 import { Logo } from "@/components/logo"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
+import { avatarFor } from "@/lib/avatar"
 import { supabase } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
 
@@ -92,20 +94,36 @@ function BottomTabs({ pathname }: { pathname: string }) {
   )
 }
 
-function UserMenu({ email }: { email: string | null }) {
+function UserAvatar({ userId, email, size }: { userId: string | null; email: string | null; size: "lg" | "sm" }) {
+  const avatar = userId ? avatarFor(userId) : null
+  return (
+    <Avatar size={size} aria-hidden>
+      <AvatarFallback
+        className={
+          avatar
+            ? cn(avatar.bg, size === "lg" ? "text-[20px]" : "text-[13px]")
+            : "bg-primary-soft font-semibold text-primary-text"
+        }
+      >
+        {avatar ? avatar.emoji : (email ?? "G").charAt(0).toUpperCase()}
+      </AvatarFallback>
+    </Avatar>
+  )
+}
+
+function UserMenu({ userId, email }: { userId: string | null; email: string | null }) {
   const router = useRouter()
-  const initial = (email ?? "G").charAt(0).toUpperCase()
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        className="grid size-10 place-items-center rounded-full bg-primary-soft font-semibold text-primary-text"
-        aria-label="Account menu"
-      >
-        {initial}
+      <DropdownMenuTrigger className="rounded-full" aria-label="Account menu">
+        <UserAvatar userId={userId} email={email} size="lg" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuGroup>
-          <DropdownMenuLabel className="truncate">{email ?? "Guest"}</DropdownMenuLabel>
+          <DropdownMenuLabel className="flex items-center gap-2">
+            <UserAvatar userId={userId} email={email} size="sm" />
+            <span className="truncate">{email ?? "Guest"}</span>
+          </DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => router.push("/profile")}>
@@ -164,7 +182,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Today />
           </span>
           <span className="ml-auto sm:hidden" />
-          <UserMenu email={session?.user.email ?? null} />
+          <UserMenu userId={session?.user.id ?? null} email={session?.user.email ?? null} />
         </header>
         <main className="mx-auto max-w-[1200px] px-3 py-5 pb-24 sm:px-4 md:px-8 md:py-8 md:pb-10">
           {ready && session ? children : <PageSkeleton />}

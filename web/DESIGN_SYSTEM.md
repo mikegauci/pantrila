@@ -113,6 +113,9 @@ Numbers in stats, macros and grocery quantities use `font-variant-numeric: tabul
 - **Tablet (≥768, designed at 800):** sidebar collapses to a 76px icon rail; grid 8 columns.
 - **Mobile (designed at 390):** bottom tab bar with 5 items (Home, Recipes, Plan,
   Grocery, Assistant); top bar keeps title and avatar; cards stack in one column.
+- **Avatar:** 40px circle in the top bar (24px in the account menu) with a food emoji on a
+  soft tint, both picked from a hash of the user id (`src/lib/avatar.ts`), so it stays the
+  same for that user and nothing is stored; the email's first letter shows until the session loads.
 
 ## Screen map (Nutrigo → Pantrio)
 
