@@ -153,3 +153,20 @@ def test_db_cookbook_is_per_user_and_import_is_a_usage_kind(conn):
     assert alice.update(saved.id, renamed).recipe.title == "Hot toast"
     assert alice.delete(saved.id) and alice.list() == []
     DbRecords(conn, "alice").log(UsageEvent("import", "m", 900, llm_calls=1))
+
+
+def test_db_chats_are_per_user_and_keep_history_and_messages(conn):
+    from pantrio.chats import DbChats
+
+    alice, bob = DbChats(conn, "alice"), DbChats(conn, "bob")
+    first = alice.create("Pasta", [], [])
+    second = alice.create("Soup", [], [])
+    turn = [{"role": "user", "content": "Pasta?"}, {"role": "assistant", "content": "Yes."}]
+    shown = [{"role": "user", "text": "Pasta?"}, {"role": "assistant", "text": "Yes."}]
+    assert bob.append(first.id, shown, turn) is None and bob.get(first.id) is None
+    saved = alice.append(first.id, shown, turn)
+    assert saved.history == turn and saved.messages == shown
+    assert alice.append(first.id, shown[:1], turn).messages == shown + shown[:1]
+    assert [(t.id, t.messages) for t in alice.list()] == [(first.id, 3), (second.id, 0)]
+    assert bob.list() == [] and not bob.delete(first.id)
+    assert alice.delete(first.id) and [t.id for t in alice.list()] == [second.id]

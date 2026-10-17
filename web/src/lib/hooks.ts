@@ -4,7 +4,7 @@ import useSWR, { type SWRConfiguration } from "swr"
 
 import { api, ApiError } from "@/lib/api"
 import type {
-  CookbookCard, CookbookDetail, Food, GroceryList, Me, Meta, PantryItem, Plan, Profile, RecipeDetail,
+  ChatThread, ChatThreadSummary, CookbookCard, CookbookDetail, Food, GroceryList, Me, Meta, PantryItem, Plan, Profile, RecipeDetail,
   Usage,
 } from "@/lib/types"
 
@@ -23,6 +23,8 @@ export const useProfile = () => useApi<Profile>("/me/profile")
 export const usePantry = () => useApi<PantryItem[]>("/me/pantry")
 export const useUsage = () => useApi<Usage>("/me/usage")
 export const useRecipe = (id: string | null) => useApi<RecipeDetail>(id ? `/recipes/${id}` : null)
+export const useChats = () => useApi<ChatThreadSummary[]>("/me/chats")
+export const useChat = (id: number | null) => useApi<ChatThread>(id ? `/me/chats/${id}` : null)
 export const useCookbook = () => useApi<CookbookCard[]>("/me/recipes")
 export const useCookbookRecipe = (id: string | null) =>
   useApi<CookbookDetail>(id ? `/me/recipes/${id}` : null)

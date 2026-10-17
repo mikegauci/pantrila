@@ -8,6 +8,9 @@ against the person's current profile so a later allergy change shows up loudly.
 Planning takes 10 to 90 seconds, so POST /plans streams server-sent events: one `step` per
 LangGraph node as it finishes, then `plan` (the saved plan) or `error`.
 
+Chat threads (/me/chats) are saved per user; each POST /chat continues one thread (or starts
+one) and the server, not the client, supplies that thread's history to the assistant.
+
 The cookbook (/me/recipes) holds recipes people add from a photo, a link or by hand. Imports
 return a draft for the person to review; nothing is saved until they post it back. Grams,
 nutrition, allergens and diets are derived in code on every read, like the corpus.
@@ -37,6 +40,7 @@ from pydantic import BaseModel, Field
 from pantrio import config
 from pantrio.assistant import Assistant
 from pantrio.auth import AuthError, User, verifier
+from pantrio.chats import Chats, SavedThread, title_for
 from pantrio.constraints import day_nutrition, recipe_problems
 from pantrio.cookbook import (
     Cookbook,
@@ -91,6 +95,7 @@ class Session:
     kitchen: Kitchen
     records: Records
     cookbook: Cookbook
+    chats: Chats
 
 
 class Backend(Protocol):
@@ -116,6 +121,7 @@ class DbBackend:
 
     @contextmanager
     def session(self, user_id: str) -> Iterator[Session]:
+        from pantrio.chats import DbChats
         from pantrio.cookbook import DbCookbook
         from pantrio.pantry import DbKitchen
         from pantrio.planner import DbStore
@@ -123,7 +129,8 @@ class DbBackend:
 
         with self.pool.connection() as conn:
             yield Session(DbStore(conn, self.embed_query), DbKitchen(conn, user_id),
-                          DbRecords(conn, user_id), DbCookbook(conn, user_id))  # fmt: skip
+                          DbRecords(conn, user_id), DbCookbook(conn, user_id),
+                          DbChats(conn, user_id))  # fmt: skip
 
     def close(self) -> None:
         self.pool.close()
@@ -259,14 +266,9 @@ class PlanView(BaseModel):
     report: dict = Field(description="Planner metrics: warnings, repairs, cost, latency, path.")
 
 
-class ChatTurn(BaseModel):
-    role: Literal["user", "assistant"]
-    content: str = Field(max_length=8000)
-
-
 class ChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=MAX_MESSAGE_CHARS)
-    history: list[ChatTurn] = Field(default_factory=list)
+    thread_id: int | None = Field(default=None, description="Thread to continue; none starts one.")
 
 
 class ToolCallView(BaseModel):
@@ -276,14 +278,34 @@ class ToolCallView(BaseModel):
 
 
 class ChatReply(BaseModel):
+    thread_id: int
     text: str
-    history: list[ChatTurn]
     cited: list[RecipeCard]
     flagged: list[str]
     tool_calls: list[ToolCallView]
     pantry_changed: bool
     cost_usd: float | None
     latency_ms: float
+
+
+class ChatMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    text: str
+    reply: ChatReply | None = None
+
+
+class ChatThreadSummary(BaseModel):
+    id: int
+    title: str
+    messages: int
+    updated_at: datetime
+
+
+class ChatThreadView(BaseModel):
+    id: int
+    title: str
+    messages: list[ChatMessage]
+    updated_at: datetime
 
 
 class CookbookCard(BaseModel):
@@ -857,13 +879,39 @@ def create_app(
                                  headers={"Cache-Control": "no-cache",
                                           "X-Accel-Buffering": "no"})  # fmt: skip
 
+    # --- Assistant chat, saved as threads ---
+
+    def get_thread(s: Session, thread_id: int) -> SavedThread:
+        thread = s.chats.get(thread_id)
+        if thread is None:
+            raise HTTPException(404, "No such chat.")
+        return thread
+
+    @app.get("/me/chats")
+    def list_chats(s: SessionDep) -> list[ChatThreadSummary]:
+        return [ChatThreadSummary(id=t.id, title=t.title, messages=t.messages,
+                                  updated_at=t.updated_at) for t in s.chats.list()]  # fmt: skip
+
+    @app.get("/me/chats/{thread_id}")
+    def get_chat(thread_id: int, s: SessionDep) -> ChatThreadView:
+        t = get_thread(s, thread_id)
+        messages = [ChatMessage.model_validate(m) for m in t.messages]
+        return ChatThreadView(id=t.id, title=t.title, messages=messages, updated_at=t.updated_at)
+
+    @app.delete("/me/chats/{thread_id}", status_code=204)
+    def delete_chat(thread_id: int, s: SessionDep) -> Response:
+        if not s.chats.delete(thread_id):
+            raise HTTPException(404, "No such chat.")
+        return Response(status_code=204)
+
     @app.post("/chat")
     def chat(body: ChatRequest, request: Request, s: SessionDep) -> ChatReply:
+        thread = None if body.thread_id is None else get_thread(s, body.thread_id)
         check_quota(s.records, "chat")
         backend: Backend = request.app.state.backend
         model = config.model()
         bot = Assistant(s.store, s.kitchen, client=backend.client, model=model, source="api")
-        history = [t.model_dump() for t in body.history][-MAX_CHAT_HISTORY:]
+        history = (thread.history if thread else [])[-MAX_CHAT_HISTORY:]
         start = time.perf_counter()
         try:
             result = bot.reply(body.message, history)
@@ -878,9 +926,11 @@ def create_app(
         s.records.log(UsageEvent.from_usage("chat", model, result.usage, result.latency_ms))
         profile = s.kitchen.profile()
         cited = s.store.get(result.cited)
-        return ChatReply(
+        if thread is None:
+            thread = s.chats.create(title_for(body.message), [], [])
+        reply = ChatReply(
+            thread_id=thread.id,
             text=result.text,
-            history=[ChatTurn(**t) for t in result.history],
             cited=[recipe_card(cited[i], profile) for i in result.cited if i in cited],
             flagged=result.flagged,
             tool_calls=[
@@ -891,6 +941,11 @@ def create_app(
             cost_usd=result.usage.cost(),
             latency_ms=round(result.latency_ms),
         )
+        asked = ChatMessage(role="user", text=body.message)
+        answered = ChatMessage(role="assistant", text=reply.text, reply=reply)
+        s.chats.append(thread.id, [asked.model_dump(mode="json"), answered.model_dump(mode="json")],
+                       result.history[-MAX_CHAT_HISTORY:])  # fmt: skip
+        return reply
 
     return app
 

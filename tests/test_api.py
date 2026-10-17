@@ -10,6 +10,7 @@ from openai.types.responses import ResponseFunctionToolCall
 
 from pantrio.api import Session, create_app
 from pantrio.auth import AuthError, User
+from pantrio.chats import MAX_THREADS_PER_USER, MemoryChats
 from pantrio.cookbook import MemoryCookbook
 from pantrio.pantry import MemoryKitchen
 from pantrio.planner import PlanDraft
@@ -43,9 +44,11 @@ def text_reply(text: str) -> SimpleNamespace:
 class FakeClient:
     def __init__(self):
         self.replies: list = []
+        self.calls: list[dict] = []
         self.responses = self
 
     def parse(self, **kwargs):
+        self.calls.append(kwargs)
         return self.replies.pop(0)
 
     create = parse
@@ -62,7 +65,8 @@ class MemoryBackend:
     def session(self, user_id):
         kitchen = self.kitchens.setdefault(user_id, MemoryKitchen())
         yield Session(self.store, kitchen, MemoryRecords(user_id, self.shared),
-                      MemoryCookbook(user_id, self.shared))  # fmt: skip
+                      MemoryCookbook(user_id, self.shared),
+                      MemoryChats(user_id, self.shared))  # fmt: skip
 
     def close(self):
         pass
@@ -237,23 +241,65 @@ def test_chat_returns_cited_recipes_tools_and_guard_notes(api, backend):
         SimpleNamespace(output=[call], output_text="", usage=USAGE),
         text_reply(f"Try [{OMELETTE}] or [{SALMON}]."),
     ]
-    r = api.post(
-        "/chat",
-        json={
-            "message": "I bought eggs. Ideas?",
-            "history": [
-                {"role": "user", "content": "hi"},
-                {"role": "assistant", "content": "Hello!"},
-            ],
-        },
-    )
-    body = r.json()
+    body = api.post("/chat", json={"message": "I bought eggs. Ideas?"}).json()
     assert [c["id"] for c in body["cited"]] == [OMELETTE, SALMON]
     assert body["flagged"] == [SALMON] and "does not suit you" in body["text"]
     assert body["pantry_changed"] is True
     assert body["tool_calls"][0]["name"] == "update_pantry"
-    assert len(body["history"]) == 4
     assert [i["key"] for i in api.get("/me/pantry").json()] == ["egg"]
+    thread = api.get(f"/me/chats/{body['thread_id']}").json()
+    assert thread["title"] == "I bought eggs. Ideas?"
+    assert [(m["role"], m["text"]) for m in thread["messages"]] == [
+        ("user", "I bought eggs. Ideas?"), ("assistant", body["text"])]  # fmt: skip
+    assert thread["messages"][1]["reply"]["flagged"] == [SALMON]
+
+
+def model_inputs(call: dict) -> list[tuple[str, str]]:
+    return [(i["role"], i["content"]) for i in call["input"] if isinstance(i, dict) and "role" in i]
+
+
+def test_chat_threads_keep_their_own_context(api, backend):
+    backend.client.replies = [text_reply("Pasta it is."), text_reply("Soup it is."),
+                              text_reply("Add basil.")]  # fmt: skip
+    pasta = api.post("/chat", json={"message": "Pasta tonight?"}).json()["thread_id"]
+    soup = api.post("/chat", json={"message": "Soup tonight?"}).json()["thread_id"]
+    assert pasta != soup
+    assert ("user", "Pasta tonight?") not in model_inputs(backend.client.calls[1])
+
+    again = api.post("/chat", json={"message": "Any herb?", "thread_id": pasta}).json()
+    assert again["thread_id"] == pasta
+    seen = model_inputs(backend.client.calls[2])
+    assert ("user", "Pasta tonight?") in seen and ("assistant", "Pasta it is.") in seen
+    assert ("user", "Soup tonight?") not in seen
+
+    listed = api.get("/me/chats").json()
+    assert [(t["id"], t["messages"]) for t in listed] == [(pasta, 4), (soup, 2)]
+
+    bob = {"Authorization": "Bearer bob"}
+    assert api.get("/me/chats", headers=bob).json() == []
+    assert api.get(f"/me/chats/{pasta}", headers=bob).status_code == 404
+    r = api.post("/chat", json={"message": "Hi", "thread_id": pasta}, headers=bob)
+    assert r.status_code == 404 and backend.client.calls[3:] == []
+    assert api.delete(f"/me/chats/{pasta}", headers=bob).status_code == 404
+
+    assert api.delete(f"/me/chats/{pasta}").status_code == 204
+    assert [t["id"] for t in api.get("/me/chats").json()] == [soup]
+    assert api.get(f"/me/chats/{pasta}").status_code == 404
+
+
+def test_failed_chat_saves_no_thread(api, backend):
+    backend.client.replies = []  # the scripted client runs dry: the model call fails
+    assert api.post("/chat", json={"message": "Hi"}).status_code == 502
+    assert api.get("/me/chats").json() == []
+
+
+def test_chat_threads_drop_the_least_recently_used_past_the_cap():
+    chats = MemoryChats("alice")
+    ids = [chats.create(f"t{n}", [], []).id for n in range(MAX_THREADS_PER_USER)]
+    chats.append(ids[0], [{"role": "user", "text": "still here"}], [])
+    chats.create("one more", [], [])
+    kept = {t.id for t in chats.list()}
+    assert len(kept) == MAX_THREADS_PER_USER and ids[0] in kept and ids[1] not in kept
 
 
 def test_meta_and_foods(api):

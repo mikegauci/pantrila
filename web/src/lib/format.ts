@@ -31,3 +31,13 @@ export function percentile(values: number[], p: number): number | null {
   const i = Math.min(sorted.length - 1, Math.ceil((p / 100) * sorted.length) - 1)
   return sorted[Math.max(0, i)]
 }
+
+/** "just now", "5 min ago", "3 h ago", "yesterday", else a short date. */
+export function ago(iso: string): string {
+  const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60_000)
+  if (mins < 1) return "just now"
+  if (mins < 60) return `${mins} min ago`
+  if (mins < 24 * 60) return `${Math.floor(mins / 60)} h ago`
+  if (mins < 48 * 60) return "yesterday"
+  return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
+}
