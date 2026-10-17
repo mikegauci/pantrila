@@ -82,6 +82,8 @@ Chat threads (this PR): migration 0006 (`chat_threads`, RLS; applied on Supabase
 routes, `POST /chat` takes `thread_id` instead of client-sent history. Assistant page has a
 thread list (left column on desktop, "Chats" drawer on mobile) and "New chat". No prompt,
 tool or model change, so no eval rerun.
+Header avatar (PR #13): food emoji on a soft tint, picked from a hash of the Supabase user id
+(`web/src/lib/avatar.ts`); nothing stored, no backend change.
 
 ## Stack
 
