@@ -223,7 +223,7 @@ export function CookbookForm({
   const { data: foods } = useFoods()
   const keys = useMemo(() => new Set(foods?.map((f) => f.key) ?? []), [foods])
   const [r, setR] = useState<CookbookRecipeIn>(initial)
-  const [stepsText, setStepsText] = useState(initial.steps.join("\n"))
+  const [stepsText, setStepsText] = useState(initial.steps.join("\n\n"))
   const [busy, setBusy] = useState<"save" | "estimate" | null>(null)
 
   const recipe: CookbookRecipeIn = { ...r, steps: stepsText.split("\n").map((s) => s.trim()).filter(Boolean) }
@@ -350,7 +350,7 @@ export function CookbookForm({
 
         <Panel className="grid gap-2">
           <PanelTitle className="mb-0">Method</PanelTitle>
-          <Label htmlFor="steps" className="text-muted-foreground">One step per line</Label>
+          <Label htmlFor="steps" className="text-muted-foreground">One step per paragraph</Label>
           <Textarea id="steps" value={stepsText} rows={8} className="min-h-40 bg-surface"
                     onChange={(e) => setStepsText(e.target.value)} />
         </Panel>
