@@ -154,7 +154,7 @@ class DbChats:
         with self.conn.transaction():
             row = self.conn.execute(
                 "update chat_threads set messages = messages || %s::jsonb, history = %s,"
-                " updated_at = now() where user_id = %s and id = %s"
+                " updated_at = clock_timestamp() where user_id = %s and id = %s"
                 f" returning {THREAD_COLUMNS}",
                 (json.dumps(messages), json.dumps(history), self.user_id, thread_id),
             ).fetchone()
