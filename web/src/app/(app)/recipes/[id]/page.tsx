@@ -112,7 +112,10 @@ export default function RecipePage() {
       <ProblemAlert title="This recipe does not suit you" items={r.problems} />
 
       <Panel className="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-        <RecipeArt meal={r.meal_types[0]} cuisine={r.cuisine} size="lg" className="aspect-[4/3] w-full" />
+        <RecipeArt
+          meal={r.meal_types[0]} cuisine={r.cuisine} size="lg" photo={r.photo_url}
+          sizes="(min-width: 768px) 440px, 100vw" className="aspect-[4/3] w-full"
+        />
         <div className="flex flex-col gap-3">
           <h2 className="text-[24px] font-bold leading-8">{r.title}</h2>
           <p className="text-muted-foreground">{r.summary}</p>

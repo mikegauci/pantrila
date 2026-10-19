@@ -64,7 +64,10 @@ export default function HomePage() {
               {today.meals.map((m) => (
                 <li key={m.meal_type}>
                   <Link href={`/recipes/${m.recipe.id}`} className="group flex items-center gap-3 rounded-2xl border p-3 hover:shadow-soft sm:block">
-                    <RecipeArt meal={m.meal_type} className="size-16 shrink-0 sm:mb-3 sm:aspect-[4/3] sm:size-auto" />
+                    <RecipeArt
+                      meal={m.meal_type} photo={m.recipe.photo_url} sizes="(min-width: 640px) 340px, 64px"
+                      className="size-16 shrink-0 sm:mb-3 sm:aspect-[4/3] sm:size-auto"
+                    />
                     <div className="min-w-0">
                     <p className="text-[12px] font-medium text-muted-foreground">{label(m.meal_type)}</p>
                     <p className="line-clamp-2 font-semibold group-hover:text-primary-text">{m.recipe.title}</p>
