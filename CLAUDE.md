@@ -107,6 +107,12 @@ square and shrinks to JPEG; `PUT /me/avatar` re-encodes it as a 256 px WebP (`ph
 `DELETE /me/avatar` removes it, `/me` carries `avatar_url`. Header and Profile page show it, else the
 emoji avatar. No model call, so no eval rerun.
 
+Profile picture (this PR): migration 0008 (`user_avatars`, path only; applied on Supabase), stored
+in the `recipe-photos` bucket under `avatars/<user>/` (no new bucket). The browser crops to a
+square and shrinks to JPEG; `PUT /me/avatar` re-encodes it as a 256 px WebP (`photos.to_avatar_webp`),
+`DELETE /me/avatar` removes it, `/me` carries `avatar_url`. Header and Profile page show it, else the
+emoji avatar. No model call, so no eval rerun.
+
 ## Stack
 
 - Python 3.12, `uv`, Pydantic v2, FastAPI, pytest, ruff.
