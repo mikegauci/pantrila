@@ -321,3 +321,22 @@ def test_chat_updates_detect_conflicts_and_bound_retained_messages(conn):
     messages = [{"text": str(i)} for i in range(MAX_THREAD_MESSAGES + 10)]
     retained = chats.append(thread.id, messages, [])
     assert retained.messages == messages[-MAX_THREAD_MESSAGES:]
+
+
+def test_db_cooking_log_is_per_user_newest_first_and_bounded(conn, monkeypatch):
+    from pantrio import records
+    from pantrio.records import Cooked, DbRecords
+
+    monkeypatch.setattr(records, "MAX_COOKED_PER_USER", 2)
+    alice, bob = DbRecords(conn, "alice"), DbRecords(conn, "bob")
+    first = alice.log_cooked(Cooked(title="Omelette", servings=1, pantry_updated=True,
+                                    recipe_id="french-mushroom-omelette"))  # fmt: skip
+    assert first.id > 0 and first.cooked_at is not None
+    alice.log_cooked(Cooked(title="Toast", servings=2, pantry_updated=False, cookbook_id=7))
+    alice.log_cooked(Cooked(title="Curry", servings=4, pantry_updated=True, recipe_id="curry"))
+    bob.log_cooked(Cooked(title="Soup", servings=1, pantry_updated=True, recipe_id="soup"))
+    assert [(c.title, c.cookbook_id) for c in alice.cooked()] == [("Curry", None), ("Toast", 7)]
+    assert [c.title for c in bob.cooked()] == ["Soup"]
+    with pytest.raises(Exception, match="check"):
+        alice.log_cooked(Cooked(title="Both", servings=1, pantry_updated=True, recipe_id="x",
+                                cookbook_id=1))  # fmt: skip

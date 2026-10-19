@@ -661,3 +661,43 @@ def test_concurrent_turns_report_a_conflict_instead_of_losing_history(api, backe
     messages = api.get(f"/me/chats/{tid}").json()["messages"]
     assert len(messages) == 4
     assert messages[2]["text"] in ("One", "Two")
+
+
+def test_i_cooked_this_logs_and_takes_what_was_used_out_of_the_pantry(api):
+    api.post("/me/pantry", json={"food": "eggs", "quantity": 6, "unit": "piece"})
+    api.post("/me/pantry", json={"food": "butter", "quantity": 15, "unit": "g"})
+    api.post("/me/pantry", json={"food": "thyme"})
+    body = {"recipe_id": OMELETTE, "servings": 1}
+    preview = api.post("/me/cooked/preview", json=body).json()
+    assert preview["cooked"] is None
+    assert [(c["food"], c["unit"], c["before"], c["after"]) for c in preview["pantry"]] == [
+        ("butter", "g", 15, 5), ("egg", "piece", 6, 3)]  # fmt: skip
+    assert len(api.get("/me/pantry").json()) == 3 and api.get("/me/cooked").json() == []
+
+    done = api.post("/me/cooked", json={**body, "servings": 2})
+    assert done.status_code == 201
+    cooked = done.json()["cooked"]
+    assert (cooked["recipe_id"], cooked["title"], cooked["servings"], cooked["pantry_updated"]
+            ) == (OMELETTE, "Mushroom Omelette", 2, True)  # fmt: skip
+    pantry = {i["key"]: i["quantity"] for i in api.get("/me/pantry").json()}
+    assert pantry == {"thyme": None}  # 6 eggs and 15 g butter used up by two omelettes
+    assert [c["id"] for c in api.get("/me/cooked").json()] == [cooked["id"]]
+    assert api.get("/me/cooked", headers={"Authorization": "Bearer bob"}).json() == []
+
+
+def test_i_cooked_this_can_leave_the_pantry_alone_and_works_for_the_cookbook(api):
+    api.post("/me/pantry", json={"food": "butter", "quantity": 50, "unit": "g"})
+    toast = api.post("/me/recipes", json=TOAST).json()
+    r = api.post("/me/cooked", json={"cookbook_id": toast["id"], "servings": 2,
+                                     "update_pantry": False}).json()  # fmt: skip
+    assert r["cooked"]["cookbook_id"] == toast["id"] and not r["cooked"]["pantry_updated"]
+    assert [(c["food"], c["after"]) for c in r["pantry"]] == [("butter", 30)]
+    assert api.get("/me/pantry").json()[0]["quantity"] == 50
+
+    bob = {"Authorization": "Bearer bob"}
+    assert api.post("/me/cooked", json={"cookbook_id": toast["id"], "servings": 1},
+                    headers=bob).status_code == 404  # fmt: skip
+    assert api.post("/me/cooked", json={"recipe_id": "nope", "servings": 1}).status_code == 404
+    both = {"recipe_id": OMELETTE, "cookbook_id": toast["id"], "servings": 1}
+    assert api.post("/me/cooked", json=both).status_code == 422
+    assert api.post("/me/cooked", json={"recipe_id": OMELETTE, "servings": 0}).status_code == 422

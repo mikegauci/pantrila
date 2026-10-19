@@ -1,8 +1,9 @@
-"""What the web app remembers per user besides the kitchen: saved plans and a usage log.
+"""What the web app remembers per user besides the kitchen: saved plans, a usage log and a
+cooking log.
 
 The usage log has one event per paid call (a plan, a chat turn, a recipe import or a
 generated photo) with tokens, cost and latency. The API counts events for its daily limits
-and shows them on the Insights page.
+and shows them on the Insights page. The cooking log has one entry per "I cooked this".
 """
 
 from __future__ import annotations
@@ -10,7 +11,7 @@ from __future__ import annotations
 import json
 import threading
 import uuid
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import UTC, datetime
 from typing import Literal, Protocol
 
@@ -20,6 +21,7 @@ from pantrio.planner import Usage
 from pantrio.schema import MealPlan
 
 Kind = Literal["plan", "chat", "import", "photo", "search"]
+MAX_COOKED_PER_USER = 500  # older cooking log entries are dropped
 
 
 class QuotaExceeded(ValueError):
@@ -68,6 +70,19 @@ class SavedPlan:
     created_at: datetime
 
 
+@dataclass
+class Cooked:
+    """One "I cooked this": a corpus recipe (`recipe_id`) or a cookbook one (`cookbook_id`)."""
+
+    title: str
+    servings: int
+    pantry_updated: bool
+    recipe_id: str | None = None
+    cookbook_id: int | None = None
+    id: int = 0
+    cooked_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+
+
 class Records(Protocol):
     """One user's saved plans and usage, plus the total spend across all users."""
 
@@ -98,6 +113,14 @@ class Records(Protocol):
     def avatar_path(self) -> str | None: ...
 
     def set_avatar(self, path: str | None) -> None: ...
+
+    def log_cooked(self, cooked: Cooked) -> Cooked:
+        """Add to this user's cooking log; returns it with its id and time."""
+        ...
+
+    def cooked(self, limit: int = 50) -> list[Cooked]:
+        """This user's cooking log, newest first."""
+        ...
 
 
 class MemoryRecords:
@@ -162,6 +185,18 @@ class MemoryRecords:
             avatars.pop(self.user_id, None)
         else:
             avatars[self.user_id] = path
+
+    def log_cooked(self, cooked: Cooked) -> Cooked:
+        log = self.shared.setdefault("cooked", [])
+        saved = replace(cooked, id=len(log) + 1, cooked_at=datetime.now(UTC))
+        log.append((self.user_id, saved))
+        mine = [c for u, c in log if u == self.user_id]
+        for old in mine[:-MAX_COOKED_PER_USER]:
+            log.remove((self.user_id, old))
+        return saved
+
+    def cooked(self, limit: int = 50) -> list[Cooked]:
+        return [c for u, c in reversed(self.shared.get("cooked", [])) if u == self.user_id][:limit]
 
 
 EVENT_COLUMNS = (
@@ -278,3 +313,28 @@ class DbRecords:
                     " on conflict (user_id) do update set path = excluded.path, updated_at = now()",
                     (self.user_id, path),
                 )
+
+    def log_cooked(self, cooked: Cooked) -> Cooked:
+        with self.conn.transaction():
+            cid, at = self.conn.execute(
+                "insert into cooked_meals (user_id, recipe_id, cookbook_id, title, servings,"
+                " pantry_updated) values (%s, %s, %s, %s, %s, %s) returning id, cooked_at",
+                (self.user_id, cooked.recipe_id, cooked.cookbook_id, cooked.title,
+                 cooked.servings, cooked.pantry_updated),
+            ).fetchone()  # fmt: skip
+            self.conn.execute(
+                "delete from cooked_meals where user_id = %s and id not in (select id from"
+                " cooked_meals where user_id = %s order by cooked_at desc, id desc limit %s)",
+                (self.user_id, self.user_id, MAX_COOKED_PER_USER),
+            )
+        return replace(cooked, id=cid, cooked_at=at)
+
+    def cooked(self, limit: int = 50) -> list[Cooked]:
+        rows = self.conn.execute(
+            "select id, recipe_id, cookbook_id, title, servings, pantry_updated, cooked_at"
+            " from cooked_meals where user_id = %s order by cooked_at desc, id desc limit %s",
+            (self.user_id, limit),
+        ).fetchall()
+        return [Cooked(id=i, recipe_id=r, cookbook_id=c, title=t, servings=n,
+                       pantry_updated=p, cooked_at=at)
+                for i, r, c, t, n, p, at in rows]  # fmt: skip
