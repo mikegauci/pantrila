@@ -33,6 +33,10 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Planned next: social recipe import (TikTok/Instagram/Facebook captions, linked recipe sites,
+then uploaded video audio), two PRs. Full plan and checklists in
+`docs/plans/social-recipe-import.md`; read it before starting either PR.
+
 Review maintenance: API models/views/backend construction now live in `api_models.py`,
 `api_views.py`, and `backend.py`; `api.py` owns routes and app lifecycle. Insights is generated
 from `evals/report_selection.json` with `scripts/update_eval_snapshot.py`, checked by pytest.
