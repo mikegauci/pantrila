@@ -60,9 +60,9 @@ export function AskPantrio() {
           <Send />
         </Button>
       </form>
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div className="no-scrollbar -mx-5 mt-3 flex gap-2 overflow-x-auto px-5 py-1 md:mx-0 md:flex-wrap md:overflow-visible md:p-0">
         {STARTERS.map((s) => (
-          <Button key={s} variant="outline" size="sm" className="bg-surface" onClick={() => ask(s)}>{s}</Button>
+          <Button key={s} variant="outline" size="sm" className="shrink-0 whitespace-nowrap bg-surface" onClick={() => ask(s)}>{s}</Button>
         ))}
       </div>
       {recent.length > 0 && (
