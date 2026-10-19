@@ -207,6 +207,28 @@ class PlanView(BaseModel):
     report: dict = Field(description="Planner metrics: warnings, repairs, cost, latency, path.")
 
 
+class MealOptionView(BaseModel):
+    recipe: RecipeCard
+    portions: float = Field(description="Servings per person that fit the day's targets best.")
+    day_nutrition: NutritionFacts = Field(description="The day's total per person with this meal.")
+    kcal_change: float = Field(description="Change in the day's kcal against the current meal.")
+
+
+class MealOptions(BaseModel):
+    plan_id: int
+    day: int
+    meal_type: MealType
+    current: PlanMealView
+    options: list[MealOptionView] = Field(
+        description="Recipes that pass the person's rules for this slot, best fit first."
+    )
+
+
+class SwapMealRequest(BaseModel):
+    plan_id: int = Field(description="The plan being edited; a newer plan makes this a conflict.")
+    recipe_id: str
+
+
 class ChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=MAX_MESSAGE_CHARS)
     thread_id: int | None = Field(default=None, description="Thread to continue; none starts one.")

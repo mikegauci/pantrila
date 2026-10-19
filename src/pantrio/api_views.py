@@ -7,6 +7,8 @@ from pantrio.api_models import (
     CookbookDetail,
     CookbookLine,
     IngredientView,
+    MealOptions,
+    MealOptionView,
     PlanDayView,
     PlanMealView,
     PlanProblem,
@@ -25,11 +27,13 @@ from pantrio.cookbook import (
     derive,
     problems_for,
 )
+from pantrio.meal_swap import MealOption, find_meal
 from pantrio.photos import (
     public_url,
 )
 from pantrio.records import SavedPlan
 from pantrio.schema import (
+    MealType,
     Recipe,
     UserProfile,
 )
@@ -130,6 +134,28 @@ def plan_view(saved: SavedPlan, store: Catalog, profile: UserProfile) -> PlanVie
         days.append(PlanDayView(day=day.day, meals=meals, nutrition=day_nutrition(day, recipes)))
     return PlanView(id=saved.id, created_at=saved.created_at, days=days, notes=saved.plan.notes,
                     targets=profile.targets, problems=problems, report=saved.report)  # fmt: skip
+
+
+def meal_options_view(
+    saved: SavedPlan, day: int, meal_type: MealType, options: list[MealOption], store: Catalog,
+    profile: UserProfile,
+) -> MealOptions | None:  # fmt: skip
+    """The meal in the slot and the recipes it could be swapped for; None if the meal's own
+    recipe has left the corpus (the plan view does not show such a meal either)."""
+    d, m = find_meal(saved.plan, day, meal_type)
+    meal = saved.plan.days[d].meals[m]
+    current = store.get({meal.recipe_id}).get(meal.recipe_id)
+    if current is None:
+        return None
+    photos = store.photos({meal.recipe_id} | {o.recipe.id for o in options})
+    return MealOptions(
+        plan_id=saved.id, day=day, meal_type=meal_type,
+        current=PlanMealView(meal_type=meal_type, portions=meal.portions,
+                             recipe=recipe_card(current, profile, photos.get(current.id))),
+        options=[MealOptionView(recipe=recipe_card(o.recipe, profile, photos.get(o.recipe.id)),
+                                portions=o.portions, day_nutrition=o.day_nutrition,
+                                kcal_change=o.kcal_change) for o in options],
+    )  # fmt: skip
 
 
 def plan_report(result, model: str) -> dict:

@@ -135,6 +135,25 @@ def test_db_records_keep_plans_and_usage_per_user(conn):
                                                              ("plan", True, 0.02)]  # fmt: skip
 
 
+def test_db_records_update_a_plan_only_for_its_owner(conn):
+    from pantrio.records import DbRecords
+    from pantrio.schema import MealPlan, PlanDay, PlannedMeal
+
+    alice, bob = DbRecords(conn, "alice"), DbRecords(conn, "bob")
+    meals = [PlannedMeal(meal_type=MealType.DINNER, recipe_id="x")]
+    plan = MealPlan(days=[PlanDay(day=1, meals=meals)])
+    saved = alice.save_plan(plan, {"repairs": 0})
+    changed = plan.model_copy(update={"notes": "swapped"})
+
+    assert bob.update_plan(saved.id, changed, {"swaps": 1}) is None
+    assert alice.update_plan(saved.id + 999, changed, {"swaps": 1}) is None
+    assert alice.latest_plan().plan.notes == ""
+    updated = alice.update_plan(saved.id, changed, {"swaps": 1})
+    assert updated.id == saved.id and updated.created_at == saved.created_at
+    latest = alice.latest_plan()
+    assert latest.plan.notes == "swapped" and latest.report == {"swaps": 1}
+
+
 def test_db_cookbook_is_per_user_and_import_is_a_usage_kind(conn):
     from pantrio.cookbook import CookbookRecipeIn, DbCookbook
     from pantrio.records import DbRecords, UsageEvent

@@ -144,6 +144,33 @@ def _target_cost(n: dict[str, float], profile: UserProfile) -> float:
     return cost
 
 
+def target_miss(n: NutritionFacts, profile: UserProfile) -> float:
+    """How far a day's nutrition is from the person's targets; 0 when it meets them all."""
+    return _target_cost(n.model_dump(), profile)
+
+
+def fit_slot_portion(
+    day: PlanDay, index: int, profile: UserProfile, recipes: Mapping[str, Recipe]
+) -> float:
+    """Portions for one meal of a day that bring the day closest to the targets, with the
+    day's other meals left as they are. Ties go to a normal portion; 1.0 without targets."""
+    t = profile.targets
+    if not (t.kcal or t.min_protein_g or t.max_carbs_g):
+        return 1.0
+    base = dict.fromkeys(("kcal", "protein_g", "carbs_g"), 0.0)
+    for i, m in enumerate(day.meals):
+        if i != index and (r := recipes.get(m.recipe_id)):
+            for f in base:
+                base[f] += getattr(r.nutrition, f) * m.portions
+    facts = recipes[day.meals[index].recipe_id].nutrition
+
+    def cost(p: float) -> float:
+        n = {f: base[f] + getattr(facts, f) * p for f in base}
+        return _target_cost(n, profile) + 0.001 * abs(p - 1)
+
+    return min(PORTION_STEPS, key=cost)
+
+
 def fit_portions(plan: MealPlan, profile: UserProfile, recipes: Mapping[str, Recipe]) -> MealPlan:
     """Choose portions (0.5 to 2 servings, in quarters) per meal to bring each day closest to
     the targets. Exhaustive over at most 7^5 combinations a day; ties go to normal portions."""

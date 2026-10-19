@@ -232,6 +232,78 @@ def test_plan_streams_steps_saves_the_plan_and_logs_usage(api, backend):
     assert api.get("/plans/latest", headers={"Authorization": "Bearer bob"}).status_code == 404
 
 
+def make_plan(api, backend, allergies=("fish",)) -> dict:
+    """Plan two days (omelette, then chicken and curry for dinner) and return the plan."""
+    api.put("/me/profile", json={"days": 2, "meals": ["breakfast", "dinner"],
+                                 "allergies": list(allergies)})  # fmt: skip
+    backend.client.replies = [plan_reply(CHICKEN, CURRY)]
+    with api.stream("POST", "/plans") as r:
+        events = sse(r.read().decode())
+    kind, plan = events[-1]
+    assert kind == "plan"
+    return plan
+
+
+def test_a_meal_can_be_swapped_for_a_safe_recipe_and_the_grocery_list_follows(api, backend):
+    plan = make_plan(api, backend)
+    options = api.get("/plans/latest/meals/1/dinner/options").json()
+    assert options["plan_id"] == plan["id"] and options["current"]["recipe"]["id"] == CHICKEN
+    ids = {o["recipe"]["id"] for o in options["options"]}
+    assert ids == {CURRY, NOODLES}  # the salmon pasta has fish; the chicken is the current meal
+    assert all(o["recipe"]["problems"] == [] and o["portions"] > 0 for o in options["options"])
+    paid = api.get("/me/usage").json()["events"]
+
+    r = api.put("/plans/latest/meals/1/dinner", json={"plan_id": plan["id"], "recipe_id": NOODLES})
+    assert r.status_code == 200
+    swapped = r.json()
+    assert [m["recipe"]["id"] for m in swapped["days"][0]["meals"]] == [OMELETTE, NOODLES]
+    assert swapped["id"] == plan["id"] and swapped["problems"] == []
+    assert swapped["report"]["swaps"] == 1
+    assert swapped["report"]["cost_usd"] == plan["report"]["cost_usd"]  # planning cost is kept
+    assert api.get("/plans/latest").json()["days"][0]["meals"][1]["recipe"]["id"] == NOODLES
+
+    grocery = api.get("/plans/latest/grocery").json()
+    foods = {i["food"] for i in grocery["items"] + grocery["covered"]}
+    assert "rice_noodles" in foods and "chicken_thigh" not in foods
+    assert api.get("/me/usage").json()["events"] == paid  # swapping is not a paid call
+
+
+def test_a_swap_is_refused_when_unsafe_stale_or_unknown(api, backend):
+    plan = make_plan(api, backend)
+    url, body = "/plans/latest/meals/1/dinner", {"plan_id": plan["id"], "recipe_id": SALMON}
+    unsafe = api.put(url, json=body)
+    assert unsafe.status_code == 422
+    detail = unsafe.json()["detail"]
+    assert detail["message"] == "That recipe does not suit your rules."
+    assert detail["problems"] == ["contains fish"]
+    assert api.put(url, json={**body, "plan_id": plan["id"] + 1, "recipe_id": CURRY}
+                   ).status_code == 409  # fmt: skip
+    assert api.put(url, json={**body, "recipe_id": "no-such-recipe"}).status_code == 404
+    assert api.put(url, json={**body, "recipe_id": CHICKEN}).status_code == 422
+    assert api.put("/plans/latest/meals/1/lunch", json={**body, "recipe_id": CURRY}
+                   ).status_code == 404  # fmt: skip
+    assert api.put("/plans/latest/meals/1/brunch", json=body).status_code == 422
+    assert api.get("/plans/latest/meals/9/dinner/options").status_code == 404
+    assert api.get("/plans/latest").json()["days"][0]["meals"][1]["recipe"]["id"] == CHICKEN
+
+    bob = {"Authorization": "Bearer bob"}
+    assert api.get("/plans/latest/meals/1/dinner/options", headers=bob).status_code == 404
+    assert api.put(url, json=body, headers=bob).status_code == 404
+
+
+def test_a_swap_replaces_a_meal_that_a_new_allergy_flags(api, backend):
+    make_plan(api, backend)
+    api.put("/me/profile", json={"days": 2, "meals": ["breakfast", "dinner"],
+                                 "allergies": ["fish", "mustard"]})  # fmt: skip
+    flagged = api.get("/plans/latest").json()
+    assert {(p["day"], p["meal_type"]) for p in flagged["problems"]} == {(2, "dinner")}
+    options = api.get("/plans/latest/meals/2/dinner/options").json()["options"]
+    assert {o["recipe"]["id"] for o in options} == {CHICKEN, NOODLES}
+    r = api.put("/plans/latest/meals/2/dinner",
+                json={"plan_id": flagged["id"], "recipe_id": CHICKEN})  # fmt: skip
+    assert r.status_code == 200 and r.json()["problems"] == []
+
+
 def test_planning_error_is_streamed_and_logged(api, backend):
     api.put("/me/profile", json={"days": 1, "meals": ["snack"]})
     with api.stream("POST", "/plans") as r:
