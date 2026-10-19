@@ -111,8 +111,8 @@ Numbers in stats, macros and grocery quantities use `font-variant-numeric: tabul
   card at the bottom), top bar 72px (page title, search, date, notifications, avatar),
   content grid 12 columns, max width 1200.
 - **Tablet (≥768, designed at 800):** sidebar collapses to a 76px icon rail; grid 8 columns.
-- **Mobile (designed at 390):** bottom tab bar with 5 items (Home, Recipes, Plan,
-  Grocery, Assistant); top bar keeps title and avatar; cards stack in one column.
+- **Mobile (designed at 390):** bottom tab bar with 5 items (Home, Assistant, Recipes,
+  Plan, Grocery); top bar keeps title and avatar; cards stack in one column.
 - **Avatar:** 40px circle in the top bar (24px in the account menu) with a food emoji on a
   soft tint, both picked from a hash of the user id (`src/lib/avatar.ts`), so it stays the
   same for that user and nothing is stored; the email's first letter shows until the session loads.
@@ -121,7 +121,7 @@ Numbers in stats, macros and grocery quantities use `font-variant-numeric: tabul
 
 | Nutrigo screen | Pantrio screen | Notes |
 |---|---|---|
-| Dashboard | **Home** | Greeting, today's meals, macro ring, pantry "use it up" card, grocery preview |
+| Dashboard | **Home** | Greeting, "Ask Pantrio" assistant card, today's meals, macro ring, pantry "use it up" card, grocery preview |
 | Healthy Menu | **Recipes** | Search box (hybrid RAG), filter chips (diet, time, cuisine), recipe card grid |
 | Recipe Details | **Recipe** | Hero image, macros, ingredients ticked against pantry, steps, "swap ingredient" |
 | Meal Plan + Calendar | **Meal plan** | Week grid (days × breakfast/lunch/dinner/snack), "Generate week" button, drag to swap |
