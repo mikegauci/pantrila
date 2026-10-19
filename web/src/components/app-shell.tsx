@@ -16,6 +16,7 @@ import {
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
+import { pingServer } from "@/lib/api"
 import { avatarFor } from "@/lib/avatar"
 import { supabase } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
@@ -162,6 +163,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
   const { session, ready } = useAuth()
+
+  useEffect(pingServer, [])
 
   useEffect(() => {
     if (ready && !session) router.replace("/login")

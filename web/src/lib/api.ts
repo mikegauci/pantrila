@@ -1,3 +1,5 @@
+import { toast } from "sonner"
+
 import { supabase } from "@/lib/supabase"
 
 const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000").replace(/\/$/, "")
@@ -37,9 +39,33 @@ async function errorFrom(res: Response): Promise<ApiError> {
   return new ApiError(res.status, detail, suggestions, problems)
 }
 
+// The API sleeps when idle (Render free plan), so the first request can take up to a minute.
+// Any request still waiting after SLOW_MS shows one shared toast until every slow one answers.
+const SLOW_MS = 3000
+const WAKE_TOAST = "server-wake"
+let slow = 0
+
+function markSlow() {
+  if (slow++ === 0)
+    toast.loading("Waking up the Pantrio server…", {
+      id: WAKE_TOAST,
+      duration: Infinity,
+      description: "It sleeps when idle, so the first load can take up to a minute.",
+    })
+}
+
+function unmarkSlow() {
+  if (--slow === 0) toast.success("Server ready", { id: WAKE_TOAST, duration: 2000, description: undefined })
+}
+
 /** fetch that explains a network failure: browsers only say "Load failed" or "Failed to fetch". */
 async function request(path: string, init: RequestInit): Promise<Response> {
   const start = Date.now()
+  let counted = false
+  const timer = setTimeout(() => {
+    counted = true
+    markSlow()
+  }, SLOW_MS)
   try {
     return await fetch(`${API_URL}${path}`, init)
   } catch (e) {
@@ -52,7 +78,15 @@ async function request(path: string, init: RequestInit): Promise<Response> {
         ` (${e instanceof Error ? e.message : "network error"}). The server may be waking up or the upload` +
         ` was too slow. Check your connection and try again.`,
     )
+  } finally {
+    clearTimeout(timer)
+    if (counted) unmarkSlow()
   }
+}
+
+/** Wake the API as early as possible; failures surface later on real requests. */
+export function pingServer() {
+  request("/health", {}).catch(() => {})
 }
 
 /** Call the Pantrio API with the signed-in user's token. */
