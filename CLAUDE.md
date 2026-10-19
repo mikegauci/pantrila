@@ -159,6 +159,9 @@ visible match wins because hidden pages stay mounted). Opens once per user id
 Favicon (this PR): `web/src/app/icon.svg` (white lucide Leaf on the #3fa34d rounded square, like
 `Logo`), with `apple-icon.png` (180 px) and `favicon.ico` (16/32/48) rendered from it with `sharp`.
 File-convention icons, no `layout.tsx` change. Web only, so no eval rerun.
+Mobile recipe filters (this PR): Recipes chips are four rows (Meal, Time, Diet, Cuisine) that scroll
+sideways edge to edge below `md` (`no-scrollbar` utility) and wrap from `md`; shorter safety banner on
+phones, so the first recipe shows above the fold at 390 px. Web only, so no eval rerun.
 
 ## Stack
 
