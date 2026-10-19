@@ -98,6 +98,12 @@ generic herb bowls or salt dishes. Cookbook recipes get Generate/New/Remove phot
 (`PANTRIO_DAILY_PHOTOS`, default 5). Web uses `next/image` (Vercel Hobby: 5K transformations a
 month; `minimumCacheTTL` 31 days). No text-model prompt change, so no eval rerun.
 
+Profile picture (this PR): migration 0008 (`user_avatars`, path only; applied on Supabase), stored
+in the `recipe-photos` bucket under `avatars/<user>/` (no new bucket). The browser crops to a
+square and shrinks to JPEG; `PUT /me/avatar` re-encodes it as a 256 px WebP (`photos.to_avatar_webp`),
+`DELETE /me/avatar` removes it, `/me` carries `avatar_url`. Header and Profile page show it, else the
+emoji avatar. No model call, so no eval rerun.
+
 ## Stack
 
 - Python 3.12, `uv`, Pydantic v2, FastAPI, pytest, ruff.
@@ -191,7 +197,7 @@ month; `minimumCacheTTL` 31 days). No text-model prompt change, so no eval rerun
   recipes regenerate.
 - `src/pantrio/api.py`: FastAPI app (`create_app(backend, verify)`; tests pass an in-memory
   backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
-  `/me/usage`, `/recipes` (search or browse, profile rules as filters unless `safe=false`),
+  `/me/usage`, `/me/avatar` (PUT/DELETE), `/recipes` (search or browse, profile rules as filters unless `safe=false`),
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
   `/plans/latest`, `/plans/latest/grocery`, `POST /chat` (continues `thread_id` or starts a
   thread; the server supplies the thread's history), `/me/chats` (list, get, delete),
