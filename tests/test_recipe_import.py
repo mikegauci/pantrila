@@ -292,25 +292,29 @@ def test_trickling_headers_cannot_extend_socket_deadline():
 def test_pinned_fetch_falls_back_only_to_other_validated_addresses():
     import threading
     import time
-    from http.server import BaseHTTPRequestHandler, HTTPServer
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
     from pantrio.safe_http import pinned_page
 
     hosts = []
+    body = b"<html>recipe</html>"
 
     class Handler(BaseHTTPRequestHandler):
+        wbufsize = 8192  # one send for headers and body; split sends flake on loopback
+
         def do_GET(self):
             hosts.append(self.headers["Host"])
             self.send_response(200)
             self.send_header("Content-Type", "text/html")
+            self.send_header("Content-Length", str(len(body)))
             self.end_headers()
-            self.wfile.write(b"<html>recipe</html>")
+            self.wfile.write(body)
 
         def log_message(self, *args):
             pass
 
-    server = HTTPServer(("127.0.0.1", 0), Handler)
-    thread = threading.Thread(target=server.handle_request, daemon=True)
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
         port = server.server_port
@@ -320,5 +324,6 @@ def test_pinned_fetch_falls_back_only_to_other_validated_addresses():
             assert b"recipe" in b"".join(response.iter_bytes())
         assert hosts == [f"recipes.example:{port}"]
     finally:
+        server.shutdown()
         server.server_close()
         thread.join(timeout=2)
