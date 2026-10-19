@@ -117,6 +117,9 @@ Plan and Grocery, pointing at elements marked `data-tour="…"` (nav links carry
 visible match wins because hidden pages stay mounted). Opens once per user id
 (`localStorage["pantrio-tour-done:<id>"]`), replay from the account menu ("App tour") or Profile
 ("Help"). Web only, no new dependency, so no eval rerun.
+Favicon (this PR): `web/src/app/icon.svg` (white lucide Leaf on the #3fa34d rounded square, like
+`Logo`), with `apple-icon.png` (180 px) and `favicon.ico` (16/32/48) rendered from it with `sharp`.
+File-convention icons, no `layout.tsx` change. Web only, so no eval rerun.
 
 ## Stack
 
