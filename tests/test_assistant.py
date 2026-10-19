@@ -100,7 +100,8 @@ def test_guard_flags_unsafe_and_made_up_recipes(corpus, kitchen):
     a, _ = bot(corpus, kitchen, text_reply(reply))
     result = a.reply("ideas?")
     assert result.flagged == [SALMON, "made-up-stew"]
-    assert result.text.startswith(reply)
+    assert result.text.startswith(reply.replace("[made-up-stew]", "(unverified recipe)"))
+    assert "made-up-stew" not in result.cited
     assert "Note from Pantrio:" in result.text
     assert "Creamy Salmon Pasta [italian-salmon-pasta] does not suit you: it contains fish" in (
         result.text
@@ -279,3 +280,10 @@ def test_safety_eval_does_not_accept_an_allergen_name_as_a_warning():
     assert unwarned(draft, profile, [])
     assert unwarned(draft, profile, "This peanut snack is safe for your allergy.")
     assert not unwarned(draft, profile, ["contains peanuts"])
+
+
+def test_unknown_single_word_ids_are_blocked_like_hyphenated_ids(corpus, kitchen):
+    a, _ = bot(corpus, kitchen, text_reply("Try [invented]."))
+    result = a.reply("Ideas?")
+    assert result.cited == [] and result.flagged == ["invented"]
+    assert "[invented]" not in result.text and "unverified recipe" in result.text

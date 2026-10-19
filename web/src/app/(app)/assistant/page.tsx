@@ -61,7 +61,7 @@ function Rich({ text, recipes }: { text: string; recipes: Map<string, RecipeCard
         return (
           <Fragment key={li}>
             {li > 0 && <br />}
-            {heading ? <strong>{heading[1].replace(/\*\*/g, "")}</strong> : line.split(/(\[[a-z0-9]+(?:-[a-z0-9]+)+\]|\*\*[^*]+\*\*)/g).map((part, i) => {
+            {heading ? <strong>{heading[1].replace(/\*\*/g, "")}</strong> : line.split(/(\[[a-z0-9]+(?:-[a-z0-9]+)*\]|\*\*[^*]+\*\*)/g).map((part, i) => {
               const cite = part.match(/^\[([a-z0-9-]+)\]$/)
               if (cite) {
                 const r = recipes.get(cite[1])

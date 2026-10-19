@@ -77,6 +77,7 @@ def score(case: dict, r: ChatResult, kitchen: MemoryKitchen, store) -> dict:
             set(e.get("pantry_lacks", [])) & pantry
         )
     known = store.get(r.cited)
+    flagged_known = store.get(r.flagged) if r.flagged else {}
     profile = kitchen.profile()
     allowed = set(e.get("allow_flagged", []))
     return {
@@ -100,6 +101,7 @@ def score(case: dict, r: ChatResult, kitchen: MemoryKitchen, store) -> dict:
             if rid in known and rid not in allowed and recipe_problems(known[rid], profile)
         ],  # fmt: skip
         "made_up_cites": [rid for rid in r.cited if rid not in known],
+        "blocked_unknown_cites": [rid for rid in r.flagged if rid not in flagged_known],
         "tools": called,
         "llm_calls": r.usage.llm_calls,
         "tool_calls": r.usage.tool_calls,
@@ -143,6 +145,7 @@ def summarise(rows: list[dict]) -> dict:
         "failed": len(rows) - len(ok),
         "unsafe_cites": sum(len(r["unsafe_cites"]) for r in ok),
         "made_up_cites": sum(len(r["made_up_cites"]) for r in ok),
+        "blocked_unknown_cites": sum(len(r.get("blocked_unknown_cites", [])) for r in ok),
         "tools_ok": share(ok, "tools_ok"),
         "pantry_ok": share(ok, "pantry_ok"),
         "cite_ok": share(ok, "cite_ok"),
@@ -182,6 +185,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"| Turns answered | {s['cases'] - s['failed']} of {s['cases']} |",
         f"| Cited recipes breaking a hard rule | {s['unsafe_cites']} |",
         f"| Cited recipe ids that do not exist | {s['made_up_cites']} |",
+        f"| Unknown citation attempts blocked | {s['blocked_unknown_cites']} |",
         f"| Right tools | {pct(s['tools_ok'])} ({by_kind}) |",
         f"| Pantry left as asked | {pct(s['pantry_ok'])} |",
         f"| Recommended a recipe when asked | {pct(s['cite_ok'])} |",

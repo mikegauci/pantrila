@@ -39,7 +39,7 @@ from pantrio.swaps import Swap, evaluate_swap, swap_options
 MAX_TOOL_ROUNDS = 4
 SEARCH_LIMIT = 6
 MAX_HISTORY = 20  # messages kept from earlier turns
-CITED = re.compile(r"\[([a-z0-9]+(?:-[a-z0-9]+)+)\]")
+CITED = re.compile(r"\[([a-z0-9]+(?:-[a-z0-9]+)*)\]")
 
 
 # --- Tools the model sees ------------------------------------------------------------------
@@ -142,6 +142,13 @@ from tools.
 finds nothing close) or asks for their own version, write it with write_recipe, then show it: \
 the ingredients with amounts and the method. Give it no id in square brackets. Pass on any \
 rule problem or unchecked ingredient the tool reports.
+- Choosing existing versus new: "do you have a recipe for X?" means search the corpus. If a \
+matching dish is returned, cite it; do not rewrite it with write_recipe. A safe variation of \
+the same dish counts as a match even when its title includes an extra ingredient. Only create \
+a different version when the person explicitly asks for one. For full ingredients and method, \
+call scale_recipe at the returned number of servings. If the person asks you to \
+give them a recipe and search finds only different dishes (brownies are not a chocolate cake), \
+call write_recipe in this turn. Do not ask permission or merely offer to write it later.
 - Safety: search_recipes already removes recipes that break the person's allergies, diets, \
 excluded foods and time limit. Other tools report problems; pass them on plainly. Never say a \
 recipe or swap is safe for an allergy unless a tool said so.
@@ -326,7 +333,11 @@ class Assistant:
             for draft, problems in zip(s.get("drafts", []), draft_problems, strict=True)
             if problems
         ]
-        text = s["text"]
+        # Unknown IDs must never survive as citations, even when the model invents one.
+        text = CITED.sub(
+            lambda match: match.group(0) if match.group(1) in recipes else "(unverified recipe)",
+            s["text"],
+        )
         if notes:
             text += "\n\nNote from Pantrio: " + " ".join(notes)
         return {"text": text, "flagged": flagged, "draft_problems": draft_problems}
@@ -364,7 +375,11 @@ class Assistant:
         ids = self.store.search(a.query, filters, SEARCH_LIMIT)
         recipes = self.store.get(ids)
         pantry = set(self.kitchen.profile().pantry)
-        lines = [recipe_line(recipes[rid], pantry) for rid in ids if rid in recipes]
+        lines = [
+            recipe_line(recipes[rid], pantry) + f" | {recipes[rid].servings} servings"
+            for rid in ids
+            if rid in recipes
+        ]
         return "\n".join(lines) or "no recipes match"
 
     def _check_pantry(self, a: CheckPantryArgs, p: UserProfile) -> str:

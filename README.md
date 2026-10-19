@@ -21,7 +21,7 @@ cheapest model that passes the evals. Each figure links to the committed report 
 |---|---|---|---|---|
 | [Recipe search](evals/reports/retrieval-2026-10-15T195536Z.md) | 65 labelled queries, 300 recipes | hybrid recall@10 **0.843** (vector 0.811, full text 0.770), MRR **0.922**, 0 filter violations | embeddings only | 0.57 s / 0.73 s |
 | [Meal planner](evals/reports/planner-2026-10-16T084243Z.md) | 16 diet and allergy profiles, 1 to 7 days | **0 hard violations**, 13/16 plans meet every target, protein days 94%, pantry use 94% | **$0.023** per plan | 19 s / 84 s |
-| [Cooking assistant](evals/reports/assistant-2026-10-19T130624Z.md) | 28 single-turn cases | right tools **96.4%**, pantry edits as asked 100%, expected drafts 4/4, **0** missing draft warnings or unsafe/made-up citations | **$0.0031** per turn | 4.7 s / 8.3 s |
+| [Cooking assistant](evals/reports/assistant-2026-10-19T132325Z.md) | 28 single-turn cases | right tools **100%**, pantry edits as asked 100%, expected draft decisions 3/4, **0** missing draft warnings or unsafe/made-up citations | **$0.0037** per turn | 4.7 s / 8.0 s |
 | [Recipe import](evals/reports/import-2026-10-16T185930Z.md) | 12 labelled recipe pages (JSON-LD, blog text, no recipe, prompt injection) | **0** missed allergens, food matching 99%, servings 100%, injection ignored | **$0.006** per import | 6.5 s / 11.5 s |
 
 - Hybrid search beats either retriever alone. It gains most on allergen queries (0.875
@@ -221,6 +221,10 @@ The paid evals are a manual GitHub Actions workflow.
 | `web/` | Next.js app ([`web/DESIGN_SYSTEM.md`](web/DESIGN_SYSTEM.md)) |
 
 ## Limitations
+
+- The assistant can choose a new draft even when a related corpus recipe exists. In the
+  latest 28-case run, draft/corpus decisions passed 3/4 cases and existing-recipe citations
+  appeared in 9/11 expected cases. Safety warnings are enforced separately in code.
 
 - High-protein, low-energy profiles (`cutting`) often miss the protein minimum. The corpus
   has few lean, protein-dense dishes, so retrieval can't fix it; more recipes would.

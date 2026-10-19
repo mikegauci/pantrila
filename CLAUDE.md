@@ -38,9 +38,11 @@ draft to the cookbook form. The final guard independently computes structured dr
 including unchecked ingredients, and the UI renders them beside each save action. Saved
 chats refresh these warnings too. The evaluator checks rule warnings, not allergen-name
 mentions. Before/after 28-case reports: `assistant-2026-10-19T130451Z` and
-`assistant-2026-10-19T130624Z`; after: 0 unsafe/made-up citations, 0 missing draft warnings,
-100% expected drafting, $0.00312/turn, p50 4.7s/p95 8.3s. Model variability remains (96.4%
-expected tools in both runs). The original stash is retained as a recovery backup.
+`assistant-2026-10-19T132325Z`; after: 0 unsafe/made-up citations, 0 missing draft warnings,
+100% expected tools, 3/4 expected drafting decisions, $0.00375/turn, p50 4.7s/p95 8.0s.
+Existing-recipe citation coverage was 9/11 (before 11/11), so draft/corpus selection remains
+a model-quality limitation. Intermediate reports are retained. Unknown IDs are now blocked
+as citations and tracked as blocked attempts. All 8 paid live gates passed. The original stash is retained as a recovery backup.
 
 Review safety/data bounds: saved chats refresh cited cards and expose current-profile warnings.
 Concurrent chat writes compare the original history and return 409 on conflict; messages retain
