@@ -6,10 +6,10 @@ import math
 from collections.abc import Collection, Sequence
 
 
-def recall_at_k(ranked: Sequence[str], relevant: Collection[str], k: int) -> float:
+def normalized_recall_at_k(ranked: Sequence[str], relevant: Collection[str], k: int) -> float:
     """Share of relevant recipes found in the top k, capped so a perfect top k scores 1.
 
-    Denominator is min(k, |relevant|): when a query has 12 relevant recipes, recall@5 asks
+    Denominator is min(k, |relevant|). With 12 relevant recipes, normalized recall@5 asks
     "are all 5 results relevant?", not "did we find all 12 in 5 slots?".
     """
     if not relevant:

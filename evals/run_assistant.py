@@ -3,7 +3,7 @@
 Per case: whether the expected tools ran (and none ran for plain cooking questions), whether the
 pantry ended up as asked, whether a recipe was recommended when one should be, whether the
 assistant wrote its own recipe (a draft) exactly when it should, drafts that break the
-person's rules without the reply naming the problem (must be 0), recipes cited
+person's rules without structured warnings (must be 0), recipes cited
 that break the person's hard rules (must be 0; the guard notes them, but the model should not
 cite them) or do not exist (must be 0), tool calls, tokens, cost and latency. Pantries live in
 memory, so the eval never writes to the database. Writes a report under evals/reports/; also
@@ -302,6 +302,8 @@ def main() -> None:
     if os.environ.get("LANGSMITH_API_KEY"):
         upload_to_langsmith(rows, meta)
 
+    if summary["failed"]:
+        raise SystemExit("some assistant cases failed to complete; inspect the report")
     if summary["unsafe_cites"] or summary["made_up_cites"]:
         raise SystemExit("the assistant cited unsafe or made-up recipes")
     if summary["unwarned_drafts"]:

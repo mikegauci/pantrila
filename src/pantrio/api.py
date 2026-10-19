@@ -29,39 +29,76 @@ import json
 import logging
 import queue
 import threading
-from collections.abc import Callable, Iterable, Iterator
-from contextlib import AbstractContextManager, asynccontextmanager, contextmanager
-from dataclasses import dataclass
+from collections.abc import Callable, Iterator
+from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from datetime import time as dtime
-from typing import Annotated, Any, Literal, Protocol
+from typing import Annotated, Any
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
-from pydantic import BaseModel, Field
 
 from pantrio import config
+from pantrio.api_models import (
+    AvatarIn,
+    ChatMessage,
+    ChatReply,
+    ChatRequest,
+    ChatThreadSummary,
+    ChatThreadView,
+    CookbookCard,
+    CookbookDetail,
+    CookbookPreview,
+    EstimateRequest,
+    EstimateView,
+    FoodView,
+    ImportView,
+    LimitsView,
+    LinkImport,
+    Me,
+    Meta,
+    PantryAdd,
+    PantryItemView,
+    PhotoImport,
+    PlanView,
+    RecipeDetail,
+    RecipeList,
+    SwapList,
+    ToolCallView,
+    UsageEventView,
+    UsageView,
+)
+from pantrio.api_views import (
+    cookbook_card,
+    cookbook_detail,
+    food_name,
+    plan_report,
+    plan_view,
+    recipe_card,
+    recipe_detail,
+    swap_view,
+)
 from pantrio.assistant import Assistant, draft_warnings
 from pantrio.auth import AuthError, User, verifier
-from pantrio.chats import Chats, SavedThread, title_for
-from pantrio.constraints import day_nutrition, recipe_problems
+from pantrio.backend import (
+    Backend,
+    DbBackend,
+    Session,
+)
+from pantrio.chats import SavedThread, title_for
 from pantrio.cookbook import (
-    Cookbook,
     CookbookError,
     CookbookFull,
     CookbookRecipeIn,
-    Derived,
-    LineView,
     SavedRecipe,
-    Source,
     derive,
     problems_for,
 )
 from pantrio.foods import UnitError, load_foods
 from pantrio.grocery import grocery_list
 from pantrio.operations import EmbeddingUsage, PaidOperation, daily_cap
-from pantrio.pantry import Kitchen, UnknownFood, make_item, resolve_food
+from pantrio.pantry import UnknownFood, make_item, resolve_food
 from pantrio.photos import (
     Dish,
     PhotoStore,
@@ -69,526 +106,32 @@ from pantrio.photos import (
     avatar_path,
     cookbook_path,
     generate,
-    photo_store,
     public_url,
     to_avatar_webp,
 )
-from pantrio.planner import Planner, PlanningError, RecipeStore, Usage
+from pantrio.planner import Planner, PlanningError, Usage
 from pantrio.recipe_import import (
-    MAX_IMAGES,
     Importer,
     ImportFailed,
-    NamedEstimate,
     check_image,
 )
-from pantrio.records import Records, SavedPlan
+from pantrio.records import Records
 from pantrio.request_limits import RequestSizeLimit
 from pantrio.schema import (
     Allergen,
     DietTag,
     GroceryList,
     MealType,
-    NutritionFacts,
-    NutritionTargets,
     Recipe,
     Unit,
     UserProfile,
 )
 from pantrio.search import SearchFilters
-from pantrio.swaps import Swap, evaluate_swap, swap_options
+from pantrio.swaps import evaluate_swap, swap_options
 
 log = logging.getLogger("pantrio.api")
 
-MAX_MESSAGE_CHARS = 2000
 MAX_CHAT_HISTORY = 20
-
-
-# --- Backends ---------------------------------------------------------------------------------
-
-
-class Catalog(RecipeStore, Protocol):
-    def browse(self, filters: SearchFilters, limit: int) -> list[str]: ...
-
-    def photos(self, ids: Iterable[str]) -> dict[str, str]:
-        """Photo paths by recipe id; recipes without a photo are left out."""
-        ...
-
-
-@dataclass
-class Session:
-    """Everything one request needs, scoped to one user."""
-
-    store: Catalog
-    kitchen: Kitchen
-    records: Records
-    cookbook: Cookbook
-    chats: Chats
-
-
-class Backend(Protocol):
-    client: Any  # OpenAI client, or None for the default
-    photos: PhotoStore | None  # None: photo generation is off (no Storage key)
-
-    def session(self, user_id: str) -> AbstractContextManager[Session]: ...
-
-    def close(self) -> None: ...
-
-
-class DbBackend:
-    """Postgres through a small connection pool; one connection per request."""
-
-    def __init__(self, url: str, max_size: int = 8):
-        from psycopg_pool import ConnectionPool
-
-        from pantrio.search import openai_query_embedder
-
-        self.pool = ConnectionPool(url, min_size=1, max_size=max_size,
-                                   kwargs={"autocommit": True}, open=True)  # fmt: skip
-        self.embed_query = openai_query_embedder(config.embed_model())
-        self.client = None
-        self.photos = photo_store()
-
-    @contextmanager
-    def session(self, user_id: str) -> Iterator[Session]:
-        from pantrio.chats import DbChats
-        from pantrio.cookbook import DbCookbook
-        from pantrio.pantry import DbKitchen
-        from pantrio.records import DbRecords
-
-        yield Session(
-            PooledCatalog(self.pool, self.embed_query),
-            PooledRepository(self.pool, DbKitchen, user_id),
-            PooledRepository(self.pool, DbRecords, user_id),
-            PooledRepository(self.pool, DbCookbook, user_id),
-            PooledRepository(self.pool, DbChats, user_id),
-        )
-
-    def close(self) -> None:
-        self.pool.close()
-        if self.photos is not None:
-            self.photos.close()
-
-
-class PooledRepository:
-    """Borrow a connection for one repository method, never for an external call."""
-
-    def __init__(self, pool, factory, *args):
-        self.pool, self.factory, self.args = pool, factory, args
-
-    def __getattr__(self, name):
-        def call(*args, **kwargs):
-            with self.pool.connection() as conn:
-                return getattr(self.factory(conn, *self.args), name)(*args, **kwargs)
-
-        return call
-
-
-class PooledCatalog(PooledRepository):
-    def __init__(self, pool, embed_query):
-        from pantrio.planner import DbStore
-
-        super().__init__(pool, DbStore, embed_query)
-        self.embed_query, self.embed_tokens = embed_query, 0
-
-    def search(self, query, filters, limit):
-        from pantrio.search import search
-
-        # Embedding I/O happens before acquiring a database connection.
-        vector, tokens = self.embed_query(query)
-        self.embed_tokens += tokens
-        with self.pool.connection() as conn:
-            return search(conn, query, filters, limit=limit, embed_query=lambda _: (vector, 0)).ids
-
-
-# --- Response models ----------------------------------------------------------------------
-
-
-class RecipeCard(BaseModel):
-    id: str
-    title: str
-    summary: str
-    cuisine: str
-    meal_types: list[MealType]
-    diet_tags: list[DietTag]
-    allergens: list[Allergen]
-    total_minutes: int
-    servings: int
-    nutrition: NutritionFacts
-    ingredient_count: int
-    pantry_foods: list[str] = Field(description="Foods from the person's pantry it uses.")
-    problems: list[str] = Field(description="Hard rules it breaks for the person; empty if none.")
-    photo_url: str | None = Field(default=None, description="4:3 photo; none yet if null.")
-
-
-class IngredientView(BaseModel):
-    name: str
-    food: str
-    quantity: float
-    unit: Unit
-    grams: float
-    in_pantry: bool
-
-
-class RecipeDetail(RecipeCard):
-    ingredients: list[IngredientView]
-    steps: list[str]
-
-
-class RecipeList(BaseModel):
-    query: str
-    rules: SearchFilters = Field(description="Filters applied, the person's rules included.")
-    recipes: list[RecipeCard]
-
-
-class SwapView(BaseModel):
-    food: str
-    replacement: str
-    safe: bool
-    problems: list[str]
-    added_allergens: list[Allergen]
-    lost_diets: list[DietTag]
-    kcal_change: float
-    protein_change: float
-    nutrition: NutritionFacts
-
-
-class SwapList(BaseModel):
-    recipe_id: str
-    food: str
-    swaps: list[SwapView]
-
-
-class FoodView(BaseModel):
-    key: str
-    name: str
-    aisle: str
-
-
-class PantryItemView(FoodView):
-    quantity: float | None
-    unit: Unit | None
-    grams: float | None
-
-
-class PantryAdd(BaseModel):
-    food: str = Field(min_length=1, max_length=80)
-    quantity: float | None = Field(default=None, gt=0)
-    unit: Unit | None = None
-
-
-class Meta(BaseModel):
-    allergens: list[Allergen]
-    diets: list[DietTag]
-    meal_types: list[MealType]
-    units: list[Unit]
-    cuisines: list[str]
-
-
-class LimitsView(BaseModel):
-    plans_per_day: int
-    plans_left: int
-    chats_per_day: int
-    chats_left: int
-    imports_per_day: int
-    imports_left: int
-    photos_per_day: int
-    photos_left: int
-
-
-class Me(BaseModel):
-    id: str
-    email: str | None
-    anonymous: bool
-    avatar_url: str | None = Field(description="Uploaded profile picture; null: show the emoji.")
-    limits: LimitsView
-
-
-class PlanMealView(BaseModel):
-    meal_type: MealType
-    portions: float
-    recipe: RecipeCard
-
-
-class PlanDayView(BaseModel):
-    day: int
-    meals: list[PlanMealView]
-    nutrition: NutritionFacts = Field(description="Per person, at the planned portions.")
-
-
-class PlanProblem(BaseModel):
-    day: int
-    meal_type: MealType
-    recipe_id: str
-    message: str
-
-
-class PlanView(BaseModel):
-    id: int
-    created_at: datetime
-    days: list[PlanDayView]
-    notes: str
-    targets: NutritionTargets
-    problems: list[PlanProblem] = Field(
-        description="Meals that break the person's current hard rules (e.g. a new allergy)."
-    )
-    report: dict = Field(description="Planner metrics: warnings, repairs, cost, latency, path.")
-
-
-class ChatRequest(BaseModel):
-    message: str = Field(min_length=1, max_length=MAX_MESSAGE_CHARS)
-    thread_id: int | None = Field(default=None, description="Thread to continue; none starts one.")
-
-
-class ToolCallView(BaseModel):
-    name: str
-    arguments: dict
-    output: str
-
-
-class ChatReply(BaseModel):
-    thread_id: int
-    text: str
-    cited: list[RecipeCard]
-    flagged: list[str]
-    tool_calls: list[ToolCallView]
-    pantry_changed: bool
-    cost_usd: float | None
-    latency_ms: float
-    profile_problems: list[str] = Field(default_factory=list)
-    draft_problems: list[list[str]] = Field(default_factory=list)
-    drafts: list[CookbookRecipeIn] = Field(
-        default=[], description="Recipes the assistant wrote, for the cookbook's review form."
-    )
-
-
-class ChatMessage(BaseModel):
-    role: Literal["user", "assistant"]
-    text: str
-    reply: ChatReply | None = None
-
-
-class ChatThreadSummary(BaseModel):
-    id: int
-    title: str
-    messages: int
-    updated_at: datetime
-
-
-class ChatThreadView(BaseModel):
-    id: int
-    title: str
-    messages: list[ChatMessage]
-    updated_at: datetime
-
-
-class CookbookCard(BaseModel):
-    id: int
-    title: str
-    summary: str
-    cuisine: str
-    meal_types: list[MealType]
-    total_minutes: int
-    servings: int
-    source: Source
-    source_url: str | None
-    created_at: datetime
-    updated_at: datetime
-    ingredient_count: int
-    # Derived in code; empty with `invalid` set when the stored lines no longer check out
-    # (e.g. a food was removed from the ingredient table).
-    nutrition: NutritionFacts | None
-    allergens: list[Allergen]
-    diet_tags: list[DietTag]
-    estimated: bool
-    invalid: list[str]
-    pantry_foods: list[str]
-    problems: list[str] = Field(description="Hard rules it breaks for the person; empty if none.")
-    photo_url: str | None = Field(default=None, description="Generated 4:3 photo, if any.")
-
-
-class CookbookLine(LineView):
-    in_pantry: bool
-
-
-class CookbookDetail(CookbookCard):
-    ingredients: list[CookbookLine]
-    steps: list[str]
-    recipe: CookbookRecipeIn = Field(description="As stored, for the edit form.")
-
-
-class CookbookPreview(BaseModel):
-    ingredients: list[LineView]
-    nutrition: NutritionFacts
-    allergens: list[Allergen]
-    diet_tags: list[DietTag]
-    estimated: bool
-    problems: list[str]
-
-
-class LinkImport(BaseModel):
-    url: str = Field(min_length=4, max_length=2000)
-
-
-class PhotoImport(BaseModel):
-    images: list[str] = Field(
-        min_length=1, max_length=MAX_IMAGES, description="Data URLs: JPEG, PNG or WebP, < 4 MB."
-    )
-
-
-class AvatarIn(BaseModel):
-    image: str = Field(description="Data URL: JPEG, PNG or WebP, < 4 MB.")
-
-
-class EstimateRequest(BaseModel):
-    names: list[Annotated[str, Field(min_length=1, max_length=120)]] = Field(
-        min_length=1, max_length=10
-    )
-
-
-class ImportView(BaseModel):
-    draft: CookbookRecipeIn
-    notes: list[str] = Field(description="What to check or fix before saving.")
-    cost_usd: float | None
-    latency_ms: float
-
-
-class EstimateView(BaseModel):
-    estimates: list[NamedEstimate]
-    cost_usd: float | None
-
-
-class UsageEventView(BaseModel):
-    kind: str
-    model: str
-    created_at: datetime
-    latency_ms: int
-    llm_calls: int
-    tool_calls: int
-    input_tokens: int
-    output_tokens: int
-    cost_usd: float | None
-    ok: bool
-
-
-class UsageView(BaseModel):
-    events: list[UsageEventView]
-    limits: LimitsView
-
-
-# --- Views --------------------------------------------------------------------------------
-
-
-def food_name(key: str) -> str:
-    return key.replace("_", " ")
-
-
-def problem_messages(r: Recipe, profile: UserProfile) -> list[str]:
-    return [msg.removeprefix(f"{r.id} ") for _, msg in recipe_problems(r, profile)]
-
-
-def recipe_card(r: Recipe, profile: UserProfile, photo: str | None = None) -> RecipeCard:
-    return RecipeCard(
-        **r.model_dump(include=set(RecipeCard.model_fields) & set(Recipe.model_fields)),
-        ingredient_count=len(r.ingredients),
-        pantry_foods=sorted(r.foods & set(profile.pantry)),
-        problems=problem_messages(r, profile),
-        photo_url=public_url(photo),
-    )
-
-
-def recipe_detail(r: Recipe, profile: UserProfile, photo: str | None = None) -> RecipeDetail:
-    pantry = set(profile.pantry)
-    return RecipeDetail(
-        **recipe_card(r, profile, photo).model_dump(),
-        ingredients=[IngredientView(**i.model_dump(), in_pantry=i.food in pantry)
-                     for i in r.ingredients],
-        steps=r.steps,
-    )  # fmt: skip
-
-
-def swap_view(s: Swap) -> SwapView:
-    return SwapView(
-        food=s.food, replacement=s.replacement, safe=s.safe, problems=list(s.problems),
-        added_allergens=sorted(s.added_allergens), lost_diets=sorted(s.lost_diets),
-        kcal_change=s.kcal_change, protein_change=s.protein_change, nutrition=s.recipe.nutrition,
-    )  # fmt: skip
-
-
-def cookbook_detail(saved: SavedRecipe, profile: UserProfile) -> CookbookDetail:
-    r, pantry = saved.recipe, set(profile.pantry)
-    try:
-        d: Derived | None = derive(r)
-        invalid: list[str] = []
-    except CookbookError as exc:
-        d, invalid = None, exc.problems
-    lines = d.ingredients if d else [LineView(**i.model_dump(), grams=0) for i in r.ingredients]
-    return CookbookDetail(
-        id=saved.id, title=r.title, summary=r.summary, cuisine=r.cuisine,
-        meal_types=r.meal_types, total_minutes=r.total_minutes, servings=r.servings,
-        source=r.source, source_url=r.source_url, created_at=saved.created_at,
-        updated_at=saved.updated_at, ingredient_count=len(r.ingredients),
-        nutrition=d.nutrition if d else None, allergens=d.allergens if d else [],
-        diet_tags=d.diet_tags if d else [], estimated=d.estimated if d else False,
-        invalid=invalid, pantry_foods=sorted(set(d.foods) & pantry) if d else [],
-        problems=problems_for(r, d, profile) if d else [],
-        photo_url=public_url(saved.photo_path),
-        ingredients=[CookbookLine(**line.model_dump(), in_pantry=line.food in pantry)
-                     for line in lines],
-        steps=r.steps, recipe=r,
-    )  # fmt: skip
-
-
-def cookbook_card(saved: SavedRecipe, profile: UserProfile) -> CookbookCard:
-    detail = cookbook_detail(saved, profile)
-    return CookbookCard(**detail.model_dump(include=set(CookbookCard.model_fields)))
-
-
-def plan_view(saved: SavedPlan, store: Catalog, profile: UserProfile) -> PlanView:
-    ids = {m.recipe_id for _, m in saved.plan.meals}
-    recipes, photos = store.get(ids), store.photos(ids)
-    days, problems = [], []
-    for day in saved.plan.days:
-        meals = []
-        for m in day.meals:
-            r = recipes.get(m.recipe_id)
-            if r is None:  # removed from the corpus since; never show it
-                problems.append(
-                    PlanProblem(
-                        day=day.day,
-                        meal_type=m.meal_type,
-                        recipe_id=m.recipe_id,
-                        message="is no longer in Pantrio's recipes",
-                    )
-                )
-                continue
-            problems += [
-                PlanProblem(day=day.day, meal_type=m.meal_type, recipe_id=r.id, message=msg)
-                for msg in problem_messages(r, profile)
-            ]
-            card = recipe_card(r, profile, photos.get(r.id))
-            meals.append(PlanMealView(meal_type=m.meal_type, portions=m.portions, recipe=card))
-        days.append(PlanDayView(day=day.day, meals=meals, nutrition=day_nutrition(day, recipes)))
-    return PlanView(id=saved.id, created_at=saved.created_at, days=days, notes=saved.plan.notes,
-                    targets=profile.targets, problems=problems, report=saved.report)  # fmt: skip
-
-
-def plan_report(result, model: str) -> dict:
-    u = result.usage
-    return {
-        "model": model,
-        "warnings": [str(v) for v in result.warnings],
-        "first_draft_problems": [str(v) for v in result.first_draft_violations],
-        "repairs": result.repairs,
-        "fallbacks": result.fallbacks,
-        "pantry_use": round(result.pantry_use, 3),
-        "path": result.path,
-        "llm_calls": u.llm_calls,
-        "tool_calls": u.tool_calls,
-        "input_tokens": u.input_tokens,
-        "output_tokens": u.output_tokens,
-        "cost_usd": u.cost(),
-        "latency_ms": round(result.latency_ms),
-    }
 
 
 def today_start() -> datetime:
@@ -1047,7 +590,14 @@ def create_app(
         threading.Thread(target=work, daemon=True).start()
 
         def stream() -> Iterator[str]:
-            while (item := events.get()) is not None:
+            while True:
+                try:
+                    item = events.get(timeout=15)
+                except queue.Empty:
+                    yield ": keep-alive\n\n"
+                    continue
+                if item is None:
+                    return
                 kind, data = item
                 yield f"event: {kind}\ndata: {json.dumps(data)}\n\n"
 

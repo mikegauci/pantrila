@@ -165,23 +165,26 @@ function LineRow({
 }
 
 function Preview({ recipe }: { recipe: CookbookRecipeIn }) {
-  const [preview, setPreview] = useState<CookbookPreview | null>(null)
+  const [checked, setChecked] = useState<{ key: string; preview: CookbookPreview } | null>(null)
   const [problems, setProblems] = useState<string[]>([])
   const { data: profile } = useProfile()
   const body = JSON.stringify(recipe)
+  const rules = JSON.stringify(profile)
+  const key = `${body}:${rules}`
+  const preview = checked?.key === key ? checked.preview : null
 
   useEffect(() => {
     let live = true
     const t = setTimeout(async () => {
       try {
         const p = await send<CookbookPreview>("/me/recipes/preview", "POST", JSON.parse(body))
-        if (live) { setPreview(p); setProblems([]) }
+        if (live) { setChecked({ key, preview: p }); setProblems([]) }
       } catch (e) {
         if (live && e instanceof ApiError) setProblems(e.problems.length ? e.problems : [e.message])
       }
     }, 500)
     return () => { live = false; clearTimeout(t) }
-  }, [body])
+  }, [body, key])
 
   const allergies = new Set(profile?.allergies ?? [])
   return (

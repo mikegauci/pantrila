@@ -2,19 +2,21 @@ import json
 
 import pytest
 
-from evals.metrics import percentile, recall_at_k, reciprocal_rank
+from evals.metrics import normalized_recall_at_k, percentile, reciprocal_rank
 from evals.retrieval_queries import OUT, SPECS, generate, render
 from pantrio.corpus import load_briefs, load_corpus
 
 
-def test_recall_at_k_is_capped_by_k():
+def test_normalized_recall_at_k_is_capped_by_k():
     ranked = ["a", "b", "c", "d", "e", "f"]
-    assert recall_at_k(ranked, {"a", "c"}, 5) == 1.0
-    assert recall_at_k(ranked, {"a", "z"}, 5) == 0.5
+    assert normalized_recall_at_k(ranked, {"a", "c"}, 5) == 1.0
+    assert normalized_recall_at_k(ranked, {"a", "z"}, 5) == 0.5
     # 10 relevant, 5 of them in the top 5: perfect at k=5.
-    assert recall_at_k(ranked[:5], set(ranked[:5]) | {str(i) for i in range(5)}, 5) == 1.0
+    assert (
+        normalized_recall_at_k(ranked[:5], set(ranked[:5]) | {str(i) for i in range(5)}, 5) == 1.0
+    )
     with pytest.raises(ValueError):
-        recall_at_k(ranked, set(), 5)
+        normalized_recall_at_k(ranked, set(), 5)
 
 
 def test_reciprocal_rank():
@@ -134,3 +136,9 @@ def test_import_scoring_counts_estimates_and_missed_allergens():
     # gochujang's gluten is still covered by the soy sauce, but nothing else is lost.
     assert row["lines_matched"] == 5 and row["missed_allergens"] == []
     assert row["servings_ok"] and row["time_ok"]
+
+
+def test_insights_snapshot_matches_the_selected_eval_reports():
+    from scripts.update_eval_snapshot import OUT, render_snapshot
+
+    assert OUT.read_text() == render_snapshot()

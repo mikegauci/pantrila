@@ -19,6 +19,9 @@ test("draft warnings remain visible and the reviewed recipe can be edited and sa
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname
     const now = new Date().toISOString()
+    if (path === "/me/recipes/preview" && route.request().postDataJSON().ingredients[0].quantity <= 0) {
+      return route.fulfill({ status: 422, json: { detail: "Amount must be greater than zero" } })
+    }
     if (path === "/plans/latest") return route.fulfill({ status: 404, json: {} })
     if (path === "/me/recipes" && route.request().method() === "POST") {
       saved = route.request().postDataJSON()
@@ -55,6 +58,11 @@ test("draft warnings remain visible and the reviewed recipe can be edited and sa
   await page.getByRole("button", { name: "Save “Butter cake” to My recipes" }).click()
   await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Butter cake")
   await page.getByLabel("Title", { exact: true }).fill("Family cake")
+  await expect(page.getByRole("figure", { name: "100 kcal", exact: true })).toBeVisible()
+  await page.getByRole("spinbutton", { name: "Amount for ingredient 1" }).fill("0")
+  await expect(page.getByRole("figure", { name: "100 kcal", exact: true })).toHaveCount(0)
+  await expect(page.getByText("Amount must be greater than zero", { exact: true })).toBeVisible()
+  await page.getByRole("spinbutton", { name: "Amount for ingredient 1" }).fill("30")
   await page.getByRole("button", { name: "Save to my recipes", exact: true }).click()
   await expect(page).toHaveURL(/\/recipes\/mine\/7$/)
   await expect(page.getByRole("heading", { name: "Family cake", exact: true })).toBeVisible()

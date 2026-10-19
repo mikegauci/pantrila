@@ -19,7 +19,7 @@ cheapest model that passes the evals. Each figure links to the committed report 
 
 | What | Eval set | Quality | Cost | Latency p50 / p95 |
 |---|---|---|---|---|
-| [Recipe search](evals/reports/retrieval-2026-10-15T195536Z.md) | 65 labelled queries, 300 recipes | hybrid recall@10 **0.843** (vector 0.811, full text 0.770), MRR **0.922**, 0 filter violations | embeddings only | 0.57 s / 0.73 s |
+| [Recipe search](evals/reports/retrieval-2026-10-15T195536Z.md) | 65 labelled queries, 300 recipes | hybrid normalized recall@10 **0.843** (vector 0.811, full text 0.770), MRR **0.922**, 0 filter violations | embeddings only | 0.57 s / 0.73 s |
 | [Meal planner](evals/reports/planner-2026-10-16T084243Z.md) | 16 diet and allergy profiles, 1 to 7 days | **0 hard violations**, 13/16 plans meet every target, protein days 94%, pantry use 94% | **$0.023** per plan | 19 s / 84 s |
 | [Cooking assistant](evals/reports/assistant-2026-10-19T132325Z.md) | 28 single-turn cases | right tools **100%**, pantry edits as asked 100%, expected draft decisions 3/4, **0** missing draft warnings or unsafe/made-up citations | **$0.0037** per turn | 4.7 s / 8.0 s |
 | [Recipe import](evals/reports/import-2026-10-16T185930Z.md) | 12 labelled recipe pages (JSON-LD, blog text, no recipe, prompt injection) | **0** missed allergens, food matching 99%, servings 100%, injection ignored | **$0.006** per import | 6.5 s / 11.5 s |
@@ -113,7 +113,7 @@ Written drafts are checked independently after the model answers. Rule violation
 ingredients are returned as structured warnings and displayed beside the save action.
 
 Conversations are saved as threads per user (table `chat_threads`), so each topic keeps its
-own context. The server keeps each thread's model history (the last 20 turns) and sends it
+own context. The server keeps each thread's model history (the last 20 messages) and sends it
 with the next message; the browser only says which thread it is in.
 
 | | |
@@ -155,7 +155,7 @@ with the next message; the browser only says which thread it is in.
   no bread beside a gluten-free dish), in one fixed scene so the grid looks consistent. All
   300 cost $4.15 ($0.014 each, p50 14.5 s); you can make one for your own recipes too.
   Images live in Supabase Storage; the database keeps paths only.
-- **No data retention at OpenAI.** Every Responses API call uses `store=False`, and tool
+- **Response storage disabled in requests.** Every Responses API call uses `store=False`, and tool
   loops are capped.
 
 ## Observability
@@ -215,7 +215,8 @@ The paid evals are a manual GitHub Actions workflow.
 | `src/pantrio/assistant.py`, `swaps.py`, `pantry.py`, `grocery.py` | Assistant graph and its tools |
 | `src/pantrio/cookbook.py`, `recipe_import.py` | Your own recipes: derivation, storage, import from photos and links |
 | `src/pantrio/photos.py` | Recipe photo prompt, generation and Supabase Storage |
-| `src/pantrio/api.py`, `auth.py`, `records.py`, `chats.py` | FastAPI app, Supabase token check, saved plans, usage log and chat threads |
+| `src/pantrio/api.py`, `api_models.py`, `api_views.py`, `backend.py` | FastAPI routes, HTTP models, response views and pooled persistence |
+| `src/pantrio/auth.py`, `records.py`, `chats.py`, `operations.py` | Token checks, saved records, conversations and atomic paid-operation lifecycle |
 | `supabase/migrations/` | SQL migrations (pgvector, full text, RLS) |
 | `evals/` | Eval generators, runners, committed reports |
 | `web/` | Next.js app ([`web/DESIGN_SYSTEM.md`](web/DESIGN_SYSTEM.md)) |
@@ -228,7 +229,7 @@ The paid evals are a manual GitHub Actions workflow.
 
 - High-protein, low-energy profiles (`cutting`) often miss the protein minimum. The corpus
   has few lean, protein-dense dishes, so retrieval can't fix it; more recipes would.
-- Vague queries are the weakest retrieval kind (recall@10 0.55). A query rewriter
+- Vague queries are the weakest retrieval kind (normalized recall@10 0.55). A query rewriter
   (`--parse`) exists but is off in the evals.
 - Nutrition is computed from ingredient weights and USDA averages. It is an estimate, not
   medical advice.
@@ -249,3 +250,12 @@ and recipe steps at 2,000 characters each. Chats retain the latest 200 displayed
 model context remains the latest 20 messages. Conflicting writes from two tabs return a
 retryable conflict instead of silently replacing conversation history. Saved chat recipe
 cards are checked against the current profile whenever the conversation is loaded.
+
+
+### Updating the Insights evaluation snapshot
+
+Select committed report filenames in `evals/report_selection.json`, then run
+`uv run python scripts/update_eval_snapshot.py`. Tests reject a stale generated snapshot.
+Retrieval scores use **normalized recall@k**: hits divided by `min(k, relevant_count)`, so
+these values are not standard recall over all relevant recipes. Historical reports retain
+their original labels and numbers; new runs name the normalized metric explicitly.

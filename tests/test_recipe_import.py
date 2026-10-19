@@ -287,3 +287,38 @@ def test_trickling_headers_cannot_extend_socket_deadline():
         stop.set()
         listener.close()
         thread.join(timeout=1)
+
+
+def test_pinned_fetch_falls_back_only_to_other_validated_addresses():
+    import threading
+    import time
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    from pantrio.safe_http import pinned_page
+
+    hosts = []
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            hosts.append(self.headers["Host"])
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html")
+            self.end_headers()
+            self.wfile.write(b"<html>recipe</html>")
+
+        def log_message(self, *args):
+            pass
+
+    server = HTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.handle_request, daemon=True)
+    thread.start()
+    try:
+        port = server.server_port
+        with pinned_page(
+            f"http://recipes.example:{port}/", ["127.0.0.2", "127.0.0.1"], {}, time.monotonic() + 2
+        ) as response:
+            assert b"recipe" in b"".join(response.iter_bytes())
+        assert hosts == [f"recipes.example:{port}"]
+    finally:
+        server.server_close()
+        thread.join(timeout=2)

@@ -251,7 +251,7 @@ def test_pooled_backend_does_not_hold_a_connection_during_external_work(conn, mo
 
     conn.commit()
     monkeypatch.setattr("pantrio.search.openai_query_embedder", lambda _: lambda _: ([0.0], 0))
-    monkeypatch.setattr("pantrio.api.photo_store", lambda: None)
+    monkeypatch.setattr("pantrio.backend.photo_store", lambda: None)
     backend = DbBackend(os.environ["PANTRIO_TEST_DATABASE_URL"], max_size=1)
     backend.pool.wait()
 
