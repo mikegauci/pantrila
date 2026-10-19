@@ -101,6 +101,14 @@ def test_tiktok_caption_comes_from_oembed_and_short_links_are_followed():
     assert post.handle == "cookwithsam" and post.caption.startswith("Easy pasta")
 
 
+def test_tiktok_short_link_to_somewhere_else_is_refused():
+    http = mock_http({"https://vm.tiktok.com/ZMabc/": httpx.Response(
+        302, headers={"location": "https://example.com/"}),
+        "https://example.com/": httpx.Response(200, html="<p>hi</p>")})  # fmt: skip
+    with pytest.raises(ImportFailed, match="TikTok didn't let Pantrio read this post"):
+        fetch_post("https://vm.tiktok.com/ZMabc/", http, resolve)
+
+
 @pytest.mark.parametrize(
     "response",
     [httpx.Response(403), httpx.Response(200, json={"title": ""}), httpx.Response(200, json=[])],

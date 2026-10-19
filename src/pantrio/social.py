@@ -199,6 +199,8 @@ def fetch_post(url: str, http=None, resolve: Resolver = resolve_host) -> Post:
         if platform == "tiktok":
             if is_short_link(url):
                 url, _ = recipe_import.fetch_page(url, http, resolve)
+            if detect(url) != platform:  # a short link that led somewhere else
+                raise ImportFailed(blocked)
             post_url = clean_url(url, platform)
             oembed = f"https://www.tiktok.com/oembed?url={quote(post_url, safe='')}"
             _, body = recipe_import.fetch_page(oembed, http, resolve, kinds=("application/json",))
