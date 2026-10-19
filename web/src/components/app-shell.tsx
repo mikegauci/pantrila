@@ -1,7 +1,7 @@
 "use client"
 
 import {
-  BarChart3, CalendarDays, ChefHat, House, LogOut, MessageCircle, Refrigerator, ShieldCheck,
+  BarChart3, CalendarDays, ChefHat, Compass, House, LogOut, MessageCircle, Refrigerator,
   ShoppingBasket, UserRound,
 } from "lucide-react"
 import Link from "next/link"
@@ -10,6 +10,7 @@ import { useEffect, useSyncExternalStore } from "react"
 
 import { useAuth } from "@/components/auth-provider"
 import { Logo } from "@/components/logo"
+import { TourProvider, useTour } from "@/components/tour"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel,
@@ -23,14 +24,14 @@ import { supabase } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
 
 const NAV = [
-  { href: "/", label: "Home", icon: House, mobile: true },
-  { href: "/assistant", label: "Assistant", icon: MessageCircle, mobile: true },
-  { href: "/recipes", label: "Recipes", icon: ChefHat, mobile: true },
-  { href: "/plan", label: "Meal plan", icon: CalendarDays, mobile: true },
-  { href: "/grocery", label: "Grocery list", icon: ShoppingBasket, mobile: true },
-  { href: "/pantry", label: "Pantry", icon: Refrigerator, mobile: false },
-  { href: "/insights", label: "Insights", icon: BarChart3, mobile: false },
-  { href: "/profile", label: "Profile", icon: UserRound, mobile: false },
+  { key: "home", href: "/", label: "Home", icon: House, mobile: true },
+  { key: "assistant", href: "/assistant", label: "Assistant", icon: MessageCircle, mobile: true },
+  { key: "recipes", href: "/recipes", label: "Recipes", icon: ChefHat, mobile: true },
+  { key: "plan", href: "/plan", label: "Meal plan", icon: CalendarDays, mobile: true },
+  { key: "grocery", href: "/grocery", label: "Grocery list", icon: ShoppingBasket, mobile: true },
+  { key: "pantry", href: "/pantry", label: "Pantry", icon: Refrigerator, mobile: false },
+  { key: "insights", href: "/insights", label: "Insights", icon: BarChart3, mobile: false },
+  { key: "profile", href: "/profile", label: "Profile", icon: UserRound, mobile: false },
 ]
 
 function active(pathname: string, href: string) {
@@ -45,12 +46,13 @@ function Sidebar({ pathname }: { pathname: string }) {
         <Logo className="hidden xl:flex" />
       </Link>
       <nav className="flex flex-1 flex-col gap-1" aria-label="Main">
-        {NAV.map(({ href, label, icon: Icon }) => {
+        {NAV.map(({ key, href, label, icon: Icon }) => {
           const on = active(pathname, href)
           return (
             <Link
               key={href}
               href={href}
+              data-tour={`nav-${key}`}
               aria-current={on ? "page" : undefined}
               title={label}
               className={cn(
@@ -75,12 +77,13 @@ function BottomTabs({ pathname }: { pathname: string }) {
       aria-label="Main"
       className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
     >
-      {NAV.filter((n) => n.mobile).map(({ href, label, icon: Icon }) => {
+      {NAV.filter((n) => n.mobile).map(({ key, href, label, icon: Icon }) => {
         const on = active(pathname, href)
         return (
           <Link
             key={href}
             href={href}
+            data-tour={`nav-${key}`}
             aria-current={on ? "page" : undefined}
             className={cn(
               "flex h-16 flex-col items-center justify-center gap-1 text-[11px] font-medium text-muted-foreground",
@@ -121,6 +124,7 @@ export function UserAvatar({ userId, email, size, url }: {
 
 function UserMenu({ userId, email }: { userId: string | null; email: string | null }) {
   const router = useRouter()
+  const tour = useTour()
   const { data: me } = useMe()
   const url = me?.avatar_url
   return (
@@ -144,6 +148,9 @@ function UserMenu({ userId, email }: { userId: string | null; email: string | nu
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => router.push("/insights")}>
           <BarChart3 /> Insights
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={tour.start}>
+          <Compass /> App tour
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -182,6 +189,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const title = NAV.find((n) => active(pathname, n.href))?.label ?? "Pantrio"
 
   return (
+    <TourProvider userId={ready && session ? session.user.id : null}>
     <div className="min-h-screen">
       <Sidebar pathname={pathname} />
       <div className="md:pl-[76px] xl:pl-[248px]">
@@ -202,6 +210,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </div>
       <BottomTabs pathname={pathname} />
     </div>
+    </TourProvider>
   )
 }
 

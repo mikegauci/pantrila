@@ -66,6 +66,7 @@ export default function RecipesPage() {
     <div className="grid gap-5">
       <form
         role="search"
+        data-tour="recipe-search"
         onSubmit={(e) => {
           e.preventDefault()
           setQ(text.trim())
@@ -83,7 +84,7 @@ export default function RecipesPage() {
           />
         </div>
         <Button type="submit" size="lg" className="h-12">Search</Button>
-        <Link href="/recipes/mine" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-12 bg-surface")}>
+        <Link href="/recipes/mine" data-tour="my-recipes" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-12 bg-surface")}>
           <BookOpen /> <span className="hidden sm:inline">My recipes</span>
           <span className="sr-only sm:hidden">My recipes</span>
         </Link>
@@ -123,7 +124,7 @@ export default function RecipesPage() {
             <>Showing every recipe. Ones that break your rules are marked in red.</>
           )}
         </p>
-        <label className="flex items-center gap-2 text-[13px] font-medium">
+        <label data-tour="safety-switch" className="flex items-center gap-2 text-[13px] font-medium">
           <Switch checked={safe} onCheckedChange={setSafe} /> Only what suits me
         </label>
       </div>

@@ -269,6 +269,7 @@ export default function AssistantPage() {
         </div>
 
         <form
+          data-tour="chat-composer"
           className="mt-3 flex items-end gap-2"
           onSubmit={(e) => {
             e.preventDefault()
