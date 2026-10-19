@@ -300,9 +300,7 @@ def test_pinned_fetch_falls_back_only_to_other_validated_addresses():
     body = b"<html>recipe</html>"
 
     class Handler(BaseHTTPRequestHandler):
-        # Buffer headers and body into one send. Unbuffered, the client saw EOF before the
-        # body in about 3% of loopback runs.
-        wbufsize = 8192
+        wbufsize = 8192  # one send for headers and body; split sends flake on loopback
 
         def do_GET(self):
             hosts.append(self.headers["Host"])
