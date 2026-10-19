@@ -13,10 +13,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from typing import Literal, Protocol
+from typing import Annotated, Literal, Protocol
 
 import psycopg
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, HttpUrl, field_validator, model_validator
 
 from pantrio.constraints import rule_problems
 from pantrio.foods import Food, UnitError, derive_allergens, derive_ingredient_diets, load_foods
@@ -114,9 +114,16 @@ class CookbookRecipeIn(BaseModel):
     total_minutes: int = Field(gt=0, le=24 * 60)
     servings: int = Field(gt=0, le=24)
     ingredients: list[RecipeLine] = Field(min_length=1, max_length=60)
-    steps: list[str] = Field(min_length=1, max_length=40)
+    steps: list[Annotated[str, Field(min_length=1, max_length=2000)]] = Field(
+        min_length=1, max_length=40
+    )
     source: Source = "manual"
     source_url: str | None = Field(default=None, max_length=2000)
+
+    @field_validator("source_url")
+    @classmethod
+    def valid_source_url(cls, value):
+        return str(HttpUrl(value)) if value is not None else None
 
 
 class LineView(RecipeLine):

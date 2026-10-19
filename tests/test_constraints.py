@@ -146,3 +146,14 @@ def test_pantry_use(recipes):
 
 def rule_counts(violations):
     return dict(Counter(v.rule for v in violations))
+
+
+def test_malformed_plan_is_checked_before_exponential_portion_fitting(recipes, monkeypatch):
+    oversized = plan([(D, "indian-chickpea-curry")] * 10)
+    p = profile(targets=NutritionTargets(kcal=2000))
+    monkeypatch.setattr(
+        "pantrio.constraints.itertools.product",
+        lambda *a, **kw: pytest.fail("must not enumerate malformed meals"),
+    )
+    assert fit_portions(oversized, p, recipes) is oversized
+    assert "structure" in rules(check_plan(oversized, p, recipes))

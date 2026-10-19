@@ -33,6 +33,12 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Review safety/data bounds: saved chats refresh cited cards and expose current-profile warnings.
+Concurrent chat writes compare the original history and return 409 on conflict; messages retain
+the latest 200 entries. Malformed plan structure skips portion enumeration and reaches repair.
+Profile fields, recipe steps/source URLs, uploads (24 MB), and avatar pixels are validated.
+Quota reservation migration is applied on Supabase; PR #26 passed CI and merged.
+
 Review usage hardening: migration `20261019124726_usage_reservations` adds RLS-protected
 reservations. `operations.py` reserves per-user quota and shared budget atomically before
 paid work, settles once on success/failure, and conservatively budgets unknown cost. Searches

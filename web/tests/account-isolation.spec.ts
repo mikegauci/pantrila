@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test"
 
+import { session } from "./helpers"
+
 const A = "00000000-0000-4000-8000-000000000001"
 const B = "00000000-0000-4000-8000-000000000002"
 const profile = {
@@ -9,16 +11,6 @@ const profile = {
   pantry: [], cuisines: [], notes: "",
 }
 
-function session(id: string) {
-  const exp = Math.floor(Date.now() / 1000) + 3600
-  const encode = (data: unknown) => Buffer.from(JSON.stringify(data)).toString("base64url")
-  return {
-    access_token: `${encode({ alg: "HS256" })}.${encode({ sub: id, exp })}.signature`,
-    refresh_token: `refresh-${id}`, token_type: "bearer", expires_in: 3600, expires_at: exp,
-    user: { id, aud: "authenticated", role: "authenticated", is_anonymous: true,
-      app_metadata: {}, user_metadata: {}, created_at: new Date().toISOString() },
-  }
-}
 
 test("switching accounts drops cached data and remembered chat state", async ({ page }) => {
   let signups = 0

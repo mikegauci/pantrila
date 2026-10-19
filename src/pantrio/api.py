@@ -82,6 +82,7 @@ from pantrio.recipe_import import (
     check_image,
 )
 from pantrio.records import Records, SavedPlan
+from pantrio.request_limits import RequestSizeLimit
 from pantrio.schema import (
     Allergen,
     DietTag,
@@ -353,6 +354,7 @@ class ChatReply(BaseModel):
     pantry_changed: bool
     cost_usd: float | None
     latency_ms: float
+    profile_problems: list[str] = Field(default_factory=list)
 
 
 class ChatMessage(BaseModel):
@@ -659,6 +661,7 @@ def create_app(
         app.state.backend.close()
 
     app = FastAPI(title="Pantrio API", version="0.4.0", lifespan=lifespan)
+    app.add_middleware(RequestSizeLimit)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=config.cors_origins(),
@@ -1065,6 +1068,31 @@ def create_app(
     def get_chat(thread_id: int, s: SessionDep) -> ChatThreadView:
         t = get_thread(s, thread_id)
         messages = [ChatMessage.model_validate(m) for m in t.messages]
+        profile = s.kitchen.profile()
+        ids = {card.id for m in messages if m.reply for card in m.reply.cited}
+        recipes, photos = s.store.get(ids), s.store.photos(ids)
+        for message in messages:
+            if message.reply is None:
+                continue
+            reply = message.reply
+            cited_ids = [card.id for card in reply.cited]
+            reply.cited = [
+                recipe_card(recipes[rid], profile, photos.get(rid))
+                for rid in cited_ids
+                if rid in recipes
+            ]
+            reply.profile_problems = [
+                f"{card.title}: {problem}" for card in reply.cited for problem in card.problems
+            ] + [f"{rid} is no longer available." for rid in cited_ids if rid not in recipes]
+            reply.flagged = list(
+                dict.fromkeys(
+                    [
+                        *[rid for rid in reply.flagged if rid not in cited_ids],
+                        *[card.id for card in reply.cited if card.problems],
+                        *[rid for rid in cited_ids if rid not in recipes],
+                    ]
+                )
+            )
         return ChatThreadView(id=t.id, title=t.title, messages=messages, updated_at=t.updated_at)
 
     @app.delete("/me/chats/{thread_id}", status_code=204)
@@ -1079,7 +1107,8 @@ def create_app(
         backend: Backend = request.app.state.backend
         model = config.model()
         bot = Assistant(s.store, s.kitchen, client=backend.client, model=model, source="api")
-        history = (thread.history if thread else [])[-MAX_CHAT_HISTORY:]
+        original_history = list(thread.history) if thread else []
+        history = original_history[-MAX_CHAT_HISTORY:]
         operation = PaidOperation(s.records, "chat", model)
         try:
             result = bot.reply(body.message, history)
@@ -1109,8 +1138,14 @@ def create_app(
         )
         asked = ChatMessage(role="user", text=body.message)
         answered = ChatMessage(role="assistant", text=reply.text, reply=reply)
-        s.chats.append(thread.id, [asked.model_dump(mode="json"), answered.model_dump(mode="json")],
-                       result.history[-MAX_CHAT_HISTORY:])  # fmt: skip
+        saved = s.chats.append(
+            thread.id,
+            [asked.model_dump(mode="json"), answered.model_dump(mode="json")],
+            result.history[-MAX_CHAT_HISTORY:],
+            expected_history=original_history,
+        )
+        if saved is None:
+            raise HTTPException(409, "This chat changed in another tab. Reload it and try again.")
         return reply
 
     return app

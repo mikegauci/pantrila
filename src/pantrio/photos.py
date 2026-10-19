@@ -130,6 +130,8 @@ def to_avatar_webp(image: bytes) -> bytes:
     from PIL import Image, ImageOps
 
     with Image.open(io.BytesIO(image)) as img:
+        if img.width * img.height > 16_000_000:
+            raise ValueError("Profile picture exceeds the pixel limit")
         img = ImageOps.fit(ImageOps.exif_transpose(img).convert("RGB"), AVATAR_SIZE,
                            Image.Resampling.LANCZOS)  # fmt: skip
         out = io.BytesIO()

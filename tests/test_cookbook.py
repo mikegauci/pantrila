@@ -106,3 +106,16 @@ def test_memory_cookbook_is_per_user_and_capped():
     with pytest.raises(CookbookFull):
         alice.add(pancakes())
     assert bob.add(pancakes())
+
+
+@pytest.mark.parametrize(
+    "url", ["not-a-url", "javascript:alert(1)", "https://bad host/", "https://example.com:bad/"]
+)
+def test_saved_source_links_must_be_valid_web_urls(url):
+    with pytest.raises(ValidationError):
+        pancakes(source_url=url)
+
+
+def test_recipe_step_length_is_bounded():
+    with pytest.raises(ValidationError):
+        pancakes(steps=["x" * 2001])
