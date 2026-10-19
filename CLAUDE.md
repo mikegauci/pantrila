@@ -33,6 +33,10 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Review hardening: recipe imports connect directly to validated IP addresses, preserving HTTPS
+hostname verification, with a ten-second overall DNS/socket deadline and bounded DNS workers.
+Regression tests cover rebinding, TLS identity, stalled DNS and trickling headers.
+
 Step 1 merged (PR #1): 300-recipe corpus, Supabase seeded and embedded, 65 labelled queries,
 hybrid recall@10 0.843, MRR 0.922 (`evals/reports/retrieval-2026-10-15T195536Z.md`).
 

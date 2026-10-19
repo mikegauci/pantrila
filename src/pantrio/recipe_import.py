@@ -21,10 +21,14 @@ import ipaddress
 import json
 import re
 import socket
+import threading
 import time
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FutureTimeout
 from dataclasses import dataclass, field
 from html.parser import HTMLParser
+from http.client import HTTPException as HTTPProtocolError
 from urllib.parse import urljoin, urlsplit
 
 from pydantic import BaseModel, Field, ValidationError
@@ -164,7 +168,7 @@ def resolve_host(host: str, port: int) -> list[str]:
     return [info[4][0] for info in infos]
 
 
-def check_url(url: str, resolve: Resolver = resolve_host) -> None:
+def check_url(url: str, resolve: Resolver = resolve_host) -> list[str]:
     """Allow only http(s) on default ports to hosts whose every address is public."""
     parts = urlsplit(url)
     if parts.scheme not in ("http", "https") or not parts.hostname:
@@ -186,6 +190,22 @@ def check_url(url: str, resolve: Resolver = resolve_host) -> None:
             raise ImportFailed("That link points to a private address.")
     if not addresses:
         raise ImportFailed(f"Could not find {parts.hostname}.")
+    return addresses
+
+
+_DNS_POOL = ThreadPoolExecutor(max_workers=4, thread_name_prefix="recipe-dns")
+_DNS_SLOTS = threading.BoundedSemaphore(4)
+
+
+def _resolve_before(resolve: Resolver, host: str, port: int, deadline: float) -> list[str]:
+    if not _DNS_SLOTS.acquire(blocking=False):
+        raise ImportFailed("Too many pages are being resolved. Try again shortly.")
+    future = _DNS_POOL.submit(resolve, host, port)
+    future.add_done_callback(lambda _: _DNS_SLOTS.release())
+    try:
+        return future.result(timeout=max(0, deadline - time.monotonic()))
+    except FutureTimeout as exc:
+        raise ImportFailed("The page took too long to load.") from exc
 
 
 def fetch_page(url: str, http=None, resolve: Resolver = resolve_host) -> tuple[str, str]:
@@ -193,11 +213,20 @@ def fetch_page(url: str, http=None, resolve: Resolver = resolve_host) -> tuple[s
     import httpx
 
     headers = {"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml"}
-    client = http or httpx.Client(timeout=FETCH_TIMEOUT_S, follow_redirects=False, headers=headers)
+    from pantrio.safe_http import pinned_page
+
+    deadline = time.monotonic() + FETCH_TIMEOUT_S
     try:
         for _ in range(MAX_REDIRECTS + 1):
-            check_url(url, resolve)
-            with client.stream("GET", url) as r:
+            addresses = check_url(url, lambda h, p: _resolve_before(resolve, h, p, deadline))
+            if time.monotonic() >= deadline:
+                raise ImportFailed("The page took too long to load.")
+            stream = (
+                http.stream("GET", url)
+                if http is not None
+                else pinned_page(url, addresses, headers, deadline)
+            )
+            with stream as r:
                 if r.is_redirect and "location" in r.headers:
                     url = urljoin(url, r.headers["location"])
                     continue
@@ -210,16 +239,15 @@ def fetch_page(url: str, http=None, resolve: Resolver = resolve_host) -> tuple[s
                     raise ImportFailed("That link is not a web page.")
                 body = bytearray()
                 for chunk in r.iter_bytes():
+                    if time.monotonic() >= deadline:
+                        raise ImportFailed("The page took too long to load.")
                     body += chunk
                     if len(body) > MAX_PAGE_BYTES:
                         break
                 return url, bytes(body[:MAX_PAGE_BYTES]).decode(r.encoding or "utf-8", "replace")
         raise ImportFailed("The link redirects too many times.")
-    except httpx.HTTPError as exc:
+    except (httpx.HTTPError, OSError, HTTPProtocolError) as exc:
         raise ImportFailed("Could not load that page.") from exc
-    finally:
-        if http is None:
-            client.close()
 
 
 # --- Reading pages ----------------------------------------------------------------------------
