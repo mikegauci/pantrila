@@ -1,15 +1,15 @@
 "use client"
 
-import { ArrowRight, CalendarDays, Refrigerator, ShoppingBasket, UserRound } from "lucide-react"
+import { ArrowRight, CalendarDays, Refrigerator, ShoppingBasket } from "lucide-react"
 import Link from "next/link"
 
-import { AiBadge, EmptyState, Panel, PanelTitle, ProblemAlert, RecipeArt, Stat } from "@/components/bits"
+import { EmptyState, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
 import { MacroRing } from "@/components/macro-ring"
 import { buttonVariants } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useAuth } from "@/components/auth-provider"
-import { label, planDayIndex, usd } from "@/lib/format"
-import { useGrocery, usePantry, usePlan, useProfile } from "@/lib/hooks"
+import { label, planDayIndex } from "@/lib/format"
+import { useGrocery, usePantry, usePlan } from "@/lib/hooks"
 
 function greeting() {
   const h = new Date().getHours()
@@ -19,14 +19,12 @@ function greeting() {
 export default function HomePage() {
   const { session } = useAuth()
   const { data: plan, isLoading } = usePlan()
-  const { data: profile } = useProfile()
   const { data: pantry } = usePantry()
   const { data: grocery } = useGrocery(1, !!plan)
   const name = session?.user.email?.split("@")[0]
 
   const dayIndex = plan ? planDayIndex(plan.created_at, plan.days.length) : 0
   const today = plan?.days[dayIndex]
-  const hasRules = profile && (profile.allergies.length || profile.diets.length || profile.targets.kcal)
 
   return (
     <div className="grid gap-5">
@@ -103,7 +101,7 @@ export default function HomePage() {
         </Panel>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-5 md:grid-cols-2">
         <Panel className="bg-orange-soft">
           <PanelTitle
             action={<Link href="/pantry" className={buttonVariants({ variant: "ghost", size: "sm" })}>Open <ArrowRight /></Link>}
@@ -156,30 +154,6 @@ export default function HomePage() {
               <ShoppingBasket className="size-5 shrink-0 text-muted-foreground" aria-hidden />
               <p className="text-muted-foreground">Your grocery list comes from your meal plan.</p>
             </div>
-          )}
-        </Panel>
-
-        <Panel className="md:col-span-2 lg:col-span-1">
-          <PanelTitle action={plan && <AiBadge>Last plan</AiBadge>}>How the plan was made</PanelTitle>
-          {plan ? (
-            <div className="grid grid-cols-2 gap-4">
-              <Stat label="Pantry foods used" value={`${Math.round(plan.report.pantry_use * 100)}%`} />
-              <Stat label="Cost to plan" value={usd(plan.report.cost_usd, 3)} />
-              <Stat label="Repairs by the model" value={plan.report.repairs} hint="after code checks" />
-              <Stat label="Targets missed" value={plan.report.warnings.length}
-                    tone={plan.report.warnings.length ? "warn" : "good"}
-                    hint={plan.report.warnings.length ? "see the plan" : "all met"} />
-            </div>
-          ) : !hasRules ? (
-            <div className="flex items-start gap-3">
-              <UserRound className="size-5 shrink-0 text-muted-foreground" aria-hidden />
-              <p>
-                Start with your <Link href="/profile" className="font-medium text-primary-text underline">profile</Link>:
-                allergies, diet and daily targets.
-              </p>
-            </div>
-          ) : (
-            <p className="text-muted-foreground">Cost, repairs and pantry use appear after your first plan.</p>
           )}
         </Panel>
       </div>
