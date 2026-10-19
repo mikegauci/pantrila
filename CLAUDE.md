@@ -97,6 +97,15 @@ images/min, so the run uses 4 workers and SDK retries (6 workers hit 429s). Prom
 generic herb bowls or salt dishes. Cookbook recipes get Generate/New/Remove photo
 (`PANTRIO_DAILY_PHOTOS`, default 5). Web uses `next/image` (Vercel Hobby: 5K transformations a
 month; `minimumCacheTTL` 31 days). No text-model prompt change, so no eval rerun.
+Assistant first (this PR): Assistant is second in the nav (sidebar and mobile tabs) and Home
+opens with an "Ask Pantrio" card (`web/src/components/ask-pantrio.tsx`: question box, starters,
+last 3 chats); it links to `/assistant?q=` (asked in a new chat) or `?thread=`. Web only.
+
+Profile picture (this PR): migration 0008 (`user_avatars`, path only; applied on Supabase), stored
+in the `recipe-photos` bucket under `avatars/<user>/` (no new bucket). The browser crops to a
+square and shrinks to JPEG; `PUT /me/avatar` re-encodes it as a 256 px WebP (`photos.to_avatar_webp`),
+`DELETE /me/avatar` removes it, `/me` carries `avatar_url`. Header and Profile page show it, else the
+emoji avatar. No model call, so no eval rerun.
 
 ## Stack
 
@@ -191,7 +200,7 @@ month; `minimumCacheTTL` 31 days). No text-model prompt change, so no eval rerun
   recipes regenerate.
 - `src/pantrio/api.py`: FastAPI app (`create_app(backend, verify)`; tests pass an in-memory
   backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
-  `/me/usage`, `/recipes` (search or browse, profile rules as filters unless `safe=false`),
+  `/me/usage`, `/me/avatar` (PUT/DELETE), `/recipes` (search or browse, profile rules as filters unless `safe=false`),
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
   `/plans/latest`, `/plans/latest/grocery`, `POST /chat` (continues `thread_id` or starts a
   thread; the server supplies the thread's history), `/me/chats` (list, get, delete),
@@ -225,7 +234,7 @@ month; `minimumCacheTTL` 31 days). No text-model prompt change, so no eval rerun
   `src/lib/api.ts`, types in `src/lib/types.ts` mirror `api.py`); Supabase is used only for
   sign-in (magic link or anonymous guest). The cookbook lives under `recipes/mine` (list,
   `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`. The assistant's
-  thread list is `src/components/chat-threads.tsx`. `RecipeArt` (`src/components/bits.tsx`)
+  thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrio.tsx`. `RecipeArt` (`src/components/bits.tsx`)
   shows the recipe photo with `next/image` (host allowed from `NEXT_PUBLIC_SUPABASE_URL` in
   `next.config.ts`) or the meal-type art when there is none. Read `web/AGENTS.md`: this Next.js differs from
   older versions (e.g. `proxy.ts` replaces middleware; check `node_modules/next/dist/docs/`).
