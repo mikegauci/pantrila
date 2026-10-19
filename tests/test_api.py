@@ -497,3 +497,43 @@ def test_cookbook_photos_need_storage(api, backend):
     rid = api.post("/me/recipes", json=TOAST).json()["id"]
     assert api.post(f"/me/recipes/{rid}/photo").status_code == 503
     assert backend.client.image_calls == []
+
+
+# --- Profile picture ---
+
+
+def avatar_data_url(size=(900, 400)) -> str:
+    return f"data:image/png;base64,{png_b64(size)}"
+
+
+def test_avatar_is_stored_as_a_square_replaced_and_removed(api, backend, photo_env):
+    from io import BytesIO
+
+    from PIL import Image
+
+    assert api.get("/me").json()["avatar_url"] is None
+    first = api.put("/me/avatar", json={"image": avatar_data_url()})
+    assert first.status_code == 200
+    url = first.json()["avatar_url"]
+    assert url.startswith("https://example.supabase.co/storage/v1/object/public/recipe-photos/"
+                          "avatars/alice/") and url.endswith(".webp")  # fmt: skip
+    (path,) = backend.photos.files
+    with Image.open(BytesIO(backend.photos.files[path])) as img:
+        assert img.format == "WEBP" and img.size == (256, 256)
+    assert api.get("/me").json()["avatar_url"] == url
+    assert api.get("/me", headers={"Authorization": "Bearer bob"}).json()["avatar_url"] is None
+
+    second = api.put("/me/avatar", json={"image": avatar_data_url()}).json()["avatar_url"]
+    assert second != url and len(backend.photos.files) == 1  # the old file is gone
+
+    gone = api.delete("/me/avatar")
+    assert gone.status_code == 200 and gone.json()["avatar_url"] is None
+    assert backend.photos.files == {}
+
+
+def test_avatar_rejects_bad_files_and_needs_storage(api, backend, photo_env):
+    assert api.put("/me/avatar", json={"image": "data:image/png;base64,AAAA"}).status_code == 422
+    assert api.put("/me/avatar", json={"image": "data:text/html;base64,AAAA"}).status_code == 422
+    assert backend.photos.files == {}
+    backend.photos = None
+    assert api.put("/me/avatar", json={"image": avatar_data_url()}).status_code == 503

@@ -24,6 +24,7 @@ Run: uv run uvicorn pantrio.api:app --env-file .env --reload
 
 from __future__ import annotations
 
+import base64
 import json
 import logging
 import queue
@@ -65,13 +66,21 @@ from pantrio.photos import (
     Dish,
     PhotoStore,
     PhotoUsage,
+    avatar_path,
     cookbook_path,
     generate,
     photo_store,
     public_url,
+    to_avatar_webp,
 )
 from pantrio.planner import Planner, PlanningError, RecipeStore
-from pantrio.recipe_import import MAX_IMAGES, Importer, ImportFailed, NamedEstimate
+from pantrio.recipe_import import (
+    MAX_IMAGES,
+    Importer,
+    ImportFailed,
+    NamedEstimate,
+    check_image,
+)
 from pantrio.records import Kind, Records, SavedPlan, UsageEvent
 from pantrio.schema import (
     Allergen,
@@ -256,6 +265,7 @@ class Me(BaseModel):
     id: str
     email: str | None
     anonymous: bool
+    avatar_url: str | None = Field(description="Uploaded profile picture; null: show the emoji.")
     limits: LimitsView
 
 
@@ -384,6 +394,10 @@ class PhotoImport(BaseModel):
     images: list[str] = Field(
         min_length=1, max_length=MAX_IMAGES, description="Data URLs: JPEG, PNG or WebP, < 4 MB."
     )
+
+
+class AvatarIn(BaseModel):
+    image: str = Field(description="Data URL: JPEG, PNG or WebP, < 4 MB.")
 
 
 class EstimateRequest(BaseModel):
@@ -661,7 +675,38 @@ def create_app(
     @app.get("/me")
     def me(user: UserDep, s: SessionDep) -> Me:
         return Me(id=user.id, email=user.email, anonymous=user.anonymous,
+                  avatar_url=public_url(s.records.avatar_path()),
                   limits=limits_view(s.records))  # fmt: skip
+
+    @app.put("/me/avatar")
+    def put_avatar(body: AvatarIn, request: Request, user: UserDep, s: SessionDep) -> Me:
+        """Replace the profile picture: any image is re-encoded as a 256 px square WebP."""
+        backend: Backend = request.app.state.backend
+        if backend.photos is None:
+            raise HTTPException(503, "Pictures are not set up on this server.")
+        try:
+            data = base64.b64decode(check_image(body.image).split(",", 1)[1])
+            webp = to_avatar_webp(data)
+        except ImportFailed as exc:
+            raise HTTPException(422, str(exc)) from exc
+        except Exception as exc:  # Pillow raises many types for a corrupt file
+            raise HTTPException(422, "That file is not a picture Pantrio can read.") from exc
+        old, path = s.records.avatar_path(), avatar_path(user.id)
+        try:
+            backend.photos.put(path, webp)
+        except Exception as exc:
+            log.exception("avatar upload failed")
+            raise HTTPException(502, "The picture could not be saved. Try again.") from exc
+        s.records.set_avatar(path)
+        drop_photo(request, old)
+        return me(user, s)
+
+    @app.delete("/me/avatar")
+    def delete_avatar(request: Request, user: UserDep, s: SessionDep) -> Me:
+        old = s.records.avatar_path()
+        s.records.set_avatar(None)
+        drop_photo(request, old)
+        return me(user, s)
 
     @app.get("/me/profile")
     def get_profile(s: SessionDep) -> UserProfile:

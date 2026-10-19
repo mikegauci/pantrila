@@ -74,6 +74,10 @@ class Records(Protocol):
         """Known cost of every user's events since a time."""
         ...
 
+    def avatar_path(self) -> str | None: ...
+
+    def set_avatar(self, path: str | None) -> None: ...
+
 
 class MemoryRecords:
     def __init__(self, user_id: str, shared: dict | None = None):
@@ -100,6 +104,16 @@ class MemoryRecords:
 
     def spend_since(self, since: datetime) -> float:
         return sum(e.cost_usd or 0.0 for _, e in self.shared["events"] if e.created_at >= since)
+
+    def avatar_path(self) -> str | None:
+        return self.shared.get("avatars", {}).get(self.user_id)
+
+    def set_avatar(self, path: str | None) -> None:
+        avatars = self.shared.setdefault("avatars", {})
+        if path is None:
+            avatars.pop(self.user_id, None)
+        else:
+            avatars[self.user_id] = path
 
 
 EVENT_COLUMNS = (
@@ -169,3 +183,20 @@ class DbRecords:
             (since,),
         ).fetchone()
         return float(row[0])
+
+    def avatar_path(self) -> str | None:
+        row = self.conn.execute(
+            "select path from user_avatars where user_id = %s", (self.user_id,)
+        ).fetchone()
+        return row[0] if row else None
+
+    def set_avatar(self, path: str | None) -> None:
+        with self.conn.transaction():
+            if path is None:
+                self.conn.execute("delete from user_avatars where user_id = %s", (self.user_id,))
+            else:
+                self.conn.execute(
+                    "insert into user_avatars (user_id, path) values (%s, %s)"
+                    " on conflict (user_id) do update set path = excluded.path, updated_at = now()",
+                    (self.user_id, path),
+                )

@@ -97,6 +97,11 @@ def cookbook_path(user_id: str) -> str:
     return f"user-recipes/{user_id}/{secrets.token_urlsafe(16)}.webp"
 
 
+def avatar_path(user_id: str) -> str:
+    """Unguessable and new on every upload, so a changed picture is never served from cache."""
+    return f"avatars/{user_id}/{secrets.token_urlsafe(16)}.webp"
+
+
 def public_url(path: str | None) -> str | None:
     base = config.supabase_url_or_none()
     if not path or not base:
@@ -113,6 +118,22 @@ def to_webp(png: bytes) -> bytes:
         img = ImageOps.fit(img.convert("RGB"), STORED_SIZE, Image.Resampling.LANCZOS)
         out = io.BytesIO()
         img.save(out, "WEBP", quality=82, method=6)
+    return out.getvalue()
+
+
+AVATAR_SIZE = (256, 256)
+
+
+def to_avatar_webp(image: bytes) -> bytes:
+    """Centre-crop to a square, resize to 256 px and encode as WebP (drops EXIF and any
+    transparency, so a re-encoded upload carries nothing but pixels)."""
+    from PIL import Image, ImageOps
+
+    with Image.open(io.BytesIO(image)) as img:
+        img = ImageOps.fit(ImageOps.exif_transpose(img).convert("RGB"), AVATAR_SIZE,
+                           Image.Resampling.LANCZOS)  # fmt: skip
+        out = io.BytesIO()
+        img.save(out, "WEBP", quality=85, method=6)
     return out.getvalue()
 
 
