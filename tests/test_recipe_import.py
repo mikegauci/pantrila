@@ -206,3 +206,84 @@ def test_estimates_gain_the_allergens_of_table_foods_the_line_names():
     paste = imported().model_dump()["ingredients"][2]  # gochujang: names no table food
     draft, notes = to_draft(imported(ingredients=[paste]), "link", None)
     assert draft.ingredients[0].estimate.allergens == ["soy"] and len(notes) == 1
+
+
+def test_fetch_pins_the_validated_address_without_a_second_dns_lookup(monkeypatch):
+    import socket
+    from unittest.mock import Mock
+
+    from pantrio.safe_http import PinnedConnection
+
+    sock = Mock()
+    sock.connect.side_effect = OSError("stop before network")
+    monkeypatch.setattr(socket, "socket", lambda *a: sock)
+    monkeypatch.setattr(socket, "getaddrinfo", Mock(side_effect=AssertionError("second DNS")))
+    with pytest.raises(ImportFailed, match="Could not load"):
+        fetch_page("http://rebind.example/", resolve=resolver(PUBLIC))
+    sock.connect.assert_called_once_with((PUBLIC, 80))
+    sock.close.assert_called()
+    # HTTPS must still authenticate the original hostname, not the pinned address.
+    import time
+
+    conn = PinnedConnection("recipes.example", 443, PUBLIC, True, time.monotonic() + 10)
+    sock.connect.side_effect = None
+    context = Mock()
+    monkeypatch.setattr("ssl.create_default_context", lambda: context)
+    try:
+        conn.connect()
+        context.wrap_socket.assert_called_once_with(
+            sock, server_hostname="recipes.example", do_handshake_on_connect=False
+        )
+        context.wrap_socket.return_value.do_handshake.assert_called_once()
+    finally:
+        conn.close()
+
+
+def test_dns_resolution_has_an_overall_deadline(monkeypatch):
+    import threading
+
+    release = threading.Event()
+    monkeypatch.setattr("pantrio.recipe_import.FETCH_TIMEOUT_S", 0.02)
+    try:
+        with pytest.raises(ImportFailed, match="too long"):
+            fetch_page("https://slow.example/", resolve=lambda *_: (release.wait(2), [PUBLIC])[1])
+    finally:
+        release.set()
+
+
+def test_trickling_headers_cannot_extend_socket_deadline():
+    import socket
+    import threading
+    import time
+    from contextlib import suppress
+
+    from pantrio.safe_http import pinned_page
+
+    listener = socket.socket()
+    listener.bind(("127.0.0.1", 0))
+    listener.listen()
+    stop = threading.Event()
+
+    def serve():
+        with listener.accept()[0] as sock, suppress(OSError):
+            sock.recv(4096)
+            sock.sendall(b"HTTP/1.1 200 OK\r\nX-Slow: ")
+            while not stop.wait(0.01):
+                sock.sendall(b"a")
+
+    thread = threading.Thread(target=serve, daemon=True)
+    thread.start()
+    start = time.monotonic()
+    try:
+        with (
+            pytest.raises((OSError, ValueError)),
+            pinned_page(
+                f"http://localhost:{listener.getsockname()[1]}/", ["127.0.0.1"], {}, start + 0.1
+            ) as response,
+        ):
+            list(response.iter_bytes())
+        assert time.monotonic() - start < 1
+    finally:
+        stop.set()
+        listener.close()
+        thread.join(timeout=1)
