@@ -29,7 +29,7 @@ export function AskPantrio() {
   }
 
   return (
-    <Panel className="bg-primary-soft">
+    <Panel className="bg-primary-soft" data-tour="ask-pantrio">
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <h2 className="text-[18px] font-semibold leading-[26px]">Ask Pantrio</h2>
         <AiBadge>Cooking assistant</AiBadge>

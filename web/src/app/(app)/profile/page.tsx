@@ -1,6 +1,6 @@
 "use client"
 
-import { Camera, Save, Trash2, X } from "lucide-react"
+import { Camera, Compass, Save, Trash2, X } from "lucide-react"
 import { useRef, useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
@@ -8,6 +8,7 @@ import { useSWRConfig } from "swr"
 import { UserAvatar } from "@/components/app-shell"
 import { useAuth } from "@/components/auth-provider"
 import { Panel, PanelTitle } from "@/components/bits"
+import { useTour } from "@/components/tour"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -30,6 +31,19 @@ const PRESETS: { name: string; patch: Partial<Profile> }[] = [
   { name: "Coeliac", patch: { diets: ["gluten_free"], allergies: ["gluten"], targets: { kcal: 2000, min_protein_g: null, max_carbs_g: null } } },
   { name: "Nut allergy, family", patch: { diets: [], allergies: ["peanuts", "tree_nuts"], targets: { kcal: 2100, min_protein_g: 80, max_carbs_g: null } } },
 ]
+
+function HelpCard() {
+  const tour = useTour()
+  return (
+    <Panel>
+      <PanelTitle>Help</PanelTitle>
+      <p className="mb-4 text-muted-foreground">A one-minute walk through the Assistant, recipes, your cookbook and the meal plan.</p>
+      <Button variant="outline" onClick={tour.start}>
+        <Compass /> Replay the tour
+      </Button>
+    </Panel>
+  )
+}
 
 function Toggle<T extends string>({ value, on, onToggle, danger }: { value: T; on: boolean; onToggle: (v: T) => void; danger?: boolean }) {
   return (
@@ -260,6 +274,8 @@ export default function ProfilePage() {
             </div>
           </div>
         </Panel>
+
+        <HelpCard />
       </div>
 
       <div className="sticky bottom-20 flex justify-end md:bottom-6">

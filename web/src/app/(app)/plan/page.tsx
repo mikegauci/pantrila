@@ -145,7 +145,7 @@ export default function PlanPage() {
             {left != null && ` ${left} of ${me?.limits.plans_per_day} plans left today.`}
           </p>
         </div>
-        <Button size="lg" onClick={generate} disabled={running || left === 0}>
+        <Button size="lg" onClick={generate} disabled={running || left === 0} data-tour="plan-generate">
           {running ? <Loader2 className="animate-spin" /> : <Sparkles />}
           {running ? "Planning…" : plan ? "Plan a new week" : "Plan my week"}
         </Button>
