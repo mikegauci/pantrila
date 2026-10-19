@@ -355,6 +355,9 @@ class ChatReply(BaseModel):
     cost_usd: float | None
     latency_ms: float
     profile_problems: list[str] = Field(default_factory=list)
+    drafts: list[CookbookRecipeIn] = Field(
+        default=[], description="Recipes the assistant wrote, for the cookbook's review form."
+    )
 
 
 class ChatMessage(BaseModel):
@@ -1133,6 +1136,7 @@ def create_app(
                 for c in result.tool_calls
             ],  # fmt: skip
             pantry_changed=any(c.name == "update_pantry" for c in result.tool_calls),
+            drafts=result.drafts,
             cost_usd=result.usage.cost(),
             latency_ms=round(result.latency_ms),
         )

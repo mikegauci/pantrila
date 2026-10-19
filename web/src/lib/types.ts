@@ -216,6 +216,7 @@ export interface ChatReply {
   pantry_changed: boolean
   cost_usd: number | null
   latency_ms: number
+  drafts: CookbookRecipeIn[]
 }
 
 export interface ChatMessage {

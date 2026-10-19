@@ -1,13 +1,13 @@
 "use client"
 
-import { ArrowLeft, Camera, Link2, PenLine, Sparkles, X } from "lucide-react"
+import { ArrowLeft, Camera, Link2, MessageCircle, PenLine, Sparkles, X } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { useSWRConfig } from "swr"
 
 import { Panel, PanelTitle } from "@/components/bits"
-import { BLANK_RECIPE, CookbookForm } from "@/components/cookbook-form"
+import { BLANK_RECIPE, CHAT_DRAFT, CookbookForm } from "@/components/cookbook-form"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { send } from "@/lib/api"
@@ -129,10 +129,32 @@ export default function NewRecipePage() {
   const [method, setMethod] = useState<Method | null>(null)
   const [draft, setDraft] = useState<CookbookRecipeIn | null>(null)
   const [result, setResult] = useState<ImportView | null>(null)
+  const [fromChat, setFromChat] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
 
   // Cache Components keeps a hidden page's state; start fresh each visit.
-  useEffect(() => () => { setMethod(null); setDraft(null); setResult(null) }, [])
+  useEffect(() => () => { setMethod(null); setDraft(null); setResult(null); setFromChat(false) }, [])
+
+  // The assistant's "Save to My recipes" leaves its recipe in sessionStorage and links here with ?from=chat.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get("from") !== "chat") return
+    window.history.replaceState(null, "", "/recipes/mine/new")
+    const stored = sessionStorage.getItem(CHAT_DRAFT)
+    sessionStorage.removeItem(CHAT_DRAFT)
+    if (!stored) return
+    let fromAssistant: CookbookRecipeIn
+    try {
+      fromAssistant = JSON.parse(stored)
+    } catch {
+      return // a broken value: show the method picker
+    }
+    // Reading sessionStorage is only possible on the client, after the first render.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setDraft(fromAssistant)
+    setMethod("manual")
+    setFromChat(true)
+  }, [])
 
   // The section under the picker is often below the fold on a phone: bring it into view.
   useEffect(() => {
@@ -141,6 +163,7 @@ export default function NewRecipePage() {
 
   const pick = (key: Method) => {
     setResult(null)
+    setFromChat(false)
     setDraft(key === "manual" ? BLANK_RECIPE : null)
     setMethod(key)
   }
@@ -196,6 +219,14 @@ export default function NewRecipePage() {
 
           {draft && (
             <>
+              {fromChat && (
+                <div className="rounded-2xl bg-yellow-soft p-4 text-[13px]">
+                  <p className="flex items-center gap-2 font-semibold">
+                    <MessageCircle className="size-4 text-[#b7860b]" aria-hidden /> From the assistant.
+                  </p>
+                  <p className="mt-1">Check the amounts; foods marked unknown need a pick or an estimate.</p>
+                </div>
+              )}
               {result && (
                 <div className="rounded-2xl bg-yellow-soft p-4 text-[13px]">
                   <p className="flex flex-wrap items-center gap-2 font-semibold">
@@ -215,7 +246,7 @@ export default function NewRecipePage() {
                   mutate("/me/recipes")
                   router.push(`/recipes/mine/${saved.id}`)
                 }}
-                onCancel={() => { setMethod(null); setDraft(null); setResult(null) }}
+                onCancel={() => { setMethod(null); setDraft(null); setResult(null); setFromChat(false) }}
               />
             </>
           )}

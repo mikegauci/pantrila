@@ -277,6 +277,29 @@ def test_chat_returns_cited_recipes_tools_and_guard_notes(api, backend):
     assert thread["messages"][1]["reply"]["flagged"] == [SALMON]
 
 
+def test_chat_returns_recipe_drafts_and_old_messages_still_load(api, backend):
+    cake = {"title": "Chocolate Cake", "summary": "", "cuisine": "", "meal_types": ["snack"],
+            "total_minutes": 60, "servings": 8, "steps": ["Mix.", "Bake."],
+            "ingredients": [{"name": "plain flour", "quantity": 200, "unit": "g"},
+                            {"name": "eggs", "quantity": 3, "unit": "piece"}]}  # fmt: skip
+    call = ResponseFunctionToolCall(type="function_call", call_id="c1", name="write_recipe",
+                                    arguments=json.dumps(cake))  # fmt: skip
+    backend.client.replies = [SimpleNamespace(output=[call], output_text="", usage=USAGE),
+                              text_reply("Here is a cake.")]  # fmt: skip
+    body = api.post("/chat", json={"message": "Chocolate cake recipe?"}).json()
+    [draft] = body["drafts"]
+    assert draft["title"] == "Chocolate Cake" and draft["source"] == "manual"
+    assert [x["food"] for x in draft["ingredients"]] == ["plain_flour", "egg"]
+    saved = api.get(f"/me/chats/{body['thread_id']}").json()["messages"][1]["reply"]
+    assert saved["drafts"] == body["drafts"]
+    assert api.post("/me/recipes", json=draft).status_code in (200, 201)
+
+    old = {k: v for k, v in body.items() if k != "drafts"}  # saved before replies had drafts
+    chats = MemoryChats("alice", backend.shared)
+    tid = chats.create("Old", [{"role": "assistant", "text": "Hi", "reply": old}], []).id
+    assert api.get(f"/me/chats/{tid}").json()["messages"][0]["reply"]["drafts"] == []
+
+
 def model_inputs(call: dict) -> list[tuple[str, str]]:
     return [(i["role"], i["content"]) for i in call["input"] if isinstance(i, dict) and "role" in i]
 

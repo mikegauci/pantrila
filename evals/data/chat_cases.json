@@ -856,5 +856,137 @@
     "expect": {
       "no_tools": true
     }
+  },
+  {
+    "id": "chocolate-cake",
+    "kind": "write",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Give me a chocolate cake recipe.",
+    "expect": {
+      "tools_all": [
+        "write_recipe"
+      ],
+      "must_draft": true
+    }
+  },
+  {
+    "id": "chocolate-cake-milk-egg-allergy",
+    "kind": "write",
+    "profile": {
+      "allergies": [
+        "milk",
+        "eggs"
+      ],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Give me a chocolate cake recipe.",
+    "expect": {
+      "tools_all": [
+        "write_recipe"
+      ],
+      "must_draft": true
+    }
+  },
+  {
+    "id": "own-lasagne",
+    "kind": "write",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Write me your own recipe for a classic beef lasagne.",
+    "expect": {
+      "tools_all": [
+        "write_recipe"
+      ],
+      "must_draft": true
+    }
+  },
+  {
+    "id": "banana-bread-from-corpus",
+    "kind": "write",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    },
+    "pantry": [],
+    "message": "Do you have a banana bread recipe?",
+    "expect": {
+      "tools_all": [
+        "search_recipes"
+      ],
+      "must_cite": true,
+      "must_draft": false
+    }
   }
 ]

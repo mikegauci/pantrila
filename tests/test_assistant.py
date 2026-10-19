@@ -60,7 +60,8 @@ def test_plain_answer_keeps_history_and_sends_the_profile(corpus, kitchen):
     assert "Allergies: fish." in call["instructions"]
     assert "Pantry: egg, spinach." in call["instructions"]
     assert {t["name"] for t in call["tools"]} == {
-        "search_recipes", "check_pantry", "update_pantry", "swap_ingredient", "scale_recipe"
+        "search_recipes", "check_pantry", "update_pantry", "swap_ingredient", "scale_recipe",
+        "write_recipe",
     }  # fmt: skip
     assert all(t["strict"] for t in TOOLS)
 
@@ -183,3 +184,57 @@ def test_update_pantry_keeps_a_food_whose_amount_cannot_be_converted(corpus, kit
     out = a.run_tool("update_pantry", json.dumps(args), kitchen.profile())
     assert out.startswith("added kale (amount not stored: kale cannot be counted in pieces")
     assert {i.food: i.grams for i in kitchen.pantry()}["kale"] is None
+
+
+def cake(*lines) -> dict:
+    return {"title": "Chocolate Cake", "summary": "A rich sponge.", "cuisine": "British",
+            "meal_types": ["snack"], "total_minutes": 60, "servings": 8,
+            "ingredients": [{"name": n, "quantity": q, "unit": u} for n, q, u in lines],
+            "steps": ["Mix.", " ", "Bake for 30 minutes."]}  # fmt: skip
+
+
+CAKE = [("plain flour", 200, "g"), ("eggs", 3, "piece"), ("butter", 150, "g"),
+        ("cocoa powder", 40, "g")]  # fmt: skip
+
+
+def test_write_recipe_resolves_foods_and_checks_the_rules(corpus):
+    kitchen = MemoryKitchen(UserProfile(allergies=[Allergen.MILK]))
+    a, _ = bot(corpus, kitchen, tool_reply("write_recipe", **cake(*CAKE)),
+               text_reply("Here is a chocolate cake."))  # fmt: skip
+    result = a.reply("Give me a chocolate cake recipe")
+    out = result.tool_calls[0].output
+    assert "Allergens found: gluten, eggs, milk." in out
+    assert "WARNING, does not suit the person: contains milk" in out
+    assert "Per serving:" in out and "suits the person" not in out
+    [draft] = result.drafts
+    assert draft.source == "manual" and draft.cuisine == "british"
+    assert draft.steps == ["Mix.", "Bake for 30 minutes."]
+    assert [x.food for x in draft.ingredients] == ["plain_flour", "egg", "butter", "cocoa_powder"]
+
+
+def test_write_recipe_leaves_unknown_foods_for_review(corpus, kitchen):
+    a, _ = bot(corpus, kitchen)
+    drafts: list = []
+    args = cake(("plain flour", 200, "g"), ("unicorn sprinkles", 1, "tbsp"), ("eggs", -1, "piece"))
+    out = a.run_tool("write_recipe", json.dumps(args), kitchen.profile(), drafts)
+    assert (
+        "Could not check for allergens or diets (not in Pantrio's table): unicorn sprinkles" in out
+    )
+    assert "suits the person" not in out and "Per serving" not in out
+    [draft] = drafts
+    sprinkles = draft.ingredients[1]
+    assert sprinkles.food is None and sprinkles.estimate is None
+    assert draft.ingredients[2].quantity == 1.0  # a bad amount becomes 1 for the person to check
+
+
+def test_write_recipe_says_when_it_suits_the_person(corpus, kitchen):
+    a, _ = bot(corpus, kitchen)
+    drafts: list = []
+    out = a.run_tool("write_recipe", json.dumps(cake(("eggs", 2, "piece"), ("spinach", 100, "g"))),
+                     kitchen.profile(), drafts)  # fmt: skip
+    assert "It suits the person's allergies, diets and excluded foods." in out
+    empty = {**cake(), "steps": []}
+    assert a.run_tool("write_recipe", json.dumps(empty), kitchen.profile(), drafts).startswith(
+        "a recipe needs"
+    )
+    assert len(drafts) == 1

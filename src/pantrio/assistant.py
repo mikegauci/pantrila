@@ -3,9 +3,11 @@
     agent -> (tools -> agent)* -> guard
 
 - agent: one Responses API call (store=False) with the person's profile in the instructions.
-- tools: search_recipes, check_pantry, update_pantry, swap_ingredient, scale_recipe. Each one is
-  plain code; the model only picks arguments. Capped at MAX_TOOL_ROUNDS, after which the model
-  must answer.
+- tools: search_recipes, check_pantry, update_pantry, swap_ingredient, scale_recipe,
+  write_recipe. Each one is plain code; the model only picks arguments. Capped at
+  MAX_TOOL_ROUNDS, after which the model must answer. write_recipe turns a recipe the model
+  wrote into a cookbook draft (foods resolved and rules checked in code) that the app offers
+  to save through the cookbook's review form.
 - guard: code checks every recipe the reply cites (as `[recipe-id]`) against the person's hard
   rules and appends a note for any that breaks one or does not exist, whatever the model said.
 """
@@ -15,7 +17,7 @@ from __future__ import annotations
 import re
 import time
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
@@ -24,10 +26,12 @@ from pydantic import BaseModel, Field, ValidationError
 
 from pantrio import config
 from pantrio.constraints import recipe_problems
-from pantrio.foods import UnitError
+from pantrio.cookbook import CookbookError, CookbookRecipeIn, RecipeLine, derive, problems_for
+from pantrio.foods import UnitError, to_grams
 from pantrio.grocery import shop_amount
 from pantrio.pantry import Kitchen, UnknownFood, item_text, make_item, resolve_food
 from pantrio.planner import RecipeStore, Usage, as_input, recipe_line
+from pantrio.recipe_import import MAX_LINES, capped_draft, draft_line
 from pantrio.schema import MealType, Recipe, Unit, UserProfile
 from pantrio.search import SearchFilters
 from pantrio.swaps import Swap, evaluate_swap, swap_options
@@ -77,6 +81,26 @@ class ScaleArgs(BaseModel):
     servings: int = Field(description="Servings wanted, 1 to 24.")
 
 
+class WrittenLine(BaseModel):
+    name: str = Field(
+        description="The food in plain words, without amount or preparation, "
+        "e.g. 'egg', 'plain flour', 'dark chocolate'."
+    )
+    quantity: float = Field(description="Amount in `unit`; greater than zero.")
+    unit: Unit
+
+
+class WriteRecipeArgs(BaseModel):
+    title: str
+    summary: str = Field(description="One or two sentences.")
+    cuisine: str = Field(description="One lowercase word, e.g. 'french'; empty if unclear.")
+    meal_types: list[MealType]
+    total_minutes: int
+    servings: int
+    ingredients: list[WrittenLine]
+    steps: list[str] = Field(description="The method as steps without numbers.")
+
+
 def _tool(name: str, args: type[BaseModel], description: str) -> dict:
     return {"type": "function", "name": name, "description": description,
             "parameters": to_strict_json_schema(args), "strict": True}  # fmt: skip
@@ -88,6 +112,7 @@ TOOL_ARGS: dict[str, type[BaseModel]] = {
     "update_pantry": UpdatePantryArgs,
     "swap_ingredient": SwapArgs,
     "scale_recipe": ScaleArgs,
+    "write_recipe": WriteRecipeArgs,
 }
 TOOLS = [
     _tool("search_recipes", SearchArgs, "Search Pantrio's recipes. Results already respect the "
@@ -99,6 +124,9 @@ TOOLS = [
           "nutrition, any allergens or diets the swap changes, and whether it suits the person."),
     _tool("scale_recipe", ScaleArgs, "A recipe's ingredients for a number of servings, with its "
           "steps and nutrition per serving."),
+    _tool("write_recipe", WriteRecipeArgs, "Write your own recipe when Pantrio's recipes do not "
+          "have what the person asked for. Code checks it against their rules and the app "
+          "offers to save it to their cookbook."),
 ]  # fmt: skip
 
 INSTRUCTIONS = """\
@@ -106,10 +134,14 @@ You are Pantrio's cooking assistant. You help one person cook from their kitchen
 recipes, check what they have, swap ingredients, scale recipes and answer cooking questions. \
 Talk to them as "you".
 
-- Recipes: only suggest recipes your tools returned in this conversation. Write each as its \
+- Recipes: suggest recipes your tools returned in this conversation first. Write each as its \
 title followed by its id in square brackets, copied exactly from the tool output, e.g. \
-Mushroom Omelette [french-mushroom-omelette]. Never invent recipes, ids, amounts or nutrition \
-numbers; get them from tools.
+Mushroom Omelette [french-mushroom-omelette]. Never invent ids or nutrition numbers; get them \
+from tools.
+- Your own recipes: when the person asks for a recipe Pantrio's recipes do not have (search \
+finds nothing close) or asks for their own version, write it with write_recipe, then show it: \
+the ingredients with amounts and the method. Give it no id in square brackets. Pass on any \
+rule problem or unchecked ingredient the tool reports.
 - Safety: search_recipes already removes recipes that break the person's allergies, diets, \
 excluded foods and time limit. Other tools report problems; pass them on plainly. Never say a \
 recipe or swap is safe for an allergy unless a tool said so.
@@ -164,6 +196,7 @@ class ChatResult:
     tool_calls: list[ToolCall]
     usage: Usage
     latency_ms: float
+    drafts: list[CookbookRecipeIn] = field(default_factory=list)  # written with write_recipe
 
 
 class ChatState(TypedDict, total=False):
@@ -174,6 +207,7 @@ class ChatState(TypedDict, total=False):
     text: str
     flagged: list[str]
     tool_calls: list[ToolCall]
+    drafts: list[CookbookRecipeIn]
 
 
 # --- The graph -----------------------------------------------------------------------------
@@ -214,6 +248,7 @@ class Assistant:
                     "items": [*history, {"role": "user", "content": message}],
                     "rounds": 0,
                     "tool_calls": [],
+                    "drafts": [],
                 },
                 config.trace_config(
                     "chat", self.source, run_id, model=self.model, effort=self.effort
@@ -221,6 +256,7 @@ class Assistant:
             )
         finally:
             self.usage.embed_tokens = self.store.embed_tokens - start_tokens
+
         text = state["text"]
         cited = list(dict.fromkeys(CITED.findall(text)))
         config.log_feedback(run_id, {"flagged_citations": len(state.get("flagged", []))})
@@ -233,6 +269,7 @@ class Assistant:
             tool_calls=state["tool_calls"],
             usage=self.usage,
             latency_ms=(time.perf_counter() - start) * 1000,
+            drafts=state["drafts"],
         )  # fmt: skip
 
     # nodes
@@ -258,13 +295,15 @@ class Assistant:
 
     def _tools(self, s: ChatState) -> ChatState:
         items, log = list(s["items"]), list(s["tool_calls"])
+        drafts = list(s["drafts"])
         for call in s["pending"]:
             self.usage.tool_calls += 1
-            output = self.run_tool(call.name, call.arguments, s["profile"])
+            output = self.run_tool(call.name, call.arguments, s["profile"], drafts)
             log.append(ToolCall(call.name, call.arguments, output))
             items.append({"type": "function_call_output", "call_id": call.call_id,
                           "output": output})  # fmt: skip
-        return {"items": items, "pending": [], "rounds": s["rounds"] + 1, "tool_calls": log}
+        return {"items": items, "pending": [], "rounds": s["rounds"] + 1, "tool_calls": log,
+                "drafts": drafts}  # fmt: skip
 
     def _guard(self, s: ChatState) -> ChatState:
         cited = list(dict.fromkeys(CITED.findall(s["text"])))
@@ -285,13 +324,20 @@ class Assistant:
 
     # tools
 
-    def run_tool(self, name: str, arguments: str, profile: UserProfile) -> str:
+    def run_tool(self, name: str, arguments: str, profile: UserProfile,
+                 drafts: list[CookbookRecipeIn] | None = None) -> str:  # fmt: skip
+        """The tool's output for the model; write_recipe also appends its draft to `drafts`."""
         if name not in TOOL_ARGS:
             return f"unknown tool {name}"
         try:
             args = TOOL_ARGS[name].model_validate_json(arguments)
         except ValidationError as exc:
             return f"invalid arguments: {exc.errors()[0]['msg']}"
+        if name == "write_recipe":
+            output, draft = write_draft(args, profile)
+            if draft is not None and drafts is not None:
+                drafts.append(draft)
+            return output
         return getattr(self, f"_{name}")(args, profile)
 
     def _recipe(self, rid: str) -> Recipe | None:
@@ -403,6 +449,61 @@ class Assistant:
             *(f"{i}. {step}" for i, step in enumerate(r.steps, 1)),
         ]
         return "\n".join(lines + _problem_lines(r, p))
+
+
+def write_draft(a: WriteRecipeArgs, p: UserProfile) -> tuple[str, CookbookRecipeIn | None]:
+    """A cookbook draft from a recipe the model wrote, and what code found when checking it.
+
+    Foods are matched to the ingredient table by name; a food it lacks stays unset for the
+    person to pick or estimate in the review form. Rules are checked on the matched foods only,
+    so unmatched ones are reported as not checked."""
+    if not a.ingredients or not a.steps:
+        return "a recipe needs ingredients and steps", None
+    notes: list[str] = []
+    lines = []
+    for n, line in enumerate(a.ingredients[:MAX_LINES], start=1):
+        try:
+            food = resolve_food(line.name)
+        except UnknownFood:
+            food = None
+        lines.append(draft_line(n, line.name, line.quantity, line.unit, food, None, notes))
+    draft = capped_draft(a, lines, "manual", None, notes)
+    known = [x for x in draft.ingredients if x.food is not None and _grams_ok(x)]
+    unknown = [x.name for x in draft.ingredients if x not in known]
+    out = [f"Draft of {draft.title} ready ({draft.servings} servings, {draft.total_minutes} "
+           "min); the app offers to save it to the person's cookbook."]  # fmt: skip
+    derived = None
+    if known:
+        try:
+            derived = derive(draft.model_copy(update={"ingredients": known}))
+        except CookbookError as exc:  # not expected: every known line converts to grams
+            out.append(f"Could not work out: {exc}.")
+    if derived is not None:
+        problems = problems_for(draft, derived, p)
+        out.append(f"Allergens found: {', '.join(derived.allergens) or 'none'}.")
+        if unknown:
+            out.append(
+                f"Could not check for allergens or diets (not in Pantrio's table): "
+                f"{', '.join(unknown)} (the person fixes them when saving)."
+            )
+        else:
+            n = derived.nutrition
+            out.append(f"Per serving: {n.kcal:.0f} kcal, protein {n.protein_g:.0f} g, carbs "
+                       f"{n.carbs_g:.0f} g, fat {n.fat_g:.0f} g.")  # fmt: skip
+        out += [f"WARNING, does not suit the person: {msg}" for msg in problems]
+        if not problems and not unknown:
+            out.append("It suits the person's allergies, diets and excluded foods.")
+    elif unknown:
+        out.append(f"Could not check (not in Pantrio's table): {', '.join(unknown)}.")
+    return "\n".join(out), draft
+
+
+def _grams_ok(line: RecipeLine) -> bool:
+    try:
+        to_grams(line.food, line.quantity, line.unit)
+    except UnitError:
+        return False
+    return True
 
 
 def _amount(q: float) -> str:

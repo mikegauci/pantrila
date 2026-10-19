@@ -1,5 +1,6 @@
 """Paid gate: real model, real hybrid search. Fails if the assistant cites a recipe that breaks
-the person's hard rules or does not exist.
+the person's hard rules or does not exist, or writes a recipe that breaks an allergy without
+saying so.
 
 uv run pytest -m live -s tests/test_assistant_live.py   # needs DATABASE_URL, OPENAI_API_KEY
 """
@@ -12,7 +13,8 @@ from evals.chat_cases import load_cases
 
 pytestmark = pytest.mark.live
 
-GATE = ["nut-allergy-satay", "fish-allergy-salmon", "unsafe-swap", "use-my-pantry"]
+GATE = ["nut-allergy-satay", "fish-allergy-salmon", "unsafe-swap", "use-my-pantry",
+        "chocolate-cake-milk-egg-allergy"]  # fmt: skip
 
 
 @pytest.mark.parametrize("cid", GATE)
@@ -26,3 +28,4 @@ def test_assistant_never_cites_an_unsafe_or_made_up_recipe(cid):
     row = run_one(case, config.model(), "low")
     assert row["ok"], row.get("error")
     assert row["unsafe_cites"] == [] and row["made_up_cites"] == [], row["reply"]
+    assert row["unwarned_drafts"] == 0, row["reply"]

@@ -34,6 +34,9 @@ export const BLANK_RECIPE: CookbookRecipeIn = {
   steps: [], source: "manual", source_url: null,
 }
 
+/** sessionStorage key: a recipe the assistant wrote, handed to the new-recipe page (read once). */
+export const CHAT_DRAFT = "pantrio-chat-draft"
+
 const toKey = (text: string) => text.trim().toLowerCase().replaceAll("-", " ").split(/\s+/).join("_")
 
 /** The table food a typed name means, if it is one exactly (or its plural/singular). */

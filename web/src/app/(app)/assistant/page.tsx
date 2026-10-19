@@ -1,7 +1,8 @@
 "use client"
 
-import { History, Loader2, Plus, Refrigerator, Repeat, Scale, Search, Send, Sparkles } from "lucide-react"
+import { BookmarkPlus, History, Loader2, PenLine, Plus, Refrigerator, Repeat, Scale, Search, Send, Sparkles } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
@@ -10,6 +11,7 @@ import { useAuth } from "@/components/auth-provider"
 import { STARTERS } from "@/components/ask-pantrio"
 import { AiBadge, ProblemAlert } from "@/components/bits"
 import { ChatThreads } from "@/components/chat-threads"
+import { CHAT_DRAFT } from "@/components/cookbook-form"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
@@ -17,7 +19,7 @@ import { ApiError, send } from "@/lib/api"
 import { seconds, usd } from "@/lib/format"
 import { useChat, useChats, useMe, useRefreshKitchen } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
-import type { ChatMessage, ChatReply, ChatThread, ChatThreadSummary, RecipeCard, ToolCall } from "@/lib/types"
+import type { ChatMessage, ChatReply, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard, ToolCall } from "@/lib/types"
 
 /** A saved message, or one only this page knows about: the question in flight or an error. */
 interface Message extends ChatMessage {
@@ -42,39 +44,46 @@ function toolSummary(c: ToolCall): { icon: typeof Search; text: string } {
       return { icon: Repeat, text: `Checked swaps for ${a.food} in ${a.recipe_id}` }
     case "scale_recipe":
       return { icon: Scale, text: `Scaled ${a.recipe_id} to ${a.servings} servings` }
+    case "write_recipe":
+      return { icon: PenLine, text: `Wrote “${a.title}” and checked it against your rules` }
     default:
       return { icon: Sparkles, text: c.name }
   }
 }
 
-/** Plain text with **bold**, line breaks and [recipe-id] citations turned into links. */
+/** Plain text with **bold**, # headings, line breaks and [recipe-id] citations turned into links. */
 function Rich({ text, recipes }: { text: string; recipes: Map<string, RecipeCard> }) {
   return (
     <>
-      {text.split("\n").map((line, li) => (
-        <Fragment key={li}>
-          {li > 0 && <br />}
-          {line.split(/(\[[a-z0-9]+(?:-[a-z0-9]+)+\]|\*\*[^*]+\*\*)/g).map((part, i) => {
-            const cite = part.match(/^\[([a-z0-9-]+)\]$/)
-            if (cite) {
-              const r = recipes.get(cite[1])
-              return r ? (
-                <Link key={i} href={`/recipes/${r.id}`}
-                      className={cn("font-medium underline underline-offset-2", r.problems.length ? "text-danger" : "text-primary-text")}>
-                  ↗
-                </Link>
-              ) : <span key={i} className="text-muted-foreground">{part}</span>
-            }
-            if (part.startsWith("**") && part.endsWith("**")) return <strong key={i}>{part.slice(2, -2)}</strong>
-            return <Fragment key={i}>{part}</Fragment>
-          })}
-        </Fragment>
-      ))}
+      {text.split("\n").map((line, li) => {
+        // A markdown heading ("#### Ingredients") shows as a bold line.
+        const heading = line.match(/^#{1,6}\s+(.*)$/)
+        return (
+          <Fragment key={li}>
+            {li > 0 && <br />}
+            {heading ? <strong>{heading[1].replace(/\*\*/g, "")}</strong> : line.split(/(\[[a-z0-9]+(?:-[a-z0-9]+)+\]|\*\*[^*]+\*\*)/g).map((part, i) => {
+              const cite = part.match(/^\[([a-z0-9-]+)\]$/)
+              if (cite) {
+                const r = recipes.get(cite[1])
+                return r ? (
+                  <Link key={i} href={`/recipes/${r.id}`}
+                        className={cn("font-medium underline underline-offset-2", r.problems.length ? "text-danger" : "text-primary-text")}>
+                    ↗
+                  </Link>
+                ) : <span key={i} className="text-muted-foreground">{part}</span>
+              }
+              if (part.startsWith("**") && part.endsWith("**")) return <strong key={i}>{part.slice(2, -2)}</strong>
+              return <Fragment key={i}>{part}</Fragment>
+            })}
+          </Fragment>
+        )
+      })}
     </>
   )
 }
 
 function Bubble({ m }: { m: Message }) {
+  const router = useRouter()
   if (m.role === "user") {
     return (
       <div className="ml-auto max-w-[85%] rounded-[20px] rounded-br-md bg-primary px-4 py-2.5 text-primary-foreground">
@@ -83,6 +92,10 @@ function Bubble({ m }: { m: Message }) {
     )
   }
   const r = m.reply
+  const save = (d: CookbookRecipeIn) => {
+    sessionStorage.setItem(CHAT_DRAFT, JSON.stringify(d))
+    router.push("/recipes/mine/new?from=chat")
+  }
   const recipes = new Map(r?.cited.map((c) => [c.id, c]))
   return (
     <div className="grid max-w-[92%] gap-2">
@@ -109,6 +122,12 @@ function Bubble({ m }: { m: Message }) {
           ))}
         </div>
       )}
+      {r?.drafts?.map((d, i) => (
+        <Button key={i} variant="outline" size="sm" className="w-fit"
+                onClick={() => save(d)}>
+          <BookmarkPlus /> Save “{d.title}” to My recipes
+        </Button>
+      ))}
       {r && (
         <p className="tabular text-[11px] text-muted-foreground">
           {seconds(r.latency_ms)} · {usd(r.cost_usd)}
