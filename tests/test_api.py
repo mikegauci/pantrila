@@ -537,3 +537,55 @@ def test_avatar_rejects_bad_files_and_needs_storage(api, backend, photo_env):
     assert backend.photos.files == {}
     backend.photos = None
     assert api.put("/me/avatar", json={"image": avatar_data_url()}).status_code == 503
+
+
+def test_concurrent_chat_requests_cannot_share_the_last_allowance(api, backend, monkeypatch):
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
+
+    monkeypatch.setenv("PANTRIO_DAILY_CHATS", "1")
+    entered, release = threading.Event(), threading.Event()
+
+    def respond(**kwargs):
+        entered.set()
+        assert release.wait(5)
+        return text_reply("Hello")
+
+    backend.client.create = respond
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        first = pool.submit(api.post, "/chat", json={"message": "Hi"})
+        try:
+            assert entered.wait(5)
+            assert api.post("/chat", json={"message": "Hi again"}).status_code == 429
+            assert api.get("/me").json()["limits"]["chats_left"] == 0
+        finally:
+            release.set()
+        assert first.result().status_code == 200
+    assert len(backend.shared["events"]) == 1
+    assert backend.shared["reservations"] == {}
+
+
+def test_search_is_metered_and_budget_checked(api, backend, monkeypatch):
+    monkeypatch.setenv("PANTRIO_DAILY_SEARCHES", "1")
+    assert api.get("/recipes", params={"q": "eggs"}).status_code == 200
+    assert api.get("/recipes", params={"q": "eggs"}).status_code == 429
+    assert api.get("/recipes").status_code == 200  # browsing has no embedding call
+    assert api.get("/me/usage").json()["events"][0]["kind"] == "search"
+    monkeypatch.setenv("PANTRIO_DAILY_BUDGET_USD", "0.0001")
+    assert api.get("/recipes?q=salmon", headers={"Authorization": "Bearer bob"}).status_code == 503
+
+
+def test_unexpected_plan_failure_records_partial_usage(api, backend, monkeypatch):
+    from pantrio.planner import Usage
+
+    def failed(self, profile, on_step=None):
+        self.usage = Usage(llm_calls=1, input_tokens=1000, output_tokens=100, embed_tokens=20)
+        raise RuntimeError("failure after a successful paid call")
+
+    monkeypatch.setattr("pantrio.api.Planner.plan", failed)
+    events = sse(api.post("/plans").text)
+    assert events[-1][0] == "error"
+    event = api.get("/me/usage").json()["events"][0]
+    assert event["ok"] is False and event["input_tokens"] == 1000
+    assert event["cost_usd"] > 0
+    assert backend.shared["reservations"] == {}

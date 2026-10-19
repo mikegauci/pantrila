@@ -29,7 +29,6 @@ import json
 import logging
 import queue
 import threading
-import time
 from collections.abc import Callable, Iterable, Iterator
 from contextlib import AbstractContextManager, asynccontextmanager, contextmanager
 from dataclasses import dataclass
@@ -61,6 +60,7 @@ from pantrio.cookbook import (
 )
 from pantrio.foods import UnitError, load_foods
 from pantrio.grocery import grocery_list
+from pantrio.operations import EmbeddingUsage, PaidOperation, daily_cap
 from pantrio.pantry import Kitchen, UnknownFood, make_item, resolve_food
 from pantrio.photos import (
     Dish,
@@ -73,7 +73,7 @@ from pantrio.photos import (
     public_url,
     to_avatar_webp,
 )
-from pantrio.planner import Planner, PlanningError, RecipeStore
+from pantrio.planner import Planner, PlanningError, RecipeStore, Usage
 from pantrio.recipe_import import (
     MAX_IMAGES,
     Importer,
@@ -81,7 +81,7 @@ from pantrio.recipe_import import (
     NamedEstimate,
     check_image,
 )
-from pantrio.records import Kind, Records, SavedPlan, UsageEvent
+from pantrio.records import Records, SavedPlan
 from pantrio.schema import (
     Allergen,
     DietTag,
@@ -152,18 +152,51 @@ class DbBackend:
         from pantrio.chats import DbChats
         from pantrio.cookbook import DbCookbook
         from pantrio.pantry import DbKitchen
-        from pantrio.planner import DbStore
         from pantrio.records import DbRecords
 
-        with self.pool.connection() as conn:
-            yield Session(DbStore(conn, self.embed_query), DbKitchen(conn, user_id),
-                          DbRecords(conn, user_id), DbCookbook(conn, user_id),
-                          DbChats(conn, user_id))  # fmt: skip
+        yield Session(
+            PooledCatalog(self.pool, self.embed_query),
+            PooledRepository(self.pool, DbKitchen, user_id),
+            PooledRepository(self.pool, DbRecords, user_id),
+            PooledRepository(self.pool, DbCookbook, user_id),
+            PooledRepository(self.pool, DbChats, user_id),
+        )
 
     def close(self) -> None:
         self.pool.close()
         if self.photos is not None:
             self.photos.close()
+
+
+class PooledRepository:
+    """Borrow a connection for one repository method, never for an external call."""
+
+    def __init__(self, pool, factory, *args):
+        self.pool, self.factory, self.args = pool, factory, args
+
+    def __getattr__(self, name):
+        def call(*args, **kwargs):
+            with self.pool.connection() as conn:
+                return getattr(self.factory(conn, *self.args), name)(*args, **kwargs)
+
+        return call
+
+
+class PooledCatalog(PooledRepository):
+    def __init__(self, pool, embed_query):
+        from pantrio.planner import DbStore
+
+        super().__init__(pool, DbStore, embed_query)
+        self.embed_query, self.embed_tokens = embed_query, 0
+
+    def search(self, query, filters, limit):
+        from pantrio.search import search
+
+        # Embedding I/O happens before acquiring a database connection.
+        vector, tokens = self.embed_query(query)
+        self.embed_tokens += tokens
+        with self.pool.connection() as conn:
+            return search(conn, query, filters, limit=limit, embed_query=lambda _: (vector, 0)).ids
 
 
 # --- Response models ----------------------------------------------------------------------
@@ -556,12 +589,6 @@ def today_start() -> datetime:
     return datetime.combine(datetime.now(UTC).date(), dtime.min, tzinfo=UTC)
 
 
-def daily_cap(kind: Kind) -> int:
-    lim = config.limits()
-    return {"plan": lim.plans_per_user, "chat": lim.chats_per_user,
-            "import": lim.imports_per_user, "photo": lim.photos_per_user}[kind]  # fmt: skip
-
-
 def limits_view(records: Records) -> LimitsView:
     since = today_start()
     left = {k: max(0, daily_cap(k) - records.count_since(k, since))
@@ -572,16 +599,6 @@ def limits_view(records: Records) -> LimitsView:
         imports_per_day=daily_cap("import"), imports_left=left["import"],
         photos_per_day=daily_cap("photo"), photos_left=left["photo"],
     )  # fmt: skip
-
-
-def check_quota(records: Records, kind: Kind) -> None:
-    """Refuse a paid call over the user's daily cap or the demo's daily budget."""
-    lim, since = config.limits(), today_start()
-    cap = daily_cap(kind)
-    if records.count_since(kind, since) >= cap:
-        raise HTTPException(429, f"You have used today's {cap} {kind}s. Try again tomorrow.")
-    if records.spend_since(since) >= lim.budget_usd:
-        raise HTTPException(503, "Pantrio's demo budget for today is used up. Try tomorrow.")
 
 
 # --- App ----------------------------------------------------------------------------------
@@ -780,7 +797,19 @@ def create_app(
         f.require_diets = sorted(diets)
         f.max_minutes = min(limits) if limits else None
         q = q.strip()[:200]
-        ids = s.store.search(q, f, limit) if q else s.store.browse(f, limit)
+        if q:
+            operation = PaidOperation(s.records, "search", config.embed_model())
+            before = s.store.embed_tokens
+            try:
+                ids = s.store.search(q, f, limit)
+            except Exception:
+                operation.finish(
+                    EmbeddingUsage(embed_tokens=s.store.embed_tokens - before), ok=False
+                )
+                raise
+            operation.finish(EmbeddingUsage(embed_tokens=s.store.embed_tokens - before))
+        else:
+            ids = s.store.browse(f, limit)
         found, photos = s.store.get(ids), s.store.photos(ids)
         return RecipeList(query=q, rules=f, recipes=[recipe_card(found[i], profile, photos.get(i))
                                                      for i in ids if i in found])  # fmt: skip
@@ -827,16 +856,12 @@ def create_app(
     def paid_import(s: Session, request: Request, work: Callable[[Importer], Any]) -> tuple:
         """Run one paid import or estimate under the daily cap and log its usage.
         Returns (work's result, the importer, latency in ms)."""
-        check_quota(s.records, "import")
         model = config.model()
         importer = Importer(client=request.app.state.backend.client, model=model)
-        start = time.perf_counter()
+        operation = PaidOperation(s.records, "import", model)
 
         def logged(ok: bool) -> float:
-            ms = (time.perf_counter() - start) * 1000
-            if importer.usage.llm_calls:  # a bad link fails before any paid call
-                s.records.log(UsageEvent.from_usage("import", model, importer.usage, ms, ok=ok))
-            return ms
+            return operation.finish(importer.usage, ok, discard_empty=True)
 
         try:
             result = work(importer)
@@ -925,7 +950,6 @@ def create_app(
         backend: Backend = request.app.state.backend
         if backend.photos is None:
             raise HTTPException(503, "Photos are not set up on this server.")
-        check_quota(s.records, "photo")
         r, model = saved.recipe, config.image_model()
         try:
             gluten_free = DietTag.GLUTEN_FREE in derive(r).diet_tags
@@ -933,16 +957,15 @@ def create_app(
             gluten_free = False
         dish = Dish(title=r.title, summary=r.summary, ingredients=[i.name for i in r.ingredients],
                     steps=r.steps, gluten_free=gluten_free)  # fmt: skip
-        start = time.perf_counter()
+        operation = PaidOperation(s.records, "photo", model)
+        photo_usage = PhotoUsage()
         try:
-            photo = generate(dish, client=backend.client, model=model)
+            photo = generate(dish, client=backend.client, model=model, usage=photo_usage)
         except Exception as exc:
-            ms = (time.perf_counter() - start) * 1000  # a failed image call is not billed
-            s.records.log(UsageEvent.from_usage("photo", model, PhotoUsage(llm_calls=1), ms,
-                                                ok=False))  # fmt: skip
+            operation.finish(photo_usage, ok=False)
             log.exception("photo generation failed")
             raise HTTPException(502, describe_failure(exc, "Making the photo")) from exc
-        s.records.log(UsageEvent.from_usage("photo", model, photo.usage, photo.latency_ms))
+        operation.finish(photo.usage)
         path = cookbook_path(user.id)
         try:
             backend.photos.put(path, photo.webp)
@@ -986,13 +1009,12 @@ def create_app(
         """Plan the week from the saved profile and pantry, streaming progress as SSE."""
         backend: Backend = request.app.state.backend
         with backend.session(user.id) as s:
-            check_quota(s.records, "plan")
+            operation = PaidOperation(s.records, "plan", config.model())
         events: queue.Queue = queue.Queue()
 
         def work() -> None:
             model = config.model()
             planner = None
-            start = time.perf_counter()
             try:
                 with backend.session(user.id) as s:
                     planner = Planner(s.store, client=backend.client, model=model, source="api")
@@ -1001,17 +1023,15 @@ def create_app(
                             s.kitchen.profile(), on_step=lambda n: events.put(("step", {"node": n}))
                         )
                     except PlanningError as exc:
-                        s.records.log(UsageEvent.from_usage(
-                            "plan", model, planner.usage, (time.perf_counter() - start) * 1000,
-                            ok=False))  # fmt: skip
+                        operation.finish(planner.usage, ok=False)
                         events.put(("error", {"message": f"Could not plan: {exc}"}))
                         return
-                    s.records.log(UsageEvent.from_usage("plan", model, result.usage,
-                                                        result.latency_ms))  # fmt: skip
+                    operation.finish(result.usage)
                     saved = s.records.save_plan(result.plan, plan_report(result, model))
                     view = plan_view(saved, s.store, s.kitchen.profile())
                     events.put(("plan", view.model_dump(mode="json")))
             except Exception:
+                operation.finish(planner.usage if planner else Usage(), ok=False)
                 log.exception("planning failed")
                 events.put(("error", {"message": "Something went wrong while planning."}))
             finally:
@@ -1056,23 +1076,18 @@ def create_app(
     @app.post("/chat")
     def chat(body: ChatRequest, request: Request, s: SessionDep) -> ChatReply:
         thread = None if body.thread_id is None else get_thread(s, body.thread_id)
-        check_quota(s.records, "chat")
         backend: Backend = request.app.state.backend
         model = config.model()
         bot = Assistant(s.store, s.kitchen, client=backend.client, model=model, source="api")
         history = (thread.history if thread else [])[-MAX_CHAT_HISTORY:]
-        start = time.perf_counter()
+        operation = PaidOperation(s.records, "chat", model)
         try:
             result = bot.reply(body.message, history)
         except Exception as exc:
-            s.records.log(
-                UsageEvent.from_usage(
-                    "chat", model, bot.usage, (time.perf_counter() - start) * 1000, ok=False
-                )
-            )
+            operation.finish(bot.usage, ok=False)
             log.exception("chat failed")
             raise HTTPException(502, "The assistant could not answer. Try again.") from exc
-        s.records.log(UsageEvent.from_usage("chat", model, result.usage, result.latency_ms))
+        operation.finish(result.usage)
         profile = s.kitchen.profile()
         cited, photos = s.store.get(result.cited), s.store.photos(result.cited)
         if thread is None:
