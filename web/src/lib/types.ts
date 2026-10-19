@@ -135,6 +135,7 @@ export interface Me {
   id: string
   email: string | null
   anonymous: boolean
+  avatar_url: string | null
   limits: Limits
 }
 

@@ -1,10 +1,12 @@
 "use client"
 
-import { Save, X } from "lucide-react"
-import { useState } from "react"
+import { Camera, Save, Trash2, X } from "lucide-react"
+import { useRef, useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
+import { UserAvatar } from "@/components/app-shell"
+import { useAuth } from "@/components/auth-provider"
 import { Panel, PanelTitle } from "@/components/bits"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,9 +15,10 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send } from "@/lib/api"
 import { label } from "@/lib/format"
-import { useFoods, useMeta, useProfile } from "@/lib/hooks"
+import { useFoods, useMe, useMeta, useProfile } from "@/lib/hooks"
+import { toAvatarDataUrl } from "@/lib/images"
 import { cn } from "@/lib/utils"
-import type { Allergen, DietTag, MealType, Profile } from "@/lib/types"
+import type { Allergen, DietTag, MealType, Me, Profile } from "@/lib/types"
 
 const DIET_HELP: Partial<Record<DietTag, string>> = {
   low_carb: "at most 20 g carbs per serving",
@@ -47,6 +50,58 @@ function Toggle<T extends string>({ value, on, onToggle, danger }: { value: T; o
 
 const flip = <T,>(list: T[], v: T) => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v])
 const num = (s: string) => (s.trim() === "" ? null : Number(s))
+
+function PictureCard() {
+  const { session } = useAuth()
+  const { data: me, mutate } = useMe()
+  const input = useRef<HTMLInputElement>(null)
+  const [busy, setBusy] = useState(false)
+
+  async function change(call: () => Promise<Me>, done: string) {
+    setBusy(true)
+    try {
+      await mutate(await call(), { revalidate: false })
+      toast.success(done)
+    } catch (e) {
+      toast.error(e instanceof ApiError || e instanceof Error ? e.message : "Could not update the picture")
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <Panel>
+      <PanelTitle>Profile picture</PanelTitle>
+      <div className="flex items-center gap-4">
+        <UserAvatar userId={session?.user.id ?? null} email={session?.user.email ?? null} size="xl" url={me?.avatar_url} />
+        <div className="grid gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" disabled={busy || !me} onClick={() => input.current?.click()}>
+              <Camera /> {me?.avatar_url ? "Change picture" : "Upload picture"}
+            </Button>
+            {me?.avatar_url && (
+              <Button variant="ghost" size="sm" disabled={busy}
+                      onClick={() => change(() => send<Me>("/me/avatar", "DELETE"), "Picture removed")}>
+                <Trash2 /> Remove
+              </Button>
+            )}
+          </div>
+          <p className="text-[12px] text-muted-foreground">
+            Cropped to a square and shrunk on your device first. Without one you get a food emoji.
+          </p>
+        </div>
+        <input
+          ref={input} type="file" accept="image/*" className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0]
+            e.target.value = ""
+            if (file) change(async () => send<Me>("/me/avatar", "PUT", { image: await toAvatarDataUrl(file) }), "Picture saved")
+          }}
+        />
+      </div>
+    </Panel>
+  )
+}
 
 export default function ProfilePage() {
   const { data, isLoading, mutate } = useProfile()
@@ -86,6 +141,9 @@ export default function ProfilePage() {
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
+        <div className="lg:col-span-2">
+          <PictureCard />
+        </div>
         <Panel>
           <PanelTitle>Allergies</PanelTitle>
           <p className="mb-3 text-[13px] text-muted-foreground">

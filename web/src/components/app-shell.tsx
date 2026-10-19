@@ -10,7 +10,7 @@ import { useEffect, useSyncExternalStore } from "react"
 
 import { useAuth } from "@/components/auth-provider"
 import { Logo } from "@/components/logo"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
@@ -18,6 +18,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import { pingServer } from "@/lib/api"
 import { avatarFor } from "@/lib/avatar"
+import { useMe } from "@/lib/hooks"
 import { supabase } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
 
@@ -95,14 +96,20 @@ function BottomTabs({ pathname }: { pathname: string }) {
   )
 }
 
-function UserAvatar({ userId, email, size }: { userId: string | null; email: string | null; size: "lg" | "sm" }) {
+export function UserAvatar({ userId, email, size, url }: {
+  userId: string | null
+  email: string | null
+  size: "lg" | "sm" | "xl"
+  url?: string | null
+}) {
   const avatar = userId ? avatarFor(userId) : null
   return (
-    <Avatar size={size} aria-hidden>
+    <Avatar size={size === "xl" ? undefined : size} className={size === "xl" ? "size-20" : undefined} aria-hidden>
+      {url && <AvatarImage src={url} alt="" />}
       <AvatarFallback
         className={
           avatar
-            ? cn(avatar.bg, size === "lg" ? "text-[20px]" : "text-[13px]")
+            ? cn(avatar.bg, size === "xl" ? "text-[36px]" : size === "lg" ? "text-[20px]" : "text-[13px]")
             : "bg-primary-soft font-semibold text-primary-text"
         }
       >
@@ -114,15 +121,17 @@ function UserAvatar({ userId, email, size }: { userId: string | null; email: str
 
 function UserMenu({ userId, email }: { userId: string | null; email: string | null }) {
   const router = useRouter()
+  const { data: me } = useMe()
+  const url = me?.avatar_url
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="rounded-full" aria-label="Account menu">
-        <UserAvatar userId={userId} email={email} size="lg" />
+        <UserAvatar userId={userId} email={email} size="lg" url={url} />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuGroup>
           <DropdownMenuLabel className="flex items-center gap-2">
-            <UserAvatar userId={userId} email={email} size="sm" />
+            <UserAvatar userId={userId} email={email} size="sm" url={url} />
             <span className="truncate">{email ?? "Guest"}</span>
           </DropdownMenuLabel>
         </DropdownMenuGroup>
