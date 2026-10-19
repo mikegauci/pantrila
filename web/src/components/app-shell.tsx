@@ -23,11 +23,11 @@ import { cn } from "@/lib/utils"
 
 const NAV = [
   { href: "/", label: "Home", icon: House, mobile: true },
+  { href: "/assistant", label: "Assistant", icon: MessageCircle, mobile: true },
   { href: "/recipes", label: "Recipes", icon: ChefHat, mobile: true },
   { href: "/plan", label: "Meal plan", icon: CalendarDays, mobile: true },
   { href: "/grocery", label: "Grocery list", icon: ShoppingBasket, mobile: true },
   { href: "/pantry", label: "Pantry", icon: Refrigerator, mobile: false },
-  { href: "/assistant", label: "Assistant", icon: MessageCircle, mobile: true },
   { href: "/insights", label: "Insights", icon: BarChart3, mobile: false },
   { href: "/profile", label: "Profile", icon: UserRound, mobile: false },
 ]

@@ -3,6 +3,7 @@
 import { ArrowRight, CalendarDays, Refrigerator, ShoppingBasket } from "lucide-react"
 import Link from "next/link"
 
+import { AskPantrio } from "@/components/ask-pantrio"
 import { EmptyState, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
 import { MacroRing } from "@/components/macro-ring"
 import { buttonVariants } from "@/components/ui/button"
@@ -34,6 +35,8 @@ export default function HomePage() {
         </p>
         <p className="text-muted-foreground">Here is what is cooking today.</p>
       </div>
+
+      <AskPantrio />
 
       {plan && (
         <ProblemAlert
