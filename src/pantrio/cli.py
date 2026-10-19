@@ -1,5 +1,5 @@
 """Command line: `pantrio db migrate|seed`, `ingest`, `search`, `plan`, `pantry`, `profile`,
-`chat`, `corpus check`."""
+`chat`, `corpus check`, `photos generate`."""
 
 from __future__ import annotations
 
@@ -15,10 +15,12 @@ db_app = typer.Typer(no_args_is_help=True, help="Database migrations and seed da
 corpus_app = typer.Typer(no_args_is_help=True, help="Inspect the committed recipe corpus.")
 pantry_app = typer.Typer(no_args_is_help=True, help="A user's pantry (foods at home).")
 profile_app = typer.Typer(no_args_is_help=True, help="A user's saved profile.")
+photos_app = typer.Typer(no_args_is_help=True, help="Generated recipe photos.")
 app.add_typer(db_app, name="db")
 app.add_typer(corpus_app, name="corpus")
 app.add_typer(pantry_app, name="pantry")
 app.add_typer(profile_app, name="profile")
+app.add_typer(photos_app, name="photos")
 
 User = Annotated[str, typer.Option("--user", envvar="PANTRIO_USER", help="user id")]
 
@@ -316,3 +318,60 @@ def corpus_check() -> None:
 
 if __name__ == "__main__":
     app()
+
+
+@photos_app.command("generate")
+def photos_generate(
+    only: Annotated[list[str] | None, typer.Option("--only", help="recipe ids")] = None,
+    limit: Annotated[int | None, typer.Option(help="at most this many recipes")] = None,
+    force: Annotated[bool, typer.Option(help="regenerate even if unchanged")] = False,
+    workers: Annotated[int, typer.Option(min=1, max=16)] = 6,
+    dry_run: Annotated[
+        bool, typer.Option("--dry-run", help="print one prompt, call nothing")
+    ] = False,
+) -> None:
+    """Photograph corpus recipes whose prompt or image model changed (paid; ~$0.014 each).
+    Needs SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY; creates the public bucket if missing."""
+    import statistics
+
+    from pantrio import db, photos
+    from pantrio.corpus import load_corpus
+
+    recipes = load_corpus()
+    if only:
+        recipes = [r for r in recipes if r.id in set(only)]
+    recipes = recipes[:limit] if limit else recipes
+    if dry_run:
+        typer.echo(photos.photo_prompt(photos.corpus_dish(recipes[0])))
+        return
+    store = photos.photo_store()
+    if store is None:
+        raise SystemExit("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set")
+    if store.ensure_bucket():
+        typer.echo(f"created public bucket {photos.BUCKET}")
+
+    def done(rid: str, photo) -> None:
+        typer.echo(f"  {'ok ' if photo else 'FAILED'} {rid}"
+                   + (f"  {photo.latency_ms / 1000:.1f}s" if photo else ""))  # fmt: skip
+
+    model = config.image_model()
+    typer.echo(f"{len(recipes)} recipes, model {model}, {workers} at a time")
+    with db.connect(config.database_url()) as conn:
+        report = photos.photograph_corpus(conn, recipes, store, model=model, workers=workers,
+                                          force=force, on_done=done)  # fmt: skip
+    store.close()
+    lat = sorted(report.latencies_ms)
+    p50 = statistics.median(lat) / 1000 if lat else 0
+    p95 = lat[min(len(lat) - 1, int(len(lat) * 0.95))] / 1000 if lat else 0
+    cost = report.usage.cost()
+    per = cost / report.generated if cost is not None and report.generated else None
+    typer.echo(
+        f"generated {report.generated}, unchanged {report.skipped}, failed {len(report.failed)}\n"
+        f"tokens in {report.usage.input_tokens:,} out {report.usage.output_tokens:,}, "
+        f"cost {config.fmt_cost(cost)} ({config.fmt_cost(per)} per photo), "
+        f"p50 {p50:.1f}s / p95 {p95:.1f}s"
+    )
+    for line in report.failed:
+        typer.echo(f"  {line}")
+    if report.failed:
+        raise typer.Exit(1)
