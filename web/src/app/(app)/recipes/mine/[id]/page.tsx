@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, Check, Clock, ExternalLink, Pencil, Trash2, Users } from "lucide-react"
+import { ArrowLeft, Camera, Check, Clock, ExternalLink, ImageOff, Loader2, Pencil, Trash2, Users } from "lucide-react"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useState } from "react"
@@ -14,7 +14,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { send } from "@/lib/api"
 import { label } from "@/lib/format"
-import { useCookbookRecipe, useProfile } from "@/lib/hooks"
+import { useCookbookRecipe, useMe, useProfile } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
 
 function amount(q: number) {
@@ -27,7 +27,9 @@ export default function MyRecipePage() {
   const { mutate } = useSWRConfig()
   const { data: r, error, isLoading, mutate: refresh } = useCookbookRecipe(id)
   const { data: profile } = useProfile()
+  const { data: me, mutate: refreshMe } = useMe()
   const [editing, setEditing] = useState(false)
+  const [photoBusy, setPhotoBusy] = useState<"make" | "remove" | null>(null)
 
   if (error) {
     return <p role="alert" className="text-danger">{error.status === 404 ? "No such recipe in your cookbook." : error.message}</p>
@@ -64,6 +66,23 @@ export default function MyRecipePage() {
     }
   }
 
+  async function photo(action: "make" | "remove") {
+    if (!r) return
+    if (action === "remove" && !window.confirm("Remove this photo?")) return
+    setPhotoBusy(action)
+    try {
+      const saved = await send<typeof r>(`/me/recipes/${r.id}/photo`, action === "make" ? "POST" : "DELETE")
+      refresh(saved, { revalidate: false })
+      mutate("/me/recipes")
+      refreshMe()
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not update the photo.")
+    } finally {
+      setPhotoBusy(null)
+    }
+  }
+
+  const photosLeft = me?.limits.photos_left
   const allergies = new Set(profile?.allergies ?? [])
   const { icon: SourceIcon, text: sourceText } = RECIPE_SOURCE[r.source]
   const have = r.ingredients.filter((i) => i.in_pantry).length
@@ -84,7 +103,31 @@ export default function MyRecipePage() {
       <ProblemAlert title="This recipe needs a fix (edit it)" items={r.invalid} />
 
       <Panel className="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-        <RecipeArt meal={r.meal_types[0]} cuisine={r.cuisine || undefined} size="lg" className="aspect-[4/3] w-full" />
+        <div className="flex flex-col gap-2">
+          <RecipeArt
+            meal={r.meal_types[0]} cuisine={r.cuisine || undefined} size="lg" photo={r.photo_url}
+            sizes="(min-width: 768px) 440px, 100vw" className="aspect-[4/3] w-full"
+          />
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="outline" size="sm" onClick={() => photo("make")}
+              disabled={photoBusy !== null || photosLeft === 0}
+            >
+              {photoBusy === "make" ? <Loader2 className="animate-spin" /> : <Camera />}
+              {photoBusy === "make" ? "Making a photo…" : r.photo_url ? "New photo" : "Generate photo"}
+            </Button>
+            {r.photo_url && (
+              <Button variant="ghost" size="sm" onClick={() => photo("remove")} disabled={photoBusy !== null}>
+                <ImageOff /> Remove
+              </Button>
+            )}
+            {r.photo_url && <AiBadge />}
+          </div>
+          <p className="text-[12px] text-muted-foreground">
+            An AI photo made from this recipe&apos;s own ingredients, about 15 seconds.
+            {me && ` ${me.limits.photos_left} of ${me.limits.photos_per_day} left today.`}
+          </p>
+        </div>
         <div className="flex flex-col gap-3">
           <h2 className="text-[24px] font-bold leading-8">{r.title}</h2>
           {r.summary && <p className="text-muted-foreground">{r.summary}</p>}

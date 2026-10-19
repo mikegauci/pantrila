@@ -78,7 +78,7 @@ function Week({ plan }: { plan: Plan }) {
                   className={cn("flex items-center gap-3 rounded-2xl border p-2 hover:shadow-soft",
                     bad.has(`${d.day}-${m.meal_type}`) && "border-danger bg-danger-soft")}
                 >
-                  <RecipeArt meal={m.meal_type} size="sm" className="size-12 shrink-0 rounded-xl" />
+                  <RecipeArt meal={m.meal_type} size="sm" photo={m.recipe.photo_url} sizes="48px" className="size-12 shrink-0 rounded-xl" />
                   <span className="min-w-0 flex-1">
                     <span className="block text-[11px] font-medium text-muted-foreground uppercase">{m.meal_type}</span>
                     <span className="block truncate font-medium">{m.recipe.title}</span>

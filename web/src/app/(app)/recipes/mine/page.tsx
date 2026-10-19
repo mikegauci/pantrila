@@ -22,7 +22,11 @@ function Card({ r }: { r: CookbookCard }) {
         unsafe && "border-danger/50",
       )}
     >
-      <RecipeArt meal={r.meal_types[0]} cuisine={r.cuisine || undefined} className="aspect-[4/3] w-full" />
+      <RecipeArt
+        meal={r.meal_types[0]} cuisine={r.cuisine || undefined} photo={r.photo_url}
+        sizes="(min-width: 1280px) 280px, (min-width: 768px) 33vw, (min-width: 420px) 50vw, 100vw"
+        className="aspect-[4/3] w-full"
+      />
       <div className="flex flex-1 flex-col gap-2 px-1 pt-3 pb-1">
         <h3 className="line-clamp-2 text-[15px] font-semibold leading-[22px] group-hover:text-primary-text">{r.title}</h3>
         <p className="tabular flex flex-wrap items-center gap-3 text-[12px] text-muted-foreground">

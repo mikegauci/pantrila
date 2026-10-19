@@ -170,3 +170,40 @@ def test_db_chats_are_per_user_and_keep_history_and_messages(conn):
     assert [(t.id, t.messages) for t in alice.list()] == [(first.id, 3), (second.id, 0)]
     assert bob.list() == [] and not bob.delete(first.id)
     assert alice.delete(first.id) and [t.id for t in alice.list()] == [second.id]
+
+
+def test_recipe_photos_survive_reseeding_and_go_with_their_recipe(conn, corpus):
+    from pantrio.photos import corpus_paths, save_corpus_path
+
+    db.seed(conn, corpus)
+    a, b = corpus[0].id, corpus[1].id
+    assert save_corpus_path(conn, a, f"recipes/{a}-1.webp", "m") is None
+    assert save_corpus_path(conn, a, f"recipes/{a}-2.webp", "m") == f"recipes/{a}-1.webp"
+    save_corpus_path(conn, b, f"recipes/{b}-1.webp", "m")
+    db.seed(conn, corpus)
+    assert corpus_paths(conn, [a, b, "nope"]) == {
+        a: f"recipes/{a}-2.webp",
+        b: f"recipes/{b}-1.webp",
+    }
+    db.seed(conn, [r for r in corpus if r.id != b])
+    assert corpus_paths(conn, [a, b]) == {a: f"recipes/{a}-2.webp"}
+
+
+def test_db_cookbook_keeps_a_photo_path_and_photo_is_a_usage_kind(conn):
+    from pantrio.cookbook import CookbookRecipeIn, DbCookbook
+    from pantrio.records import DbRecords, UsageEvent
+
+    recipe = CookbookRecipeIn.model_validate({
+        "title": "Toast", "meal_types": ["breakfast"], "total_minutes": 5, "servings": 1,
+        "ingredients": [{"name": "bread", "quantity": 2, "unit": "piece", "food": "white_bread"}],
+        "steps": ["Toast it."], "source": "manual",
+    })  # fmt: skip
+    alice, bob = DbCookbook(conn, "alice"), DbCookbook(conn, "bob")
+    saved = alice.add(recipe)
+    assert saved.photo_path is None
+    bob.set_photo(saved.id, "user-recipes/bob/x.webp")
+    assert alice.get(saved.id).photo_path is None
+    alice.set_photo(saved.id, "user-recipes/alice/x.webp")
+    assert alice.update(saved.id, recipe).photo_path == "user-recipes/alice/x.webp"
+    assert alice.list()[0].photo_path == "user-recipes/alice/x.webp"
+    DbRecords(conn, "alice").log(UsageEvent("photo", "m", 12000, llm_calls=1))

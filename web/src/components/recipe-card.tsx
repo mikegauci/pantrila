@@ -16,7 +16,11 @@ export function RecipeCard({ recipe, className }: { recipe: Recipe; className?: 
         className,
       )}
     >
-      <RecipeArt meal={recipe.meal_types[0]} cuisine={recipe.cuisine} className="aspect-[4/3] w-full" />
+      <RecipeArt
+        meal={recipe.meal_types[0]} cuisine={recipe.cuisine} photo={recipe.photo_url}
+        sizes="(min-width: 1280px) 280px, (min-width: 768px) 33vw, (min-width: 420px) 50vw, 100vw"
+        className="aspect-[4/3] w-full"
+      />
       <div className="flex flex-1 flex-col gap-2 px-1 pt-3 pb-1">
         <h3 className="line-clamp-2 text-[15px] font-semibold leading-[22px] group-hover:text-primary-text">
           {recipe.title}

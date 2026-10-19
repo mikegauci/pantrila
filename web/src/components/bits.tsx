@@ -1,6 +1,7 @@
 import {
   Apple, CakeSlice, CookingPot, EggFried, Salad, Sparkles, TriangleAlert,
 } from "lucide-react"
+import Image from "next/image"
 
 import { cn } from "@/lib/utils"
 import { label } from "@/lib/format"
@@ -86,18 +87,31 @@ const MEAL_ART: Record<MealType, { icon: typeof Salad; bg: string; fg: string }>
 }
 
 /** Recipes have no photos, so a meal-coloured tile with an icon stands in. */
+/** The recipe's 4:3 photo when it has one (served resized by next/image; `sizes` says how
+ * wide it shows), else meal-type art on a tint. */
 export function RecipeArt({
-  meal, cuisine, className, size = "md",
-}: { meal: MealType; cuisine?: string; className?: string; size?: "sm" | "md" | "lg" }) {
+  meal, cuisine, className, size = "md", photo, sizes = "(min-width: 768px) 33vw, 100vw",
+}: {
+  meal: MealType
+  cuisine?: string
+  className?: string
+  size?: "sm" | "md" | "lg"
+  photo?: string | null
+  sizes?: string
+}) {
   const art = MEAL_ART[meal] ?? MEAL_ART.dinner
   const Icon = art.icon
   return (
     <div className={cn("relative grid place-items-center overflow-hidden rounded-2xl", art.bg, className)}>
-      <Icon
-        className={cn(art.fg, size === "sm" ? "size-6" : size === "lg" ? "size-16" : "size-11")}
-        strokeWidth={1.5}
-        aria-hidden
-      />
+      {photo ? (
+        <Image src={photo} alt="" fill sizes={sizes} className="object-cover" />
+      ) : (
+        <Icon
+          className={cn(art.fg, size === "sm" ? "size-6" : size === "lg" ? "size-16" : "size-11")}
+          strokeWidth={1.5}
+          aria-hidden
+        />
+      )}
       {cuisine && size !== "sm" && (
         <span className="absolute bottom-2 left-2 rounded-full bg-surface/90 px-2 py-0.5 text-[11px] font-medium">
           {label(cuisine)}

@@ -85,6 +85,11 @@ class DbStore:
 
         return load_recipes(self.conn, ids)
 
+    def photos(self, ids: Iterable[str]) -> dict[str, str]:
+        from pantrio.photos import corpus_paths
+
+        return corpus_paths(self.conn, ids)
+
 
 # --- What the model sees -------------------------------------------------------------------
 

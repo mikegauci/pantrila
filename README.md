@@ -144,6 +144,12 @@ with the next message; the browser only says which thread it is in.
   model estimate, marked "Estimated" in the UI, with allergens you can correct. Links are
   fetched with SSRF guards (public addresses only, every redirect re-checked). Your recipes
   stay in your cookbook and never go into meal plans.
+- **Photos that show the recipe, not a stock dish.** Every recipe has a 4:3 photo from
+  `gpt-image-2.5-flare`, prompted with the recipe's own ingredients and final step: garnish
+  and background props may only come from that list (no parsley on a recipe without parsley,
+  no bread beside a gluten-free dish), in one fixed scene so the grid looks consistent. All
+  300 cost $4.15 ($0.014 each, p50 14.5 s); you can make one for your own recipes too.
+  Images live in Supabase Storage; the database keeps paths only.
 - **No data retention at OpenAI.** Every Responses API call uses `store=False`, and tool
   loops are capped.
 
@@ -203,6 +209,7 @@ The paid evals are a manual GitHub Actions workflow.
 | `src/pantrio/planner.py` | Planner graph |
 | `src/pantrio/assistant.py`, `swaps.py`, `pantry.py`, `grocery.py` | Assistant graph and its tools |
 | `src/pantrio/cookbook.py`, `recipe_import.py` | Your own recipes: derivation, storage, import from photos and links |
+| `src/pantrio/photos.py` | Recipe photo prompt, generation and Supabase Storage |
 | `src/pantrio/api.py`, `auth.py`, `records.py`, `chats.py` | FastAPI app, Supabase token check, saved plans, usage log and chat threads |
 | `supabase/migrations/` | SQL migrations (pgvector, full text, RLS) |
 | `evals/` | Eval generators, runners, committed reports |
@@ -220,6 +227,8 @@ The paid evals are a manual GitHub Actions workflow.
   app suggests a screenshot instead. The import eval covers web pages only; photos were
   checked by hand.
 - Estimated foods are a best guess. Check the label of anything you buy.
+- Recipe photos are AI-generated and marked as such. The prompt keeps them to the recipe's
+  ingredients, but the plating is the model's guess (a steak kebab can come out as kofta).
 - Render's free plan sleeps when idle, so the first request after a pause is slow.
 
 "Macros" means protein, carbs and fat; "kcal" is food energy (calories).

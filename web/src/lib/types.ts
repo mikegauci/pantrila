@@ -31,6 +31,7 @@ export interface RecipeCard {
   ingredient_count: number
   pantry_foods: string[]
   problems: string[]
+  photo_url: string | null
 }
 
 export interface Ingredient {
@@ -126,6 +127,8 @@ export interface Limits {
   chats_left: number
   imports_per_day: number
   imports_left: number
+  photos_per_day: number
+  photos_left: number
 }
 
 export interface Me {
@@ -234,7 +237,7 @@ export interface ChatThread {
 }
 
 export interface UsageEvent {
-  kind: "plan" | "chat" | "import"
+  kind: "plan" | "chat" | "import" | "photo"
   model: string
   created_at: string
   latency_ms: number
@@ -315,6 +318,7 @@ export interface CookbookCard {
   invalid: string[]
   pantry_foods: string[]
   problems: string[]
+  photo_url: string | null
 }
 
 export interface CookbookDetail extends CookbookCard {
