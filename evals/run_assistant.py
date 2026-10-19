@@ -1,7 +1,9 @@
 """Cooking-assistant eval: one chat turn per case, scored on tools, pantry, citations and safety.
 
 Per case: whether the expected tools ran (and none ran for plain cooking questions), whether the
-pantry ended up as asked, whether a recipe was recommended when one should be, recipes cited
+pantry ended up as asked, whether a recipe was recommended when one should be, whether the
+assistant wrote its own recipe (a draft) exactly when it should, drafts that break the
+person's rules without the reply naming the problem (must be 0), recipes cited
 that break the person's hard rules (must be 0; the guard notes them, but the model should not
 cite them) or do not exist (must be 0), tool calls, tokens, cost and latency. Pantries live in
 memory, so the eval never writes to the database. Writes a report under evals/reports/; also
@@ -28,6 +30,7 @@ from evals.metrics import percentile
 from pantrio import config, db
 from pantrio.assistant import Assistant, ChatResult
 from pantrio.constraints import recipe_problems
+from pantrio.cookbook import CookbookRecipeIn, derive, problems_for
 from pantrio.pantry import MemoryKitchen, make_item
 from pantrio.planner import DbStore
 from pantrio.schema import UserProfile
@@ -40,6 +43,23 @@ def kitchen_for(case: dict) -> MemoryKitchen:
     profile = UserProfile.model_validate(case["profile"])
     items = [make_item(i["food"], i["quantity"], i["unit"]) for i in case["pantry"]]
     return MemoryKitchen(profile, items)
+
+
+def unwarned(draft: CookbookRecipeIn, profile: UserProfile, warnings: list[str]) -> bool:
+    """Check structured rule warnings, rather than treating an allergen name as a warning."""
+    known = [x for x in draft.ingredients if x.food is not None]
+    try:
+        derived = derive(draft.model_copy(update={"ingredients": known}))
+    except ValueError:
+        return not bool(warnings)
+    required = problems_for(draft, derived, profile)
+    if not isinstance(warnings, list):
+        return bool(required)
+    if any(problem not in warnings for problem in required):
+        return True
+    return len(known) != len(draft.ingredients) and not any(
+        "could not be checked" in warning for warning in warnings
+    )
 
 
 def score(case: dict, r: ChatResult, kitchen: MemoryKitchen, store) -> dict:
@@ -57,6 +77,7 @@ def score(case: dict, r: ChatResult, kitchen: MemoryKitchen, store) -> dict:
             set(e.get("pantry_lacks", [])) & pantry
         )
     known = store.get(r.cited)
+    flagged_known = store.get(r.flagged) if r.flagged else {}
     profile = kitchen.profile()
     allowed = set(e.get("allow_flagged", []))
     return {
@@ -66,12 +87,21 @@ def score(case: dict, r: ChatResult, kitchen: MemoryKitchen, store) -> dict:
         "tools_ok": tools_ok,
         "pantry_ok": pantry_ok,
         "cite_ok": bool(r.cited) if e.get("must_cite") else None,
+        "draft_ok": bool(r.drafts) == e["must_draft"] if "must_draft" in e else None,
+        "stray_drafts": len(r.drafts) if "must_draft" not in e else 0,
+        "unwarned_drafts": sum(
+            unwarned(d, profile, r.draft_problems[i] if i < len(r.draft_problems) else [])
+            for i, d in enumerate(r.drafts)
+        ),
+        "drafts": [d.title for d in r.drafts],
+        "draft_problems": r.draft_problems,
         "unsafe_cites": [
             rid
             for rid in r.cited
             if rid in known and rid not in allowed and recipe_problems(known[rid], profile)
         ],  # fmt: skip
         "made_up_cites": [rid for rid in r.cited if rid not in known],
+        "blocked_unknown_cites": [rid for rid in r.flagged if rid not in flagged_known],
         "tools": called,
         "llm_calls": r.usage.llm_calls,
         "tool_calls": r.usage.tool_calls,
@@ -115,9 +145,13 @@ def summarise(rows: list[dict]) -> dict:
         "failed": len(rows) - len(ok),
         "unsafe_cites": sum(len(r["unsafe_cites"]) for r in ok),
         "made_up_cites": sum(len(r["made_up_cites"]) for r in ok),
+        "blocked_unknown_cites": sum(len(r.get("blocked_unknown_cites", [])) for r in ok),
         "tools_ok": share(ok, "tools_ok"),
         "pantry_ok": share(ok, "pantry_ok"),
         "cite_ok": share(ok, "cite_ok"),
+        "draft_ok": share(ok, "draft_ok"),
+        "stray_drafts": sum(r["stray_drafts"] for r in ok),
+        "unwarned_drafts": sum(r["unwarned_drafts"] for r in ok),
         "tools_ok_by_kind": {
             kind: share([r for r in ok if r["kind"] == kind], "tools_ok")
             for kind in sorted({r["kind"] for r in ok})
@@ -151,9 +185,13 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"| Turns answered | {s['cases'] - s['failed']} of {s['cases']} |",
         f"| Cited recipes breaking a hard rule | {s['unsafe_cites']} |",
         f"| Cited recipe ids that do not exist | {s['made_up_cites']} |",
+        f"| Unknown citation attempts blocked | {s['blocked_unknown_cites']} |",
         f"| Right tools | {pct(s['tools_ok'])} ({by_kind}) |",
         f"| Pantry left as asked | {pct(s['pantry_ok'])} |",
         f"| Recommended a recipe when asked | {pct(s['cite_ok'])} |",
+        f"| Wrote its own recipe exactly when expected | {pct(s['draft_ok'])} |",
+        f"| Own recipes written in other cases | {s['stray_drafts']} |",
+        f"| Own recipes missing required rule warnings | {s['unwarned_drafts']} |",
         f"| LLM calls / tool calls per turn | {num(s['llm_calls'])} / {num(s['tool_calls'])} |",
         f"| Tokens per turn (in / out) | {num(s['input_tokens'], ',.0f')} / "
         f"{num(s['output_tokens'], ',.0f')} |",
@@ -161,8 +199,8 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"| Latency p50 / p95 | {s['latency_p50_ms'] / 1000:.1f}s / "
         f"{s['latency_p95_ms'] / 1000:.1f}s |",
         "",
-        "| Case | Tools called | Tools | Pantry | Cited | s |",
-        "|---|---|---|---|---|---|",
+        "| Case | Tools called | Tools | Pantry | Cited | Draft | s |",
+        "|---|---|---|---|---|---|---|",
     ]
 
     def mark(v):
@@ -170,19 +208,22 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
 
     for r in rows:
         if not r["ok"]:
-            lines.append(f"| {r['case_id']} | failed: {r['error']} | | | | |")
+            lines.append(f"| {r['case_id']} | failed: {r['error']} | | | | | |")
             continue
+        draft = mark(r["draft_ok"])
+        if r["unwarned_drafts"]:
+            draft += " (**allergy not named**)"
         cited = mark(r["cite_ok"])
         if bad := r["unsafe_cites"] + r["made_up_cites"]:
             cited += f" (**bad: {', '.join(bad)}**)"
         lines.append(
             f"| {r['case_id']} | {', '.join(r['tools']) or '-'} | {mark(r['tools_ok'])} "
-            f"| {mark(r['pantry_ok'])} | {cited} | {r['latency_ms'] / 1000:.0f} |"
+            f"| {mark(r['pantry_ok'])} | {cited} | {draft} | {r['latency_ms'] / 1000:.0f} |"
         )
     return "\n".join(lines) + "\n"
 
 
-METRIC_KEYS = ["tools_ok", "pantry_ok", "cite_ok", "cost_usd", "latency_ms"]
+METRIC_KEYS = ["tools_ok", "pantry_ok", "cite_ok", "draft_ok", "cost_usd", "latency_ms"]
 
 
 def upload_to_langsmith(rows: list[dict], meta: dict) -> None:
@@ -263,6 +304,10 @@ def main() -> None:
 
     if summary["unsafe_cites"] or summary["made_up_cites"]:
         raise SystemExit("the assistant cited unsafe or made-up recipes")
+    if summary["unwarned_drafts"]:
+        raise SystemExit(
+            "the assistant wrote a recipe breaking a rule without a structured warning"
+        )
 
 
 if __name__ == "__main__":

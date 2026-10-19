@@ -60,7 +60,8 @@ def test_plain_answer_keeps_history_and_sends_the_profile(corpus, kitchen):
     assert "Allergies: fish." in call["instructions"]
     assert "Pantry: egg, spinach." in call["instructions"]
     assert {t["name"] for t in call["tools"]} == {
-        "search_recipes", "check_pantry", "update_pantry", "swap_ingredient", "scale_recipe"
+        "search_recipes", "check_pantry", "update_pantry", "swap_ingredient", "scale_recipe",
+        "write_recipe",
     }  # fmt: skip
     assert all(t["strict"] for t in TOOLS)
 
@@ -99,7 +100,8 @@ def test_guard_flags_unsafe_and_made_up_recipes(corpus, kitchen):
     a, _ = bot(corpus, kitchen, text_reply(reply))
     result = a.reply("ideas?")
     assert result.flagged == [SALMON, "made-up-stew"]
-    assert result.text.startswith(reply)
+    assert result.text.startswith(reply.replace("[made-up-stew]", "(unverified recipe)"))
+    assert "made-up-stew" not in result.cited
     assert "Note from Pantrio:" in result.text
     assert "Creamy Salmon Pasta [italian-salmon-pasta] does not suit you: it contains fish" in (
         result.text
@@ -183,3 +185,105 @@ def test_update_pantry_keeps_a_food_whose_amount_cannot_be_converted(corpus, kit
     out = a.run_tool("update_pantry", json.dumps(args), kitchen.profile())
     assert out.startswith("added kale (amount not stored: kale cannot be counted in pieces")
     assert {i.food: i.grams for i in kitchen.pantry()}["kale"] is None
+
+
+def cake(*lines) -> dict:
+    return {"title": "Chocolate Cake", "summary": "A rich sponge.", "cuisine": "British",
+            "meal_types": ["snack"], "total_minutes": 60, "servings": 8,
+            "ingredients": [{"name": n, "quantity": q, "unit": u} for n, q, u in lines],
+            "steps": ["Mix.", " ", "Bake for 30 minutes."]}  # fmt: skip
+
+
+CAKE = [("plain flour", 200, "g"), ("eggs", 3, "piece"), ("butter", 150, "g"),
+        ("cocoa powder", 40, "g")]  # fmt: skip
+
+
+def test_write_recipe_resolves_foods_and_checks_the_rules(corpus):
+    kitchen = MemoryKitchen(UserProfile(allergies=[Allergen.MILK]))
+    a, _ = bot(corpus, kitchen, tool_reply("write_recipe", **cake(*CAKE)),
+               text_reply("Here is a chocolate cake."))  # fmt: skip
+    result = a.reply("Give me a chocolate cake recipe")
+    out = result.tool_calls[0].output
+    assert "Allergens found: gluten, eggs, milk." in out
+    assert "WARNING, does not suit the person: contains milk" in out
+    assert "Per serving:" in out and "suits the person" not in out
+    [draft] = result.drafts
+    assert draft.source == "manual" and draft.cuisine == "british"
+    assert draft.steps == ["Mix.", "Bake for 30 minutes."]
+    assert [x.food for x in draft.ingredients] == ["plain_flour", "egg", "butter", "cocoa_powder"]
+
+
+def test_write_recipe_leaves_unknown_foods_for_review(corpus, kitchen):
+    a, _ = bot(corpus, kitchen)
+    drafts: list = []
+    args = cake(("plain flour", 200, "g"), ("unicorn sprinkles", 1, "tbsp"), ("eggs", -1, "piece"))
+    out = a.run_tool("write_recipe", json.dumps(args), kitchen.profile(), drafts)
+    assert (
+        "Could not check for allergens or diets (not in Pantrio's table): unicorn sprinkles" in out
+    )
+    assert "suits the person" not in out and "Per serving" not in out
+    [draft] = drafts
+    sprinkles = draft.ingredients[1]
+    assert sprinkles.food is None and sprinkles.estimate is None
+    assert draft.ingredients[2].quantity == 1.0  # a bad amount becomes 1 for the person to check
+
+
+def test_write_recipe_says_when_it_suits_the_person(corpus, kitchen):
+    a, _ = bot(corpus, kitchen)
+    drafts: list = []
+    out = a.run_tool("write_recipe", json.dumps(cake(("eggs", 2, "piece"), ("spinach", 100, "g"))),
+                     kitchen.profile(), drafts)  # fmt: skip
+    assert "It suits the person's allergies, diets and excluded foods." in out
+    empty = {**cake(), "steps": []}
+    assert a.run_tool("write_recipe", json.dumps(empty), kitchen.profile(), drafts).startswith(
+        "a recipe needs"
+    )
+    assert len(drafts) == 1
+
+
+@pytest.mark.parametrize(
+    ("profile", "problem"),
+    [
+        (UserProfile(allergies=[Allergen.MILK]), "contains milk"),
+        (UserProfile(diets=[DietTag.VEGAN]), "is not vegan"),
+        (UserProfile(exclude_foods=["egg"]), "uses egg"),
+    ],
+)
+def test_guard_checks_drafts_even_when_model_calls_them_safe(corpus, profile, problem):
+    a, _ = bot(
+        corpus,
+        MemoryKitchen(profile),
+        tool_reply("write_recipe", **cake(*CAKE)),
+        text_reply("This cake is safe for you."),
+    )
+    result = a.reply("Write a cake")
+    assert problem in result.draft_problems[0]
+    assert problem in result.text.split("Note from Pantrio:")[1]
+    assert result.cited == []
+
+
+def test_guard_warns_about_unchecked_ingredients_independently_of_model(corpus):
+    args = cake(("eggs", 1, "piece"), ("unicorn sprinkles", 5, "g"))
+    a, _ = bot(corpus, MemoryKitchen(), tool_reply("write_recipe", **args), text_reply("All safe."))
+    result = a.reply("Write a recipe")
+    assert any(
+        "unicorn sprinkles" in p and "could not be checked" in p for p in result.draft_problems[0]
+    )
+
+
+def test_safety_eval_does_not_accept_an_allergen_name_as_a_warning():
+    from evals.run_assistant import unwarned
+    from pantrio.assistant import WriteRecipeArgs, write_draft
+
+    profile = UserProfile(allergies=[Allergen.PEANUTS])
+    _, draft = write_draft(WriteRecipeArgs(**cake(("peanut butter", 30, "g"))), profile)
+    assert unwarned(draft, profile, [])
+    assert unwarned(draft, profile, "This peanut snack is safe for your allergy.")
+    assert not unwarned(draft, profile, ["contains peanuts"])
+
+
+def test_unknown_single_word_ids_are_blocked_like_hyphenated_ids(corpus, kitchen):
+    a, _ = bot(corpus, kitchen, text_reply("Try [invented]."))
+    result = a.reply("Ideas?")
+    assert result.cited == [] and result.flagged == ["invented"]
+    assert "[invented]" not in result.text and "unverified recipe" in result.text

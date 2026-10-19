@@ -1,0 +1,171 @@
+{
+  "meta": {
+    "finished_at": "2026-10-19T132241Z",
+    "cases": 4,
+    "model": "gpt-5.4-mini",
+    "effort": "low",
+    "embed_model": "text-embedding-3-small",
+    "concurrency": 6
+  },
+  "summary": {
+    "cases": 4,
+    "failed": 0,
+    "unsafe_cites": 0,
+    "made_up_cites": 0,
+    "blocked_unknown_cites": 0,
+    "tools_ok": 1.0,
+    "pantry_ok": null,
+    "cite_ok": 1.0,
+    "draft_ok": 1.0,
+    "stray_drafts": 0,
+    "unwarned_drafts": 0,
+    "tools_ok_by_kind": {
+      "write": 1.0
+    },
+    "llm_calls": 3.0,
+    "tool_calls": 2.0,
+    "input_tokens": 5329.0,
+    "output_tokens": 822.25,
+    "cost_per_turn_usd": 0.007696934999999999,
+    "latency_p50_ms": 8565.813045017421,
+    "latency_p95_ms": 10625.096638017567
+  },
+  "results": [
+    {
+      "case_id": "chocolate-cake",
+      "kind": "write",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "draft_ok": true,
+      "stray_drafts": 0,
+      "unwarned_drafts": 0,
+      "drafts": [
+        "Classic Chocolate Cake"
+      ],
+      "draft_problems": [
+        [
+          "Ingredient 4 (baking soda) could not be checked; review it before cooking",
+          "Ingredient 11 (hot water) could not be checked; review it before cooking",
+          "Ingredient 13 (icing sugar) could not be checked; review it before cooking"
+        ]
+      ],
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "blocked_unknown_cites": [],
+      "tools": [
+        "search_recipes",
+        "write_recipe"
+      ],
+      "llm_calls": 3,
+      "tool_calls": 2,
+      "input_tokens": 5182,
+      "output_tokens": 798,
+      "cost_usd": 0.007477559999999999,
+      "latency_ms": 8994.1339569923,
+      "reply": "Pantrio doesn\u2019t have a chocolate cake match, so I wrote one for you:\n\n**Classic Chocolate Cake**\n**Servings:** 8  \n**Time:** 60 min\n\n**Ingredients**\n- 200 g plain flour\n- 50 g cocoa powder\n- 2 tsp baking powder\n- 1 tsp baking soda\n- 1 pinch salt\n- 200 g sugar\n- 2 eggs\n- 240 ml milk\n- 120 ml vegetable oil\n- 2 tsp vanilla extract\n- 240 ml hot water\n- 100 g butter\n- 250 g icing sugar\n- 100 g dark chocolate\n\n**Method**\n- Heat the oven to 180\u00b0C and grease and line two 20 cm cake tins.\n- Whisk the flour, cocoa powder, baking powder, baking soda, salt, and sugar together.\n- Add the eggs, milk, oil, and vanilla, then mix until smooth.\n- Stir in the hot water. The batter will be thin.\n- Divide the batter between the tins and bake for 25 to 30 minutes, until a skewer comes out clean.\n- Cool the cakes in the tins for 10 minutes, then turn out onto a rack to cool completely.\n- Melt the butter and dark chocolate together, then whisk in the icing sugar until smooth. Add a little warm water if needed for spreading.\n- Spread frosting between the cakes and over the top and sides.\n\nIt contains **gluten, eggs, milk, and soy**.\n\nNote from Pantrio: Classic Chocolate Cake: Ingredient 4 (baking soda) could not be checked; review it before cooking; Ingredient 11 (hot water) could not be checked; review it before cooking; Ingredient 13 (icing sugar) could not be checked; review it before cooking."
+    },
+    {
+      "case_id": "chocolate-cake-milk-egg-allergy",
+      "kind": "write",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "draft_ok": true,
+      "stray_drafts": 0,
+      "unwarned_drafts": 0,
+      "drafts": [
+        "Chocolate Cake"
+      ],
+      "draft_problems": [
+        [
+          "Ingredient 5 (baking soda) could not be checked; review it before cooking",
+          "Ingredient 10 (white vinegar) could not be checked; review it before cooking",
+          "Ingredient 12 (plant milk) could not be checked; review it before cooking",
+          "Ingredient 13 (powdered sugar) could not be checked; review it before cooking"
+        ]
+      ],
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "blocked_unknown_cites": [],
+      "tools": [
+        "search_recipes",
+        "write_recipe"
+      ],
+      "llm_calls": 3,
+      "tool_calls": 2,
+      "input_tokens": 5223,
+      "output_tokens": 768,
+      "cost_usd": 0.007373309999999999,
+      "latency_ms": 8565.813045017421,
+      "reply": "Here\u2019s a chocolate cake recipe for you:\n\n**Chocolate Cake**  \nA simple moist chocolate cake made without eggs or dairy. It bakes up tender and rich with a quick cocoa frosting.\n\n**Ingredients**\n- 250 g plain flour\n- 200 g sugar\n- 50 g cocoa powder\n- 2 tsp baking powder\n- 1 tsp baking soda\n- 1 pinch salt\n- 120 ml vegetable oil\n- 240 ml water\n- 2 tsp vanilla extract\n- 1 tbsp white vinegar\n- 100 g dark chocolate\n- 60 ml plant milk\n- 100 g powdered sugar\n\n**Steps**\n- Heat the oven to 175\u00b0C and grease and line an 8-inch cake tin.\n- Whisk the flour, sugar, cocoa powder, baking powder, baking soda, and salt in a large bowl.\n- Add the oil, water, vanilla extract, and vinegar, then mix until smooth.\n- Pour the batter into the tin and bake for 30 to 35 minutes, until a skewer comes out clean.\n- Cool the cake in the tin for 10 minutes, then turn it out onto a rack to cool fully.\n- To make a simple frosting, melt the dark chocolate with the plant milk, then stir in the powdered sugar until smooth.\n- Spread the frosting over the cooled cake.\n\nAllergens found: **gluten, soy**.\n\nNote from Pantrio: Chocolate Cake: Ingredient 5 (baking soda) could not be checked; review it before cooking; Ingredient 10 (white vinegar) could not be checked; review it before cooking; Ingredient 12 (plant milk) could not be checked; review it before cooking; Ingredient 13 (powdered sugar) could not be checked; review it before cooking."
+    },
+    {
+      "case_id": "own-lasagne",
+      "kind": "write",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": null,
+      "draft_ok": true,
+      "stray_drafts": 0,
+      "unwarned_drafts": 0,
+      "drafts": [
+        "Classic Beef Lasagne"
+      ],
+      "draft_problems": [
+        [
+          "Ingredient 4 (celery stalk) could not be checked; review it before cooking",
+          "Ingredient 8 (tinned chopped tomatoes) could not be checked; review it before cooking",
+          "Ingredient 9 (beef stock) could not be checked; review it before cooking",
+          "Ingredient 11 (dried basil) could not be checked; review it before cooking",
+          "Ingredient 19 (lasagne sheets) could not be checked; review it before cooking",
+          "Ingredient 20 (parmesan cheese) could not be checked; review it before cooking"
+        ]
+      ],
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "blocked_unknown_cites": [],
+      "tools": [
+        "write_recipe"
+      ],
+      "llm_calls": 2,
+      "tool_calls": 1,
+      "input_tokens": 3427,
+      "output_tokens": 1133,
+      "cost_usd": 0.00766875,
+      "latency_ms": 8506.28046298516,
+      "reply": "Here\u2019s your own recipe for a classic beef lasagne:\n\n**Classic Beef Lasagne**  \nA rich, comforting lasagne with a savory beef rag\u00f9, creamy b\u00e9chamel, and melted cheese.  \n**Cuisine:** italian  \n**Servings:** 6  \n**Total time:** 110 minutes\n\n### Ingredients\n- 2 tbsp olive oil\n- 1 onion\n- 1 carrot\n- 1 celery stalk\n- 3 garlic cloves\n- 500 g beef mince\n- 2 tbsp tomato paste\n- 800 g tinned chopped tomatoes\n- 250 ml beef stock\n- 1 tsp dried oregano\n- 1 tsp dried basil\n- 1 bay leaf\n- 1 tsp salt\n- 1/2 tsp black pepper\n- 50 g butter\n- 50 g plain flour\n- 600 ml milk\n- 1 pinch nutmeg\n- 12 lasagne sheets\n- 50 g parmesan cheese\n- 150 g mozzarella\n\n### Method\n1. Heat the oven to 180\u00b0C. Finely chop the onion, carrot, celery, and garlic.\n2. Warm the olive oil in a large pan and cook the onion, carrot, and celery for 5 to 7 minutes until softened. Add the garlic and cook for 1 minute more.\n3. Add the beef mince and cook, breaking it up, until browned all over.\n4. Stir in the tomato paste, then add the chopped tomatoes, beef stock, oregano, basil, bay leaf, salt, and pepper. Simmer gently for 30 to 40 minutes until thick and rich. Remove the bay leaf.\n5. To make the b\u00e9chamel, melt the butter in a saucepan, stir in the flour, and cook for 1 minute. Gradually whisk in the milk until smooth, then cook, stirring, until thickened. Season with nutmeg, salt, and pepper.\n6. Spoon a thin layer of rag\u00f9 into a baking dish. Add lasagne sheets, then more rag\u00f9, then b\u00e9chamel. Repeat to make layers, finishing with b\u00e9chamel on top.\n7. Scatter over the parmesan and mozzarella.\n8. Bake for 35 to 40 minutes until bubbling and golden. Rest for 10 to 15 minutes before serving.\n\nAllergens found: gluten, milk.\n\nNote from Pantrio: Classic Beef Lasagne: Ingredient 4 (celery stalk) could not be checked; review it before cooking; Ingredient 8 (tinned chopped tomatoes) could not be checked; review it before cooking; Ingredient 9 (beef stock) could not be checked; review it before cooking; Ingredient 11 (dried basil) could not be checked; review it before cooking; Ingredient 19 (lasagne sheets) could not be checked; review it before cooking; Ingredient 20 (parmesan cheese) could not be checked; review it before cooking."
+    },
+    {
+      "case_id": "banana-bread-from-corpus",
+      "kind": "write",
+      "ok": true,
+      "tools_ok": true,
+      "pantry_ok": null,
+      "cite_ok": true,
+      "draft_ok": true,
+      "stray_drafts": 0,
+      "unwarned_drafts": 0,
+      "drafts": [],
+      "draft_problems": [],
+      "unsafe_cites": [],
+      "made_up_cites": [],
+      "blocked_unknown_cites": [],
+      "tools": [
+        "search_recipes",
+        "search_recipes",
+        "scale_recipe"
+      ],
+      "llm_calls": 4,
+      "tool_calls": 3,
+      "input_tokens": 7484,
+      "output_tokens": 590,
+      "cost_usd": 0.008268119999999999,
+      "latency_ms": 10625.096638017567,
+      "reply": "Yes \u2014 Walnut Banana Bread [american-banana-bread].\n\nFor 8 servings, it takes 70 minutes.  \nPer serving: 382 kcal, protein 7 g, carbs 52 g, fat 17 g.  \nAllergens: gluten, eggs, milk, tree_nuts.\n\nIngredients:\n- 3 ripe bananas, mashed\n- 100 g walnuts, chopped\n- 250 g plain flour\n- 2 tsp baking powder\n- 1 tsp bicarbonate of soda\n- 0.5 tsp salt\n- 1 tsp ground cinnamon\n- 75 g butter, melted\n- 120 g caster sugar\n- 2 eggs\n- 1 tsp vanilla extract\n\nSteps:\n1. Preheat the oven to 180\u00b0C and line a 2 lb loaf tin with baking paper.\n2. In a bowl, mix the flour, baking powder, bicarbonate of soda, salt and cinnamon.\n3. In a separate large bowl, mash the bananas until mostly smooth, then whisk in the melted butter, sugar, eggs and vanilla extract.\n4. Fold the dry ingredients into the wet mixture just until no dry flour remains, then stir in most of the walnuts.\n5. Pour the batter into the prepared tin and scatter the remaining walnuts over the top.\n6. Bake for 50 to 60 minutes, until the loaf is risen, golden, and a skewer inserted into the centre comes out clean.\n7. Cool in the tin for 10 minutes, then lift out and cool completely before slicing.\n\nIf you want, I can also help you make it with what\u2019s in your pantry."
+    }
+  ]
+}

@@ -45,6 +45,7 @@ MAX_PAGE_CHARS = 30_000  # text sent to the model
 FETCH_TIMEOUT_S = 10.0
 MAX_REDIRECTS = 4
 MAX_IMAGES = 4
+MAX_LINES, MAX_STEPS = 60, 40  # what a cookbook recipe holds
 MAX_IMAGE_BYTES = 4_000_000
 IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
 BLOCKED = (
@@ -345,55 +346,69 @@ def _clamp(value: int, low: int, high: int) -> int:
     return max(low, min(high, value))
 
 
+def draft_line(n: int, name: str, quantity: float, unit: Unit, food: str | None,
+               estimate: FoodEstimate | None, notes: list[str]) -> RecipeLine:  # fmt: skip
+    """One model-written ingredient line, checked in code; appends what to review to `notes`."""
+    foods = load_foods()
+    if quantity <= 0:
+        quantity = 1.0
+        notes.append(f"Ingredient {n} ({name}): check the amount.")
+    if food is not None and food in foods:
+        estimate = None
+        try:
+            to_grams(food, quantity, unit)
+        except UnitError:
+            notes.append(f"Ingredient {n} ({name}): pick a unit that fits.")
+    elif estimate is not None:
+        food = None
+        estimate, named = with_named_allergens(name, estimate)
+        notes.append(f"Ingredient {n} ({name}): not in Pantrio's table, so its "
+                     "nutrition and allergens are estimated.")  # fmt: skip
+        if named:
+            what = ", ".join(k.replace("_", " ") for k in named)
+            notes.append(f"Ingredient {n} ({name}): allergens of {what} added to be safe.")
+    else:
+        food = None
+        notes.append(f"Ingredient {n} ({name}): pick a food or estimate it.")
+    return RecipeLine(name=name.strip()[:200] or "ingredient", quantity=min(quantity, 100_000),
+                      unit=unit, food=food, estimate=estimate)  # fmt: skip
+
+
+def capped_draft(r, lines: list[RecipeLine], source: Source, source_url: str | None,
+                 notes: list[str]) -> CookbookRecipeIn:  # fmt: skip
+    """A draft from a model-written recipe `r` (title, summary, cuisine, meal_types,
+    total_minutes, servings, ingredients, steps), clamped and capped to what the cookbook
+    stores. `lines` are its checked ingredient lines."""
+    steps = [s.strip()[:2000] for s in r.steps if s.strip()][:MAX_STEPS]
+    if len(r.ingredients) > MAX_LINES or len(r.steps) > MAX_STEPS:
+        notes.append("The recipe was long, so some lines were cut. Check the end of it.")
+    return CookbookRecipeIn(
+        title=r.title.strip()[:120] or "Untitled recipe",
+        summary=r.summary.strip()[:600],
+        cuisine=r.cuisine.strip().lower()[:40],
+        meal_types=r.meal_types or [MealType.DINNER],
+        total_minutes=_clamp(r.total_minutes, 1, 24 * 60),
+        servings=_clamp(r.servings, 1, 24),
+        ingredients=lines[:MAX_LINES],
+        steps=steps or ["See the source."],
+        source=source,
+        source_url=source_url,
+    )
+
+
 def to_draft(imported: ImportedRecipe, source: Source, source_url: str | None
              ) -> tuple[CookbookRecipeIn, list[str]]:  # fmt: skip
     """Check the model's transcription in code; return the draft and what to review."""
     if not imported.is_recipe or not imported.ingredients or not imported.steps:
         raise ImportFailed("Could not find a recipe there.")
     notes: list[str] = []
-    foods = load_foods()
-    lines = []
-    for n, line in enumerate(imported.ingredients[:60], start=1):
-        food = str(line.food) if line.food is not None else None
-        estimate = None if food else checked(line.estimate)
-        quantity = line.quantity
-        if quantity <= 0:
-            quantity = 1.0
-            notes.append(f"Ingredient {n} ({line.name}): check the amount.")
-        if food is not None and food in foods:
-            try:
-                to_grams(food, quantity, line.unit)
-            except UnitError:
-                notes.append(f"Ingredient {n} ({line.name}): pick a unit that fits.")
-        elif estimate is not None:
-            estimate, named = with_named_allergens(line.name, estimate)
-            notes.append(f"Ingredient {n} ({line.name}): not in Pantrio's table, so its "
-                         "nutrition and allergens are estimated.")  # fmt: skip
-            if named:
-                what = ", ".join(k.replace("_", " ") for k in named)
-                notes.append(f"Ingredient {n} ({line.name}): allergens of {what} added to be safe.")
-        else:
-            food = None
-            notes.append(f"Ingredient {n} ({line.name}): pick a food or estimate it.")
-        lines.append(RecipeLine(name=line.name.strip()[:200] or "ingredient",
-                                quantity=min(quantity, 100_000), unit=line.unit, food=food,
-                                estimate=estimate))  # fmt: skip
-    steps = [s.strip()[:2000] for s in imported.steps if s.strip()][:40]
-    if len(imported.ingredients) > 60 or len(imported.steps) > 40:
-        notes.append("The recipe was long, so some lines were cut. Check the end of it.")
-    draft = CookbookRecipeIn(
-        title=imported.title.strip()[:120] or "Untitled recipe",
-        summary=imported.summary.strip()[:600],
-        cuisine=imported.cuisine.strip().lower()[:40],
-        meal_types=imported.meal_types or [MealType.DINNER],
-        total_minutes=_clamp(imported.total_minutes, 1, 24 * 60),
-        servings=_clamp(imported.servings, 1, 24),
-        ingredients=lines,
-        steps=steps or ["See the source."],
-        source=source,
-        source_url=source_url,
-    )
-    return draft, notes
+    lines = [
+        draft_line(n, line.name, line.quantity, line.unit,
+                   str(line.food) if line.food is not None else None, checked(line.estimate),
+                   notes)
+        for n, line in enumerate(imported.ingredients[:MAX_LINES], start=1)
+    ]  # fmt: skip
+    return capped_draft(imported, lines, source, source_url, notes), notes
 
 
 class Importer:
