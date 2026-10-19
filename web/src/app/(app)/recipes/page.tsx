@@ -90,7 +90,7 @@ export default function RecipesPage() {
           <Search className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
           <Input
             aria-label="Search recipes"
-            placeholder="Try “quick dinner with chickpeas and spinach”"
+            placeholder="Try “chickpea dinner”"
             value={text}
             onChange={(e) => setText(e.target.value)}
             className="h-12 rounded-xl bg-surface pl-10 text-[15px]"
