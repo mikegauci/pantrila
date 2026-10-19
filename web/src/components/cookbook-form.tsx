@@ -1,6 +1,6 @@
 "use client"
 
-import { Camera, Link2, PenLine, Plus, Sparkles, Trash2, TriangleAlert, X } from "lucide-react"
+import { Camera, ClipboardPaste, Link2, PenLine, Plus, Share2, Sparkles, Trash2, TriangleAlert, X } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { toast } from "sonner"
 
@@ -17,13 +17,28 @@ import { useFoods, useProfile } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
 import type {
   Allergen, CookbookDetail, CookbookPreview, CookbookRecipeIn, EstimateView, FoodEstimate, RecipeLine,
-  RecipeSource, Unit,
+  RecipeSource, SourcePlatform, Unit,
 } from "@/lib/types"
 
 export const RECIPE_SOURCE: Record<RecipeSource, { icon: typeof Camera; text: string }> = {
   photo: { icon: Camera, text: "From a photo" },
   link: { icon: Link2, text: "From a link" },
+  post: { icon: Share2, text: "From a post" },
+  text: { icon: ClipboardPaste, text: "Pasted text" },
   manual: { icon: PenLine, text: "Typed in" },
+}
+
+export const PLATFORM: Record<SourcePlatform, string> = {
+  tiktok: "TikTok", instagram: "Instagram", facebook: "Facebook",
+}
+
+/** A link's site for display: "bbcgoodfood.com". */
+export const siteOf = (url: string) => {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "")
+  } catch {
+    return url
+  }
 }
 
 const UNITS: Unit[] = ["g", "kg", "ml", "l", "tsp", "tbsp", "cup", "piece", "pinch"]
@@ -31,7 +46,8 @@ const UNITS: Unit[] = ["g", "kg", "ml", "l", "tsp", "tbsp", "cup", "piece", "pin
 export const BLANK_RECIPE: CookbookRecipeIn = {
   title: "", summary: "", cuisine: "", meal_types: ["dinner"], total_minutes: 30, servings: 2,
   ingredients: [{ name: "", quantity: 1, unit: "g", food: null, estimate: null }],
-  steps: [], source: "manual", source_url: null,
+  steps: [], source: "manual", source_url: null, source_platform: null, source_author: null,
+  recipe_url: null,
 }
 
 /** sessionStorage key: a recipe the assistant wrote, handed to the new-recipe page (read once). */
@@ -218,6 +234,45 @@ function Preview({ recipe }: { recipe: CookbookRecipeIn }) {
   )
 }
 
+/** Who the recipe is from: the post, its creator and the recipe site it linked to. */
+function CreditFields({ r, onChange }: { r: CookbookRecipeIn; onChange: (r: CookbookRecipeIn) => void }) {
+  const text = (v: string) => v.trim() || null
+  return (
+    <Panel className="grid gap-4">
+      <PanelTitle className="mb-0">Credit</PanelTitle>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-1.5">
+          <Label htmlFor="credit-author">Creator</Label>
+          <div className="relative">
+            <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground" aria-hidden>@</span>
+            <Input id="credit-author" value={r.source_author ?? ""} maxLength={31} autoCapitalize="none"
+                   spellCheck={false} placeholder="handle" className="h-10 bg-surface pl-7"
+                   onChange={(e) => onChange({ ...r, source_author: text(e.target.value.replace(/^@/, "")) })} />
+          </div>
+        </div>
+        <div className="grid gap-1.5">
+          <Label htmlFor="credit-platform">Posted on</Label>
+          <NativeSelect id="credit-platform" className="w-full" value={r.source_platform ?? ""}
+                        onChange={(e) => onChange({ ...r, source_platform: (e.target.value || null) as SourcePlatform | null })}>
+            <option value="">Not set</option>
+            {(Object.keys(PLATFORM) as SourcePlatform[]).map((p) => <option key={p} value={p}>{PLATFORM[p]}</option>)}
+          </NativeSelect>
+        </div>
+      </div>
+      <div className="grid gap-1.5">
+        <Label htmlFor="credit-post">Post link</Label>
+        <Input id="credit-post" type="url" value={r.source_url ?? ""} maxLength={2000} className="h-10 bg-surface"
+               placeholder="https://" onChange={(e) => onChange({ ...r, source_url: text(e.target.value) })} />
+      </div>
+      <div className="grid gap-1.5">
+        <Label htmlFor="credit-site">Recipe site (if the post linked one)</Label>
+        <Input id="credit-site" type="url" value={r.recipe_url ?? ""} maxLength={2000} className="h-10 bg-surface"
+               placeholder="https://" onChange={(e) => onChange({ ...r, recipe_url: text(e.target.value) })} />
+      </div>
+    </Panel>
+  )
+}
+
 export function CookbookForm({
   initial, recipeId, onSaved, onCancel,
 }: {
@@ -353,6 +408,8 @@ export function CookbookForm({
             <Plus /> Add ingredient
           </Button>
         </Panel>
+
+        {r.source === "post" && <CreditFields r={r} onChange={setR} />}
 
         <Panel className="grid gap-2">
           <PanelTitle className="mb-0">Method</PanelTitle>

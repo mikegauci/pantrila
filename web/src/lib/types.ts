@@ -276,7 +276,8 @@ export interface Usage {
 // --- Cookbook: the person's own recipes ---
 
 export type DietClass = "plant" | "dairy" | "egg" | "honey" | "fish" | "shellfish" | "meat"
-export type RecipeSource = "manual" | "photo" | "link"
+export type RecipeSource = "manual" | "photo" | "link" | "post" | "text"
+export type SourcePlatform = "tiktok" | "instagram" | "facebook"
 
 /** Model estimate for a food missing from the ingredient table, per 100 g. */
 export interface FoodEstimate {
@@ -311,6 +312,11 @@ export interface CookbookRecipeIn {
   steps: string[]
   source: RecipeSource
   source_url: string | null
+  /** Credit for a recipe from a social post: source_url is the post. */
+  source_platform: SourcePlatform | null
+  source_author: string | null
+  /** The recipe site the post's caption linked to, when the recipe came from there. */
+  recipe_url: string | null
 }
 
 export interface LineView extends RecipeLine {
@@ -327,6 +333,9 @@ export interface CookbookCard {
   servings: number
   source: RecipeSource
   source_url: string | null
+  source_platform: SourcePlatform | null
+  source_author: string | null
+  recipe_url: string | null
   created_at: string
   updated_at: string
   ingredient_count: number

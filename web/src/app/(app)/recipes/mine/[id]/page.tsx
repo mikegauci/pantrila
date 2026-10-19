@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
 import { AiBadge, AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
-import { CookbookForm, RECIPE_SOURCE } from "@/components/cookbook-form"
+import { CookbookForm, PLATFORM, RECIPE_SOURCE, siteOf } from "@/components/cookbook-form"
 import { StartCooking } from "@/components/cooking-mode"
 import { MacroRing } from "@/components/macro-ring"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -17,9 +17,18 @@ import { send } from "@/lib/api"
 import { label } from "@/lib/format"
 import { useCookbookRecipe, useMe, useProfile } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
+import type { CookbookDetail } from "@/lib/types"
 
 function amount(q: number) {
   return q < 10 ? String(Math.round(q * 100) / 100) : String(Math.round(q))
+}
+
+const SOURCE_LINK = "inline-flex items-center gap-1 font-medium text-primary-text underline-offset-2 hover:underline"
+
+/** "From @creator on TikTok", with whatever parts of the credit are known. */
+function postCredit(r: CookbookDetail) {
+  const by = r.source_author ? ` @${r.source_author}` : " a post"
+  return `From${by}${r.source_platform ? ` on ${PLATFORM[r.source_platform]}` : ""}`
 }
 
 export default function MyRecipePage() {
@@ -137,15 +146,35 @@ export default function MyRecipePage() {
             <span className="inline-flex items-center gap-1.5"><Users className="size-4" aria-hidden />Serves {r.servings}</span>
             <span>{r.meal_types.map(label).join(", ")}</span>
           </p>
-          <p className="inline-flex flex-wrap items-center gap-1.5 text-[13px] text-muted-foreground">
-            <SourceIcon className="size-4" aria-hidden /> {sourceText}
-            {r.source_url && (
-              <a href={r.source_url} target="_blank" rel="noopener noreferrer nofollow"
-                 className="inline-flex items-center gap-1 font-medium text-primary-text underline-offset-2 hover:underline">
-                {new URL(r.source_url).hostname.replace(/^www\./, "")} <ExternalLink className="size-3.5" aria-hidden />
-              </a>
-            )}
-          </p>
+          {r.source === "post" ? (
+            <div className="grid gap-1 text-[13px] text-muted-foreground">
+              <p className="inline-flex flex-wrap items-center gap-1.5">
+                <SourceIcon className="size-4" aria-hidden />
+                {r.source_url ? (
+                  <a href={r.source_url} target="_blank" rel="noopener noreferrer nofollow" className={SOURCE_LINK}>
+                    {postCredit(r)} <ExternalLink className="size-3.5" aria-hidden />
+                  </a>
+                ) : postCredit(r)}
+              </p>
+              {r.recipe_url && (
+                <p className="inline-flex flex-wrap items-center gap-1.5 pl-[22px]">
+                  Recipe from
+                  <a href={r.recipe_url} target="_blank" rel="noopener noreferrer nofollow" className={SOURCE_LINK}>
+                    {siteOf(r.recipe_url)} <ExternalLink className="size-3.5" aria-hidden />
+                  </a>
+                </p>
+              )}
+            </div>
+          ) : (
+            <p className="inline-flex flex-wrap items-center gap-1.5 text-[13px] text-muted-foreground">
+              <SourceIcon className="size-4" aria-hidden /> {sourceText}
+              {r.source_url && (
+                <a href={r.source_url} target="_blank" rel="noopener noreferrer nofollow" className={SOURCE_LINK}>
+                  {siteOf(r.source_url)} <ExternalLink className="size-3.5" aria-hidden />
+                </a>
+              )}
+            </p>
+          )}
           <div className="flex flex-wrap gap-1.5">
             {r.estimated && <AiBadge>Estimated</AiBadge>}
             {r.diet_tags.map((d) => <DietBadge key={d} diet={d} />)}
