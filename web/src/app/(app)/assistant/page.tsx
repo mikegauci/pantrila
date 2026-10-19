@@ -120,10 +120,10 @@ function Bubble({ m }: { m: Message }) {
 export default function AssistantPage() {
   // Rendered only on the client after sign-in, so localStorage and the URL are available here.
   // Home links here with ?q= (ask it in a new chat) or ?thread= (open that chat).
-  const [params] = useState(() => new URLSearchParams(window.location.search))
-  const [threadId, setThreadId] = useState<number | null>(() =>
-    params.has("q") ? null : Number(params.get("thread")) || Number(localStorage.getItem(LAST_THREAD)) || null)
-  const asked = useRef(false)
+  const [threadId, setThreadId] = useState<number | null>(() => {
+    const params = new URLSearchParams(window.location.search)
+    return params.has("q") ? null : Number(params.get("thread")) || Number(localStorage.getItem(LAST_THREAD)) || null
+  })
   const [pending, setPending] = useState<Message[]>([])
   const [text, setText] = useState("")
   const [busy, setBusy] = useState(false)
@@ -143,14 +143,21 @@ export default function AssistantPage() {
   }, [current])
 
   useEffect(() => {
-    const q = params.get("q")
-    // Clear ?q= without a Next navigation: a router transition can remount this page and lose the chat in flight.
-    if (params.size) window.history.replaceState(null, "", "/assistant")
-    if (q && !asked.current) {
-      asked.current = true
-      ask(q)
+    // Next keeps this page mounted but hidden between visits (Cache Components use React Activity) and
+    // re-runs this effect each time it is shown, so read the URL now rather than from state.
+    const params = new URLSearchParams(window.location.search)
+    if (!params.size) return
+    // Clear it without a Next navigation (that could remount the page and lose the chat in flight); this
+    // also stops a second run (Strict Mode) from asking twice.
+    window.history.replaceState(null, "", "/assistant")
+    const q = params.get("q")?.trim()
+    const thread = Number(params.get("thread"))
+    if (q) {
+      open(null)
+      ask(q, null)
+    } else if (thread) {
+      open(thread)
     }
-    // Once, on arrival from the home card.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -175,14 +182,14 @@ export default function AssistantPage() {
     }
   }
 
-  async function ask(message: string) {
+  async function ask(message: string, thread = current) {
     if (!message.trim() || busy) return
     setText("")
     setBusy(true)
     const asked: Message = { role: "user", text: message }
     setPending([asked])
     try {
-      const reply = await send<ChatReply>("/chat", "POST", { message, thread_id: current })
+      const reply = await send<ChatReply>("/chat", "POST", { message, thread_id: thread })
       const answered: Message = { role: "assistant", text: reply.text, reply }
       // The server saved both messages; put them in the cache instead of fetching the thread again.
       await mutate<ChatThread>(`/me/chats/${reply.thread_id}`, (t) => ({
