@@ -220,6 +220,7 @@ The paid evals are a manual GitHub Actions workflow.
 | `src/pantrio/constraints.py` | The deterministic checker: hard rules and soft targets |
 | `src/pantrio/planner.py` | Planner graph |
 | `src/pantrio/assistant.py`, `swaps.py`, `pantry.py`, `grocery.py` | Assistant graph and its tools |
+| `src/pantrio/meal_swap.py`, `web/src/components/swap-meal.tsx` | Swap one meal of a saved plan for another recipe that passes your rules (no model call) |
 | `src/pantrio/cookbook.py`, `recipe_import.py` | Your own recipes: derivation, storage, import from photos and links |
 | `src/pantrio/photos.py` | Recipe photo prompt, generation and Supabase Storage |
 | `src/pantrio/cooking.py`, `web/src/components/cooking-mode.tsx` | Cooking mode: pantry use after "I cooked this", step timers, wake lock |
