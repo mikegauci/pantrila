@@ -351,3 +351,34 @@ export interface EstimateView {
   estimates: { name: string; estimate: FoodEstimate | null }[]
   cost_usd: number | null
 }
+
+export interface CookRequest {
+  recipe_id?: string
+  cookbook_id?: number
+  servings: number
+  update_pantry: boolean
+}
+
+export interface PantryChange {
+  food: string
+  name: string
+  used_g: number
+  unit: Unit
+  before: number
+  after: number | null
+}
+
+export interface Cooked {
+  id: number
+  recipe_id: string | null
+  cookbook_id: number | null
+  title: string
+  servings: number
+  pantry_updated: boolean
+  cooked_at: string
+}
+
+export interface CookResult {
+  cooked: Cooked | null
+  pantry: PantryChange[]
+}
