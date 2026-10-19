@@ -64,6 +64,7 @@ from pantrio.api_models import (
     LimitsView,
     LinkImport,
     Me,
+    MealOptions,
     Meta,
     PantryAdd,
     PantryChangeView,
@@ -73,6 +74,7 @@ from pantrio.api_models import (
     RecipeDetail,
     RecipeList,
     SwapList,
+    SwapMealRequest,
     ToolCallView,
     UsageEventView,
     UsageView,
@@ -81,6 +83,7 @@ from pantrio.api_views import (
     cookbook_card,
     cookbook_detail,
     food_name,
+    meal_options_view,
     plan_report,
     plan_view,
     recipe_card,
@@ -106,6 +109,7 @@ from pantrio.cookbook import (
 from pantrio.cooking import grams_used, use_from_pantry
 from pantrio.foods import UnitError, load_foods
 from pantrio.grocery import grocery_list
+from pantrio.meal_swap import SwapError, meal_options, replace_meal, swapped_report
 from pantrio.operations import EmbeddingUsage, PaidOperation, daily_cap
 from pantrio.pantry import UnknownFood, make_item, resolve_food
 from pantrio.photos import (
@@ -612,6 +616,48 @@ def create_app(
             for d in saved.plan.days
         ]})  # fmt: skip
         return grocery_list(plan, recipes, s.kitchen.pantry(), people)
+
+    def swap_http_error(exc: SwapError) -> HTTPException:
+        detail = {"message": str(exc), "problems": exc.problems} if exc.problems else str(exc)
+        return HTTPException(exc.status, detail)
+
+    @app.get("/plans/latest/meals/{day}/{meal_type}/options")
+    def meal_swap_options(day: int, meal_type: MealType, s: SessionDep) -> MealOptions:
+        """Recipes that could replace one meal of the latest plan, best fit first. Nothing is
+        saved and nothing is paid for: candidates pass the person's rules, ranked in code."""
+        saved = s.records.latest_plan()
+        if saved is None:
+            raise HTTPException(404, "No plan yet.")
+        profile = s.kitchen.profile()
+        try:
+            options = meal_options(saved.plan, day, meal_type, profile, s.store)
+        except SwapError as exc:
+            raise swap_http_error(exc) from exc
+        view = meal_options_view(saved, day, meal_type, options, s.store, profile)
+        if view is None:
+            raise HTTPException(404, "That meal's recipe is no longer in Pantrio's recipes.")
+        return view
+
+    @app.put("/plans/latest/meals/{day}/{meal_type}")
+    def swap_meal(day: int, meal_type: MealType, body: SwapMealRequest, s: SessionDep
+                  ) -> PlanView:  # fmt: skip
+        """Swap one meal of the latest plan. The recipe is checked against the person's rules
+        and its portions are fitted here, so a request cannot save an unsafe meal."""
+        saved = s.records.latest_plan()
+        if saved is None:
+            raise HTTPException(404, "No plan yet.")
+        if saved.id != body.plan_id:
+            raise HTTPException(409, "Your plan changed. Reload it and try again.")
+        profile = s.kitchen.profile()
+        try:
+            plan = replace_meal(saved.plan, day, meal_type, body.recipe_id, profile, s.store)
+        except SwapError as exc:
+            raise swap_http_error(exc) from exc
+        report = swapped_report(saved.report, plan, profile, s.store)
+        updated = s.records.update_plan(saved.id, plan, report)
+        if updated is None:
+            raise HTTPException(409, "Your plan changed. Reload it and try again.")
+        return plan_view(updated, s.store, profile)
 
     @app.post("/plans")
     def create_plan(request: Request, user: UserDep) -> StreamingResponse:

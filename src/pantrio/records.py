@@ -90,6 +90,10 @@ class Records(Protocol):
 
     def latest_plan(self) -> SavedPlan | None: ...
 
+    def update_plan(self, plan_id: int, plan: MealPlan, report: dict) -> SavedPlan | None:
+        """Replace a saved plan's meals and report; None if this user has no such plan."""
+        ...
+
     def log(self, event: UsageEvent) -> None: ...
 
     def reserve(
@@ -138,6 +142,14 @@ class MemoryRecords:
     def latest_plan(self) -> SavedPlan | None:
         mine = [p for u, p in self.shared["plans"] if u == self.user_id]
         return mine[-1] if mine else None
+
+    def update_plan(self, plan_id: int, plan: MealPlan, report: dict) -> SavedPlan | None:
+        for i, (user, saved) in enumerate(self.shared["plans"]):
+            if user == self.user_id and saved.id == plan_id:
+                updated = replace(saved, plan=plan, report=report)
+                self.shared["plans"][i] = (user, updated)
+                return updated
+        return None
 
     def log(self, event: UsageEvent) -> None:
         self.shared["events"].append((self.user_id, event))
@@ -230,6 +242,15 @@ class DbRecords:
             return None
         pid, plan, report, created = row
         return SavedPlan(pid, MealPlan.model_validate(plan), report, created)
+
+    def update_plan(self, plan_id: int, plan: MealPlan, report: dict) -> SavedPlan | None:
+        with self.conn.transaction():
+            row = self.conn.execute(
+                "update meal_plans set plan = %s, report = %s where user_id = %s and id = %s"
+                " returning created_at",
+                (plan.model_dump_json(), json.dumps(report), self.user_id, plan_id),
+            ).fetchone()
+        return None if row is None else SavedPlan(plan_id, plan, report, row[0])
 
     def log(self, event: UsageEvent) -> None:
         values = asdict(event)

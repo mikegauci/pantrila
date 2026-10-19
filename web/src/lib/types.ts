@@ -184,6 +184,21 @@ export interface Plan {
   report: PlanReport
 }
 
+export interface MealOption {
+  recipe: RecipeCard
+  portions: number
+  day_nutrition: Nutrition
+  kcal_change: number
+}
+
+export interface MealOptions {
+  plan_id: number
+  day: number
+  meal_type: MealType
+  current: PlanMeal
+  options: MealOption[]
+}
+
 export interface GroceryItem {
   food: string
   aisle: string

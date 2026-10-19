@@ -171,6 +171,16 @@ in code (`web/src/lib/cooking.ts`, lower bound of a range), Screen Wake Lock, pr
 default takes the grams used out of measured pantry items (`cooking.py`; "some" items stay);
 `/me/cooked/preview` shows that first. No model call, so no eval rerun.
 
+Swap a meal (this PR): each meal on the Meal plan page has a swap button that opens a sheet
+(`web/src/components/swap-meal.tsx`) listing recipes for that slot. `GET
+/plans/latest/meals/{day}/{meal_type}/options` returns up to 6 recipes that pass the person's
+current hard rules (SQL filters, then re-checked in code), best fit first; `PUT
+/plans/latest/meals/{day}/{meal_type}` with `{plan_id, recipe_id}` re-checks the recipe, fits its
+portions in code and saves the change in place (`Records.update_plan`; no migration, no new
+plan, no usage event). A stale `plan_id` is a 409; a rule-breaking recipe a 422 with the
+problems. The saved report keeps planning cost and path and recomputes warnings and pantry
+use. No model call, so no eval rerun; offline tests cover ranking, rule checks and the API.
+
 ## Stack
 
 - Python 3.12, `uv`, Pydantic v2, FastAPI, pytest, ruff.
@@ -235,14 +245,20 @@ default takes the grams used out of measured pantry items (`cooking.py`; "some" 
 - `src/pantrio/swaps.py`: same-weight ingredient swaps re-derived like the corpus (nutrition,
   allergens, diets) and checked with `constraints.recipe_problems`; suggestions from the same
   aisle (or any protein) ranked by nutrition distance.
+- `src/pantrio/meal_swap.py`: swap one meal of a saved plan, no model call. `meal_options`
+  (candidates from `slot_filters` via `Catalog.browse`, re-checked with `recipe_violations`,
+  ranked by distance to the day's targets, then pantry use, then calories) and `replace_meal`
+  (re-checks the chosen recipe, fits portions with `constraints.fit_slot_portion`);
+  `swapped_report` recomputes warnings and pantry use. `SwapError` carries the HTTP status.
 - `src/pantrio/assistant.py`: LangGraph chat agent agent -> tools (max 4 rounds) -> guard;
   tools search_recipes, check_pantry, update_pantry, swap_ingredient, scale_recipe; replies
   cite recipes as `[recipe-id]` and the guard appends a note for any cited recipe that breaks
   a hard rule or does not exist.
 - `src/pantrio/auth.py`: verifies Supabase Auth access tokens (ES256 via the project JWKS,
   audience `authenticated`, issuer `SUPABASE_URL/auth/v1`); returns the user id.
-- `src/pantrio/records.py`: saved plans and the usage log per user (`Records` protocol,
-  `DbRecords` on `meal_plans`/`usage_events`, `MemoryRecords` for tests).
+- `src/pantrio/records.py`: saved plans (`save_plan`, `latest_plan`, `update_plan` for a swap)
+  and the usage log per user (`Records` protocol, `DbRecords` on `meal_plans`/`usage_events`,
+  `MemoryRecords` for tests).
 - `src/pantrio/chats.py`: saved assistant threads per user (`Chats` protocol, `DbChats` on
   `chat_threads`, `MemoryChats`): model `history` plus the `messages` the app shows; titled
   from the first message; 100 threads per user, least recently used dropped.
@@ -269,7 +285,8 @@ default takes the grams used out of measured pantry items (`cooking.py`; "some" 
   backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
   `/me/usage`, `/me/avatar` (PUT/DELETE), `/recipes` (search or browse, profile rules as filters unless `safe=false`),
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
-  `/plans/latest`, `/plans/latest/grocery`, `POST /chat` (continues `thread_id` or starts a
+  `/plans/latest`, `/plans/latest/grocery`, `/plans/latest/meals/{day}/{meal_type}` (`/options`
+  GET, PUT to swap), `POST /chat` (continues `thread_id` or starts a
   thread; the server supplies the thread's history), `/me/chats` (list, get, delete),
   `/me/cooked` (GET log, POST "I cooked this"; `/preview`), `/me/recipes` (cookbook CRUD,
   `/preview`, `/import/link`, `/import/photos`, `/estimate`, `/{id}/photo` POST/DELETE). Every
