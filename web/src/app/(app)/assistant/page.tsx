@@ -2,10 +2,12 @@
 
 import { History, Loader2, Plus, Refrigerator, Repeat, Scale, Search, Send, Sparkles } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
+import { STARTERS } from "@/components/ask-pantrio"
 import { AiBadge } from "@/components/bits"
 import { ChatThreads } from "@/components/chat-threads"
 import { Button } from "@/components/ui/button"
@@ -23,12 +25,6 @@ interface Message extends ChatMessage {
 }
 
 const LAST_THREAD = "pantrio-chat-thread"
-const STARTERS = [
-  "What can I cook tonight with what I have?",
-  "I just bought eggs, spinach and feta.",
-  "Find a quick high-protein breakfast.",
-  "What does “fold in” mean?",
-]
 
 function toolSummary(c: ToolCall): { icon: typeof Search; text: string } {
   const a = c.arguments as Record<string, string | number | null>
@@ -123,8 +119,13 @@ function Bubble({ m }: { m: Message }) {
 }
 
 export default function AssistantPage() {
-  // Rendered only on the client after sign-in, so localStorage is available here.
-  const [threadId, setThreadId] = useState<number | null>(() => Number(localStorage.getItem(LAST_THREAD)) || null)
+  // Rendered only on the client after sign-in, so localStorage and the URL are available here.
+  // Home links here with ?q= (ask it in a new chat) or ?thread= (open that chat).
+  const [params] = useState(() => new URLSearchParams(window.location.search))
+  const [threadId, setThreadId] = useState<number | null>(() =>
+    params.has("q") ? null : Number(params.get("thread")) || Number(localStorage.getItem(LAST_THREAD)) || null)
+  const router = useRouter()
+  const asked = useRef(false)
   const [pending, setPending] = useState<Message[]>([])
   const [text, setText] = useState("")
   const [busy, setBusy] = useState(false)
@@ -142,6 +143,17 @@ export default function AssistantPage() {
     if (current) localStorage.setItem(LAST_THREAD, String(current))
     else localStorage.removeItem(LAST_THREAD)
   }, [current])
+
+  useEffect(() => {
+    const q = params.get("q")
+    if (params.size) router.replace("/assistant")
+    if (q && !asked.current) {
+      asked.current = true
+      ask(q)
+    }
+    // Once, on arrival from the home card.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     end.current?.scrollIntoView({ behavior: "smooth", block: "end" })
