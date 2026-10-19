@@ -167,7 +167,7 @@ Cooking mode (this PR): `/recipes/[id]/cook` and `/recipes/mine/[id]/cook` (full
 checklist (with "for this step" chips matched from the step text), timers parsed from step text
 in code (`web/src/lib/cooking.ts`, lower bound of a range), Screen Wake Lock, progress in
 `localStorage["pantrio-cook:<user>:<corpus|mine>:<id>"]` for 12 h. "I cooked this" posts
-`/me/cooked` (migration `20261019160000_cooked_meals`, RLS; latest 500 per user), which by
+`/me/cooked` (migration `20261019160000_cooked_meals`, RLS, applied on Supabase; latest 500 per user), which by
 default takes the grams used out of measured pantry items (`cooking.py`; "some" items stay);
 `/me/cooked/preview` shows that first. No model call, so no eval rerun.
 
