@@ -29,7 +29,7 @@ export function AskPantrio() {
   }
 
   return (
-    <Panel className="bg-primary-soft" data-tour="ask-pantrio">
+    <Panel className="min-w-0 bg-primary-soft" data-tour="ask-pantrio">
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <h2 className="text-[18px] font-semibold leading-[26px]">Ask Pantrio</h2>
         <AiBadge>Cooking assistant</AiBadge>
@@ -60,7 +60,7 @@ export function AskPantrio() {
           <Send />
         </Button>
       </form>
-      <div className="no-scrollbar -mx-5 mt-3 flex gap-2 overflow-x-auto px-5 py-1 md:mx-0 md:flex-wrap md:overflow-visible md:p-0">
+      <div className="no-scrollbar mt-3 flex gap-2 overflow-x-auto py-1 md:flex-wrap md:overflow-visible md:py-0">
         {STARTERS.map((s) => (
           <Button key={s} variant="outline" size="sm" className="shrink-0 whitespace-nowrap bg-surface" onClick={() => ask(s)}>{s}</Button>
         ))}
