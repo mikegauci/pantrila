@@ -89,7 +89,8 @@ def cookbook_detail(saved: SavedRecipe, profile: UserProfile) -> CookbookDetail:
     return CookbookDetail(
         id=saved.id, title=r.title, summary=r.summary, cuisine=r.cuisine,
         meal_types=r.meal_types, total_minutes=r.total_minutes, servings=r.servings,
-        source=r.source, source_url=r.source_url, created_at=saved.created_at,
+        source=r.source, source_url=r.source_url, source_platform=r.source_platform,
+        source_author=r.source_author, recipe_url=r.recipe_url, created_at=saved.created_at,
         updated_at=saved.updated_at, ingredient_count=len(r.ingredients),
         nutrition=d.nutrition if d else None, allergens=d.allergens if d else [],
         diet_tags=d.diet_tags if d else [], estimated=d.estimated if d else False,

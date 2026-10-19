@@ -512,6 +512,51 @@ def test_bad_links_fail_before_any_paid_call(api):
     assert api.get("/me/usage").json()["events"] == []
 
 
+def test_post_import_reads_the_caption_and_keeps_the_credit(api, backend, monkeypatch):
+    import pantrio.recipe_import as ri
+
+    post = "https://www.tiktok.com/@toastqueen/video/7300000000000000001"
+    oembed = json.dumps({"title": "Toast 🍞 2 slices of bread #breakfast",
+                         "author_unique_id": "toastqueen"})  # fmt: skip
+    monkeypatch.setattr(ri, "fetch_page", lambda url, http=None, resolve=None, kinds=None:
+                        (url, oembed))  # fmt: skip
+    backend.client.replies = [imported_reply()]
+    r = api.post("/me/recipes/import/post", json={"url": post + "?_t=x"}).json()
+    d = r["draft"]
+    assert (d["source"], d["source_url"], d["source_platform"], d["source_author"]) == (
+        "post", post, "tiktok", "toastqueen")  # fmt: skip
+    assert [e["kind"] for e in api.get("/me/usage").json()["events"]] == ["import"]
+
+    saved = api.post("/me/recipes", json=d).json()
+    assert saved["source_author"] == "toastqueen" and saved["source_platform"] == "tiktok"
+    assert saved["recipe"]["source_url"] == post
+
+
+def test_post_and_text_imports_need_something_to_read(api):
+    assert api.post("/me/recipes/import/post", json={}).status_code == 422
+    assert api.post("/me/recipes/import/post", json={"url": " ", "caption": ""}).status_code == 422
+    assert api.post("/me/recipes/import/text", json={"text": ""}).status_code == 422
+    assert api.get("/me/usage").json()["events"] == []
+
+
+def test_text_import_and_bad_handles(api, backend):
+    backend.client.replies = [imported_reply()]
+    r = api.post("/me/recipes/import/text", json={"text": "Toast: 2 slices of bread, toast."})
+    assert r.json()["draft"]["source"] == "text"
+    bad = {**TOAST, "source": "post", "source_author": "not a handle"}
+    assert api.post("/me/recipes", json=bad).status_code == 422
+    ok = api.post("/me/recipes", json={**TOAST, "source": "post", "source_author": "@sam.c"})
+    assert ok.json()["source_author"] == "sam.c"
+
+
+def test_post_imports_share_the_daily_import_cap(api, backend, monkeypatch):
+    monkeypatch.setenv("PANTRIO_DAILY_IMPORTS", "1")
+    backend.client.replies = [imported_reply()]
+    assert api.post("/me/recipes/import/post", json={"caption": "Toast: bread"}).status_code == 200
+    assert api.post("/me/recipes/import/post", json={"caption": "Toast"}).status_code == 429
+    assert api.post("/me/recipes/import/text", json={"text": "Toast: 2 slices"}).status_code == 429
+
+
 def test_imports_are_capped_per_day(api, backend, monkeypatch):
     monkeypatch.setenv("PANTRIO_DAILY_IMPORTS", "1")
     png = "data:image/png;base64,iVBORw0KGgo="

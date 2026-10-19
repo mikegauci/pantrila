@@ -10,10 +10,12 @@ from pydantic import BaseModel, Field, model_validator
 from pantrio.cookbook import (
     CookbookRecipeIn,
     LineView,
+    Platform,
     Source,
 )
 from pantrio.recipe_import import (
     MAX_IMAGES,
+    MAX_PAGE_CHARS,
     NamedEstimate,
 )
 from pantrio.schema import (
@@ -25,6 +27,7 @@ from pantrio.schema import (
     Unit,
 )
 from pantrio.search import SearchFilters
+from pantrio.social import MAX_CAPTION_CHARS
 
 MAX_MESSAGE_CHARS = 2000
 
@@ -286,6 +289,9 @@ class CookbookCard(BaseModel):
     servings: int
     source: Source
     source_url: str | None
+    source_platform: Platform | None = None
+    source_author: str | None = None
+    recipe_url: str | None = Field(default=None, description="Recipe site a post linked to.")
     created_at: datetime
     updated_at: datetime
     ingredient_count: int
@@ -322,6 +328,23 @@ class CookbookPreview(BaseModel):
 
 class LinkImport(BaseModel):
     url: str = Field(min_length=4, max_length=2000)
+
+
+class PostImport(BaseModel):
+    url: str | None = Field(default=None, max_length=2000, description="The post's link.")
+    caption: str | None = Field(
+        default=None, max_length=MAX_CAPTION_CHARS, description="Pasted; else read from the link."
+    )
+
+    @model_validator(mode="after")
+    def _something(self) -> PostImport:
+        if not (self.url or "").strip() and not (self.caption or "").strip():
+            raise ValueError("Paste the post's link or its caption.")
+        return self
+
+
+class TextImport(BaseModel):
+    text: str = Field(min_length=10, max_length=MAX_PAGE_CHARS)
 
 
 class PhotoImport(BaseModel):

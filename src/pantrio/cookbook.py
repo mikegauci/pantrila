@@ -11,6 +11,7 @@ good as the estimate, and the app says so.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Annotated, Literal, Protocol
@@ -33,8 +34,10 @@ from pantrio.schema import (
 )
 
 MAX_RECIPES_PER_USER = 200
+HANDLE = re.compile(r"[A-Za-z0-9._]{1,30}")
 DietClass = Literal["plant", "dairy", "egg", "honey", "fish", "shellfish", "meat"]
-Source = Literal["manual", "photo", "link"]
+Source = Literal["manual", "photo", "link", "post", "text"]
+Platform = Literal["tiktok", "instagram", "facebook"]
 
 
 class FoodFacts(BaseModel):
@@ -119,11 +122,27 @@ class CookbookRecipeIn(BaseModel):
     )
     source: Source = "manual"
     source_url: str | None = Field(default=None, max_length=2000)
+    # Credit for a recipe from a social post: source_url is the post, recipe_url the recipe
+    # website its caption linked to (when that is where the recipe came from).
+    source_platform: Platform | None = None
+    source_author: str | None = Field(
+        default=None, max_length=31, description="The creator's handle, without the @."
+    )
+    recipe_url: str | None = Field(default=None, max_length=2000)
 
-    @field_validator("source_url")
+    @field_validator("source_url", "recipe_url")
     @classmethod
     def valid_source_url(cls, value):
         return str(HttpUrl(value)) if value is not None else None
+
+    @field_validator("source_author")
+    @classmethod
+    def valid_handle(cls, value):
+        if value is None or not (value := value.strip().removeprefix("@")):
+            return None
+        if not HANDLE.fullmatch(value):
+            raise ValueError("a handle has up to 30 letters, digits, dots or underscores")
+        return value
 
 
 class LineView(RecipeLine):

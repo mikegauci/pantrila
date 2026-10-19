@@ -11,7 +11,8 @@ LangGraph node as it finishes, then `plan` (the saved plan) or `error`.
 Chat threads (/me/chats) are saved per user; each POST /chat continues one thread (or starts
 one) and the server, not the client, supplies that thread's history to the assistant.
 
-The cookbook (/me/recipes) holds recipes people add from a photo, a link or by hand. Imports
+The cookbook (/me/recipes) holds recipes people add from a photo, a link, a TikTok, Instagram or
+Facebook post (its caption, or a recipe site the caption links), pasted text or by hand. Imports
 return a draft for the person to review; nothing is saved until they post it back. Grams,
 nutrition, allergens and diets are derived in code on every read, like the corpus. A cookbook
 recipe can get a generated photo (POST /me/recipes/{id}/photo), capped per user per day.
@@ -71,10 +72,12 @@ from pantrio.api_models import (
     PantryItemView,
     PhotoImport,
     PlanView,
+    PostImport,
     RecipeDetail,
     RecipeList,
     SwapList,
     SwapMealRequest,
+    TextImport,
     ToolCallView,
     UsageEventView,
     UsageView,
@@ -465,6 +468,15 @@ def create_app(
     @app.post("/me/recipes/import/link")
     def import_link(body: LinkImport, request: Request, s: SessionDep) -> ImportView:
         return import_view(s, request, lambda i: i.from_link(body.url))
+
+    @app.post("/me/recipes/import/post")
+    def import_post(body: PostImport, request: Request, s: SessionDep) -> ImportView:
+        """A TikTok, Instagram or Facebook post: its caption, else a recipe site it links."""
+        return import_view(s, request, lambda i: i.from_post(body.url, body.caption))
+
+    @app.post("/me/recipes/import/text")
+    def import_text(body: TextImport, request: Request, s: SessionDep) -> ImportView:
+        return import_view(s, request, lambda i: i.from_text(body.text))
 
     @app.post("/me/recipes/import/photos")
     def import_photos(body: PhotoImport, request: Request, s: SessionDep) -> ImportView:
