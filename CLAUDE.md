@@ -33,6 +33,14 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Review maintenance: API models/views/backend construction now live in `api_models.py`,
+`api_views.py`, and `backend.py`; `api.py` owns routes and app lifecycle. Insights is generated
+from `evals/report_selection.json` with `scripts/update_eval_snapshot.py`, checked by pytest.
+Retrieval metrics are explicitly named normalized recall (the existing formula is unchanged).
+Plan streams send keep-alives and detect premature EOF; recipe previews are tied to the exact
+recipe/profile payload. Four production-browser regressions run in CI. Pinned page fetches
+fail over among vetted addresses without re-resolving the hostname.
+
 Chat recipe drafts restored from the saved work: write_recipe resolves foods and hands a
 draft to the cookbook form. The final guard independently computes structured draft warnings,
 including unchecked ingredients, and the UI renders them beside each save action. Saved
@@ -276,7 +284,7 @@ File-convention icons, no `layout.tsx` change. Web only, so no eval rerun.
 - `web/`: Next.js 16 App Router (Cache Components on), Tailwind v4, shadcn/ui on Base UI;
   see `web/DESIGN_SYSTEM.md` (tokens live in `src/app/globals.css`). Signed-in screens are
   client components under `src/app/(app)/` fetching the API with SWR (`src/lib/hooks.ts`,
-  `src/lib/api.ts`, types in `src/lib/types.ts` mirror `api.py`); Supabase is used only for
+  `src/lib/api.ts`, types in `src/lib/types.ts` mirror `api_models.py`); Supabase is used only for
   sign-in (magic link or anonymous guest). The cookbook lives under `recipes/mine` (list,
   `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`. The first-run tour
   is `src/components/tour.tsx` (`TourProvider` in `AppShell`, `useTour().start`). The assistant's

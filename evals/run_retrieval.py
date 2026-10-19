@@ -1,7 +1,7 @@
 """Retrieval eval: vector-only vs full-text-only vs hybrid on the labelled queries.
 
-Reports recall@5, recall@10, MRR, filter violations (must be 0), latency p50/p95 and query
-embedding cost per mode. Always writes a local report under evals/reports/; also uploads the
+Reports normalized recall@5/@10, MRR, filter violations (must be 0), latency p50/p95 and
+query embedding cost per mode. Always writes a local report under evals/reports/; also uploads the
 dataset and one LangSmith experiment per mode when LANGSMITH_API_KEY is set.
 
     uv run python -m evals.run_retrieval                  # needs DATABASE_URL, OPENAI_API_KEY
@@ -20,7 +20,7 @@ from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
 
-from evals.metrics import percentile, recall_at_k, reciprocal_rank
+from evals.metrics import normalized_recall_at_k, percentile, reciprocal_rank
 from pantrio import config, db
 from pantrio.corpus import load_corpus
 from pantrio.search import Mode, SearchFilters, openai_query_embedder, search
@@ -44,8 +44,8 @@ def run_mode(conn, queries: list[dict], mode: Mode, recipes: dict, embed_query) 
                 "query_id": q["id"],
                 "kind": q["kind"],
                 "ranked": result.ids,
-                "recall@5": recall_at_k(result.ids, relevant, 5),
-                "recall@10": recall_at_k(result.ids, relevant, 10),
+                "normalized_recall@5": normalized_recall_at_k(result.ids, relevant, 5),
+                "normalized_recall@10": normalized_recall_at_k(result.ids, relevant, 10),
                 "rr": reciprocal_rank(result.ids, relevant),
                 "violations": violations,
                 "latency_ms": latency_ms,
@@ -61,8 +61,8 @@ def summarise(rows: list[dict]) -> dict:
     cost = config.prices().embed_cost(tokens)
     return {
         "queries": len(rows),
-        "recall@5": statistics.fmean(r["recall@5"] for r in rows),
-        "recall@10": statistics.fmean(r["recall@10"] for r in rows),
+        "normalized_recall@5": statistics.fmean(r["normalized_recall@5"] for r in rows),
+        "normalized_recall@10": statistics.fmean(r["normalized_recall@10"] for r in rows),
         "mrr": statistics.fmean(r["rr"] for r in rows),
         "filter_violations": sum(len(r["violations"]) for r in rows),
         "latency_p50_ms": percentile(latencies, 50),
@@ -76,7 +76,7 @@ def summarise(rows: list[dict]) -> dict:
 def by_kind(rows: list[dict]) -> dict[str, float]:
     groups: dict[str, list[float]] = defaultdict(list)
     for r in rows:
-        groups[r["kind"]].append(r["recall@10"])
+        groups[r["kind"]].append(r["normalized_recall@10"])
     return {k: statistics.fmean(v) for k, v in sorted(groups.items())}
 
 
@@ -88,20 +88,27 @@ def markdown(summary: dict[str, dict], kinds: dict[str, dict], meta: dict) -> st
         f"# Retrieval eval {meta['finished_at']}",
         "",
         f"{meta['queries']} queries, {meta['recipes']} recipes, embeddings `{meta['embed_model']}`,"
-        f" top {LIMIT}, RRF k=60. Recall@k is capped: hits / min(k, relevant).",
+        f" top {LIMIT}, RRF k=60. Normalized recall@k: hits / min(k, relevant).",
         "",
-        "| Mode | Recall@5 | Recall@10 | MRR | Filter violations | p50 ms | p95 ms"
+        "| Mode | Normalized recall@5 | Normalized recall@10 | MRR | Filter violations"
+        " | p50 ms | p95 ms"
         " | Cost / query |",
         "|---|---|---|---|---|---|---|---|",
     ]
     for mode, s in summary.items():
         lines.append(
-            f"| {mode} | {s['recall@5']:.3f} | {s['recall@10']:.3f} | {s['mrr']:.3f} | "
+            f"| {mode} | {s['normalized_recall@5']:.3f} | "
+            f"{s['normalized_recall@10']:.3f} | {s['mrr']:.3f} | "
             f"{s['filter_violations']} | {s['latency_p50_ms']:.0f} | {s['latency_p95_ms']:.0f} | "
             f"{cost(s['cost_per_query_usd'])} |"
         )
     kind_names = sorted({k for v in kinds.values() for k in v})
-    lines += ["", "Recall@10 by query kind:", "", "| Mode | " + " | ".join(kind_names) + " |"]
+    lines += [
+        "",
+        "Normalized recall@10 by query kind:",
+        "",
+        "| Mode | " + " | ".join(kind_names) + " |",
+    ]
     lines.append("|---" * (len(kind_names) + 1) + "|")
     for mode, v in kinds.items():
         lines.append(f"| {mode} | " + " | ".join(f"{v[k]:.3f}" for k in kind_names) + " |")
@@ -135,7 +142,7 @@ def upload_to_langsmith(queries: list[dict], results: dict[str, list[dict]], met
         evaluator.__name__ = key.replace("@", "_at_")
         return evaluator
 
-    keys = ["recall@5", "recall@10", "rr", "filter_violations", "latency_ms"]
+    keys = ["normalized_recall@5", "normalized_recall@10", "rr", "filter_violations", "latency_ms"]
     for mode, rows in results.items():
         by_id = {r["query_id"]: r for r in rows}
 
@@ -143,8 +150,8 @@ def upload_to_langsmith(queries: list[dict], results: dict[str, list[dict]], met
             r = by_id[inputs["query_id"]]
             return {
                 "ranked": r["ranked"],
-                "recall@5": r["recall@5"],
-                "recall@10": r["recall@10"],
+                "normalized_recall@5": r["normalized_recall@5"],
+                "normalized_recall@10": r["normalized_recall@10"],
                 "rr": r["rr"],
                 "filter_violations": len(r["violations"]),
                 "latency_ms": r["latency_ms"],

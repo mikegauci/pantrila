@@ -16,9 +16,18 @@ import httpx
 
 
 class PinnedConnection(http.client.HTTPConnection):
-    def __init__(self, host: str, port: int, address: str, secure: bool, deadline: float):
+    def __init__(
+        self,
+        host: str,
+        port: int,
+        address: str,
+        secure: bool,
+        deadline: float,
+        connect_timeout: float = 3.0,
+    ):
         super().__init__(host, port, timeout=max(0.001, deadline - time.monotonic()))
         self.address, self.secure, self.deadline = address, secure, deadline
+        self.connect_timeout = connect_timeout
         self.timer: threading.Timer | None = None
         self.active_socket: socket.socket | None = None
 
@@ -36,7 +45,7 @@ class PinnedConnection(http.client.HTTPConnection):
         family = socket.AF_INET6 if ":" in self.address else socket.AF_INET
         sock = socket.socket(family, socket.SOCK_STREAM)
         self.active_socket = self.sock = sock
-        sock.settimeout(remaining)
+        sock.settimeout(min(self.connect_timeout, remaining))
         self.timer = threading.Timer(remaining, self.expire)
         self.timer.daemon = True
         self.timer.start()
@@ -47,7 +56,10 @@ class PinnedConnection(http.client.HTTPConnection):
                 sock, server_hostname=self.host, do_handshake_on_connect=False
             )
             self.active_socket = self.sock = tls
+            if time.monotonic() >= self.deadline:
+                raise TimeoutError("page deadline exceeded")
             tls.do_handshake()
+        self.sock.settimeout(max(0.001, self.deadline - time.monotonic()))
 
     def close(self):
         if self.timer is not None:
@@ -70,6 +82,8 @@ class PageResponse:
                 raise TimeoutError("page deadline exceeded")
             chunk = self.response.read1(64 * 1024)
             if not chunk:
+                if time.monotonic() >= self.deadline:
+                    raise TimeoutError("page deadline exceeded")
                 return
             yield chunk
 
@@ -79,13 +93,27 @@ def pinned_page(url: str, addresses: list[str], headers: dict, deadline: float):
     parts = urlsplit(url)
     secure = parts.scheme == "https"
     port = parts.port or (443 if secure else 80)
-    conn = PinnedConnection(parts.hostname, port, addresses[0], secure, deadline)
-    try:
-        path = parts.path or "/"
-        if parts.query:
-            path += "?" + parts.query
-        conn.request("GET", path, headers={**headers, "Accept-Encoding": "identity"})
-        with conn.getresponse() as response:
-            yield PageResponse(response, deadline)
-    finally:
-        conn.close()
+    path = parts.path or "/"
+    if parts.query:
+        path += "?" + parts.query
+    failure = None
+    for index, address in enumerate(addresses):
+        # Leave time for remaining vetted addresses if the first one cannot connect.
+        connect_timeout = max(
+            0.001, min(3.0, (deadline - time.monotonic()) / (len(addresses) - index))
+        )
+        conn = PinnedConnection(parts.hostname, port, address, secure, deadline, connect_timeout)
+        try:
+            conn.request("GET", path, headers={**headers, "Accept-Encoding": "identity"})
+            response = conn.getresponse()
+        except (OSError, http.client.HTTPException) as exc:
+            conn.close()
+            failure = exc
+            continue
+        try:
+            with response:
+                yield PageResponse(response, deadline)
+        finally:
+            conn.close()
+        return
+    raise failure or OSError("No validated address was reachable")

@@ -119,6 +119,7 @@ export async function streamPlan(
   if (!res.ok || !res.body) throw await errorFrom(res)
   const reader = res.body.pipeThrough(new TextDecoderStream()).getReader()
   let buffer = ""
+  let terminal = false
   for (;;) {
     const { value, done } = await reader.read()
     if (done) break
@@ -133,7 +134,12 @@ export async function streamPlan(
         if (line.startsWith("event: ")) event = line.slice(7)
         else if (line.startsWith("data: ")) data += line.slice(6)
       }
-      onEvent(event, data ? JSON.parse(data) : null)
+      if (event === "plan" || event === "error") terminal = true
+      if (data || event !== "message") onEvent(event, data ? JSON.parse(data) : null)
     }
   }
+  if (!terminal) throw new ApiError(
+    502,
+    "Planning progress disconnected before a result arrived. Check your latest plan before trying again.",
+  )
 }

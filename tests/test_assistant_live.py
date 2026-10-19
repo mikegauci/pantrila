@@ -1,6 +1,6 @@
 """Paid gate: real model, real hybrid search. Fails if the assistant cites a recipe that breaks
-the person's hard rules or does not exist, or writes a recipe that breaks an allergy without
-saying so.
+the person's hard rules or does not exist, or writes a recipe that breaks a hard rule without
+a structured warning.
 
 uv run pytest -m live -s tests/test_assistant_live.py   # needs DATABASE_URL, OPENAI_API_KEY
 """
