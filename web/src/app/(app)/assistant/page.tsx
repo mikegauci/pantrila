@@ -277,7 +277,7 @@ export default function AssistantPage() {
           </span>
         </div>
 
-        <div className="flex-1 overflow-y-auto rounded-[20px] border bg-background/60 p-4 shadow-soft" aria-live="polite">
+        <div className="flex-1 overflow-y-auto rounded-[20px] border bg-primary-soft p-4 shadow-soft" aria-live="polite">
           {current && !thread && !pending.length ? (
             <p className="flex items-center gap-2 text-[13px] text-muted-foreground">
               <Loader2 className="size-4 animate-spin" aria-hidden /> Loading chat…
@@ -287,7 +287,7 @@ export default function AssistantPage() {
               <p className="text-[18px] font-semibold">Ask about cooking, recipes or your pantry</p>
               <div className="flex flex-wrap justify-center gap-2">
                 {STARTERS.map((s) => (
-                  <Button key={s} variant="outline" size="sm" onClick={() => ask(s)}>{s}</Button>
+                  <Button key={s} variant="outline" size="sm" className="bg-surface" onClick={() => ask(s)}>{s}</Button>
                 ))}
               </div>
             </div>
