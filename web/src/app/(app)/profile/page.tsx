@@ -3,7 +3,6 @@
 import { Camera, Compass, Save, Trash2, X } from "lucide-react"
 import { useRef, useState } from "react"
 import { toast } from "sonner"
-import { useSWRConfig } from "swr"
 
 import { UserAvatar } from "@/components/app-shell"
 import { useAuth } from "@/components/auth-provider"
@@ -16,7 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send } from "@/lib/api"
 import { label } from "@/lib/format"
-import { useFoods, useMe, useMeta, useProfile } from "@/lib/hooks"
+import { useFoods, useMe, useMeta, useProfile, useRefreshKitchen } from "@/lib/hooks"
 import { toAvatarDataUrl } from "@/lib/images"
 import { cn } from "@/lib/utils"
 import type { Allergen, DietTag, MealType, Me, Profile } from "@/lib/types"
@@ -121,7 +120,7 @@ export default function ProfilePage() {
   const { data, isLoading, mutate } = useProfile()
   const { data: meta } = useMeta()
   const { data: foods } = useFoods()
-  const { mutate: revalidate } = useSWRConfig()
+  const refreshKitchen = useRefreshKitchen()
   const [draft, setP] = useState<Profile | null>(null)
   const [exclude, setExclude] = useState("")
   const [saving, setSaving] = useState(false)
@@ -136,7 +135,7 @@ export default function ProfilePage() {
       const saved = await send<Profile>("/me/profile", "PUT", p)
       await mutate(saved, { revalidate: false })
       setP(null)
-      revalidate((k) => typeof k === "string" && (k.startsWith("/recipes") || k.startsWith("/plans")))
+      await refreshKitchen()
       toast.success("Profile saved")
     } catch (e) {
       toast.error(e instanceof ApiError ? e.message : "Could not save")

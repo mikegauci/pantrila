@@ -4,6 +4,7 @@ import { Minus, Plus, ShoppingBasket } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
+import { useAuth } from "@/components/auth-provider"
 import { EmptyState, Panel, PanelTitle } from "@/components/bits"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -26,13 +27,14 @@ function byAisle(items: GroceryItem[]) {
 }
 
 export default function GroceryPage() {
+  const { session } = useAuth()
   const { data: plan, isLoading: planLoading } = usePlan()
   const [people, setPeople] = useState(1)
   const { data, isLoading } = useGrocery(people, !!plan)
   // Ticks per plan, kept in this browser. The app renders only after sign-in on the client,
   // so reading localStorage during render is safe.
   const [edits, setEdits] = useState<Record<string, string[]>>({})
-  const storageKey = plan ? `pantrio-grocery-${plan.id}` : null
+  const storageKey = plan ? `pantrio-grocery-${session!.user.id}-${plan.id}` : null
   const ticked = new Set(
     storageKey
       ? edits[storageKey] ?? (JSON.parse(localStorage.getItem(storageKey) ?? "[]") as string[])

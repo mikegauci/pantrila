@@ -33,6 +33,10 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Review account isolation: authenticated users get separate SWR caches and retained page state;
+remembered chat and grocery keys include the user id. Profile/pantry mutations invalidate all
+derived views. Playwright exercises account switching with delayed data; web CI runs it.
+
 Review hardening: recipe imports connect directly to validated IP addresses, preserving HTTPS
 hostname verification, with a ten-second overall DNS/socket deadline and bounded DNS workers.
 Regression tests cover rebinding, TLS identity, stalled DNS and trickling headers.

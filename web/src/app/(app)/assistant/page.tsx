@@ -6,6 +6,7 @@ import { Fragment, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
+import { useAuth } from "@/components/auth-provider"
 import { STARTERS } from "@/components/ask-pantrio"
 import { AiBadge } from "@/components/bits"
 import { ChatThreads } from "@/components/chat-threads"
@@ -14,7 +15,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send } from "@/lib/api"
 import { seconds, usd } from "@/lib/format"
-import { useChat, useChats, useMe } from "@/lib/hooks"
+import { useChat, useChats, useMe, useRefreshKitchen } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
 import type { ChatMessage, ChatReply, ChatThread, ChatThreadSummary, RecipeCard, ToolCall } from "@/lib/types"
 
@@ -118,11 +119,13 @@ function Bubble({ m }: { m: Message }) {
 }
 
 export default function AssistantPage() {
+  const { session } = useAuth()
+  const lastThreadKey = `${LAST_THREAD}:${session!.user.id}`
   // Rendered only on the client after sign-in, so localStorage and the URL are available here.
   // Home links here with ?q= (ask it in a new chat) or ?thread= (open that chat).
   const [threadId, setThreadId] = useState<number | null>(() => {
     const params = new URLSearchParams(window.location.search)
-    return params.has("q") ? null : Number(params.get("thread")) || Number(localStorage.getItem(LAST_THREAD)) || null
+    return params.has("q") ? null : Number(params.get("thread")) || Number(localStorage.getItem(lastThreadKey)) || null
   })
   const [pending, setPending] = useState<Message[]>([])
   const [text, setText] = useState("")
@@ -132,15 +135,16 @@ export default function AssistantPage() {
   const { data: threads, mutate: refreshThreads } = useChats()
   const { data: thread, error: threadError } = useChat(threadId)
   const { mutate } = useSWRConfig()
+  const refreshKitchen = useRefreshKitchen()
   const end = useRef<HTMLDivElement>(null)
   // A remembered chat that was deleted (here or on another device) means a new chat.
   const current = threadError?.status === 404 ? null : threadId
   const messages: Message[] = [...(current ? thread?.messages ?? [] : []), ...pending]
 
   useEffect(() => {
-    if (current) localStorage.setItem(LAST_THREAD, String(current))
-    else localStorage.removeItem(LAST_THREAD)
-  }, [current])
+    if (current) localStorage.setItem(lastThreadKey, String(current))
+    else localStorage.removeItem(lastThreadKey)
+  }, [current, lastThreadKey])
 
   useEffect(() => {
     // Next keeps this page mounted but hidden between visits (Cache Components use React Activity) and
@@ -201,7 +205,7 @@ export default function AssistantPage() {
       setThreadId(reply.thread_id)
       setPending([])
       refreshThreads()
-      if (reply.pantry_changed) mutate("/me/pantry")
+      if (reply.pantry_changed) refreshKitchen()
     } catch (e) {
       const msg = e instanceof ApiError ? e.message : "Could not reach Pantrio. Try again."
       setPending([asked, { role: "assistant", text: msg, error: true }])

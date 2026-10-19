@@ -1,6 +1,6 @@
 "use client"
 
-import useSWR, { type SWRConfiguration } from "swr"
+import useSWR, { useSWRConfig, type SWRConfiguration } from "swr"
 
 import { api, ApiError } from "@/lib/api"
 import type {
@@ -43,4 +43,18 @@ export function usePlan() {
 
 export function useGrocery(people: number, enabled = true) {
   return useApi<GroceryList>(enabled ? `/plans/latest/grocery?people=${people}` : null)
+}
+
+/** Clear derived views as well as refreshing mounted readers after a kitchen change. */
+export function useRefreshKitchen() {
+  const { mutate } = useSWRConfig()
+  return () => mutate(
+    (key) => typeof key === "string" && (
+      key.startsWith("/recipes") || key.startsWith("/plans") ||
+      key.startsWith("/me/recipes") || key.startsWith("/me/chats") ||
+      key === "/me/pantry" || key === "/me/profile"
+    ),
+    undefined,
+    { revalidate: true },
+  )
 }

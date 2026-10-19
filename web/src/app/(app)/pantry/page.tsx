@@ -12,13 +12,14 @@ import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ApiError, send } from "@/lib/api"
 import { label } from "@/lib/format"
-import { useFoods, usePantry } from "@/lib/hooks"
+import { useFoods, usePantry, useRefreshKitchen } from "@/lib/hooks"
 import type { PantryItem, Unit } from "@/lib/types"
 
 const UNITS: Unit[] = ["g", "kg", "ml", "l", "piece", "tbsp", "tsp", "cup"]
 
 export default function PantryPage() {
-  const { data: items, isLoading, mutate } = usePantry()
+  const { data: items, isLoading } = usePantry()
+  const refreshKitchen = useRefreshKitchen()
   const { data: foods } = useFoods()
   const [food, setFood] = useState("")
   const [quantity, setQuantity] = useState("")
@@ -33,7 +34,7 @@ export default function PantryPage() {
     try {
       const q = quantity ? Number(quantity) : null
       const item = await send<PantryItem>("/me/pantry", "POST", { food: name, quantity: q, unit: q ? unit : null })
-      await mutate()
+      await refreshKitchen()
       toast.success(`Added ${item.name}`)
       setFood("")
       setQuantity("")
@@ -48,8 +49,12 @@ export default function PantryPage() {
   }
 
   async function remove(item: PantryItem) {
-    await send(`/me/pantry/${item.key}`, "DELETE")
-    mutate(items?.filter((i) => i.key !== item.key), { revalidate: true })
+    try {
+      await send(`/me/pantry/${item.key}`, "DELETE")
+      await refreshKitchen()
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not remove that food.")
+    }
   }
 
   const groups = new Map<string, PantryItem[]>()
