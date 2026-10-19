@@ -325,7 +325,7 @@ def photos_generate(
     only: Annotated[list[str] | None, typer.Option("--only", help="recipe ids")] = None,
     limit: Annotated[int | None, typer.Option(help="at most this many recipes")] = None,
     force: Annotated[bool, typer.Option(help="regenerate even if unchanged")] = False,
-    workers: Annotated[int, typer.Option(min=1, max=16)] = 6,
+    workers: Annotated[int, typer.Option(min=1, max=16, help="~20 images/min allowed")] = 4,
     dry_run: Annotated[
         bool, typer.Option("--dry-run", help="print one prompt, call nothing")
     ] = False,

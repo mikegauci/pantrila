@@ -260,14 +260,15 @@ class RunReport:
 
 
 def photograph_corpus(
-    conn, recipes, store: PhotoStore, client=None, model: str | None = None, workers: int = 6,
+    conn, recipes, store: PhotoStore, client=None, model: str | None = None, workers: int = 4,
     force: bool = False, on_done=None,
 ) -> RunReport:  # fmt: skip
     """Generate and upload a photo for every recipe whose prompt or model changed (or all with
     `force`). Image calls and uploads run in threads; database writes stay on this thread."""
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
-    client = client or config.openai_client()
+    # Image models allow about 20 images a minute; the SDK backs off and retries on 429.
+    client = (client or config.openai_client()).with_options(max_retries=8)
     model = model or config.image_model()
     current = corpus_paths(conn, [r.id for r in recipes])
     report, todo = RunReport(), []
