@@ -232,3 +232,11 @@ The paid evals are a manual GitHub Actions workflow.
 - Render's free plan sleeps when idle, so the first request after a pause is slow.
 
 "Macros" means protein, carbs and fat; "kcal" is food energy (calories).
+
+### Request and conversation limits
+
+The API caps request bodies at 24 MB (including uploads), profile notes at 300 characters,
+and recipe steps at 2,000 characters each. Chats retain the latest 200 displayed messages;
+model context remains the latest 20 messages. Conflicting writes from two tabs return a
+retryable conflict instead of silently replacing conversation history. Saved chat recipe
+cards are checked against the current profile whenever the conversation is loaded.

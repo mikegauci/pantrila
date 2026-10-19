@@ -8,6 +8,7 @@ The API writes a thread only after a reply succeeds, so a failed turn leaves no 
 from __future__ import annotations
 
 import json
+import threading
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Protocol
@@ -15,6 +16,7 @@ from typing import Protocol
 import psycopg
 
 MAX_THREADS_PER_USER = 100
+MAX_THREAD_MESSAGES = 200
 TITLE_CHARS = 60
 
 
@@ -56,8 +58,13 @@ class Chats(Protocol):
         """Save a new thread, dropping the least recently used past the cap."""
         ...
 
-    def append(self, thread_id: int, messages: list[dict],
-               history: list[dict]) -> SavedThread | None:  # fmt: skip
+    def append(
+        self,
+        thread_id: int,
+        messages: list[dict],
+        history: list[dict],
+        expected_history: list[dict] | None = None,
+    ) -> SavedThread | None:
         """Add messages and replace the history."""
         ...
 
@@ -70,6 +77,7 @@ class MemoryChats:
         self.shared = shared if shared is not None else {}
         self.shared.setdefault("chats", [])
         self.shared.setdefault("chat_ids", 0)
+        self.lock = self.shared.setdefault("chat_lock", threading.RLock())
 
     @property
     def _rows(self) -> list[tuple[str, SavedThread]]:
@@ -95,13 +103,21 @@ class MemoryChats:
         self._rows.append((self.user_id, thread))
         return thread
 
-    def append(self, thread_id: int, messages: list[dict],
-               history: list[dict]) -> SavedThread | None:  # fmt: skip
-        thread = self.get(thread_id)
-        if thread is not None:
-            thread.messages = thread.messages + messages
-            thread.history, thread.updated_at = list(history), datetime.now(UTC)
-        return thread
+    def append(
+        self,
+        thread_id: int,
+        messages: list[dict],
+        history: list[dict],
+        expected_history: list[dict] | None = None,
+    ) -> SavedThread | None:
+        with self.lock:
+            thread = self.get(thread_id)
+            if thread is not None:
+                if expected_history is not None and thread.history != expected_history:
+                    return None
+                thread.messages = (thread.messages + messages)[-MAX_THREAD_MESSAGES:]
+                thread.history, thread.updated_at = list(history), datetime.now(UTC)
+            return thread
 
     def delete(self, thread_id: int) -> bool:
         for n, (u, t) in enumerate(self._rows):
@@ -149,14 +165,28 @@ class DbChats:
             ).fetchone()
         return SavedThread(*row)
 
-    def append(self, thread_id: int, messages: list[dict],
-               history: list[dict]) -> SavedThread | None:  # fmt: skip
+    def append(
+        self,
+        thread_id: int,
+        messages: list[dict],
+        history: list[dict],
+        expected_history: list[dict] | None = None,
+    ) -> SavedThread | None:
         with self.conn.transaction():
             row = self.conn.execute(
-                "update chat_threads set messages = messages || %s::jsonb, history = %s,"
+                "update chat_threads set messages = jsonb_path_query_array("
+                "messages || %s::jsonb, '$[last - 199 to last]'), history = %s,"
                 " updated_at = clock_timestamp() where user_id = %s and id = %s"
+                " and (%s::jsonb is null or history = %s::jsonb)"
                 f" returning {THREAD_COLUMNS}",
-                (json.dumps(messages), json.dumps(history), self.user_id, thread_id),
+                (
+                    json.dumps(messages),
+                    json.dumps(history),
+                    self.user_id,
+                    thread_id,
+                    None if expected_history is None else json.dumps(expected_history),
+                    None if expected_history is None else json.dumps(expected_history),
+                ),
             ).fetchone()
         return None if row is None else SavedThread(*row)
 

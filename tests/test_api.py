@@ -589,3 +589,49 @@ def test_unexpected_plan_failure_records_partial_usage(api, backend, monkeypatch
     assert event["ok"] is False and event["input_tokens"] == 1000
     assert event["cost_usd"] > 0
     assert backend.shared["reservations"] == {}
+
+
+def test_saved_chat_citations_are_rechecked_after_profile_change(api, backend):
+    backend.client.replies = [text_reply(f"Try these noodles [{NOODLES}].")]
+    reply = api.post("/chat", json={"message": "Noodles?"}).json()
+    assert reply["cited"][0]["problems"] == []
+    api.put("/me/profile", json={"allergies": ["peanuts"]})
+    loaded = api.get(f"/me/chats/{reply['thread_id']}").json()["messages"][-1]["reply"]
+    assert loaded["cited"][0]["problems"] == ["contains peanuts"]
+    assert loaded["flagged"] == [NOODLES]
+    assert "contains peanuts" in loaded["profile_problems"][0]
+    # Removing an allergy refreshes the card as well; historical prose remains historical.
+    api.put("/me/profile", json={})
+    loaded = api.get(f"/me/chats/{reply['thread_id']}").json()["messages"][-1]["reply"]
+    assert loaded["profile_problems"] == [] and loaded["cited"][0]["problems"] == []
+
+
+def test_profile_inputs_have_server_side_bounds(api):
+    assert api.put("/me/profile", json={"notes": "a" * 301}).status_code == 422
+    assert api.put("/me/profile", json={"meals": ["dinner"] * 6}).status_code == 422
+
+
+def test_concurrent_turns_report_a_conflict_instead_of_losing_history(api, backend):
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
+
+    backend.client.replies = [text_reply("First answer")]
+    tid = api.post("/chat", json={"message": "Start"}).json()["thread_id"]
+    barrier = threading.Barrier(2)
+
+    def respond(**kwargs):
+        barrier.wait(timeout=5)
+        return text_reply("Concurrent answer")
+
+    backend.client.create = respond
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        requests = list(
+            pool.map(
+                lambda text: api.post("/chat", json={"message": text, "thread_id": tid}),
+                ["One", "Two"],
+            )
+        )
+    assert sorted(r.status_code for r in requests) == [200, 409]
+    messages = api.get(f"/me/chats/{tid}").json()["messages"]
+    assert len(messages) == 4
+    assert messages[2]["text"] in ("One", "Two")

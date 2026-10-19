@@ -8,7 +8,7 @@ import { useSWRConfig } from "swr"
 
 import { useAuth } from "@/components/auth-provider"
 import { STARTERS } from "@/components/ask-pantrio"
-import { AiBadge } from "@/components/bits"
+import { AiBadge, ProblemAlert } from "@/components/bits"
 import { ChatThreads } from "@/components/chat-threads"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
@@ -86,6 +86,7 @@ function Bubble({ m }: { m: Message }) {
   const recipes = new Map(r?.cited.map((c) => [c.id, c]))
   return (
     <div className="grid max-w-[92%] gap-2">
+      <ProblemAlert title="Current profile check" items={r?.profile_problems ?? []} />
       {r?.tool_calls.map((c, i) => {
         const { icon: Icon, text } = toolSummary(c)
         return (
@@ -200,13 +201,14 @@ export default function AssistantPage() {
         id: reply.thread_id,
         title: t?.title ?? message,
         updated_at: new Date().toISOString(),
-        messages: [...(t?.messages ?? []), asked, answered],
+        messages: [...(t?.messages ?? []), asked, answered].slice(-200),
       }), { revalidate: false })
       setThreadId(reply.thread_id)
       setPending([])
       refreshThreads()
       if (reply.pantry_changed) refreshKitchen()
     } catch (e) {
+      if (e instanceof ApiError && e.status === 409 && thread) await mutate(`/me/chats/${thread}`)
       const msg = e instanceof ApiError ? e.message : "Could not reach Pantrio. Try again."
       setPending([asked, { role: "assistant", text: msg, error: true }])
     } finally {

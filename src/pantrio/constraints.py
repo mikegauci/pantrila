@@ -147,6 +147,14 @@ def _target_cost(n: dict[str, float], profile: UserProfile) -> float:
 def fit_portions(plan: MealPlan, profile: UserProfile, recipes: Mapping[str, Recipe]) -> MealPlan:
     """Choose portions (0.5 to 2 servings, in quarters) per meal to bring each day closest to
     the targets. Exhaustive over at most 7^5 combinations a day; ties go to normal portions."""
+    # Model output is untrusted: malformed structure must reach the checker without
+    # starting a 7**N search over an arbitrary number of meals.
+    if sorted(d.day for d in plan.days) != list(range(1, profile.days + 1)) or any(
+        Counter(m.meal_type for m in d.meals) != Counter(profile.meals)
+        or len(d.meals) > len(MealType)
+        for d in plan.days
+    ):
+        return plan
     t = profile.targets
     if not (t.kcal or t.min_protein_g or t.max_carbs_g):
         return plan

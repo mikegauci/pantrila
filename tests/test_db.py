@@ -299,3 +299,25 @@ def test_rest_role_cannot_read_or_write_user_data_even_with_table_grants(conn):
         conn.execute(sql.SQL("drop owned by {}").format(role))
         conn.execute(sql.SQL("drop role {}").format(role))
     assert DbKitchen(conn, "alice").pantry()[0].food == "egg"
+
+
+def test_chat_updates_detect_conflicts_and_bound_retained_messages(conn):
+    from pantrio.chats import MAX_THREAD_MESSAGES, DbChats
+
+    chats = DbChats(conn, "alice")
+    thread = chats.create("Test", [], [])
+    old_history = list(thread.history)
+    updated = chats.append(
+        thread.id, [{"text": "first"}], [{"content": "first"}], expected_history=old_history
+    )
+    assert updated is not None
+    assert (
+        chats.append(
+            thread.id, [{"text": "lost"}], [{"content": "lost"}], expected_history=old_history
+        )
+        is None
+    )
+    assert chats.get(thread.id).messages == [{"text": "first"}]
+    messages = [{"text": str(i)} for i in range(MAX_THREAD_MESSAGES + 10)]
+    retained = chats.append(thread.id, messages, [])
+    assert retained.messages == messages[-MAX_THREAD_MESSAGES:]
