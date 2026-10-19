@@ -84,9 +84,19 @@ thread list (left column on desktop, "Chats" drawer on mobile) and "New chat". N
 tool or model change, so no eval rerun.
 Header avatar (PR #13): food emoji on a soft tint, picked from a hash of the Supabase user id
 (`web/src/lib/avatar.ts`); nothing stored, no backend change.
-Server wake-up notice (this PR): any API request pending over 3 s shows one shared Sonner toast
+Server wake-up notice (PR #14): any API request pending over 3 s shows one shared Sonner toast
 ("Waking up the Pantrio server…") until every slow request answers (`request()` in
 `web/src/lib/api.ts`); `AppShell` pings `/health` on mount to start the Render wake-up early.
+Recipe photos (this PR): migration 0007 (`recipe_photos`, `user_recipes.photo_path`, usage kind
+`photo`; applied on Supabase), public Storage bucket `recipe-photos` (created by `pantrio photos
+generate`; needs `SUPABASE_SERVICE_ROLE_KEY`, also set on Render). All 300 corpus recipes
+photographed with `gpt-image-2.5-flare` at 1536x1152 medium, stored as 1200x900 WebP: $4.15
+total, $0.0138 per photo (408 output tokens each), p50 ~14.5 s / p95 ~20 s. OpenAI allows ~20
+images/min, so the run uses 4 workers and SDK retries (6 workers hit 429s). Prompt chosen over
+7 sample rounds (owner-reviewed): only the recipe's ingredients as garnish and props, no
+generic herb bowls or salt dishes. Cookbook recipes get Generate/New/Remove photo
+(`PANTRIO_DAILY_PHOTOS`, default 5). Web uses `next/image` (Vercel Hobby: 5K transformations a
+month; `minimumCacheTTL` 31 days). No text-model prompt change, so no eval rerun.
 
 ## Stack
 
@@ -171,6 +181,14 @@ Server wake-up notice (this PR): any API request pending over 3 s shows one shar
   `store=False`) `from_link` / `from_html` / `from_photos` / `estimate`; `fetch_page` with SSRF
   guards; `jsonld_recipe`, `page_text`; `to_draft` checks every line in code and returns notes;
   `with_named_allergens` adds the allergens of table foods an estimated line names.
+- `src/pantrio/photos.py`: recipe photos. `photo_prompt` (the dish as the recipe makes it:
+  ingredient names and final step, garnish and background props only from those ingredients,
+  bread only if used or suggested and never for gluten-free; fixed stoneware/stone/linen
+  scene), `generate` (`PANTRIO_IMAGE_MODEL`, 1536x1152 = 4:3, stored as 1200x900 WebP),
+  `SupabasePhotos` (public bucket `recipe-photos`, service role key), `photograph_corpus`.
+  The DB stores paths only (`recipe_photos`, `user_recipes.photo_path`); `public_url` builds
+  URLs from `SUPABASE_URL`. Corpus paths carry a hash of prompt + model, so only changed
+  recipes regenerate.
 - `src/pantrio/api.py`: FastAPI app (`create_app(backend, verify)`; tests pass an in-memory
   backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
   `/me/usage`, `/recipes` (search or browse, profile rules as filters unless `safe=false`),
@@ -178,9 +196,10 @@ Server wake-up notice (this PR): any API request pending over 3 s shows one shar
   `/plans/latest`, `/plans/latest/grocery`, `POST /chat` (continues `thread_id` or starts a
   thread; the server supplies the thread's history), `/me/chats` (list, get, delete),
   `/me/recipes` (cookbook CRUD,
-  `/preview`, `/import/link`, `/import/photos`, `/estimate`). Every recipe returned carries the
-  hard rules it breaks for the person's current profile. Paid calls are capped per user per
-  day (`PANTRIO_DAILY_PLANS`, `PANTRIO_DAILY_CHATS`, `PANTRIO_DAILY_IMPORTS`) and in total
+  `/preview`, `/import/link`, `/import/photos`, `/estimate`, `/{id}/photo` POST/DELETE). Every
+  recipe returned carries the hard rules it breaks for the person's current profile and its
+  `photo_url` (or null). Paid calls are capped per user per day (`PANTRIO_DAILY_PLANS`,
+  `PANTRIO_DAILY_CHATS`, `PANTRIO_DAILY_IMPORTS`, `PANTRIO_DAILY_PHOTOS`) and in total
   (`PANTRIO_DAILY_BUDGET_USD`).
 - `render.yaml`: Render Blueprint for the API.
 - `data/`: `ingredients.csv` (hand-curated), `usda_foods.csv` (built by
@@ -206,7 +225,9 @@ Server wake-up notice (this PR): any API request pending over 3 s shows one shar
   `src/lib/api.ts`, types in `src/lib/types.ts` mirror `api.py`); Supabase is used only for
   sign-in (magic link or anonymous guest). The cookbook lives under `recipes/mine` (list,
   `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`. The assistant's
-  thread list is `src/components/chat-threads.tsx`. Read `web/AGENTS.md`: this Next.js differs from
+  thread list is `src/components/chat-threads.tsx`. `RecipeArt` (`src/components/bits.tsx`)
+  shows the recipe photo with `next/image` (host allowed from `NEXT_PUBLIC_SUPABASE_URL` in
+  `next.config.ts`) or the meal-type art when there is none. Read `web/AGENTS.md`: this Next.js differs from
   older versions (e.g. `proxy.ts` replaces middleware; check `node_modules/next/dist/docs/`).
 
 ## Commands
@@ -238,6 +259,7 @@ uv run python -m evals.run_assistant [--only ids] # assistant eval (paid; ~$0.00
 uv run python -m evals.import_cases      # regenerate the recipe-import eval pages
 uv run python -m evals.run_import [--only ids]    # recipe-import eval (paid; ~$0.006/import)
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
+uv run pantrio photos generate [--only ids] [--limit n] [--force] [--dry-run]  # corpus photos (paid; ~$0.014 each)
 uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # LangSmith dashboard
 uv run uvicorn pantrio.api:app --env-file .env --reload   # API on :8000 (SUPABASE_URL, DATABASE_URL)
 cd web && npm ci && npm run dev          # :3000; web/.env.local from web/.env.example
