@@ -162,6 +162,14 @@ File-convention icons, no `layout.tsx` change. Web only, so no eval rerun.
 Mobile recipe filters (this PR): Recipes chips are four rows (Meal, Time, Diet, Cuisine) that scroll
 sideways edge to edge below `md` (`no-scrollbar` utility) and wrap from `md`; shorter safety banner on
 phones, so the first recipe shows above the fold at 390 px. Web only, so no eval rerun.
+Cooking mode (this PR): `/recipes/[id]/cook` and `/recipes/mine/[id]/cook` (full-screen
+`CookingMode` in `web/src/components/cooking-mode.tsx`): one step at a time, ingredient
+checklist (with "for this step" chips matched from the step text), timers parsed from step text
+in code (`web/src/lib/cooking.ts`, lower bound of a range), Screen Wake Lock, progress in
+`localStorage["pantrio-cook:<user>:<corpus|mine>:<id>"]` for 12 h. "I cooked this" posts
+`/me/cooked` (migration `20261019160000_cooked_meals`, RLS, applied on Supabase; latest 500 per user), which by
+default takes the grams used out of measured pantry items (`cooking.py`; "some" items stay);
+`/me/cooked/preview` shows that first. No model call, so no eval rerun.
 
 ## Stack
 
@@ -254,13 +262,16 @@ phones, so the first recipe shows above the fold at 390 px. Web only, so no eval
   The DB stores paths only (`recipe_photos`, `user_recipes.photo_path`); `public_url` builds
   URLs from `SUPABASE_URL`. Corpus paths carry a hash of prompt + model, so only changed
   recipes regenerate.
+- `src/pantrio/cooking.py`: "I cooked this": `grams_used` (per food for the servings cooked)
+  and `use_from_pantry` (measured items go down in their own unit, removed under 0.5 g; items
+  without an amount stay). The cooking log is in `records.py` (`Cooked`, `cooked_meals`).
 - `src/pantrio/api.py`: FastAPI app (`create_app(backend, verify)`; tests pass an in-memory
   backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
   `/me/usage`, `/me/avatar` (PUT/DELETE), `/recipes` (search or browse, profile rules as filters unless `safe=false`),
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
   `/plans/latest`, `/plans/latest/grocery`, `POST /chat` (continues `thread_id` or starts a
   thread; the server supplies the thread's history), `/me/chats` (list, get, delete),
-  `/me/recipes` (cookbook CRUD,
+  `/me/cooked` (GET log, POST "I cooked this"; `/preview`), `/me/recipes` (cookbook CRUD,
   `/preview`, `/import/link`, `/import/photos`, `/estimate`, `/{id}/photo` POST/DELETE). Every
   recipe returned carries the hard rules it breaks for the person's current profile and its
   `photo_url` (or null). Paid calls are capped per user per day (`PANTRIO_DAILY_PLANS`,
@@ -290,7 +301,8 @@ phones, so the first recipe shows above the fold at 390 px. Web only, so no eval
   `src/lib/api.ts`, types in `src/lib/types.ts` mirror `api_models.py`); Supabase is used only for
   sign-in (magic link or anonymous guest). The cookbook lives under `recipes/mine` (list,
   `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`. The first-run tour
-  is `src/components/tour.tsx` (`TourProvider` in `AppShell`, `useTour().start`). The assistant's
+  is `src/components/tour.tsx` (`TourProvider` in `AppShell`, `useTour().start`). Cooking mode is
+  `src/components/cooking-mode.tsx` with helpers in `src/lib/cooking.ts`. The assistant's
   thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrio.tsx`. `RecipeArt` (`src/components/bits.tsx`)
   shows the recipe photo with `next/image` (host allowed from `NEXT_PUBLIC_SUPABASE_URL` in
   `next.config.ts`) or the meal-type art when there is none. Read `web/AGENTS.md`: this Next.js differs from

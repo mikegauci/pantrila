@@ -9,6 +9,7 @@ import { useSWRConfig } from "swr"
 
 import { AiBadge, AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
 import { CookbookForm, RECIPE_SOURCE } from "@/components/cookbook-form"
+import { StartCooking } from "@/components/cooking-mode"
 import { MacroRing } from "@/components/macro-ring"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -154,6 +155,10 @@ export default function MyRecipePage() {
             {r.allergens.length
               ? r.allergens.map((a) => <AllergenBadge key={a} allergen={a} danger={allergies.has(a)} />)
               : <span className="text-[12px]">none of the 14 EU allergens</span>}
+          </div>
+          <div className="mt-auto pt-2">
+            <StartCooking href={`/recipes/mine/${r.id}/cook`} recipeKey={`mine:${r.id}`}
+                          match={{ cookbook_id: r.id }} />
           </div>
         </div>
       </Panel>

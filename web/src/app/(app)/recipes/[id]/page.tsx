@@ -6,6 +6,7 @@ import { useParams } from "next/navigation"
 import { useState } from "react"
 
 import { AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
+import { StartCooking } from "@/components/cooking-mode"
 import { MacroRing } from "@/components/macro-ring"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -132,6 +133,10 @@ export default function RecipePage() {
             {r.allergens.length
               ? r.allergens.map((a) => <AllergenBadge key={a} allergen={a} danger={allergies.has(a)} />)
               : <span className="text-[12px]">none of the 14 EU allergens</span>}
+          </div>
+          <div className="mt-auto pt-2">
+            <StartCooking href={`/recipes/${r.id}/cook?servings=${n}`} recipeKey={`corpus:${r.id}`}
+                          match={{ recipe_id: r.id }} />
           </div>
         </div>
       </Panel>

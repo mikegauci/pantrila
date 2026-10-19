@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from pantrio.cookbook import (
     CookbookRecipeIn,
@@ -102,6 +102,51 @@ class PantryAdd(BaseModel):
     food: str = Field(min_length=1, max_length=80)
     quantity: float | None = Field(default=None, gt=0)
     unit: Unit | None = None
+
+
+class CookRequest(BaseModel):
+    recipe_id: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=200,
+        description="A Pantrio recipe; or set cookbook_id.",
+    )
+    cookbook_id: int | None = Field(default=None, description="A cookbook recipe.")
+    servings: int = Field(ge=1, le=24)
+    update_pantry: bool = Field(default=True, description="Take what was used out of the pantry.")
+
+    @model_validator(mode="after")
+    def _one_recipe(self) -> CookRequest:
+        if (self.recipe_id is None) == (self.cookbook_id is None):
+            raise ValueError("set exactly one of recipe_id and cookbook_id")
+        return self
+
+
+class PantryChangeView(BaseModel):
+    food: str
+    name: str
+    used_g: float
+    unit: Unit
+    before: float = Field(description="Quantity in `unit` before cooking.")
+    after: float | None = Field(description="Quantity left; null when used up and removed.")
+
+
+class CookedView(BaseModel):
+    id: int
+    recipe_id: str | None
+    cookbook_id: int | None
+    title: str
+    servings: int
+    pantry_updated: bool
+    cooked_at: datetime
+
+
+class CookResult(BaseModel):
+    cooked: CookedView | None = Field(description="The log entry; null for a preview.")
+    pantry: list[PantryChangeView] = Field(
+        description="Pantry items the recipe uses, before and after; applied unless a preview "
+        "or update_pantry is false."
+    )
 
 
 class Meta(BaseModel):

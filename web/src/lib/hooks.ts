@@ -4,7 +4,7 @@ import useSWR, { useSWRConfig, type SWRConfiguration } from "swr"
 
 import { api, ApiError } from "@/lib/api"
 import type {
-  ChatThread, ChatThreadSummary, CookbookCard, CookbookDetail, Food, GroceryList, Me, Meta, PantryItem, Plan, Profile, RecipeDetail,
+  ChatThread, ChatThreadSummary, CookbookCard, CookbookDetail, Cooked, Food, GroceryList, Me, Meta, PantryItem, Plan, Profile, RecipeDetail,
   Usage,
 } from "@/lib/types"
 
@@ -28,6 +28,7 @@ export const useChat = (id: number | null) => useApi<ChatThread>(id ? `/me/chats
 export const useCookbook = () => useApi<CookbookCard[]>("/me/recipes")
 export const useCookbookRecipe = (id: string | null) =>
   useApi<CookbookDetail>(id ? `/me/recipes/${id}` : null)
+export const useCooked = () => useApi<Cooked[]>("/me/cooked")
 
 /** The latest plan; a 404 (no plan yet) comes back as null, not an error. */
 export function usePlan() {
@@ -45,16 +46,20 @@ export function useGrocery(people: number, enabled = true) {
   return useApi<GroceryList>(enabled ? `/plans/latest/grocery?people=${people}` : null)
 }
 
-/** Clear derived views as well as refreshing mounted readers after a kitchen change. */
+/** Clear derived views as well as refreshing mounted readers after a kitchen change. `keep` is
+ * a key the current page is showing: it is refreshed without being cleared first. */
 export function useRefreshKitchen() {
   const { mutate } = useSWRConfig()
-  return () => mutate(
-    (key) => typeof key === "string" && (
-      key.startsWith("/recipes") || key.startsWith("/plans") ||
-      key.startsWith("/me/recipes") || key.startsWith("/me/chats") ||
-      key === "/me/pantry" || key === "/me/profile"
-    ),
-    undefined,
-    { revalidate: true },
-  )
+  return (keep?: string) => {
+    if (keep) mutate(keep)
+    return mutate(
+      (key) => typeof key === "string" && key !== keep && (
+        key.startsWith("/recipes") || key.startsWith("/plans") ||
+        key.startsWith("/me/recipes") || key.startsWith("/me/chats") ||
+        key === "/me/pantry" || key === "/me/profile" || key === "/me/cooked"
+      ),
+      undefined,
+      { revalidate: true },
+    )
+  }
 }

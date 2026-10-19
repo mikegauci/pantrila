@@ -16,6 +16,10 @@ return a draft for the person to review; nothing is saved until they post it bac
 nutrition, allergens and diets are derived in code on every read, like the corpus. A cookbook
 recipe can get a generated photo (POST /me/recipes/{id}/photo), capped per user per day.
 
+Cooking mode ends with "I cooked this" (POST /me/cooked): it logs the cook and, unless the
+person opts out, takes the amounts used out of their pantry (see pantrio.cooking).
+/me/cooked/preview shows that pantry change first without saving anything.
+
 Recipes carry `photo_url` when they have a photo (Supabase Storage; see pantrio.photos), else
 null and the web app shows its placeholder art.
 
@@ -50,6 +54,9 @@ from pantrio.api_models import (
     CookbookCard,
     CookbookDetail,
     CookbookPreview,
+    CookedView,
+    CookRequest,
+    CookResult,
     EstimateRequest,
     EstimateView,
     FoodView,
@@ -59,6 +66,7 @@ from pantrio.api_models import (
     Me,
     Meta,
     PantryAdd,
+    PantryChangeView,
     PantryItemView,
     PhotoImport,
     PlanView,
@@ -95,6 +103,7 @@ from pantrio.cookbook import (
     derive,
     problems_for,
 )
+from pantrio.cooking import grams_used, use_from_pantry
 from pantrio.foods import UnitError, load_foods
 from pantrio.grocery import grocery_list
 from pantrio.operations import EmbeddingUsage, PaidOperation, daily_cap
@@ -115,7 +124,7 @@ from pantrio.recipe_import import (
     ImportFailed,
     check_image,
 )
-from pantrio.records import Records
+from pantrio.records import Cooked, Records
 from pantrio.request_limits import RequestSizeLimit
 from pantrio.schema import (
     Allergen,
@@ -533,6 +542,56 @@ def create_app(
         s.cookbook.set_photo(recipe_id, None)
         drop_photo(request, old_path)
         return cookbook_detail(get_saved(s, recipe_id), s.kitchen.profile())
+
+    # --- Cooking mode: "I cooked this" ---
+
+    def cook(body: CookRequest, s: Session, save: bool) -> CookResult:
+        if body.recipe_id is not None:
+            r = get_recipe(s, body.recipe_id)
+            title, servings = r.title, r.servings
+            lines = [(i.food, i.grams) for i in r.ingredients]
+        else:
+            saved = get_saved(s, body.cookbook_id)
+            title, servings = saved.recipe.title, saved.recipe.servings
+            try:
+                lines = [(line.food, line.grams) for line in derive(saved.recipe).ingredients]
+            except CookbookError:  # its lines no longer check out; log it, leave the pantry
+                lines = []
+        used = grams_used(lines, servings, body.servings)
+        changes = use_from_pantry(used, s.kitchen.pantry())
+        cooked = None
+        if save:
+            if body.update_pantry:
+                for c in changes:
+                    if c.after is None:
+                        s.kitchen.remove(c.food)
+                    else:
+                        s.kitchen.put(c.after)
+            cooked = s.records.log_cooked(Cooked(
+                title=title, servings=body.servings, pantry_updated=body.update_pantry,
+                recipe_id=body.recipe_id, cookbook_id=body.cookbook_id,
+            ))  # fmt: skip
+        return CookResult(
+            cooked=cooked and CookedView(**vars(cooked)),
+            pantry=[PantryChangeView(food=c.food, name=food_name(c.food), used_g=c.used_g,
+                                     unit=c.before.unit, before=c.before.quantity,
+                                     after=c.after and c.after.quantity)
+                    for c in changes],
+        )  # fmt: skip
+
+    @app.post("/me/cooked/preview")
+    def preview_cooked(body: CookRequest, s: SessionDep) -> CookResult:
+        """What "I cooked this" would take out of the pantry; nothing is saved."""
+        return cook(body, s, save=False)
+
+    @app.post("/me/cooked", status_code=201)
+    def add_cooked(body: CookRequest, s: SessionDep) -> CookResult:
+        return cook(body, s, save=True)
+
+    @app.get("/me/cooked")
+    def list_cooked(s: SessionDep, limit: Annotated[int, Query(ge=1, le=200)] = 50
+                    ) -> list[CookedView]:  # fmt: skip
+        return [CookedView(**vars(c)) for c in s.records.cooked(limit)]
 
     @app.get("/plans/latest")
     def latest_plan(s: SessionDep) -> PlanView:

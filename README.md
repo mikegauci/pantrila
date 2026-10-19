@@ -3,7 +3,8 @@
 AI cooking and meal-planning assistant. Tell it what is in your kitchen, your diet, allergies
 and nutrition targets; it finds recipes with hybrid RAG search, plans your week with a
 LangGraph agent, builds a grocery list from what is missing and answers cooking questions in
-a chat. You can add your own recipes from photos, a link or by typing them in. **The model proposes; deterministic code decides.** Every recipe and plan is
+a chat. You can add your own recipes from photos, a link or by typing them in, and cook any
+recipe in cooking mode. **The model proposes; deterministic code decides.** Every recipe and plan is
 re-checked against your allergens and diet before you see it.
 
 **Live demo: https://pantrio-azure.vercel.app** ("Try it as a guest" needs no account. The API
@@ -155,6 +156,12 @@ with the next message; the browser only says which thread it is in.
   no bread beside a gluten-free dish), in one fixed scene so the grid looks consistent. All
   300 cost $4.15 ($0.014 each, p50 14.5 s); you can make one for your own recipes too.
   Images live in Supabase Storage; the database keeps paths only.
+- **Cooking mode for the moment you need the recipe.** One step at a time in large type,
+  ingredients to tick off, timers read from the step text in code ("simmer for 10 to 12
+  minutes" offers a 10-minute timer), and a screen wake lock so the phone stays on. Progress
+  stays in the browser for 12 hours. "I cooked this" logs the cook and, unless you turn it
+  off, takes the amounts used out of your pantry (shown first), so the grocery list stays
+  right. No model call is involved.
 - **Response storage disabled in requests.** Every Responses API call uses `store=False`, and tool
   loops are capped.
 
@@ -215,6 +222,7 @@ The paid evals are a manual GitHub Actions workflow.
 | `src/pantrio/assistant.py`, `swaps.py`, `pantry.py`, `grocery.py` | Assistant graph and its tools |
 | `src/pantrio/cookbook.py`, `recipe_import.py` | Your own recipes: derivation, storage, import from photos and links |
 | `src/pantrio/photos.py` | Recipe photo prompt, generation and Supabase Storage |
+| `src/pantrio/cooking.py`, `web/src/components/cooking-mode.tsx` | Cooking mode: pantry use after "I cooked this", step timers, wake lock |
 | `src/pantrio/api.py`, `api_models.py`, `api_views.py`, `backend.py` | FastAPI routes, HTTP models, response views and pooled persistence |
 | `src/pantrio/auth.py`, `records.py`, `chats.py`, `operations.py` | Token checks, saved records, conversations and atomic paid-operation lifecycle |
 | `supabase/migrations/` | SQL migrations (pgvector, full text, RLS) |
@@ -239,6 +247,9 @@ The paid evals are a manual GitHub Actions workflow.
 - Estimated foods are a best guess. Check the label of anything you buy.
 - Recipe photos are AI-generated and marked as such. The prompt keeps them to the recipe's
   ingredients, but the plating is the model's guess (a steak kebab can come out as kofta).
+- Cooking-mode timers find durations written as numbers or simple words ("3 to 4 minutes",
+  "1½ hours"); a phrase like "until golden" gets no timer. Timers only ring while the page is
+  open, and browsers without the Screen Wake Lock API (or in battery saver) may still dim.
 - Render's free plan sleeps when idle, so the first request after a pause is slow.
 
 "Macros" means protein, carbs and fat; "kcal" is food energy (calories).
