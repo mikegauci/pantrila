@@ -1,6 +1,6 @@
 "use client"
 
-import { CalendarDays, Check, Loader2, Sparkles, TriangleAlert } from "lucide-react"
+import { CalendarDays, Check, Loader2, Shuffle, Sparkles, TriangleAlert } from "lucide-react"
 import Link from "next/link"
 import { useRef, useState } from "react"
 import { toast } from "sonner"
@@ -9,6 +9,7 @@ import { useSWRConfig } from "swr"
 import { AiBadge, EmptyState, Panel, PanelTitle, ProblemAlert, RecipeArt, Stat } from "@/components/bits"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
+import { SwapMealSheet, type SwapTarget } from "@/components/swap-meal"
 import { ApiError, streamPlan } from "@/lib/api"
 import { label, MEAL_ORDER, planDayIndex, seconds, usd } from "@/lib/format"
 import { useMe, usePlan, useProfile } from "@/lib/hooks"
@@ -62,6 +63,7 @@ function DayTargets({ n, t }: { n: Nutrition; t: NutritionTargets }) {
 function Week({ plan }: { plan: Plan }) {
   const today = planDayIndex(plan.created_at, plan.days.length)
   const bad = new Set(plan.problems.map((p) => `${p.day}-${p.meal_type}`))
+  const [swap, setSwap] = useState<SwapTarget | null>(null)
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       {plan.days.map((d, i) => (
@@ -72,10 +74,10 @@ function Week({ plan }: { plan: Plan }) {
           </div>
           <ul className="mb-4 grid grid-cols-1 gap-2">
             {[...d.meals].sort((a, b) => MEAL_ORDER.indexOf(a.meal_type) - MEAL_ORDER.indexOf(b.meal_type)).map((m) => (
-              <li key={m.meal_type}>
+              <li key={m.meal_type} className="flex items-center gap-1">
                 <Link
                   href={`/recipes/${m.recipe.id}`}
-                  className={cn("flex items-center gap-3 rounded-2xl border p-2 hover:shadow-soft",
+                  className={cn("flex min-w-0 flex-1 items-center gap-3 rounded-2xl border p-2 hover:shadow-soft",
                     bad.has(`${d.day}-${m.meal_type}`) && "border-danger bg-danger-soft")}
                 >
                   <RecipeArt meal={m.meal_type} size="sm" photo={m.recipe.photo_url} sizes="48px" className="size-12 shrink-0 rounded-xl" />
@@ -88,12 +90,20 @@ function Week({ plan }: { plan: Plan }) {
                     <span className="block">×{m.portions}</span>
                   </span>
                 </Link>
+                <Button
+                  variant="ghost" size="icon-lg" className="shrink-0"
+                  aria-label={`Swap ${m.recipe.title}`} title="Swap this meal"
+                  onClick={() => setSwap({ day: d.day, meal: m.meal_type })}
+                >
+                  <Shuffle aria-hidden />
+                </Button>
               </li>
             ))}
           </ul>
           <DayTargets n={d.nutrition} t={plan.targets} />
         </Panel>
       ))}
+      <SwapMealSheet target={swap} onClose={() => setSwap(null)} />
     </div>
   )
 }
