@@ -49,7 +49,17 @@ The Claude Code cloud container cannot reach TikTok/Instagram; test from the dep
 - Caption comes back -> paste-a-link works for that platform. Blocked or empty -> that
   platform asks for the pasted caption.
 
-Results: _(fill in)_
+Results: _not run yet._ The cloud container's proxy refuses tiktok.com, instagram.com and
+facebook.com (403 on CONNECT), so the check still has to be run from Render or the owner's
+machine. The code does not depend on the answer: every platform tries the link and falls back to
+the pasted caption, so a blocked platform is paste-only without code changes. To check:
+
+```bash
+curl -sA "PantrioBot/1.0 (+https://pantrio-azure.vercel.app; recipe import for one user)" \
+  "https://www.tiktok.com/oembed?url=<post>" | jq '{title, author_unique_id}'
+curl -sLA "PantrioBot/1.0 (+https://pantrio-azure.vercel.app; recipe import for one user)" \
+  "<instagram or facebook post>" | grep -o '<meta property="og:[a-z]*" content="[^"]*"'
+```
 
 ### 2. Backend: `src/pantrio/social.py` (new)
 
@@ -120,12 +130,24 @@ Results: _(fill in)_
 ### Checklist
 
 - [ ] Platform check results recorded above
-- [ ] `social.py` + tests
-- [ ] `from_post` / `from_text` + prompt change
-- [ ] Data fields, API routes, types
-- [ ] Web: "From a post", credit on recipe page and form
-- [ ] Eval cases, before/after reports
-- [ ] README "User recipes", CLAUDE.md Status/Layout; PR merged
+- [x] `social.py` + tests
+- [x] `from_post` / `from_text` + prompt change
+- [x] Data fields, API routes, types
+- [x] Web: "From a post", credit on recipe page and form (Playwright: `post-import.spec.ts`)
+- [x] Eval cases (10 captions, `--instructions-from` for the before run)
+- [ ] Before/after reports (needs `OPENAI_API_KEY`: `python -m evals.run_import
+      --instructions-from origin/main`, then without the flag)
+- [x] README, CLAUDE.md Status/Layout
+- [ ] PR merged
+
+Notes from building PR 1:
+
+- A caption pasted with no post link goes to `/import/text` (source "Pasted text"): there is no
+  post to credit. With a link it goes to `/import/post`, which uses the pasted caption and
+  doesn't fetch, so the handle comes from the link when it carries one (TikTok `/@handle/`,
+  Instagram `/<handle>/reel/`) and the person can type it in the form's Credit panel.
+- A non-social link pasted into "From a post" falls through to the link import.
+- Up to 3 caption links are fetched (free) until one loads; only that page is sent to the model.
 
 ---
 
