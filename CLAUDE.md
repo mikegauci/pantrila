@@ -84,6 +84,9 @@ thread list (left column on desktop, "Chats" drawer on mobile) and "New chat". N
 tool or model change, so no eval rerun.
 Header avatar (PR #13): food emoji on a soft tint, picked from a hash of the Supabase user id
 (`web/src/lib/avatar.ts`); nothing stored, no backend change.
+Server wake-up notice (this PR): any API request pending over 3 s shows one shared Sonner toast
+("Waking up the Pantrio server…") until every slow request answers (`request()` in
+`web/src/lib/api.ts`); `AppShell` pings `/health` on mount to start the Render wake-up early.
 
 ## Stack
 
