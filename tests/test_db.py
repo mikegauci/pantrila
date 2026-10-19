@@ -210,6 +210,7 @@ def test_db_cookbook_keeps_a_photo_path_and_photo_is_a_usage_kind(conn):
 
 
 def test_reservations_serialize_across_connections_and_settle_once(conn):
+    import os
     from concurrent.futures import ThreadPoolExecutor
     from datetime import UTC, datetime
 
@@ -221,7 +222,7 @@ def test_reservations_serialize_across_connections_and_settle_once(conn):
     since = datetime.now(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
 
     def reserve(user):
-        with psycopg.connect(conn.info.dsn, autocommit=True) as other:
+        with psycopg.connect(os.environ["PANTRIO_TEST_DATABASE_URL"], autocommit=True) as other:
             try:
                 return user, DbRecords(other, user).reserve("chat", since, 10, 0.15, 0.15)
             except QuotaExceeded:
@@ -242,12 +243,16 @@ def test_reservations_serialize_across_connections_and_settle_once(conn):
     assert len(records.events()) == 1
 
 
-def test_pooled_backend_does_not_hold_a_connection_during_external_work(conn):
+def test_pooled_backend_does_not_hold_a_connection_during_external_work(conn, monkeypatch):
+    import os
+
     from pantrio.api import DbBackend
     from pantrio.pantry import make_item
 
     conn.commit()
-    backend = DbBackend(conn.info.dsn, max_size=1)
+    monkeypatch.setattr("pantrio.search.openai_query_embedder", lambda _: lambda _: ([0.0], 0))
+    monkeypatch.setattr("pantrio.api.photo_store", lambda: None)
+    backend = DbBackend(os.environ["PANTRIO_TEST_DATABASE_URL"], max_size=1)
     backend.pool.wait()
 
     def embed(_):
