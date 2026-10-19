@@ -21,7 +21,7 @@ cheapest model that passes the evals. Each figure links to the committed report 
 |---|---|---|---|---|
 | [Recipe search](evals/reports/retrieval-2026-10-15T195536Z.md) | 65 labelled queries, 300 recipes | hybrid recall@10 **0.843** (vector 0.811, full text 0.770), MRR **0.922**, 0 filter violations | embeddings only | 0.57 s / 0.73 s |
 | [Meal planner](evals/reports/planner-2026-10-16T084243Z.md) | 16 diet and allergy profiles, 1 to 7 days | **0 hard violations**, 13/16 plans meet every target, protein days 94%, pantry use 94% | **$0.023** per plan | 19 s / 84 s |
-| [Cooking assistant](evals/reports/assistant-2026-10-16T094533Z.md) | 24 single-turn cases | right tools **100%**, pantry edits as asked 100%, **0** unsafe or made-up cited recipes | **$0.0022** per turn | 8 s / 17 s |
+| [Cooking assistant](evals/reports/assistant-2026-10-19T130624Z.md) | 28 single-turn cases | right tools **96.4%**, pantry edits as asked 100%, expected drafts 4/4, **0** missing draft warnings or unsafe/made-up citations | **$0.0031** per turn | 4.7 s / 8.3 s |
 | [Recipe import](evals/reports/import-2026-10-16T185930Z.md) | 12 labelled recipe pages (JSON-LD, blog text, no recipe, prompt injection) | **0** missed allergens, food matching 99%, servings 100%, injection ignored | **$0.006** per import | 6.5 s / 11.5 s |
 
 - Hybrid search beats either retriever alone. It gains most on allergen queries (0.875
@@ -53,7 +53,7 @@ flowchart LR
         Caps["Daily caps per user<br/>+ total budget"]
         Search["Hybrid search<br/>pgvector + full text, RRF"]
         Planner["Planner graph<br/>(LangGraph)"]
-        Chat["Assistant graph<br/>(LangGraph, 5 tools)"]
+        Chat["Assistant graph<br/>(LangGraph, 6 tools)"]
         Rules["constraints.py<br/>deterministic checker"]
     end
     subgraph Data["Supabase Postgres 17"]
@@ -104,9 +104,13 @@ Progress streams to the browser as server-sent events, one per graph node.
 
 `agent -> tools (max 4 rounds) -> guard`. Tools: `search_recipes`, `check_pantry`,
 `update_pantry`, `swap_ingredient` (same-weight swaps with nutrition, allergens and diets
-re-derived and re-checked) and `scale_recipe`. Replies cite recipes as `[recipe-id]`. The
+re-derived and re-checked), `scale_recipe`, and `write_recipe` (a draft for the cookbook
+review form). Replies cite corpus recipes as `[recipe-id]`. The
 guard checks every cited id against the person's rules and adds a note for any that breaks
 one or does not exist, so a made-up recipe can't reach the user without a warning.
+
+Written drafts are checked independently after the model answers. Rule violations and unchecked
+ingredients are returned as structured warnings and displayed beside the save action.
 
 Conversations are saved as threads per user (table `chat_threads`), so each topic keeps its
 own context. The server keeps each thread's model history (the last 20 turns) and sends it
@@ -136,8 +140,9 @@ with the next message; the browser only says which thread it is in.
 - **Cheapest model that passes.** `gpt-5.4-mini` with reasoning effort low. Any change to a
   prompt, schema, tool, retrieval setting or model needs a before/after eval run.
 - **Cost guards for a public demo.** Guests sign in anonymously. Each user gets 5 plans and
-  50 chat turns a day, and a total daily budget caps the spend across everyone. Every paid
-  call is logged with tokens, cost and latency (the Insights page).
+  50 chat turns a day; searches are also metered. A shared daily budget includes reservations
+  for in-flight work, then reconciles actual cost. Reservation sizes are estimates rather than
+  provider billing ceilings. Every paid call is logged with tokens, cost and latency (the Insights page).
 - **Your recipes, checked like ours.** Imports (a photo, a web page's schema.org data or its
   text) come back as a draft you review; nothing is saved first. Each ingredient maps to the
   food table, so nutrition and allergens are computed in code. A food the table lacks gets a

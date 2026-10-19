@@ -4,9 +4,13 @@ export default defineConfig({
   testDir: "./tests",
   fullyParallel: false,
   timeout: 60_000,
+  expect: { timeout: 15_000 },
   use: { baseURL: "http://127.0.0.1:3100", trace: "retain-on-failure", channel: process.env.PLAYWRIGHT_CHANNEL },
   webServer: {
-    command: "npm run dev -- --hostname 127.0.0.1 --port 3100",
+    command: process.env.PLAYWRIGHT_DEV
+      ? "npm run dev -- --hostname 127.0.0.1 --port 3100"
+      : "npm run build && npm run start -- --hostname 127.0.0.1 --port 3100",
+    timeout: 180_000,
     url: "http://127.0.0.1:3100/login",
     reuseExistingServer: false,
     env: {

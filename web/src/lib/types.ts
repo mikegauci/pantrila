@@ -208,6 +208,7 @@ export interface ToolCall {
 
 export interface ChatReply {
   profile_problems: string[]
+  draft_problems: string[][]
   thread_id: number
   text: string
   cited: RecipeCard[]

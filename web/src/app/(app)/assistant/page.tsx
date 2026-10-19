@@ -84,6 +84,8 @@ function Rich({ text, recipes }: { text: string; recipes: Map<string, RecipeCard
 
 function Bubble({ m }: { m: Message }) {
   const router = useRouter()
+  const { session } = useAuth()
+  const userId = session!.user.id
   if (m.role === "user") {
     return (
       <div className="ml-auto max-w-[85%] rounded-[20px] rounded-br-md bg-primary px-4 py-2.5 text-primary-foreground">
@@ -93,7 +95,7 @@ function Bubble({ m }: { m: Message }) {
   }
   const r = m.reply
   const save = (d: CookbookRecipeIn) => {
-    sessionStorage.setItem(CHAT_DRAFT, JSON.stringify(d))
+    sessionStorage.setItem(`${CHAT_DRAFT}:${userId}`, JSON.stringify(d))
     router.push("/recipes/mine/new?from=chat")
   }
   const recipes = new Map(r?.cited.map((c) => [c.id, c]))
@@ -123,10 +125,12 @@ function Bubble({ m }: { m: Message }) {
         </div>
       )}
       {r?.drafts?.map((d, i) => (
-        <Button key={i} variant="outline" size="sm" className="w-fit"
-                onClick={() => save(d)}>
-          <BookmarkPlus /> Save “{d.title}” to My recipes
-        </Button>
+        <div key={i} className="grid gap-2">
+          <ProblemAlert title={`Check ${d.title}`} items={r.draft_problems?.[i] ?? []} />
+          <Button variant="outline" size="sm" className="w-fit" onClick={() => save(d)}>
+            <BookmarkPlus /> Save “{d.title}” to My recipes
+          </Button>
+        </div>
       ))}
       {r && (
         <p className="tabular text-[11px] text-muted-foreground">

@@ -83,7 +83,7 @@ export default function LoginPage() {
             No account needed. Set your diet and allergies, add what is in your kitchen and plan
             a week.
           </p>
-          <Button size="lg" className="mt-8 w-full" onClick={guest} disabled={busy !== null}>
+          <Button size="lg" className="mt-8 w-full" onClick={guest} disabled={!ready || busy !== null}>
             <UserRound /> {busy === "guest" ? "Starting…" : "Try it as a guest"}
           </Button>
           <p className="mt-2 text-center text-[12px] text-muted-foreground">
@@ -122,7 +122,7 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="h-10"
                 />
-                <Button type="submit" variant="outline" disabled={busy !== null}>
+                <Button type="submit" variant="outline" disabled={!ready || busy !== null}>
                   {busy === "email" ? "Sending…" : "Email me a sign-in link"}
                 </Button>
               </form>

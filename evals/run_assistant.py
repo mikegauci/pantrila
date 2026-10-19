@@ -45,23 +45,21 @@ def kitchen_for(case: dict) -> MemoryKitchen:
     return MemoryKitchen(profile, items)
 
 
-WORDS = {"milk": ("milk", "dairy"), "eggs": ("egg",), "gluten": ("gluten", "wheat", "flour")}
-
-
-def unwarned(draft: CookbookRecipeIn, profile: UserProfile, reply: str) -> bool:
-    """The draft contains an allergen the person avoids (from the foods code could match) and
-    the reply never names it."""
+def unwarned(draft: CookbookRecipeIn, profile: UserProfile, warnings: list[str]) -> bool:
+    """Check structured rule warnings, rather than treating an allergen name as a warning."""
     known = [x for x in draft.ingredients if x.food is not None]
     try:
         derived = derive(draft.model_copy(update={"ingredients": known}))
     except ValueError:
-        return False
-    bad = set(derived.allergens) & set(profile.allergies)
-    if not bad or not problems_for(draft, derived, profile):
-        return False
-    text = reply.lower()
-    words = (WORDS.get(a, (a.replace("_", " ").rstrip("s"),)) for a in bad)
-    return not all(any(w in text for w in ws) for ws in words)
+        return not bool(warnings)
+    required = problems_for(draft, derived, profile)
+    if not isinstance(warnings, list):
+        return bool(required)
+    if any(problem not in warnings for problem in required):
+        return True
+    return len(known) != len(draft.ingredients) and not any(
+        "could not be checked" in warning for warning in warnings
+    )
 
 
 def score(case: dict, r: ChatResult, kitchen: MemoryKitchen, store) -> dict:
@@ -90,8 +88,12 @@ def score(case: dict, r: ChatResult, kitchen: MemoryKitchen, store) -> dict:
         "cite_ok": bool(r.cited) if e.get("must_cite") else None,
         "draft_ok": bool(r.drafts) == e["must_draft"] if "must_draft" in e else None,
         "stray_drafts": len(r.drafts) if "must_draft" not in e else 0,
-        "unwarned_drafts": sum(unwarned(d, profile, r.text) for d in r.drafts),
+        "unwarned_drafts": sum(
+            unwarned(d, profile, r.draft_problems[i] if i < len(r.draft_problems) else [])
+            for i, d in enumerate(r.drafts)
+        ),
         "drafts": [d.title for d in r.drafts],
+        "draft_problems": r.draft_problems,
         "unsafe_cites": [
             rid
             for rid in r.cited
@@ -185,7 +187,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"| Recommended a recipe when asked | {pct(s['cite_ok'])} |",
         f"| Wrote its own recipe exactly when expected | {pct(s['draft_ok'])} |",
         f"| Own recipes written in other cases | {s['stray_drafts']} |",
-        f"| Own recipes breaking an allergy without saying so | {s['unwarned_drafts']} |",
+        f"| Own recipes missing required rule warnings | {s['unwarned_drafts']} |",
         f"| LLM calls / tool calls per turn | {num(s['llm_calls'])} / {num(s['tool_calls'])} |",
         f"| Tokens per turn (in / out) | {num(s['input_tokens'], ',.0f')} / "
         f"{num(s['output_tokens'], ',.0f')} |",
@@ -299,7 +301,9 @@ def main() -> None:
     if summary["unsafe_cites"] or summary["made_up_cites"]:
         raise SystemExit("the assistant cited unsafe or made-up recipes")
     if summary["unwarned_drafts"]:
-        raise SystemExit("the assistant wrote a recipe breaking an allergy without saying so")
+        raise SystemExit(
+            "the assistant wrote a recipe breaking a rule without a structured warning"
+        )
 
 
 if __name__ == "__main__":

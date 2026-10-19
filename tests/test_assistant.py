@@ -238,3 +238,44 @@ def test_write_recipe_says_when_it_suits_the_person(corpus, kitchen):
         "a recipe needs"
     )
     assert len(drafts) == 1
+
+
+@pytest.mark.parametrize(
+    ("profile", "problem"),
+    [
+        (UserProfile(allergies=[Allergen.MILK]), "contains milk"),
+        (UserProfile(diets=[DietTag.VEGAN]), "is not vegan"),
+        (UserProfile(exclude_foods=["egg"]), "uses egg"),
+    ],
+)
+def test_guard_checks_drafts_even_when_model_calls_them_safe(corpus, profile, problem):
+    a, _ = bot(
+        corpus,
+        MemoryKitchen(profile),
+        tool_reply("write_recipe", **cake(*CAKE)),
+        text_reply("This cake is safe for you."),
+    )
+    result = a.reply("Write a cake")
+    assert problem in result.draft_problems[0]
+    assert problem in result.text.split("Note from Pantrio:")[1]
+    assert result.cited == []
+
+
+def test_guard_warns_about_unchecked_ingredients_independently_of_model(corpus):
+    args = cake(("eggs", 1, "piece"), ("unicorn sprinkles", 5, "g"))
+    a, _ = bot(corpus, MemoryKitchen(), tool_reply("write_recipe", **args), text_reply("All safe."))
+    result = a.reply("Write a recipe")
+    assert any(
+        "unicorn sprinkles" in p and "could not be checked" in p for p in result.draft_problems[0]
+    )
+
+
+def test_safety_eval_does_not_accept_an_allergen_name_as_a_warning():
+    from evals.run_assistant import unwarned
+    from pantrio.assistant import WriteRecipeArgs, write_draft
+
+    profile = UserProfile(allergies=[Allergen.PEANUTS])
+    _, draft = write_draft(WriteRecipeArgs(**cake(("peanut butter", 30, "g"))), profile)
+    assert unwarned(draft, profile, [])
+    assert unwarned(draft, profile, "This peanut snack is safe for your allergy.")
+    assert not unwarned(draft, profile, ["contains peanuts"])

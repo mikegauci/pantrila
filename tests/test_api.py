@@ -293,6 +293,9 @@ def test_chat_returns_recipe_drafts_and_old_messages_still_load(api, backend):
     saved = api.get(f"/me/chats/{body['thread_id']}").json()["messages"][1]["reply"]
     assert saved["drafts"] == body["drafts"]
     assert api.post("/me/recipes", json=draft).status_code in (200, 201)
+    api.put("/me/profile", json={"allergies": ["eggs"]})
+    refreshed = api.get(f"/me/chats/{body['thread_id']}").json()["messages"][1]["reply"]
+    assert "contains eggs" in refreshed["draft_problems"][0]
 
     old = {k: v for k, v in body.items() if k != "drafts"}  # saved before replies had drafts
     chats = MemoryChats("alice", backend.shared)

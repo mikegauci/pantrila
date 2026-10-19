@@ -197,6 +197,7 @@ class ChatResult:
     usage: Usage
     latency_ms: float
     drafts: list[CookbookRecipeIn] = field(default_factory=list)  # written with write_recipe
+    draft_problems: list[list[str]] = field(default_factory=list)
 
 
 class ChatState(TypedDict, total=False):
@@ -208,6 +209,7 @@ class ChatState(TypedDict, total=False):
     flagged: list[str]
     tool_calls: list[ToolCall]
     drafts: list[CookbookRecipeIn]
+    draft_problems: list[list[str]]
 
 
 # --- The graph -----------------------------------------------------------------------------
@@ -270,6 +272,7 @@ class Assistant:
             usage=self.usage,
             latency_ms=(time.perf_counter() - start) * 1000,
             drafts=state["drafts"],
+            draft_problems=state["draft_problems"],
         )  # fmt: skip
 
     # nodes
@@ -317,10 +320,16 @@ class Assistant:
                 flagged.append(rid)
                 why = "; ".join(msg.removeprefix(f"{rid} ") for _, msg in problems)
                 notes.append(f"{recipes[rid].title} [{rid}] does not suit you: it {why}.")
+        draft_problems = [draft_warnings(draft, s["profile"]) for draft in s.get("drafts", [])]
+        notes += [
+            f"{draft.title}: {'; '.join(problems)}."
+            for draft, problems in zip(s.get("drafts", []), draft_problems, strict=True)
+            if problems
+        ]
         text = s["text"]
         if notes:
             text += "\n\nNote from Pantrio: " + " ".join(notes)
-        return {"text": text, "flagged": flagged}
+        return {"text": text, "flagged": flagged, "draft_problems": draft_problems}
 
     # tools
 
@@ -496,6 +505,26 @@ def write_draft(a: WriteRecipeArgs, p: UserProfile) -> tuple[str, CookbookRecipe
     elif unknown:
         out.append(f"Could not check (not in Pantrio's table): {', '.join(unknown)}.")
     return "\n".join(out), draft
+
+
+def draft_warnings(draft: CookbookRecipeIn, profile: UserProfile) -> list[str]:
+    """Check outgoing drafts even if the model omits or contradicts a tool warning."""
+    warnings, usable = [], []
+    for n, line in enumerate(draft.ingredients, 1):
+        try:
+            derive(draft.model_copy(update={"ingredients": [line]}))
+        except CookbookError:
+            warnings.append(
+                f"Ingredient {n} ({line.name}) could not be checked; review it before cooking"
+            )
+        else:
+            usable.append(line)
+    if usable:
+        derived = derive(draft.model_copy(update={"ingredients": usable}))
+        warnings = problems_for(draft, derived, profile) + warnings
+        if derived.estimated:
+            warnings.append("Some ingredient facts are estimated; check the product labels")
+    return warnings
 
 
 def _grams_ok(line: RecipeLine) -> bool:

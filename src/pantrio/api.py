@@ -42,7 +42,7 @@ from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
 from pantrio import config
-from pantrio.assistant import Assistant
+from pantrio.assistant import Assistant, draft_warnings
 from pantrio.auth import AuthError, User, verifier
 from pantrio.chats import Chats, SavedThread, title_for
 from pantrio.constraints import day_nutrition, recipe_problems
@@ -355,6 +355,7 @@ class ChatReply(BaseModel):
     cost_usd: float | None
     latency_ms: float
     profile_problems: list[str] = Field(default_factory=list)
+    draft_problems: list[list[str]] = Field(default_factory=list)
     drafts: list[CookbookRecipeIn] = Field(
         default=[], description="Recipes the assistant wrote, for the cookbook's review form."
     )
@@ -1078,6 +1079,7 @@ def create_app(
             if message.reply is None:
                 continue
             reply = message.reply
+            reply.draft_problems = [draft_warnings(d, profile) for d in reply.drafts]
             cited_ids = [card.id for card in reply.cited]
             reply.cited = [
                 recipe_card(recipes[rid], profile, photos.get(rid))
@@ -1137,6 +1139,7 @@ def create_app(
             ],  # fmt: skip
             pantry_changed=any(c.name == "update_pantry" for c in result.tool_calls),
             drafts=result.drafts,
+            draft_problems=result.draft_problems,
             cost_usd=result.usage.cost(),
             latency_ms=round(result.latency_ms),
         )

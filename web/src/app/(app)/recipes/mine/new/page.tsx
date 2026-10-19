@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { useSWRConfig } from "swr"
 
+import { useAuth } from "@/components/auth-provider"
 import { Panel, PanelTitle } from "@/components/bits"
 import { BLANK_RECIPE, CHAT_DRAFT, CookbookForm } from "@/components/cookbook-form"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -123,6 +124,8 @@ function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
 }
 
 export default function NewRecipePage() {
+  const { session } = useAuth()
+  const draftKey = `${CHAT_DRAFT}:${session!.user.id}`
   const router = useRouter()
   const { mutate } = useSWRConfig()
   const { data: me, mutate: refreshMe } = useMe()
@@ -132,29 +135,34 @@ export default function NewRecipePage() {
   const [fromChat, setFromChat] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
 
-  // Cache Components keeps a hidden page's state; start fresh each visit.
-  useEffect(() => () => { setMethod(null); setDraft(null); setResult(null); setFromChat(false) }, [])
-
-  // The assistant's "Save to My recipes" leaves its recipe in sessionStorage and links here with ?from=chat.
+  // Activity re-runs effects when this page becomes visible. Defer consuming the one-shot
+  // handoff until the effect survives Strict Mode's setup/cleanup/setup cycle.
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    if (params.get("from") !== "chat") return
-    window.history.replaceState(null, "", "/recipes/mine/new")
-    const stored = sessionStorage.getItem(CHAT_DRAFT)
-    sessionStorage.removeItem(CHAT_DRAFT)
-    if (!stored) return
-    let fromAssistant: CookbookRecipeIn
-    try {
-      fromAssistant = JSON.parse(stored)
-    } catch {
-      return // a broken value: show the method picker
-    }
-    // Reading sessionStorage is only possible on the client, after the first render.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setDraft(fromAssistant)
-    setMethod("manual")
-    setFromChat(true)
-  }, [])
+    let active = true
+    queueMicrotask(() => {
+      if (!active) return
+      setMethod(null)
+      setDraft(null)
+      setResult(null)
+      setFromChat(false)
+      const params = new URLSearchParams(window.location.search)
+      if (params.get("from") !== "chat") return
+      window.history.replaceState(null, "", "/recipes/mine/new")
+      const stored = sessionStorage.getItem(draftKey)
+      sessionStorage.removeItem(draftKey)
+      if (!stored) return
+      let fromAssistant: CookbookRecipeIn
+      try {
+        fromAssistant = JSON.parse(stored)
+      } catch {
+        return
+      }
+      setDraft(fromAssistant)
+      setMethod("manual")
+      setFromChat(true)
+    })
+    return () => { active = false }
+  }, [draftKey])
 
   // The section under the picker is often below the fold on a phone: bring it into view.
   useEffect(() => {
