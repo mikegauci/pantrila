@@ -3,6 +3,8 @@
 import type { Session } from "@supabase/supabase-js"
 import { createContext, useContext, useEffect, useState } from "react"
 
+import { SWRConfig } from "swr"
+
 import { supabase } from "@/lib/supabase"
 
 interface AuthState {
@@ -17,12 +19,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const auth = supabase().auth
-    auth.getSession().then(({ data }) => setState({ session: data.session, ready: true }))
     const { data } = auth.onAuthStateChange((_event, session) => setState({ session, ready: true }))
     return () => data.subscription.unsubscribe()
   }, [])
 
-  return <AuthContext value={state}>{children}</AuthContext>
+  return (
+    <AuthContext value={state}>
+      <AccountCache key={state.session?.user.id ?? "signed-out"}>{children}</AccountCache>
+    </AuthContext>
+  )
 }
 
 export const useAuth = () => useContext(AuthContext)
+
+/** Recreate both cached responses and retained page state whenever identity changes. */
+function AccountCache({ children }: { children: React.ReactNode }) {
+  const [cache] = useState(() => new Map())
+  return <SWRConfig value={{ provider: () => cache }}>{children}</SWRConfig>
+}
