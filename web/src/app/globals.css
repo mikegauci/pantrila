@@ -164,3 +164,9 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Sonner centres the icon on the whole toast; keep it level with the title line. */
+.cn-toast [data-icon] {
+  align-self: flex-start;
+  margin-top: 2px;
+}
