@@ -2,7 +2,6 @@
 
 import { History, Loader2, Plus, Refrigerator, Repeat, Scale, Search, Send, Sparkles } from "lucide-react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
@@ -124,7 +123,6 @@ export default function AssistantPage() {
   const [params] = useState(() => new URLSearchParams(window.location.search))
   const [threadId, setThreadId] = useState<number | null>(() =>
     params.has("q") ? null : Number(params.get("thread")) || Number(localStorage.getItem(LAST_THREAD)) || null)
-  const router = useRouter()
   const asked = useRef(false)
   const [pending, setPending] = useState<Message[]>([])
   const [text, setText] = useState("")
@@ -146,7 +144,8 @@ export default function AssistantPage() {
 
   useEffect(() => {
     const q = params.get("q")
-    if (params.size) router.replace("/assistant")
+    // Clear ?q= without a Next navigation: a router transition can remount this page and lose the chat in flight.
+    if (params.size) window.history.replaceState(null, "", "/assistant")
     if (q && !asked.current) {
       asked.current = true
       ask(q)
