@@ -13,6 +13,7 @@ from pantrio.auth import AuthError, User
 from pantrio.chats import MAX_THREADS_PER_USER, MemoryChats
 from pantrio.cookbook import MemoryCookbook
 from pantrio.pantry import MemoryKitchen
+from pantrio.photos import MemoryPhotos
 from pantrio.planner import PlanDraft
 from pantrio.records import MemoryRecords
 from pantrio.schema import MealType
@@ -41,11 +42,32 @@ def text_reply(text: str) -> SimpleNamespace:
                            usage=USAGE)  # fmt: skip
 
 
+def png_b64(size=(1536, 1152)) -> str:
+    import base64
+    import io
+
+    from PIL import Image
+
+    out = io.BytesIO()
+    Image.new("RGB", size, (200, 120, 60)).save(out, "PNG")
+    return base64.b64encode(out.getvalue()).decode()
+
+
 class FakeClient:
     def __init__(self):
         self.replies: list = []
         self.calls: list[dict] = []
         self.responses = self
+        self.images = SimpleNamespace(generate=self.generate_image)
+        self.image_calls: list[dict] = []
+        self.image_error: Exception | None = None
+
+    def generate_image(self, **kwargs):
+        self.image_calls.append(kwargs)
+        if self.image_error:
+            raise self.image_error
+        usage = SimpleNamespace(input_tokens=200, output_tokens=400)
+        return SimpleNamespace(data=[SimpleNamespace(b64_json=png_b64())], usage=usage)
 
     def parse(self, **kwargs):
         self.calls.append(kwargs)
@@ -60,6 +82,7 @@ class MemoryBackend:
         self.kitchens: dict[str, MemoryKitchen] = {}
         self.shared: dict = {"plans": [], "events": []}
         self.client = FakeClient()
+        self.photos: MemoryPhotos | None = MemoryPhotos()
 
     @contextmanager
     def session(self, user_id):
@@ -398,3 +421,79 @@ def test_imports_are_capped_per_day(api, backend, monkeypatch):
     assert api.post("/me/recipes/import/photos", json={"images": [png]}).status_code == 200
     r = api.post("/me/recipes/estimate", json={"names": ["gochujang"]})
     assert r.status_code == 429
+
+
+# --- Photos ---
+
+
+@pytest.fixture
+def photo_env(monkeypatch):
+    monkeypatch.setenv("SUPABASE_URL", "https://example.supabase.co")
+    monkeypatch.setenv("PANTRIO_PRICE_IMAGE_INPUT_PER_MTOK", "5")
+    monkeypatch.setenv("PANTRIO_PRICE_IMAGE_OUTPUT_PER_MTOK", "30")
+
+
+def test_corpus_recipes_carry_their_photo_url(api, backend, photo_env):
+    backend.store.photo_paths[CURRY] = f"recipes/{CURRY}-abc.webp"
+    url = f"https://example.supabase.co/storage/v1/object/public/recipe-photos/recipes/{CURRY}-abc.webp"
+    assert api.get(f"/recipes/{CURRY}").json()["photo_url"] == url
+    cards = {c["id"]: c for c in api.get("/recipes", params={"safe": "false", "limit": 60})
+             .json()["recipes"]}  # fmt: skip
+    assert cards[CURRY]["photo_url"] == url and cards[OMELETTE]["photo_url"] is None
+
+
+def test_cookbook_photo_is_generated_stored_replaced_and_deleted(api, backend, photo_env):
+    rid = api.post("/me/recipes", json=TOAST).json()["id"]
+    first = api.post(f"/me/recipes/{rid}/photo")
+    assert first.status_code == 200
+    url = first.json()["photo_url"]
+    assert url.startswith("https://example.supabase.co/storage/v1/object/public/recipe-photos/"
+                          "user-recipes/alice/") and url.endswith(".webp")  # fmt: skip
+    (path,) = backend.photos.files
+    assert backend.photos.files[path][:4] == b"RIFF"  # WebP
+
+    call = backend.client.image_calls[0]
+    assert call["size"] == "1536x1152" and "Ingredients: bread, butter." in call["prompt"]
+    assert "Final step: Butter." in call["prompt"]
+
+    usage = api.get("/me/usage").json()
+    event = usage["events"][0]
+    assert event["kind"] == "photo" and event["cost_usd"] == pytest.approx(0.013)
+    assert usage["limits"]["photos_left"] == usage["limits"]["photos_per_day"] - 1
+    assert api.get("/me/recipes").json()[0]["photo_url"] == url
+
+    second = api.post(f"/me/recipes/{rid}/photo").json()["photo_url"]
+    assert second != url and len(backend.photos.files) == 1  # the old file is gone
+
+    bob = {"Authorization": "Bearer bob"}
+    assert api.post(f"/me/recipes/{rid}/photo", headers=bob).status_code == 404
+    assert api.delete(f"/me/recipes/{rid}").status_code == 204
+    assert backend.photos.files == {}
+
+
+def test_cookbook_photo_can_be_removed(api, backend, photo_env):
+    rid = api.post("/me/recipes", json=TOAST).json()["id"]
+    api.post(f"/me/recipes/{rid}/photo")
+    r = api.delete(f"/me/recipes/{rid}/photo")
+    assert r.status_code == 200 and r.json()["photo_url"] is None and backend.photos.files == {}
+
+
+def test_cookbook_photos_are_capped_and_failures_logged(api, backend, photo_env, monkeypatch):
+    import openai
+
+    monkeypatch.setenv("PANTRIO_DAILY_PHOTOS", "2")
+    rid = api.post("/me/recipes", json=TOAST).json()["id"]
+    backend.client.image_error = openai.APIConnectionError(request=None)
+    r = api.post(f"/me/recipes/{rid}/photo")
+    assert r.status_code == 502 and "could not reach" in r.json()["detail"]
+    assert api.get("/me/usage").json()["events"][0]["ok"] is False
+    backend.client.image_error = None
+    assert api.post(f"/me/recipes/{rid}/photo").status_code == 200
+    assert api.post(f"/me/recipes/{rid}/photo").status_code == 429
+
+
+def test_cookbook_photos_need_storage(api, backend):
+    backend.photos = None
+    rid = api.post("/me/recipes", json=TOAST).json()["id"]
+    assert api.post(f"/me/recipes/{rid}/photo").status_code == 503
+    assert backend.client.image_calls == []

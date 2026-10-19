@@ -14,6 +14,7 @@ load_dotenv()
 
 DEFAULT_MODEL = "gpt-5.4-mini"
 DEFAULT_EMBED_MODEL = "text-embedding-3-small"
+DEFAULT_IMAGE_MODEL = "gpt-image-2.5-flare"
 EMBED_DIM = 1536
 
 
@@ -45,6 +46,19 @@ def model() -> str:
 
 def embed_model() -> str:
     return os.environ.get("PANTRIO_EMBED_MODEL") or DEFAULT_EMBED_MODEL
+
+
+def image_model() -> str:
+    return os.environ.get("PANTRIO_IMAGE_MODEL") or DEFAULT_IMAGE_MODEL
+
+
+def image_prices() -> Prices:
+    """Text input and image output rates of the image model."""
+    return Prices(
+        input=_float("PANTRIO_PRICE_IMAGE_INPUT_PER_MTOK"),
+        output=_float("PANTRIO_PRICE_IMAGE_OUTPUT_PER_MTOK"),
+        embed=None,
+    )
 
 
 def prices() -> Prices:
@@ -116,6 +130,15 @@ def supabase_url() -> str:
     return url
 
 
+def supabase_url_or_none() -> str | None:
+    return os.environ.get("SUPABASE_URL") or None
+
+
+def supabase_service_key() -> str | None:
+    """Server-side only: uploads recipe photos to Supabase Storage."""
+    return os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or None
+
+
 def cors_origins() -> list[str]:
     raw = os.environ.get("PANTRIO_CORS_ORIGINS") or "http://localhost:3000"
     return [o.strip().rstrip("/") for o in raw.split(",") if o.strip()]
@@ -128,6 +151,7 @@ class Limits:
     plans_per_user: int
     chats_per_user: int
     imports_per_user: int  # recipe imports from photos or links, and food estimates
+    photos_per_user: int  # generated photos for cookbook recipes
     budget_usd: float  # all users together
 
 
@@ -136,6 +160,7 @@ def limits() -> Limits:
         plans_per_user=int(os.environ.get("PANTRIO_DAILY_PLANS") or 5),
         chats_per_user=int(os.environ.get("PANTRIO_DAILY_CHATS") or 50),
         imports_per_user=int(os.environ.get("PANTRIO_DAILY_IMPORTS") or 20),
+        photos_per_user=int(os.environ.get("PANTRIO_DAILY_PHOTOS") or 5),
         budget_usd=float(os.environ.get("PANTRIO_DAILY_BUDGET_USD") or 2.0),
     )
 

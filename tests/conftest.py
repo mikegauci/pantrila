@@ -167,7 +167,7 @@ def conn():
         c.autocommit = True
         c.execute(
             "drop table if exists recipe_embeddings, recipe_ingredients, recipes, pantry_items,"
-            " user_profiles, meal_plans, usage_events, user_recipes, chat_threads,"
+            " user_profiles, meal_plans, usage_events, user_recipes, chat_threads, recipe_photos,"
             " pantrio_migrations cascade"
         )
         c.autocommit = False
@@ -185,6 +185,7 @@ class CorpusStore:
         self.recipes = {r.id: r for r in recipes}
         self.embed_tokens = 0
         self.queries: list[str] = []
+        self.photo_paths: dict[str, str] = {}
 
     def search(self, query, filters, limit):
         self.queries.append(query)
@@ -203,3 +204,6 @@ class CorpusStore:
 
     def get(self, ids):
         return {i: self.recipes[i] for i in ids if i in self.recipes}
+
+    def photos(self, ids):
+        return {i: self.photo_paths[i] for i in ids if i in self.photo_paths}

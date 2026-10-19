@@ -202,6 +202,7 @@ class SavedRecipe:
     recipe: CookbookRecipeIn
     created_at: datetime
     updated_at: datetime
+    photo_path: str | None = None  # in the recipe-photos bucket; see pantrio.photos
 
 
 class Cookbook(Protocol):
@@ -216,6 +217,8 @@ class Cookbook(Protocol):
     def update(self, recipe_id: int, recipe: CookbookRecipeIn) -> SavedRecipe | None: ...
 
     def delete(self, recipe_id: int) -> bool: ...
+
+    def set_photo(self, recipe_id: int, path: str | None) -> None: ...
 
 
 class CookbookFull(ValueError):
@@ -259,6 +262,11 @@ class MemoryCookbook:
                 return True
         return False
 
+    def set_photo(self, recipe_id: int, path: str | None) -> None:
+        saved = self.get(recipe_id)
+        if saved is not None:
+            saved.photo_path = path
+
 
 class DbCookbook:
     def __init__(self, conn: psycopg.Connection, user_id: str):
@@ -268,20 +276,20 @@ class DbCookbook:
 
     @staticmethod
     def _saved(row) -> SavedRecipe:
-        rid, recipe, created, updated = row
-        return SavedRecipe(rid, CookbookRecipeIn.model_validate(recipe), created, updated)
+        rid, recipe, created, updated, photo = row
+        return SavedRecipe(rid, CookbookRecipeIn.model_validate(recipe), created, updated, photo)
 
     def list(self) -> list[SavedRecipe]:
         rows = self.conn.execute(
-            "select id, recipe, created_at, updated_at from user_recipes where user_id = %s"
-            " order by created_at desc, id desc",
+            "select id, recipe, created_at, updated_at, photo_path from user_recipes"
+            " where user_id = %s order by created_at desc, id desc",
             (self.user_id,),
         ).fetchall()
         return [self._saved(r) for r in rows]
 
     def get(self, recipe_id: int) -> SavedRecipe | None:
         row = self.conn.execute(
-            "select id, recipe, created_at, updated_at from user_recipes"
+            "select id, recipe, created_at, updated_at, photo_path from user_recipes"
             " where user_id = %s and id = %s",
             (self.user_id, recipe_id),
         ).fetchone()
@@ -296,7 +304,7 @@ class DbCookbook:
                 raise CookbookFull(f"A cookbook holds at most {MAX_RECIPES_PER_USER} recipes.")
             row = self.conn.execute(
                 "insert into user_recipes (user_id, recipe) values (%s, %s)"
-                " returning id, recipe, created_at, updated_at",
+                " returning id, recipe, created_at, updated_at, photo_path",
                 (self.user_id, recipe.model_dump_json()),
             ).fetchone()
         return self._saved(row)
@@ -305,7 +313,8 @@ class DbCookbook:
         with self.conn.transaction():
             row = self.conn.execute(
                 "update user_recipes set recipe = %s, updated_at = now()"
-                " where user_id = %s and id = %s returning id, recipe, created_at, updated_at",
+                " where user_id = %s and id = %s"
+                " returning id, recipe, created_at, updated_at, photo_path",
                 (recipe.model_dump_json(), self.user_id, recipe_id),
             ).fetchone()
         return None if row is None else self._saved(row)
@@ -317,3 +326,10 @@ class DbCookbook:
                 (self.user_id, recipe_id),
             )
         return cur.rowcount > 0
+
+    def set_photo(self, recipe_id: int, path: str | None) -> None:
+        with self.conn.transaction():
+            self.conn.execute(
+                "update user_recipes set photo_path = %s where user_id = %s and id = %s",
+                (path, self.user_id, recipe_id),
+            )

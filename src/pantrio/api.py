@@ -13,7 +13,11 @@ one) and the server, not the client, supplies that thread's history to the assis
 
 The cookbook (/me/recipes) holds recipes people add from a photo, a link or by hand. Imports
 return a draft for the person to review; nothing is saved until they post it back. Grams,
-nutrition, allergens and diets are derived in code on every read, like the corpus.
+nutrition, allergens and diets are derived in code on every read, like the corpus. A cookbook
+recipe can get a generated photo (POST /me/recipes/{id}/photo), capped per user per day.
+
+Recipes carry `photo_url` when they have a photo (Supabase Storage; see pantrio.photos), else
+null and the web app shows its placeholder art.
 
 Run: uv run uvicorn pantrio.api:app --env-file .env --reload
 """
@@ -25,7 +29,7 @@ import logging
 import queue
 import threading
 import time
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from contextlib import AbstractContextManager, asynccontextmanager, contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -57,6 +61,15 @@ from pantrio.cookbook import (
 from pantrio.foods import UnitError, load_foods
 from pantrio.grocery import grocery_list
 from pantrio.pantry import Kitchen, UnknownFood, make_item, resolve_food
+from pantrio.photos import (
+    Dish,
+    PhotoStore,
+    PhotoUsage,
+    cookbook_path,
+    generate,
+    photo_store,
+    public_url,
+)
 from pantrio.planner import Planner, PlanningError, RecipeStore
 from pantrio.recipe_import import MAX_IMAGES, Importer, ImportFailed, NamedEstimate
 from pantrio.records import Kind, Records, SavedPlan, UsageEvent
@@ -86,6 +99,10 @@ MAX_CHAT_HISTORY = 20
 class Catalog(RecipeStore, Protocol):
     def browse(self, filters: SearchFilters, limit: int) -> list[str]: ...
 
+    def photos(self, ids: Iterable[str]) -> dict[str, str]:
+        """Photo paths by recipe id; recipes without a photo are left out."""
+        ...
+
 
 @dataclass
 class Session:
@@ -100,6 +117,7 @@ class Session:
 
 class Backend(Protocol):
     client: Any  # OpenAI client, or None for the default
+    photos: PhotoStore | None  # None: photo generation is off (no Storage key)
 
     def session(self, user_id: str) -> AbstractContextManager[Session]: ...
 
@@ -118,6 +136,7 @@ class DbBackend:
                                    kwargs={"autocommit": True}, open=True)  # fmt: skip
         self.embed_query = openai_query_embedder(config.embed_model())
         self.client = None
+        self.photos = photo_store()
 
     @contextmanager
     def session(self, user_id: str) -> Iterator[Session]:
@@ -134,6 +153,8 @@ class DbBackend:
 
     def close(self) -> None:
         self.pool.close()
+        if self.photos is not None:
+            self.photos.close()
 
 
 # --- Response models ----------------------------------------------------------------------
@@ -153,6 +174,7 @@ class RecipeCard(BaseModel):
     ingredient_count: int
     pantry_foods: list[str] = Field(description="Foods from the person's pantry it uses.")
     problems: list[str] = Field(description="Hard rules it breaks for the person; empty if none.")
+    photo_url: str | None = Field(default=None, description="4:3 photo; none yet if null.")
 
 
 class IngredientView(BaseModel):
@@ -226,6 +248,8 @@ class LimitsView(BaseModel):
     chats_left: int
     imports_per_day: int
     imports_left: int
+    photos_per_day: int
+    photos_left: int
 
 
 class Me(BaseModel):
@@ -330,6 +354,7 @@ class CookbookCard(BaseModel):
     invalid: list[str]
     pantry_foods: list[str]
     problems: list[str] = Field(description="Hard rules it breaks for the person; empty if none.")
+    photo_url: str | None = Field(default=None, description="Generated 4:3 photo, if any.")
 
 
 class CookbookLine(LineView):
@@ -408,19 +433,20 @@ def problem_messages(r: Recipe, profile: UserProfile) -> list[str]:
     return [msg.removeprefix(f"{r.id} ") for _, msg in recipe_problems(r, profile)]
 
 
-def recipe_card(r: Recipe, profile: UserProfile) -> RecipeCard:
+def recipe_card(r: Recipe, profile: UserProfile, photo: str | None = None) -> RecipeCard:
     return RecipeCard(
         **r.model_dump(include=set(RecipeCard.model_fields) & set(Recipe.model_fields)),
         ingredient_count=len(r.ingredients),
         pantry_foods=sorted(r.foods & set(profile.pantry)),
         problems=problem_messages(r, profile),
+        photo_url=public_url(photo),
     )
 
 
-def recipe_detail(r: Recipe, profile: UserProfile) -> RecipeDetail:
+def recipe_detail(r: Recipe, profile: UserProfile, photo: str | None = None) -> RecipeDetail:
     pantry = set(profile.pantry)
     return RecipeDetail(
-        **recipe_card(r, profile).model_dump(),
+        **recipe_card(r, profile, photo).model_dump(),
         ingredients=[IngredientView(**i.model_dump(), in_pantry=i.food in pantry)
                      for i in r.ingredients],
         steps=r.steps,
@@ -452,6 +478,7 @@ def cookbook_detail(saved: SavedRecipe, profile: UserProfile) -> CookbookDetail:
         diet_tags=d.diet_tags if d else [], estimated=d.estimated if d else False,
         invalid=invalid, pantry_foods=sorted(set(d.foods) & pantry) if d else [],
         problems=problems_for(r, d, profile) if d else [],
+        photo_url=public_url(saved.photo_path),
         ingredients=[CookbookLine(**line.model_dump(), in_pantry=line.food in pantry)
                      for line in lines],
         steps=r.steps, recipe=r,
@@ -463,8 +490,9 @@ def cookbook_card(saved: SavedRecipe, profile: UserProfile) -> CookbookCard:
     return CookbookCard(**detail.model_dump(include=set(CookbookCard.model_fields)))
 
 
-def plan_view(saved: SavedPlan, store: RecipeStore, profile: UserProfile) -> PlanView:
-    recipes = store.get({m.recipe_id for _, m in saved.plan.meals})
+def plan_view(saved: SavedPlan, store: Catalog, profile: UserProfile) -> PlanView:
+    ids = {m.recipe_id for _, m in saved.plan.meals}
+    recipes, photos = store.get(ids), store.photos(ids)
     days, problems = [], []
     for day in saved.plan.days:
         meals = []
@@ -484,8 +512,8 @@ def plan_view(saved: SavedPlan, store: RecipeStore, profile: UserProfile) -> Pla
                 PlanProblem(day=day.day, meal_type=m.meal_type, recipe_id=r.id, message=msg)
                 for msg in problem_messages(r, profile)
             ]
-            meals.append(PlanMealView(meal_type=m.meal_type, portions=m.portions,
-                                      recipe=recipe_card(r, profile)))  # fmt: skip
+            card = recipe_card(r, profile, photos.get(r.id))
+            meals.append(PlanMealView(meal_type=m.meal_type, portions=m.portions, recipe=card))
         days.append(PlanDayView(day=day.day, meals=meals, nutrition=day_nutrition(day, recipes)))
     return PlanView(id=saved.id, created_at=saved.created_at, days=days, notes=saved.plan.notes,
                     targets=profile.targets, problems=problems, report=saved.report)  # fmt: skip
@@ -517,17 +545,18 @@ def today_start() -> datetime:
 def daily_cap(kind: Kind) -> int:
     lim = config.limits()
     return {"plan": lim.plans_per_user, "chat": lim.chats_per_user,
-            "import": lim.imports_per_user}[kind]  # fmt: skip
+            "import": lim.imports_per_user, "photo": lim.photos_per_user}[kind]  # fmt: skip
 
 
 def limits_view(records: Records) -> LimitsView:
     since = today_start()
     left = {k: max(0, daily_cap(k) - records.count_since(k, since))
-            for k in ("plan", "chat", "import")}  # fmt: skip
+            for k in ("plan", "chat", "import", "photo")}  # fmt: skip
     return LimitsView(
         plans_per_day=daily_cap("plan"), plans_left=left["plan"],
         chats_per_day=daily_cap("chat"), chats_left=left["chat"],
         imports_per_day=daily_cap("import"), imports_left=left["import"],
+        photos_per_day=daily_cap("photo"), photos_left=left["photo"],
     )  # fmt: skip
 
 
@@ -566,11 +595,13 @@ def session(request: Request, user: UserDep) -> Iterator[Session]:
 SessionDep = Annotated[Session, Depends(session)]
 
 
-def describe_failure(exc: Exception) -> str:
-    """A plain-language reason for a failed paid import, with the provider's message."""
+def describe_failure(exc: Exception, what: str = "Reading the recipe") -> str:
+    """A plain-language reason for a failed paid call, with the provider's message."""
     import openai
 
     if isinstance(exc, openai.APITimeoutError):
+        if what != "Reading the recipe":
+            return "The AI model took too long. Try again."
         return "The AI model took too long to read this. Try again, or use fewer or smaller photos."
     if isinstance(exc, openai.RateLimitError):
         return "The AI provider is rate-limiting requests right now. Wait a minute and try again."
@@ -580,7 +611,7 @@ def describe_failure(exc: Exception) -> str:
         return f"The AI provider rejected the request: {getattr(exc, 'message', exc)}"
     if isinstance(exc, openai.APIStatusError):
         return f"The AI provider returned an error ({exc.status_code}). Try again."
-    return f"Reading the recipe failed ({type(exc).__name__}: {str(exc)[:200]}). Try again."
+    return f"{what} failed ({type(exc).__name__}: {str(exc)[:200]}). Try again."
 
 
 def create_app(
@@ -705,14 +736,14 @@ def create_app(
         f.max_minutes = min(limits) if limits else None
         q = q.strip()[:200]
         ids = s.store.search(q, f, limit) if q else s.store.browse(f, limit)
-        found = s.store.get(ids)
-        return RecipeList(
-            query=q, rules=f, recipes=[recipe_card(found[i], profile) for i in ids if i in found]
-        )
+        found, photos = s.store.get(ids), s.store.photos(ids)
+        return RecipeList(query=q, rules=f, recipes=[recipe_card(found[i], profile, photos.get(i))
+                                                     for i in ids if i in found])  # fmt: skip
 
     @app.get("/recipes/{recipe_id}")
     def recipe(recipe_id: str, s: SessionDep) -> RecipeDetail:
-        return recipe_detail(get_recipe(s, recipe_id), s.kitchen.profile())
+        photo = s.store.photos([recipe_id]).get(recipe_id)
+        return recipe_detail(get_recipe(s, recipe_id), s.kitchen.profile(), photo)
 
     @app.get("/recipes/{recipe_id}/swaps")
     def swaps(recipe_id: str, food: str, s: SessionDep, replacement: str | None = None
@@ -824,10 +855,66 @@ def create_app(
         return cookbook_detail(saved, s.kitchen.profile())
 
     @app.delete("/me/recipes/{recipe_id}", status_code=204)
-    def delete_recipe(recipe_id: int, s: SessionDep) -> Response:
+    def delete_recipe(recipe_id: int, request: Request, s: SessionDep) -> Response:
+        saved = get_saved(s, recipe_id)
         if not s.cookbook.delete(recipe_id):
             raise HTTPException(404, "No such recipe in your cookbook.")
+        drop_photo(request, saved.photo_path)
         return Response(status_code=204)
+
+    def drop_photo(request: Request, path: str | None) -> None:
+        """Best effort: an orphaned file in Storage is harmless, a failed request is not."""
+        photos: PhotoStore | None = request.app.state.backend.photos
+        if path and photos is not None:
+            try:
+                photos.delete([path])
+            except Exception:
+                log.warning("could not delete photo %s", path, exc_info=True)
+
+    @app.post("/me/recipes/{recipe_id}/photo")
+    def generate_photo(recipe_id: int, request: Request, user: UserDep, s: SessionDep
+                       ) -> CookbookDetail:  # fmt: skip
+        """Generate a photo of the recipe from its own ingredients (replaces any earlier one)."""
+        saved = get_saved(s, recipe_id)
+        old_path = saved.photo_path
+        backend: Backend = request.app.state.backend
+        if backend.photos is None:
+            raise HTTPException(503, "Photos are not set up on this server.")
+        check_quota(s.records, "photo")
+        r, model = saved.recipe, config.image_model()
+        try:
+            gluten_free = DietTag.GLUTEN_FREE in derive(r).diet_tags
+        except CookbookError:
+            gluten_free = False
+        dish = Dish(title=r.title, summary=r.summary, ingredients=[i.name for i in r.ingredients],
+                    steps=r.steps, gluten_free=gluten_free)  # fmt: skip
+        start = time.perf_counter()
+        try:
+            photo = generate(dish, client=backend.client, model=model)
+        except Exception as exc:
+            ms = (time.perf_counter() - start) * 1000  # a failed image call is not billed
+            s.records.log(UsageEvent.from_usage("photo", model, PhotoUsage(llm_calls=1), ms,
+                                                ok=False))  # fmt: skip
+            log.exception("photo generation failed")
+            raise HTTPException(502, describe_failure(exc, "Making the photo")) from exc
+        s.records.log(UsageEvent.from_usage("photo", model, photo.usage, photo.latency_ms))
+        path = cookbook_path(user.id)
+        try:
+            backend.photos.put(path, photo.webp)
+        except Exception as exc:
+            log.exception("photo upload failed")
+            msg = "The photo was made but could not be saved. Try again."
+            raise HTTPException(502, msg) from exc
+        s.cookbook.set_photo(recipe_id, path)
+        drop_photo(request, old_path)
+        return cookbook_detail(get_saved(s, recipe_id), s.kitchen.profile())
+
+    @app.delete("/me/recipes/{recipe_id}/photo")
+    def delete_photo(recipe_id: int, request: Request, s: SessionDep) -> CookbookDetail:
+        old_path = get_saved(s, recipe_id).photo_path
+        s.cookbook.set_photo(recipe_id, None)
+        drop_photo(request, old_path)
+        return cookbook_detail(get_saved(s, recipe_id), s.kitchen.profile())
 
     @app.get("/plans/latest")
     def latest_plan(s: SessionDep) -> PlanView:
@@ -942,13 +1029,15 @@ def create_app(
             raise HTTPException(502, "The assistant could not answer. Try again.") from exc
         s.records.log(UsageEvent.from_usage("chat", model, result.usage, result.latency_ms))
         profile = s.kitchen.profile()
-        cited = s.store.get(result.cited)
+        cited, photos = s.store.get(result.cited), s.store.photos(result.cited)
         if thread is None:
             thread = s.chats.create(title_for(body.message), [], [])
         reply = ChatReply(
             thread_id=thread.id,
             text=result.text,
-            cited=[recipe_card(cited[i], profile) for i in result.cited if i in cited],
+            cited=[
+                recipe_card(cited[i], profile, photos.get(i)) for i in result.cited if i in cited
+            ],
             flagged=result.flagged,
             tool_calls=[
                 ToolCallView(name=c.name, arguments=_json(c.arguments), output=c.output)
