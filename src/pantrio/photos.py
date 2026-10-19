@@ -153,13 +153,15 @@ class Photo:
     usage: PhotoUsage = field(default_factory=PhotoUsage)
 
 
-def generate(dish: Dish, client=None, model: str | None = None) -> Photo:
+def generate(
+    dish: Dish, client=None, model: str | None = None, usage: PhotoUsage | None = None
+) -> Photo:
     """One image call. Raises on any API error; the caller decides what to log."""
     client = client or config.openai_client()
     model = model or config.image_model()
     prompt = photo_prompt(dish)
     start = time.perf_counter()
-    usage = PhotoUsage()
+    usage = usage or PhotoUsage()
     resp = client.images.generate(model=model, prompt=prompt, size=GENERATE_SIZE, quality=QUALITY)
     usage.llm_calls += 1
     if resp.usage:

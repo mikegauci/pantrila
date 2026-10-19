@@ -207,16 +207,20 @@ class Assistant:
         start = time.perf_counter()
         history = list(history)[-MAX_HISTORY:]
         run_id = uuid.uuid4()
-        state = self.graph.invoke(
-            {
-                "profile": self.kitchen.profile(),
-                "items": [*history, {"role": "user", "content": message}],
-                "rounds": 0,
-                "tool_calls": [],
-            },
-            config.trace_config("chat", self.source, run_id, model=self.model, effort=self.effort),
-        )
-        self.usage.embed_tokens = self.store.embed_tokens - start_tokens
+        try:
+            state = self.graph.invoke(
+                {
+                    "profile": self.kitchen.profile(),
+                    "items": [*history, {"role": "user", "content": message}],
+                    "rounds": 0,
+                    "tool_calls": [],
+                },
+                config.trace_config(
+                    "chat", self.source, run_id, model=self.model, effort=self.effort
+                ),
+            )
+        finally:
+            self.usage.embed_tokens = self.store.embed_tokens - start_tokens
         text = state["text"]
         cited = list(dict.fromkeys(CITED.findall(text)))
         config.log_feedback(run_id, {"flagged_citations": len(state.get("flagged", []))})

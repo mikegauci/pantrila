@@ -33,6 +33,12 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Review usage hardening: migration `20261019124726_usage_reservations` adds RLS-protected
+reservations. `operations.py` reserves per-user quota and shared budget atomically before
+paid work, settles once on success/failure, and conservatively budgets unknown cost. Searches
+are metered and query embeddings cached. Repository calls borrow pooled connections briefly;
+external I/O holds none. Local DB concurrency and real-role RLS regressions are included.
+
 Review account isolation: authenticated users get separate SWR caches and retained page state;
 remembered chat and grocery keys include the user id. Profile/pantry mutations invalidate all
 derived views. Playwright exercises account switching with delayed data; web CI runs it.

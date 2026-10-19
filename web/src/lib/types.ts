@@ -238,7 +238,7 @@ export interface ChatThread {
 }
 
 export interface UsageEvent {
-  kind: "plan" | "chat" | "import" | "photo"
+  kind: "plan" | "chat" | "import" | "photo" | "search"
   model: string
   created_at: string
   latency_ms: number

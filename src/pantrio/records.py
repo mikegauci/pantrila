@@ -8,6 +8,8 @@ and shows them on the Insights page.
 from __future__ import annotations
 
 import json
+import threading
+import uuid
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from typing import Literal, Protocol
@@ -17,7 +19,20 @@ import psycopg
 from pantrio.planner import Usage
 from pantrio.schema import MealPlan
 
-Kind = Literal["plan", "chat", "import", "photo"]
+Kind = Literal["plan", "chat", "import", "photo", "search"]
+
+
+class QuotaExceeded(ValueError):
+    def __init__(self, message: str, status: int):
+        super().__init__(message)
+        self.status = status
+
+
+def enforce_quota(count: int, spend: float, cap: int, budget: float, reserve: float) -> None:
+    if count >= cap:
+        raise QuotaExceeded("Your daily allowance is used up. Try again tomorrow.", 429)
+    if spend + reserve > budget + 1e-9:
+        raise QuotaExceeded("Pantrio’s demo budget is used or reserved. Try again later.", 503)
 
 
 @dataclass
@@ -62,6 +77,12 @@ class Records(Protocol):
 
     def log(self, event: UsageEvent) -> None: ...
 
+    def reserve(
+        self, kind: Kind, since: datetime, cap: int, budget: float, amount: float
+    ) -> str: ...
+
+    def settle(self, reservation: str, event: UsageEvent | None) -> None: ...
+
     def events(self, limit: int = 50) -> list[UsageEvent]:
         """This user's events, newest first."""
         ...
@@ -83,6 +104,8 @@ class MemoryRecords:
     def __init__(self, user_id: str, shared: dict | None = None):
         self.user_id = user_id
         self.shared = shared if shared is not None else {"plans": [], "events": []}
+        self.reservations = self.shared.setdefault("reservations", {})
+        self.lock = self.shared.setdefault("usage_lock", threading.RLock())
 
     def save_plan(self, plan: MealPlan, report: dict) -> SavedPlan:
         saved = SavedPlan(len(self.shared["plans"]) + 1, plan, report, datetime.now(UTC))
@@ -100,10 +123,35 @@ class MemoryRecords:
         return [e for u, e in reversed(self.shared["events"]) if u == self.user_id][:limit]
 
     def count_since(self, kind: Kind, since: datetime) -> int:
-        return sum(e.kind == kind and e.created_at >= since for e in self.events(10**9))
+        return sum(e.kind == kind and e.created_at >= since for e in self.events(10**9)) + sum(
+            u == self.user_id and k == kind and t >= since
+            for u, k, _, t in self.reservations.values()
+        )
 
     def spend_since(self, since: datetime) -> float:
-        return sum(e.cost_usd or 0.0 for _, e in self.shared["events"] if e.created_at >= since)
+        return sum(
+            e.cost_usd or 0.0 for _, e in self.shared["events"] if e.created_at >= since
+        ) + sum(amount for _, _, amount, t in self.reservations.values() if t >= since)
+
+    def reserve(self, kind, since, cap, budget, amount) -> str:
+        with self.lock:
+            enforce_quota(
+                self.count_since(kind, since), self.spend_since(since), cap, budget, amount
+            )
+            rid = str(uuid.uuid4())
+            self.reservations[rid] = (self.user_id, kind, amount, datetime.now(UTC))
+            return rid
+
+    def settle(self, reservation: str, event: UsageEvent | None) -> None:
+        with self.lock:
+            row = self.reservations.get(reservation)
+            if row is None or row[0] != self.user_id:
+                return
+            if event is not None:
+                if event.cost_usd is None:
+                    event.cost_usd = row[2]  # unknown cost is conservatively budgeted
+                self.log(event)
+            del self.reservations[reservation]
 
     def avatar_path(self) -> str | None:
         return self.shared.get("avatars", {}).get(self.user_id)
@@ -172,17 +220,47 @@ class DbRecords:
 
     def count_since(self, kind: Kind, since: datetime) -> int:
         return self.conn.execute(
-            "select count(*) from usage_events where user_id = %s and kind = %s"
-            " and created_at >= %s",
-            (self.user_id, kind, since),
+            "select (select count(*) from usage_events where user_id = %s and kind = %s"
+            " and created_at >= %s) + (select count(*) from usage_reservations"
+            " where user_id = %s and kind = %s and created_at >= %s)",
+            (self.user_id, kind, since, self.user_id, kind, since),
         ).fetchone()[0]
 
     def spend_since(self, since: datetime) -> float:
         row = self.conn.execute(
-            "select coalesce(sum(cost_usd), 0) from usage_events where created_at >= %s",
-            (since,),
+            "select (select coalesce(sum(cost_usd), 0) from usage_events where created_at >= %s)"
+            " + (select coalesce(sum(reserved_usd), 0) from usage_reservations"
+            " where created_at >= %s)",
+            (since, since),
         ).fetchone()
         return float(row[0])
+
+    def reserve(self, kind, since, cap, budget, amount) -> str:
+        with self.conn.transaction():
+            self.conn.execute("select pg_advisory_xact_lock(73492810)")
+            enforce_quota(
+                self.count_since(kind, since), self.spend_since(since), cap, budget, amount
+            )
+            rid = str(uuid.uuid4())
+            self.conn.execute(
+                "insert into usage_reservations (id, user_id, kind, reserved_usd)"
+                " values (%s, %s, %s, %s)",
+                (rid, self.user_id, kind, amount),
+            )
+        return rid
+
+    def settle(self, reservation: str, event: UsageEvent | None) -> None:
+        with self.conn.transaction():
+            self.conn.execute("select pg_advisory_xact_lock(73492810)")
+            row = self.conn.execute(
+                "delete from usage_reservations where id = %s and user_id = %s"
+                " returning reserved_usd",
+                (reservation, self.user_id),
+            ).fetchone()
+            if row is not None and event is not None:
+                if event.cost_usd is None:
+                    event.cost_usd = float(row[0])
+                self.log(event)
 
     def avatar_path(self) -> str | None:
         row = self.conn.execute(

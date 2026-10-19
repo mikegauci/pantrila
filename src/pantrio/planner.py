@@ -305,14 +305,16 @@ class Planner:
         trace = config.trace_config(
             "plan", self.source, run_id, model=self.model, effort=self.effort
         )
-        for mode, chunk in self.graph.stream(inputs, trace, stream_mode=["updates", "values"]):
-            if mode == "values":
-                state = chunk
-            elif on_step:
-                for node in chunk:
-                    on_step(node)
+        try:
+            for mode, chunk in self.graph.stream(inputs, trace, stream_mode=["updates", "values"]):
+                if mode == "values":
+                    state = chunk
+                elif on_step:
+                    for node in chunk:
+                        on_step(node)
+        finally:
+            self.usage.embed_tokens = self.store.embed_tokens - start_tokens
         latency = (time.perf_counter() - start) * 1000
-        self.usage.embed_tokens = self.store.embed_tokens - start_tokens
         profile, plan, recipes = state["profile"], state["plan"], state["recipes"]
         used = pantry_use(plan, profile, recipes)
         config.log_feedback(run_id, {

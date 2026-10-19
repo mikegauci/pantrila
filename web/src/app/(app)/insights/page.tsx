@@ -94,6 +94,7 @@ export default function InsightsPage() {
             <KindStats name="Chat turn" events={events.filter((e) => e.kind === "chat")} />
             <KindStats name="Recipe import" events={events.filter((e) => e.kind === "import")} />
             <KindStats name="Recipe photo" events={events.filter((e) => e.kind === "photo")} />
+            <KindStats name="Recipe search" events={events.filter((e) => e.kind === "search")} />
             {events.length > 0 && (
               <div className="overflow-x-auto">
                 <table className="tabular w-full text-left text-[13px]">

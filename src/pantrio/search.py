@@ -7,7 +7,9 @@ candidate lists, so a recipe that breaks a filter can never be returned by any m
 
 from __future__ import annotations
 
+import threading
 import time
+from collections import OrderedDict
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from enum import StrEnum
@@ -209,9 +211,20 @@ def openai_query_embedder(model: str, client=None) -> QueryEmbedFn:
 
     embed = openai_embedder(model, client)
 
+    cache: OrderedDict[str, list[float]] = OrderedDict()
+    lock = threading.Lock()
+
     def embed_query(text: str) -> tuple[list[float], int]:
-        vecs, tokens = embed([text])
-        return vecs[0], tokens
+        key = " ".join(text.split())
+        with lock:
+            if key in cache:
+                cache.move_to_end(key)
+                return cache[key], 0
+            vecs, tokens = embed([key])
+            cache[key] = vecs[0]
+            if len(cache) > 256:
+                cache.popitem(last=False)
+            return vecs[0], tokens
 
     return embed_query
 

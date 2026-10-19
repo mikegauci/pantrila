@@ -66,3 +66,19 @@ def test_python_violations_mirror_the_sql(corpus):
         "wrong meal",
         "uses ['mushroom']",
     ]
+
+
+def test_query_embedding_cache_reuses_vectors_without_counting_tokens_twice(monkeypatch):
+    from pantrio.search import openai_query_embedder
+
+    calls = []
+
+    def embed(texts):
+        calls.extend(texts)
+        return [[0.1, 0.2]], 3
+
+    monkeypatch.setattr("pantrio.embeddings.openai_embedder", lambda *args: embed)
+    query = openai_query_embedder("model")
+    assert query("egg   curry") == ([0.1, 0.2], 3)
+    assert query("egg curry") == ([0.1, 0.2], 0)
+    assert calls == ["egg curry"]

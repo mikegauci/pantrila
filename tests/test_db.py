@@ -207,3 +207,90 @@ def test_db_cookbook_keeps_a_photo_path_and_photo_is_a_usage_kind(conn):
     assert alice.update(saved.id, recipe).photo_path == "user-recipes/alice/x.webp"
     assert alice.list()[0].photo_path == "user-recipes/alice/x.webp"
     DbRecords(conn, "alice").log(UsageEvent("photo", "m", 12000, llm_calls=1))
+
+
+def test_reservations_serialize_across_connections_and_settle_once(conn):
+    from concurrent.futures import ThreadPoolExecutor
+    from datetime import UTC, datetime
+
+    import psycopg
+
+    from pantrio.records import DbRecords, QuotaExceeded, UsageEvent
+
+    conn.commit()
+    since = datetime.now(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
+
+    def reserve(user):
+        with psycopg.connect(conn.info.dsn, autocommit=True) as other:
+            try:
+                return user, DbRecords(other, user).reserve("chat", since, 10, 0.15, 0.15)
+            except QuotaExceeded:
+                return user, None
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        attempts = list(pool.map(reserve, ["alice", "bob"]))
+    assert sum(rid is not None for _, rid in attempts) == 1
+    user, rid = next((u, r) for u, r in attempts if r is not None)
+    records = DbRecords(conn, user)
+    assert records.count_since("chat", since) == 1
+    assert records.spend_since(since) == pytest.approx(0.15)
+    event = UsageEvent("chat", "m", 100, cost_usd=0.01)
+    records.settle(rid, event)
+    records.settle(rid, event)
+    assert records.count_since("chat", since) == 1
+    assert records.spend_since(since) == pytest.approx(0.01)
+    assert len(records.events()) == 1
+
+
+def test_pooled_backend_does_not_hold_a_connection_during_external_work(conn):
+    from pantrio.api import DbBackend
+    from pantrio.pantry import make_item
+
+    conn.commit()
+    backend = DbBackend(conn.info.dsn, max_size=1)
+    backend.pool.wait()
+
+    def embed(_):
+        assert backend.pool.get_stats()["pool_available"] == 1
+        raise RuntimeError("stop before the query")
+
+    backend.embed_query = embed
+    try:
+        with backend.session("alice") as s:
+            s.kitchen.put(make_item("egg"))
+            assert backend.pool.get_stats()["pool_available"] == 1
+            with pytest.raises(RuntimeError, match="stop before"):
+                s.store.search("egg", SearchFilters(), 3)
+        assert backend.pool.get_stats()["pool_available"] == 1
+    finally:
+        backend.close()
+
+
+def test_rest_role_cannot_read_or_write_user_data_even_with_table_grants(conn):
+    import uuid
+
+    import psycopg
+    from psycopg import sql
+
+    from pantrio.pantry import DbKitchen, make_item
+
+    DbKitchen(conn, "alice").put(make_item("egg"))
+    role = sql.Identifier("pantrio_rest_" + uuid.uuid4().hex)
+    # A transaction-local test role with explicit grants distinguishes RLS from missing grants.
+    with conn.transaction():
+        conn.execute(sql.SQL("create role {} nologin").format(role))
+        conn.execute(sql.SQL("grant usage on schema public to {}").format(role))
+        conn.execute(
+            sql.SQL(
+                "grant select, insert, update, delete on all tables in schema public to {}"
+            ).format(role)
+        )
+        conn.execute(sql.SQL("set local role {}").format(role))
+        assert conn.execute("select * from pantry_items").fetchall() == []
+        assert conn.execute("update pantry_items set food = 'milk'").rowcount == 0
+        with pytest.raises(psycopg.errors.InsufficientPrivilege), conn.transaction():
+            conn.execute("insert into pantry_items (user_id, food) values ('alice', 'milk')")
+        conn.execute("reset role")
+        conn.execute(sql.SQL("drop owned by {}").format(role))
+        conn.execute(sql.SQL("drop role {}").format(role))
+    assert DbKitchen(conn, "alice").pantry()[0].food == "egg"
