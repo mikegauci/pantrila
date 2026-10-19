@@ -29,12 +29,12 @@ function Card({ r }: { r: CookbookCard }) {
       />
       <div className="flex flex-1 flex-col gap-2 px-1 pt-3 pb-1">
         <h3 className="line-clamp-2 text-[15px] font-semibold leading-[22px] group-hover:text-primary-text">{r.title}</h3>
-        <p className="tabular flex flex-wrap items-center gap-3 text-[12px] text-muted-foreground">
-          <span className="inline-flex items-center gap-1"><Clock className="size-3.5" aria-hidden />{r.total_minutes} min</span>
+        <p className="tabular flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] leading-4 text-muted-foreground">
+          <span className="inline-flex items-center gap-1 whitespace-nowrap"><Clock className="size-3.5" aria-hidden />{r.total_minutes} min</span>
           {r.nutrition && (
-            <span className="inline-flex items-center gap-1"><Flame className="size-3.5" aria-hidden />{Math.round(r.nutrition.kcal)} kcal</span>
+            <span className="inline-flex items-center gap-1 whitespace-nowrap"><Flame className="size-3.5" aria-hidden />{Math.round(r.nutrition.kcal)} kcal</span>
           )}
-          <span className="inline-flex items-center gap-1"><Icon className="size-3.5" aria-hidden />{text}</span>
+          <span className="inline-flex items-center gap-1 whitespace-nowrap"><Icon className="size-3.5" aria-hidden />{text}</span>
         </p>
         {unsafe && (
           <p className="inline-flex items-center gap-1 rounded-full bg-danger px-2.5 py-0.5 text-[12px] font-medium text-white">

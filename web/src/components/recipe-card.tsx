@@ -25,10 +25,10 @@ export function RecipeCard({ recipe, className }: { recipe: Recipe; className?: 
         <h3 className="line-clamp-2 text-[15px] font-semibold leading-[22px] group-hover:text-primary-text">
           {recipe.title}
         </h3>
-        <p className="tabular flex items-center gap-3 text-[12px] text-muted-foreground">
-          <span className="inline-flex items-center gap-1"><Clock className="size-3.5" aria-hidden />{recipe.total_minutes} min</span>
-          <span className="inline-flex items-center gap-1"><Flame className="size-3.5" aria-hidden />{Math.round(recipe.nutrition.kcal)} kcal</span>
-          <span>{Math.round(recipe.nutrition.protein_g)} g protein</span>
+        <p className="tabular flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] leading-4 text-muted-foreground">
+          <span className="inline-flex items-center gap-1 whitespace-nowrap"><Clock className="size-3.5" aria-hidden />{recipe.total_minutes} min</span>
+          <span className="inline-flex items-center gap-1 whitespace-nowrap"><Flame className="size-3.5" aria-hidden />{Math.round(recipe.nutrition.kcal)} kcal</span>
+          <span className="whitespace-nowrap">{Math.round(recipe.nutrition.protein_g)} g protein</span>
         </p>
         {unsafe && (
           <p className="inline-flex items-center gap-1 rounded-full bg-danger px-2.5 py-0.5 text-[12px] font-medium text-white">
@@ -37,7 +37,7 @@ export function RecipeCard({ recipe, className }: { recipe: Recipe; className?: 
         )}
         <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
           {recipe.pantry_foods.length > 0 && (
-            <span className="inline-flex h-6 items-center gap-1 rounded-full bg-primary-soft px-2.5 text-[12px] font-medium text-primary-text">
+            <span className="inline-flex min-h-6 items-center gap-1 rounded-2xl bg-primary-soft px-2.5 py-0.5 text-[12px] leading-4 font-medium text-primary-text">
               <Refrigerator className="size-3" aria-hidden />
               Uses {recipe.pantry_foods.length} of your pantry items
             </span>
