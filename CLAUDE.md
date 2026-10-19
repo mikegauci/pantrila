@@ -112,6 +112,11 @@ in the `recipe-photos` bucket under `avatars/<user>/` (no new bucket). The brows
 square and shrinks to JPEG; `PUT /me/avatar` re-encodes it as a 256 px WebP (`photos.to_avatar_webp`),
 `DELETE /me/avatar` removes it, `/me` carries `avatar_url`. Header and Profile page show it, else the
 emoji avatar. No model call, so no eval rerun.
+First-run tour (this PR): `web/src/components/tour.tsx`, 8 steps across Home, Assistant, Recipes,
+Plan and Grocery, pointing at elements marked `data-tour="…"` (nav links carry `nav-<key>`; the
+visible match wins because hidden pages stay mounted). Opens once per user id
+(`localStorage["pantrio-tour-done:<id>"]`), replay from the account menu ("App tour") or Profile
+("Help"). Web only, no new dependency, so no eval rerun.
 
 ## Stack
 
@@ -239,7 +244,8 @@ emoji avatar. No model call, so no eval rerun.
   client components under `src/app/(app)/` fetching the API with SWR (`src/lib/hooks.ts`,
   `src/lib/api.ts`, types in `src/lib/types.ts` mirror `api.py`); Supabase is used only for
   sign-in (magic link or anonymous guest). The cookbook lives under `recipes/mine` (list,
-  `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`. The assistant's
+  `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`. The first-run tour
+  is `src/components/tour.tsx` (`TourProvider` in `AppShell`, `useTour().start`). The assistant's
   thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrio.tsx`. `RecipeArt` (`src/components/bits.tsx`)
   shows the recipe photo with `next/image` (host allowed from `NEXT_PUBLIC_SUPABASE_URL` in
   `next.config.ts`) or the meal-type art when there is none. Read `web/AGENTS.md`: this Next.js differs from
