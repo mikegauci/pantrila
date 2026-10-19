@@ -50,7 +50,7 @@ function markSlow() {
     toast.loading("Waking up the Pantrio server…", {
       id: WAKE_TOAST,
       duration: Infinity,
-      description: "It sleeps when idle, so the first load can take up to a minute.",
+      description: "It sleeps when idle. The first load can take a minute.",
     })
 }
 
