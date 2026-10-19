@@ -26,12 +26,25 @@ function Chip({ on, onClick, children }: { on: boolean; onClick: () => void; chi
       aria-pressed={on}
       onClick={onClick}
       className={cn(
-        "h-8 rounded-full border px-3 text-[13px] font-medium transition-colors duration-150",
+        "h-8 shrink-0 rounded-full border px-3 whitespace-nowrap text-[13px] font-medium transition-colors duration-150",
         on ? "border-primary bg-primary-soft text-primary-text" : "bg-surface text-muted-foreground hover:text-foreground",
       )}
     >
       {children}
     </button>
+  )
+}
+
+/** One row of chips: scrolls sideways edge to edge on phones, wraps from md. */
+function ChipRow({ label: name, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div
+      role="group"
+      aria-label={name}
+      className="no-scrollbar -mx-3 -my-1 flex gap-2 overflow-x-auto px-3 py-1 sm:-mx-4 sm:px-4 md:m-0 md:flex-wrap md:overflow-visible md:p-0"
+    >
+      {children}
+    </div>
   )
 }
 
@@ -90,41 +103,46 @@ export default function RecipesPage() {
         </Link>
       </form>
 
-      <div className="grid gap-3">
-        <div className="flex flex-wrap gap-2" aria-label="Meal">
+      <div className="grid gap-2 md:gap-3">
+        <ChipRow label="Meal">
           {MEALS.map((m) => (
             <Chip key={m} on={meal === m} onClick={() => setMeal(meal === m ? null : m)}>{label(m)}</Chip>
           ))}
-          <span className="mx-1 w-px bg-border" />
+        </ChipRow>
+        <ChipRow label="Time">
           {TIMES.map((t) => (
             <Chip key={t} on={time === t} onClick={() => setTime(time === t ? null : t)}>≤ {t} min</Chip>
           ))}
-        </div>
-        <div className="flex flex-wrap gap-2" aria-label="Diet and cuisine">
+        </ChipRow>
+        <ChipRow label="Diet">
           {DIETS.map((d) => (
             <Chip key={d} on={diets.includes(d)}
                   onClick={() => setDiets(diets.includes(d) ? diets.filter((x) => x !== d) : [...diets, d])}>
               {label(d)}
             </Chip>
           ))}
-          <span className="mx-1 w-px bg-border" />
+        </ChipRow>
+        <ChipRow label="Cuisine">
           {meta?.cuisines.map((c) => (
             <Chip key={c} on={cuisine === c} onClick={() => setCuisine(cuisine === c ? null : c)}>{label(c)}</Chip>
           ))}
-        </div>
+        </ChipRow>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 rounded-2xl bg-primary-soft px-4 py-3">
-        <ShieldCheck className="size-5 text-primary-text" aria-hidden />
-        <p className="flex-1 text-[13px]">
+      <div className="flex items-center gap-3 rounded-2xl bg-primary-soft px-4 py-3 sm:flex-wrap">
+        <ShieldCheck className="size-5 shrink-0 text-primary-text" aria-hidden />
+        <p className="min-w-0 flex-1 text-[13px]">
           {safe ? (
             rules.length ? <>Showing only recipes that suit you: <strong>{rules.join("; ")}</strong>.</>
-                         : <>Your profile has no allergies or diets yet, so nothing is hidden.</>
+                         : <>
+                             <span className="sm:hidden">No allergies or diets set, nothing hidden.</span>
+                             <span className="hidden sm:inline">Your profile has no allergies or diets yet, so nothing is hidden.</span>
+                           </>
           ) : (
             <>Showing every recipe. Ones that break your rules are marked in red.</>
           )}
         </p>
-        <label data-tour="safety-switch" className="flex items-center gap-2 text-[13px] font-medium">
+        <label data-tour="safety-switch" className="flex shrink-0 items-center gap-2 text-[13px] font-medium">
           <Switch checked={safe} onCheckedChange={setSafe} /> Only what suits me
         </label>
       </div>

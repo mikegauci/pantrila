@@ -170,3 +170,10 @@
   align-self: flex-start;
   margin-top: 2px;
 }
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
