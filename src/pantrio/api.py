@@ -12,8 +12,9 @@ Chat threads (/me/chats) are saved per user; each POST /chat continues one threa
 one) and the server, not the client, supplies that thread's history to the assistant.
 
 The cookbook (/me/recipes) holds recipes people add from a photo, a link, a TikTok, Instagram or
-Facebook post (its caption, or a recipe site the caption links), pasted text or by hand. Imports
-return a draft for the person to review; nothing is saved until they post it back. Grams,
+Facebook post (its caption, or a recipe site the caption links), a cooking video's sound and
+frames (extracted in the browser; the video never reaches the server), pasted text or by hand.
+Imports return a draft for the person to review; nothing is saved until they post it back. Grams,
 nutrition, allergens and diets are derived in code on every read, like the corpus. A cookbook
 recipe can get a generated photo (POST /me/recipes/{id}/photo), capped per user per day.
 
@@ -81,6 +82,7 @@ from pantrio.api_models import (
     ToolCallView,
     UsageEventView,
     UsageView,
+    VideoImport,
 )
 from pantrio.api_views import (
     cookbook_card,
@@ -443,7 +445,9 @@ def create_app(
     def import_view(s: Session, request: Request, work: Callable[[Importer], Any]) -> ImportView:
         result, importer, ms = paid_import(s, request, work)
         return ImportView(draft=result.draft, notes=result.notes,
-                          cost_usd=importer.usage.cost(), latency_ms=round(ms))  # fmt: skip
+                          cost_usd=importer.usage.cost(),
+                          transcription_cost_usd=importer.usage.transcription_cost(),
+                          latency_ms=round(ms))  # fmt: skip
 
     @app.get("/me/recipes")
     def my_recipes(s: SessionDep) -> list[CookbookCard]:
@@ -477,6 +481,11 @@ def create_app(
     @app.post("/me/recipes/import/text")
     def import_text(body: TextImport, request: Request, s: SessionDep) -> ImportView:
         return import_view(s, request, lambda i: i.from_text(body.text))
+
+    @app.post("/me/recipes/import/video")
+    def import_video(body: VideoImport, request: Request, s: SessionDep) -> ImportView:
+        return import_view(s, request, lambda i: i.from_video(body.audio, body.frames, body.url,
+                                                              body.caption))  # fmt: skip
 
     @app.post("/me/recipes/import/photos")
     def import_photos(body: PhotoImport, request: Request, s: SessionDep) -> ImportView:

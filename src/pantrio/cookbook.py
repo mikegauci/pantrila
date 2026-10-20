@@ -36,7 +36,7 @@ from pantrio.schema import (
 MAX_RECIPES_PER_USER = 200
 HANDLE = re.compile(r"[A-Za-z0-9._]{1,30}")
 DietClass = Literal["plant", "dairy", "egg", "honey", "fish", "shellfish", "meat"]
-Source = Literal["manual", "photo", "link", "post", "text"]
+Source = Literal["manual", "photo", "link", "post", "text", "video"]
 Platform = Literal["tiktok", "instagram", "facebook"]
 
 

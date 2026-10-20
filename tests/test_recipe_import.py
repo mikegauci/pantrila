@@ -8,6 +8,8 @@ from pantrio.recipe_import import (
     ImportedRecipe,
     Importer,
     ImportFailed,
+    VideoRecipe,
+    check_audio,
     check_image,
     check_url,
     fetch_page,
@@ -156,8 +158,14 @@ def test_no_recipe_is_an_error_the_person_sees():
 
 
 class FakeClient:
-    def __init__(self, parsed):
+    def __init__(self, parsed, transcript: str = ""):
         self.parsed, self.calls, self.responses = parsed, [], self
+        self.transcript = transcript
+        self.audio = SimpleNamespace(transcriptions=SimpleNamespace(create=self.transcribe))
+
+    def transcribe(self, **kwargs):
+        self.calls.append(kwargs)
+        return SimpleNamespace(text=self.transcript)
 
     def parse(self, **kwargs):
         self.calls.append(kwargs)
@@ -327,3 +335,71 @@ def test_pinned_fetch_falls_back_only_to_other_validated_addresses():
         server.shutdown()
         server.server_close()
         thread.join(timeout=2)
+
+
+def wav(seconds: float, rate: int = 16_000) -> str:
+    import io
+    import wave
+
+    out = io.BytesIO()
+    with wave.open(out, "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(rate)
+        w.writeframes(b"\0\0" * int(seconds * rate))
+    return "data:audio/wav;base64," + base64.b64encode(out.getvalue()).decode()
+
+
+def video_recipe(**line_overrides) -> VideoRecipe:
+    data = imported().model_dump()
+    data["ingredients"] = [{**i, "vague_amount": None} for i in data["ingredients"][:2]]
+    data["ingredients"][1].update(line_overrides)
+    return VideoRecipe.model_validate(data)
+
+
+def test_check_audio_reads_the_length_and_refuses_the_rest():
+    data, seconds = check_audio(wav(90))
+    assert seconds == pytest.approx(90) and data[:4] == b"RIFF"
+    for bad, message in [
+        ("data:audio/mpeg;base64,AAAA", "WAV"),
+        ("data:audio/wav;base64,AAAA", "could not be read"),
+        (wav(186, rate=8000), "under 3 minutes"),
+        (wav(0.5), "no sound"),
+    ]:
+        with pytest.raises(ImportFailed, match=message):
+            check_audio(bad)
+
+
+def test_video_import_flags_vague_amounts_and_never_stores_audio():
+    client = FakeClient(video_recipe(vague_amount="a glug"), transcript="Crack in a glug of eggs")
+    png = "data:image/png;base64," + base64.b64encode(b"\x89PNG fake").decode()
+    result = Importer(client=client, model="m", transcribe_model="t").from_video(
+        wav(30), [png] * 6, caption="Pancakes #fyp"
+    )
+    transcribe, read = client.calls
+    assert transcribe["model"] == "t" and read["store"] is False
+    assert "cooking video" in read["instructions"] and read["text_format"] is VideoRecipe
+    parts = read["input"][0]["content"]
+    assert "Crack in a glug of eggs" in parts[0]["text"] and "Pancakes #fyp" in parts[0]["text"]
+    assert [p["type"] for p in parts].count("input_image") == 4  # at most 4 frames
+    assert result.draft.source == "video" and result.draft.source_url is None
+    assert result.usage.llm_calls == 2 and result.usage.audio_seconds == pytest.approx(30)
+    assert any("only says \u201ca glug\u201d" in n and "Ingredient 2" in n
+               for n in result.notes)  # fmt: skip
+    assert "audio" not in result.draft.model_dump_json()
+
+
+def test_video_import_plain_prompt_and_failures():
+    client = FakeClient(imported(), transcript="Toast.")
+    Importer(client=client, model="m").from_video(wav(5), [], guided=False)
+    assert client.calls[-1]["text_format"] is ImportedRecipe
+    assert "cooking video" not in client.calls[-1]["instructions"]
+
+    silent = FakeClient(imported(), transcript="  ")
+    with pytest.raises(ImportFailed, match="couldn't hear anyone"):
+        Importer(client=silent, model="m").from_video(wav(5), [])
+    assert len(silent.calls) == 1  # transcribed, never read
+
+    vlog = FakeClient(imported(is_recipe=False), transcript="Welcome to my kitchen tour")
+    with pytest.raises(ImportFailed, match="couldn't find a recipe in this video"):
+        Importer(client=vlog, model="m").from_video(wav(5), [])

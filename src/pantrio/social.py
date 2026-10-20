@@ -73,8 +73,8 @@ _BARE_OK = re.compile(
 
 CAPTION_BLOCKED = "{platform} didn't let Pantrio read this post. Paste the caption below."
 NO_RECIPE = (
-    "The caption doesn't include the recipe. It may be in the video: paste the recipe text or "
-    "add screenshots."
+    "The caption doesn't include the recipe. It may be in the video: upload the video, or paste "
+    "the recipe text or add screenshots."
 )
 
 
