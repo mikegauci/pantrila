@@ -2,8 +2,10 @@
   {
     "id": "reel-ingredients-only",
     "kind": "ingredients-only",
+    "platform": "instagram",
     "url": "https://www.instagram.com/reel/PantrioEval0/",
     "caption": "Spaghetti aglio e olio 🍝🧄 my empty-fridge pasta, serves 2\n\n200 g spaghetti\n4 tbsp olive oil\n4 cloves garlic, thinly sliced\n1 tsp chilli flakes\n10 g parsley, chopped\n\nMethod in the video 👆 #pasta #budget #fyp",
+    "service_caption": null,
     "video": "video-vague-aglio-olio",
     "page": null,
     "expect": {
@@ -77,8 +79,10 @@
   {
     "id": "reel-comment-recipe",
     "kind": "comment-recipe",
+    "platform": "instagram",
     "url": "https://www.instagram.com/reel/PantrioEval1/",
     "caption": "Garlic butter prawns in 15 minutes 🍤🧈 Comment PRAWNS and I'll send you the recipe! #dinner #seafood",
+    "service_caption": null,
     "video": "video-clear-prawns",
     "page": null,
     "expect": {
@@ -152,8 +156,10 @@
   {
     "id": "reel-full-caption",
     "kind": "full-caption",
+    "platform": "instagram",
     "url": "https://www.instagram.com/reel/PantrioEval2/",
     "caption": "Shakshuka for two 🍳 30 min\n\n1 tbsp olive oil\n1 onion, diced\n1 red pepper, sliced\n2 cloves garlic\n1 tsp ground cumin\n1 tsp paprika\n400 g can chopped tomatoes\n4 eggs\n\nCook the onion and pepper in the oil for 8 min. Add the garlic, cumin and paprika for 1 min. Add the tomatoes and simmer 10 min. Make 4 wells, crack in the eggs, cover and cook 6-8 min. #brunch",
+    "service_caption": null,
     "video": "video-music-shakshuka",
     "page": null,
     "expect": {
@@ -258,8 +264,10 @@
   {
     "id": "reel-linked-site",
     "kind": "linked-site",
+    "platform": "instagram",
     "url": "https://www.instagram.com/reel/PantrioEval3/",
     "caption": "Peanut noodles in 15 min 🥜🍜 Recipe: pantrio-eval.example/peanut-noodles #noodles",
+    "service_caption": null,
     "video": "video-fast-peanut-noodles",
     "page": {
       "url": "https://pantrio-eval.example/peanut-noodles",
@@ -360,8 +368,10 @@
   {
     "id": "reel-not-recipe",
     "kind": "not-recipe",
+    "platform": "instagram",
     "url": "https://www.instagram.com/reel/PantrioEval4/",
     "caption": "New toy in the kitchen 😍 #kitchen #mixer",
+    "service_caption": null,
     "video": "video-not-recipe",
     "page": null,
     "expect": {
@@ -370,6 +380,215 @@
       "service_calls": 1,
       "lines": [],
       "allergens": []
+    }
+  },
+  {
+    "id": "reel-tiktok-no-caption",
+    "kind": "no-caption",
+    "platform": "tiktok",
+    "url": "https://www.tiktok.com/@pantrio.eval/video/7410000000000000005",
+    "caption": "",
+    "service_caption": "Peanut noodles 🥜 15 min, the method's in the video #noodles #fyp",
+    "video": "video-fast-peanut-noodles",
+    "page": null,
+    "expect": {
+      "is_recipe": true,
+      "title": "Peanut Noodles",
+      "service_calls": 1,
+      "lines": [
+        {
+          "text": "200 g rice noodles",
+          "foods": [
+            "rice_noodles"
+          ],
+          "amount": [
+            200,
+            "g"
+          ],
+          "vague": false
+        },
+        {
+          "text": "3 tbsp peanut butter",
+          "foods": [
+            "peanut_butter"
+          ],
+          "amount": [
+            3,
+            "tbsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "2 tbsp soy sauce",
+          "foods": [
+            "soy_sauce"
+          ],
+          "amount": [
+            2,
+            "tbsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "1 tbsp sesame oil",
+          "foods": [
+            "sesame_oil"
+          ],
+          "amount": [
+            1,
+            "tbsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "1 tbsp lime juice",
+          "foods": [
+            "lime_juice",
+            "lime"
+          ],
+          "amount": [
+            1,
+            "tbsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "1 tbsp honey",
+          "foods": [
+            "honey"
+          ],
+          "amount": [
+            1,
+            "tbsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "2 spring onions, sliced",
+          "foods": [
+            "spring_onion"
+          ],
+          "amount": [
+            2,
+            "piece"
+          ],
+          "vague": false
+        }
+      ],
+      "allergens": [
+        "gluten",
+        "peanuts",
+        "sesame",
+        "soy"
+      ]
+    }
+  },
+  {
+    "id": "reel-facebook-comment-recipe",
+    "kind": "comment-recipe",
+    "platform": "facebook",
+    "url": "https://www.facebook.com/pantrio.eval/videos/6/",
+    "caption": "Shakshuka for two 🍳🌶️ Comment EGGS and I'll message you the recipe!",
+    "service_caption": null,
+    "video": "video-music-shakshuka",
+    "page": null,
+    "expect": {
+      "is_recipe": true,
+      "title": "Shakshuka",
+      "service_calls": 1,
+      "lines": [
+        {
+          "text": "1 tbsp olive oil",
+          "foods": [
+            "olive_oil"
+          ],
+          "amount": [
+            1,
+            "tbsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "1 onion, diced",
+          "foods": [
+            "onion"
+          ],
+          "amount": [
+            1,
+            "piece"
+          ],
+          "vague": false
+        },
+        {
+          "text": "1 red pepper, sliced",
+          "foods": [
+            "red_bell_pepper"
+          ],
+          "amount": [
+            1,
+            "piece"
+          ],
+          "vague": false
+        },
+        {
+          "text": "2 cloves garlic",
+          "foods": [
+            "garlic"
+          ],
+          "amount": [
+            2,
+            "piece"
+          ],
+          "vague": false
+        },
+        {
+          "text": "1 tsp ground cumin",
+          "foods": [
+            "cumin"
+          ],
+          "amount": [
+            1,
+            "tsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "1 tsp paprika",
+          "foods": [
+            "paprika"
+          ],
+          "amount": [
+            1,
+            "tsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "400 g can chopped tomatoes",
+          "foods": [
+            "canned_tomatoes"
+          ],
+          "amount": [
+            400,
+            "g"
+          ],
+          "vague": false
+        },
+        {
+          "text": "4 eggs",
+          "foods": [
+            "egg"
+          ],
+          "amount": [
+            4,
+            "piece"
+          ],
+          "vague": false
+        }
+      ],
+      "allergens": [
+        "eggs"
+      ]
     }
   }
 ]

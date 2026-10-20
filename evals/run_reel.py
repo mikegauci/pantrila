@@ -1,5 +1,6 @@
-"""Reel eval: each labelled post link through `Importer.from_post`, with the caption pasted and a
-fake video service (reel audio from a link). The service finds the committed WAV and drawn
+"""Reel eval: each labelled post link through `Importer.from_post`, with the caption pasted (or a
+TikTok link alone) and a fake video service (reel audio from a link). The service finds the
+committed WAV and drawn
 frames of the paired video-eval case; no real service runs.
 
 Per case: recipe found (or refused), food matching, allergens missed and extra, stated amounts
@@ -10,15 +11,14 @@ allergen is the safety number and should be 0. Writes a report under evals/repor
 
     uv run python -m evals.run_reel                 # needs OPENAI_API_KEY
     uv run python -m evals.run_reel --media off     # the "before": today's caption-only import
-    uv run python -m evals.run_reel --fee 0.0026    # the service's fee per run (else
-                                                    # PANTRIO_PRICE_MEDIA_PER_FETCH, else 0.003)
+    uv run python -m evals.run_reel --fee 0.003     # one fee per run (else each platform's
+                                                    # actor fee in post_media.ACTORS)
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import os
 import statistics
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
@@ -34,29 +34,36 @@ from evals.video_audio import AUDIO, frame_urls
 from evals.video_cases import load_cases as load_videos
 from pantrio import config, post_media
 from pantrio.cookbook import CookbookRecipeIn
-from pantrio.post_media import MediaFailed, PostVideo, VideoMedia
+from pantrio.post_media import ACTORS, MediaFailed, PostVideo, VideoMedia
 from pantrio.recipe_import import NO_METHOD_STEP, Importer, ImportFailed
 
 REPORTS = Path(__file__).parent / "reports"
-DEFAULT_FEE = 0.003  # USD per service run, about $3 per 1,000 reels at the prices seen
 VIDEOS = {v["id"]: v for v in load_videos()}
 MEDIA_HOST = "https://media.pantrio-eval.example/"
 
 
 class EvalMedia:
-    """The service, faked: a video link per case, counted."""
+    """The service, faked: a video link (and the caption it reads) per case, counted."""
 
-    platforms = frozenset({"instagram"})
+    platforms = frozenset(ACTORS)
 
-    def __init__(self, case: dict, fee: float):
-        self.case, self.fee_usd, self.calls = case, fee, 0
+    def __init__(self, case: dict, fee: float | None):
+        self.case, self.fee, self.calls, self.cost = case, fee, 0, 0.0
 
-    def video_for(self, post_url: str) -> PostVideo | None:
+    def fee_for(self, platform: str) -> float:
+        return self.fee if self.fee is not None else ACTORS[platform].fee_usd
+
+    def headers_for(self, url: str) -> dict[str, str]:
+        return {}
+
+    def video_for(self, post_url: str, platform: str) -> PostVideo | None:
         self.calls += 1
-        return PostVideo(f"{MEDIA_HOST}{self.case['video']}.mp4", None, "pantrio.eval")
+        self.cost += self.fee_for(platform)
+        return PostVideo([f"{MEDIA_HOST}{self.case['video']}.mp4"], self.case["service_caption"],
+                         "pantrio.eval")  # fmt: skip
 
 
-def fake_fetch(url: str, http=None, resolve=None) -> bytes:
+def fake_fetch(url: str, http=None, resolve=None, headers=None) -> bytes:
     if not url.startswith(MEDIA_HOST):
         raise MediaFailed("Not an eval video.")
     return url.removeprefix(MEDIA_HOST).removesuffix(".mp4").encode()
@@ -111,13 +118,14 @@ def score(case: dict, draft: CookbookRecipeIn | None, calls: int, media_on: bool
     }
 
 
-def run_one(case: dict, model: str, media_on: bool, fee: float) -> dict:
+def run_one(case: dict, model: str, media_on: bool, fee: float | None) -> dict:
     media = EvalMedia(case, fee)
     importer = Importer(model=model, media=media if media_on else None)
     base = {"case_id": case["id"], "kind": case["kind"], "ok": True}
     resolve = lambda host, port: ["93.184.216.34"]  # noqa: E731  (the mock serves the page)
     try:
-        result = importer.from_post(case["url"], case["caption"], page_http(case), resolve)
+        result = importer.from_post(case["url"], case["caption"] or None, page_http(case),
+                                    resolve)  # fmt: skip
         draft, latency = result.draft, result.latency_ms
     except ImportFailed:
         draft, latency = None, 0.0
@@ -126,8 +134,8 @@ def run_one(case: dict, model: str, media_on: bool, fee: float) -> dict:
     u = importer.usage
     model_cost = u.cost()
     row = {**base, **score(case, draft, media.calls, media_on),
-           "cost_usd": None if model_cost is None else model_cost + media.calls * fee,
-           "media_cost_usd": media.calls * fee,
+           "cost_usd": None if model_cost is None else model_cost + media.cost,
+           "media_cost_usd": media.cost,
            "transcription_cost_usd": u.transcription_cost(), "llm_calls": u.llm_calls,
            "latency_ms": latency}  # fmt: skip
     print(f"{case['id']}: found {'ok' if row['found_ok'] else 'WRONG'}, "
@@ -189,7 +197,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"# Reel eval {meta['finished_at']}",
         "",
         f"{meta['cases']} labelled reel links with pasted captions, video service "
-        f"{meta['media']} (fake; ${meta['fee_usd']} per run), transcription "
+        f"{meta['media']} (fake; fee {meta['fee_usd']} per run), transcription "
         f"`{meta['transcribe_model']}`, model `{meta['model']}` (reasoning medium).",
         "",
         "| Metric | Value |",
@@ -239,11 +247,11 @@ def main() -> None:
     parser.add_argument("--only", help="comma-separated case ids")
     parser.add_argument("--media", choices=("on", "off"), default="on",
                         help="off is the before: caption and links only")  # fmt: skip
-    parser.add_argument("--fee", type=float, help="USD per service run")
+    parser.add_argument("--fee", type=float,
+                        help="USD per service run (else each platform's actor fee)")  # fmt: skip
     parser.add_argument("--concurrency", type=int, default=5)
     args = parser.parse_args()
-    fee = args.fee if args.fee is not None else float(
-        os.environ.get("PANTRIO_PRICE_MEDIA_PER_FETCH") or DEFAULT_FEE)  # fmt: skip
+    fee = args.fee
 
     post_media.fetch_video, post_media.read_video = fake_fetch, fake_read  # no real service
     cases = load_cases()
@@ -260,7 +268,7 @@ def main() -> None:
         "model": model,
         "transcribe_model": config.transcribe_model(),
         "media": args.media,
-        "fee_usd": fee,
+        "fee_usd": fee if fee is not None else "per platform",
     }
     report = markdown(summary, rows, meta)
     print(report)
