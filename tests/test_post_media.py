@@ -87,14 +87,20 @@ def heard(steps=("Brown the sausage.", "Layer and bake.")) -> VideoRecipe:
 
 
 class FakeMedia:
-    platforms = frozenset({"instagram"})
-    fee_usd = 0.003
+    platforms = frozenset({"instagram", "tiktok"})
 
     def __init__(self, found: PostVideo | None = None, error: Exception | None = None):
-        self.found = found if found is not None or error else PostVideo(VIDEO, None, "zachs.foods")
+        self.found = found if found is not None or error else PostVideo([VIDEO], None,
+                                                                        "zachs.foods")  # fmt: skip
         self.error, self.asked = error, []
 
-    def video_for(self, post_url):
+    def fee_for(self, platform):
+        return 0.003
+
+    def headers_for(self, url):
+        return {}
+
+    def video_for(self, post_url, platform):
         self.asked.append(post_url)
         if self.error:
             raise self.error
@@ -151,7 +157,7 @@ def test_ingredients_only_caption_hears_the_video_and_keeps_the_caption():
 
 @pytest.mark.parametrize("media, host", [
     (FakeMedia(error=MediaFailed("The video service did not answer.")), video_host()),
-    (FakeMedia(found=PostVideo("https://cdn.example/none.mp4")), video_host()),
+    (FakeMedia(found=PostVideo(["https://cdn.example/none.mp4"])), video_host()),
     (FakeMedia(), video_host(b"<html>", "text/html")),
     (FakeMedia(), video_host(b"not a video at all")),
     (FakeMedia(), video_host(status=403)),
@@ -162,7 +168,8 @@ def test_any_failure_falls_back_to_the_captions_ingredients(media, host):
     imp = importer(client, media, meter)
     result = imp.from_post(REEL, CAPTION, host, resolve)
     assert NO_METHOD in result.notes and HEARD not in result.notes
-    assert meter.runs == [(0.003, False)] and imp.media_cost == pytest.approx(0.003)
+    assert meter.runs == [(0.003, media.error is None)]
+    assert imp.media_cost == pytest.approx(0.003)
     assert [kind for kind, _ in client.calls] == ["parse"]
 
 
@@ -186,7 +193,7 @@ def test_video_without_a_method_does_not_replace_the_caption_draft():
 @pytest.mark.parametrize("media, meter, url", [
     (None, None, REEL),  # off: today's behaviour exactly
     (FakeMedia(), Meter(allow=False), REEL),  # today's allowance used up
-    (FakeMedia(), None, "https://www.tiktok.com/@sam/video/7300000000000000001"),  # not covered
+    (FakeMedia(), None, "https://www.facebook.com/sam/videos/123/"),  # not covered
 ])  # fmt: skip
 def test_off_capped_or_uncovered_platforms_skip_the_service(media, meter, url):
     client = FakeClient(caption_only())
@@ -237,36 +244,128 @@ def apify(answer: httpx.Response, seen: list) -> httpx.Client:
     return httpx.Client(transport=httpx.MockTransport(handle))
 
 
-def test_apify_runs_the_actor_with_the_token_in_a_header():
+@pytest.mark.parametrize("platform, item, want", [
+    ("instagram", {"caption": "Lasagna", "ownerUsername": "zachs.foods", "videoDuration": 34.4,
+                   "videoUrl": VIDEO, "audioUrl": "https://cdn.example/a.mp4"},
+     PostVideo([VIDEO, "https://cdn.example/a.mp4"], "Lasagna", "zachs.foods", 34.4)),
+    ("tiktok", {"text": "Noodles", "authorMeta": {"name": "jose.elcook"},
+                "videoMeta": {"duration": 61}, "webVideoUrl": "https://www.tiktok.com/x",
+                "mediaUrls": ["https://api.apify.com/v2/key-value-stores/k/records/v"]},
+     PostVideo(["https://api.apify.com/v2/key-value-stores/k/records/v"], "Noodles",
+               "jose.elcook", 61.0)),
+    ("facebook", {"previewTitle": "Meatball pasta", "playable_duration_in_ms": 66730,
+                  "videoDeliveryLegacyFields": {
+                      "browser_native_sd_url": "https://video.fbcdn.net/sd.mp4",
+                      "browser_native_hd_url": "https://video.fbcdn.net/hd.mp4"}},
+     PostVideo(["https://video.fbcdn.net/sd.mp4", "https://video.fbcdn.net/hd.mp4"],
+               "Meatball pasta", None, 66.73)),
+])  # fmt: skip
+def test_apify_reads_each_platforms_actor(platform, item, want):
     seen: list[httpx.Request] = []
-    item = {"caption": "Lasagna", "ownerUsername": "zachs.foods", "videoUrl": VIDEO}
     media = ApifyMedia("secret-token", http=apify(httpx.Response(200, json=[item]), seen))
-    assert media.video_for(REEL) == PostVideo(VIDEO, "Lasagna", "zachs.foods")
+    got = media.video_for("https://example.com/post", platform)
+    assert got is not None and got.video_urls == want.video_urls
+    assert (got.caption, got.handle) == (want.caption, want.handle)
+    assert got.seconds == pytest.approx(want.seconds)
     (req,) = seen
     assert req.headers["authorization"] == "Bearer secret-token"
     assert "secret-token" not in str(req.url) and "secret-token" not in req.content.decode()
-    assert str(req.url).endswith("/acts/apify~instagram-scraper/run-sync-get-dataset-items")
-    assert REEL in req.content.decode()
+    assert str(req.url).endswith(f"/acts/{post_media.ACTORS[platform].id}"
+                                 "/run-sync-get-dataset-items")  # fmt: skip
+    assert "https://example.com/post" in req.content.decode()
 
 
 def test_apify_failures_and_empty_results():
     seen: list = []
     with pytest.raises(MediaFailed, match="error \\(502\\)"):
-        ApifyMedia("t", http=apify(httpx.Response(502), seen)).video_for(REEL)
-    assert ApifyMedia("t", http=apify(httpx.Response(200, json=[]), seen)).video_for(REEL) is None
-    nested = [{"items": [{"url": "https://cdn.example/x.mp4?sig=1"}]}]
-    found = ApifyMedia("t", http=apify(httpx.Response(200, json=nested), seen)).video_for(REEL)
-    assert found is not None and found.video_url == "https://cdn.example/x.mp4?sig=1"
+        ApifyMedia("t", http=apify(httpx.Response(502), seen)).video_for(REEL, "instagram")
+    empty = ApifyMedia("t", http=apify(httpx.Response(200, json=[]), seen))
+    assert empty.video_for(REEL, "instagram") is None
+    nothing = ApifyMedia("t", http=apify(httpx.Response(200, json=[{"likes": 3}]), seen))
+    assert nothing.video_for(REEL, "instagram") is None
+
+
+def test_the_token_goes_only_to_apify_storage_and_never_after_a_redirect():
+    media = ApifyMedia("secret-token")
+    store = "https://api.apify.com/v2/key-value-stores/k/records/v"
+    assert media.headers_for(store) == {"Authorization": "Bearer secret-token"}
+    for url in ("http://api.apify.com/x", "https://api.apify.com.evil.example/x",
+                "https://cdn.example/v.mp4", "https://api.apify.com:8443/x"):  # fmt: skip
+        assert media.headers_for(url) == {}, url
+
+    seen: list[httpx.Request] = []
+
+    def handle(req: httpx.Request) -> httpx.Response:
+        seen.append(req)
+        if req.url.host == "api.apify.com":
+            return httpx.Response(302, headers={"location": VIDEO})
+        return httpx.Response(200, content=MP4, headers={"content-type": "video/mp4"})
+
+    http = httpx.Client(transport=httpx.MockTransport(handle))
+    assert fetch_video(store, http, resolve, media.headers_for(store)) == MP4
+    assert seen[0].headers["authorization"] == "Bearer secret-token"
+    assert "authorization" not in seen[1].headers and seen[1].url.host == "cdn.example"
+
+
+def test_a_failed_video_link_falls_back_to_the_next_one():
+    client = FakeClient(caption_only(), heard())
+    media = FakeMedia(found=PostVideo(["https://cdn.example/broken.mp4", VIDEO]))
+    result = importer(client, media).from_post(REEL, CAPTION, video_host(), resolve)
+    assert result.notes[0] == HEARD
+
+
+def test_a_video_the_service_says_is_too_long_is_never_fetched():
+    client = FakeClient(caption_only())
+    media = FakeMedia(found=PostVideo([VIDEO], seconds=600))
+    host = video_host(status=500)  # any fetch would fail loudly in the result
+    result = importer(client, media).from_post(REEL, CAPTION, host, resolve)
+    assert NO_METHOD in result.notes and len(client.calls) == 1
+
+
+def test_tiktok_caption_comes_from_the_service_and_one_run_serves_both():
+    tiktok = "https://www.tiktok.com/@jose.elcook/video/7448169436764212510"
+    oembed = "https://www.tiktok.com/oembed?url=" + tiktok.replace(":", "%3A").replace("/", "%2F")
+
+    def handle(req: httpx.Request) -> httpx.Response:
+        if str(req.url) == oembed:
+            return httpx.Response(200, json={"title": "", "author_unique_id": "jose.elcook"})
+        if str(req.url) == VIDEO:
+            return httpx.Response(200, content=MP4, headers={"content-type": "video/mp4"})
+        return httpx.Response(404)
+
+    http = httpx.Client(transport=httpx.MockTransport(handle))
+    media, meter = FakeMedia(found=PostVideo([VIDEO], CAPTION, "jose.elcook")), Meter()
+    client = FakeClient(caption_only(), heard())
+    result = importer(client, media, meter).from_post(tiktok, None, http, resolve)
+    assert media.asked == [tiktok] and meter.runs == [(0.003, True)]
+    assert result.notes[0] == HEARD
+    d = result.draft
+    assert (d.source_url, d.source_platform, d.source_author) == (tiktok, "tiktok", "jose.elcook")
+    assert "Caption of a TikTok post by @jose.elcook" in client.calls[0][1]["input"][0][
+        "content"][0]["text"]  # fmt: skip
+
+    no_caption = FakeMedia(found=PostVideo([VIDEO]))
+    with pytest.raises(ImportFailed, match="TikTok"):
+        importer(FakeClient(), no_caption).from_post(tiktok, None, http, resolve)
 
 
 def test_media_source_is_off_unless_configured(monkeypatch):
-    for name in ("PANTRIO_MEDIA_SOURCE", "APIFY_TOKEN", "PANTRIO_PRICE_MEDIA_PER_FETCH"):
+    for name in (
+        "PANTRIO_MEDIA_SOURCE",
+        "APIFY_TOKEN",
+        "PANTRIO_MEDIA_PLATFORMS",
+        "PANTRIO_PRICE_MEDIA_FACEBOOK",
+    ):
         monkeypatch.delenv(name, raising=False)
     assert isinstance(media_source(), NoMedia)
     monkeypatch.setenv("PANTRIO_MEDIA_SOURCE", "apify")
     assert isinstance(media_source(), NoMedia)  # no token
     monkeypatch.setenv("APIFY_TOKEN", "t")
-    monkeypatch.setenv("PANTRIO_PRICE_MEDIA_PER_FETCH", "0.004")
     source = media_source()
-    assert isinstance(source, ApifyMedia) and source.fee_usd == 0.004
-    assert source.platforms == frozenset({"instagram"})
+    assert isinstance(source, ApifyMedia)
+    assert source.platforms == frozenset({"instagram", "tiktok", "facebook"})
+    assert source.fee_for("facebook") == 0.006
+    monkeypatch.setenv("PANTRIO_PRICE_MEDIA_FACEBOOK", "0.007")
+    monkeypatch.setenv("PANTRIO_MEDIA_PLATFORMS", "instagram, myspace")
+    source = media_source()
+    assert source.platforms == frozenset({"instagram"}) and source.fee_for("facebook") == 0.007
