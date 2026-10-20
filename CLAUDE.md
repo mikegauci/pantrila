@@ -54,8 +54,13 @@ Service runs are usage kind `reel` (migration `20261020100000_reel_usage`, appli
 cap `PANTRIO_DAILY_REEL_FETCHES`). Prompt: steps only as the source gives them. Reel eval
 before/after `reel-2026-10-20T082713Z` / `reel-2026-10-20T082734Z`: found 80% -> 100%, method
 67% -> 100%, 0 missed allergens; import eval `import-2026-10-20T082701Z` unchanged in quality.
-Still to do (owner): step 0 (Apify token, actor chosen with `scripts/reel_media_check.py`),
-Render settings, live check on the test reel.
+Second PR: one Apify actor per platform (`post_media.ACTORS`: Instagram, TikTok, Facebook;
+$0.0027 / $0.0043 / $0.006 per post), token only ever sent to api.apify.com, TikTok links
+alone work (caption from the service). Reel eval 7 cases, before/after
+`reel-2026-10-20T084302Z` / `reel-2026-10-20T084329Z`: found 57% -> 100%, method 67% -> 100%,
+0 missed allergens. Live on the test reel: 17 lines, 7 steps, ~60-90 s, ~$0.05 (the video
+read's reasoning tokens; effort low is a follow-up). Still to do (owner): `APIFY_TOKEN` and
+`PANTRIO_MEDIA_SOURCE=apify` on Render, then a live check on the deployed app.
 
 Social recipe import, two PRs; plan and checklists in `docs/plans/social-recipe-import.md`
 (read it before either PR). PR 1 (PR #36, merged): `social.py` (post detection, TikTok
@@ -348,7 +353,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `Importer.transcribe` and `from_video(audio, frames, url, caption, guided)`; vague spoken
   amounts become notes ("the video only says ..."). Audio and frames are never stored.
 - `src/pantrio/post_media.py`: reel audio from a link. `MediaSource` (`ApifyMedia`: one actor
-  run, token in a header; `NoMedia`), `media_source()` from the environment (off by default),
+  run per post, one actor per platform in `ACTORS`, token only to api.apify.com; `NoMedia`),
+  `media_source()` from the environment (off by default),
   `fetch_video` (SSRF-guarded via `recipe_import.fetch_bytes`, 60 MB), `read_video` (PyAV in
   memory: 16 kHz mono WAV, 4 JPEG frames). `Importer(media=, meter=)` uses it in `from_post`
   only when the caption and links give no full recipe; `operations.ReelMeter` caps runs.

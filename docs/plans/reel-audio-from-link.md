@@ -129,14 +129,15 @@ transcription. Revisit if the eval shows otherwise.
 
 ## Checklist
 
-- [ ] Step 0: Apify account, 2-3 actors compared, results recorded here, actor chosen with the
-      owner. `scripts/reel_media_check.py` is written (any actor: `--actor` and `--input`);
-      waiting for the owner's `APIFY_TOKEN`.
+- [x] Step 0: Apify account, actors compared, results recorded below, one actor per platform
+      (owner: Instagram, TikTok and Facebook)
 - [x] `post_media.py` + video fetch + PyAV extraction + tests
 - [x] `from_post` step 3 + settings + usage/cost + tests
 - [x] Web progress text and notes; Playwright case with the service mocked
 - [x] Eval cases and before/after reports (numbers in the PR)
-- [ ] `APIFY_TOKEN` and settings on Render (owner); live check on the test reel
+- [x] Live check on the owner's Mac (below)
+- [ ] `APIFY_TOKEN` and `PANTRIO_MEDIA_SOURCE=apify` on Render (owner); live check on the
+      deployed app (does Instagram's / Facebook's CDN serve Render's addresses?)
 - [x] README (Limitations, privacy line), CLAUDE.md Status/Layout/Commands
 
 ## Progress (20 October 2026, first PR)
@@ -187,3 +188,47 @@ actor, its input, platforms and fee; live check on the test reel and record it h
 - Instagram's terms: owner's accepted risk for this portfolio app; easy to switch off.
 - Cost creep: a few tenths of a cent per reel at the prices seen, plus transcription
   (~$0.003/min); watch the daily budget.
+
+## Step 0 results (20 October 2026, owner's Mac, `scripts/reel_media_check.py`)
+
+| Platform | Actor | Run | $ per post | Video |
+|---|---|---|---|---|
+| Instagram | `apify~instagram-scraper` (`directUrls`) | 6.3 s | 0.0027 | `videoUrl` 11.5 MB from Instagram's CDN; `audioUrl` 0.3 MB audio-only |
+| TikTok | `clockworks~tiktok-video-scraper` (`postURLs`, `shouldDownloadVideos`) | 17.2 s | 0.0043 | `mediaUrls[0]`: Apify's key-value store, 9.4 MB, needs the token (403 without) |
+| Facebook | `apify~facebook-posts-scraper` (`startUrls`) | 5.2 s | 0.006 | `browser_native_sd_url` 3.3 MB / HD 10.5 MB, fbcdn.net; no audio-only link |
+
+Rejected: `easyapi~facebook-video-download` (has an m4a link, but $0.183 a run). TikTok's actor
+also returns the caption (`text`), which TikTok's oEmbed never gives Pantrio.
+
+## Progress (20 October 2026, second PR: all three platforms)
+
+- `post_media.ACTORS`: one actor per platform with its input, fee and the paths of video links
+  (best first), caption, handle and length. `PANTRIO_MEDIA_PLATFORMS` narrows them (default
+  all three); `PANTRIO_PRICE_MEDIA_<PLATFORM>` overrides a fee. The generic actor settings of
+  the first PR are gone.
+- The token is sent only to `https://api.apify.com` (the actor run and TikTok's stored video),
+  never after a redirect elsewhere (`fetch_bytes(headers=, header_host=)`).
+- Instagram tries the video first (frames help with amounts shown on screen), then the
+  audio-only track. A length the service reports over 3 minutes is never fetched.
+- A TikTok link alone now works: when the platform shares no caption, the service's caption is
+  used, and the same run (paid once per import) serves the video later.
+- Web: the TikTok caption box no longer opens by itself when the service covers TikTok.
+
+Reel eval, 7 cases (adds a TikTok link with no caption and a Facebook "comment for the recipe"
+post), fees per platform: before `reel-2026-10-20T084302Z` vs after `reel-2026-10-20T084329Z`:
+found/refused 57% -> 100%, drafts with a method 67% -> 100%, 0 missed allergens both, food
+matching 100% / 98%, caption amounts 100% / 98%, service calls as expected 100% both,
+$0.0037 -> $0.0148 per import (fee $0.0026 + transcription $0.0012 on average), p50 6.9/10.7 s,
+p95 9.1/23.1 s. No prompt or model change in this PR, so the import eval was not rerun.
+
+Live, real Apify and OpenAI (owner's Mac):
+
+- Instagram test reel: "Spicy Sausage Lasagna with Vodka Sauce" by @zachs.foods, 17
+  ingredients, 7 steps from the video; Apify 6.8 s, video 11.5 MB in 1.7 s, decode 1.1 s,
+  transcription 2.1 s; caption read 10.6 s, video read 27.2 s; 57-88 s in total; $0.0027 fee +
+  $0.049 model and transcription. The video read spent 5,833 reasoning tokens (effort medium,
+  as for uploads). Follow-up: try effort low for this one call with the reel and video evals.
+- TikTok `@jose.elcook` feta pasta: caption from the service (oEmbed gave none), which had the
+  recipe (1 step), so no video was needed; $0.0043 fee + $0.010, 23 s.
+- Facebook Tasty meatball pasta: the caption's bzfd.it link led to the full recipe, so the
+  service never ran; $0.011, 12 s.
