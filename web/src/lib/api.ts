@@ -42,16 +42,22 @@ async function errorFrom(res: Response): Promise<ApiError> {
 // The API sleeps when idle (Render free plan), so the first request can take up to a minute.
 // Any request still waiting after SLOW_MS shows one shared toast until every slow one answers.
 const SLOW_MS = 3000
+const AWAKE_MS = 10 * 60 * 1000
 const WAKE_TOAST = "server-wake"
 let slow = 0
+// Any reply means the server is awake; a later slow request is a long job, not a cold start.
+let lastReply = 0
 
-function markSlow() {
+/** Returns false when the server answered recently, so a slow request is not a wake-up. */
+function markSlow(): boolean {
+  if (Date.now() - lastReply < AWAKE_MS) return false
   if (slow++ === 0)
     toast.loading("Waking up the Pantrila server…", {
       id: WAKE_TOAST,
       duration: Infinity,
       description: "It sleeps when idle. The first load can take a minute.",
     })
+  return true
 }
 
 function unmarkSlow() {
@@ -63,11 +69,12 @@ async function request(path: string, init: RequestInit): Promise<Response> {
   const start = Date.now()
   let counted = false
   const timer = setTimeout(() => {
-    counted = true
-    markSlow()
+    counted = markSlow()
   }, SLOW_MS)
   try {
-    return await fetch(`${API_URL}${path}`, init)
+    const res = await fetch(`${API_URL}${path}`, init)
+    lastReply = Date.now()
+    return res
   } catch (e) {
     if (e instanceof DOMException && e.name === "AbortError") throw e
     const secs = Math.round((Date.now() - start) / 1000)
