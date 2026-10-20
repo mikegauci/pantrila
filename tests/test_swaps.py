@@ -1,8 +1,8 @@
 import pytest
 
-from pantrio.constraints import recipe_problems
-from pantrio.schema import Allergen, DietTag, UserProfile
-from pantrio.swaps import evaluate_swap, swap_group, swap_options
+from pantrila.constraints import recipe_problems
+from pantrila.schema import Allergen, DietTag, UserProfile
+from pantrila.swaps import evaluate_swap, swap_group, swap_options
 
 
 @pytest.fixture
@@ -51,8 +51,8 @@ def test_swap_needs_a_food_the_recipe_uses(by_id):
 
 @pytest.mark.parametrize("food", ["egg", "butter", "mushroom"])
 def test_dessert_swaps_cannot_bypass_restriction(by_id, food):
-    from pantrio.schema import MealType
-    from pantrio.swaps import UnsupportedDessertSwap, swapped_recipe
+    from pantrila.schema import MealType
+    from pantrila.swaps import UnsupportedDessertSwap, swapped_recipe
 
     dessert = by_id["french-mushroom-omelette"].model_copy(
         update={"meal_types": [MealType.BREAKFAST, MealType.DESSERT]}

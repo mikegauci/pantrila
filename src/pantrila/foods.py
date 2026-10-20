@@ -1,4 +1,4 @@
-"""Pantrio's ingredient table: unit conversion, allergens and diet classes per food.
+"""Pantrila's ingredient table: unit conversion, allergens and diet classes per food.
 
 `data/ingredients.csv` maps each food key to a source-specific nutrition identity plus facts
 code needs to normalise and check recipes: density for volume units, weight per piece, the EU
@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
 
-from pantrio.schema import Allergen, DietTag, NutritionFacts, Unit
+from pantrila.schema import Allergen, DietTag, NutritionFacts, Unit
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data"
 

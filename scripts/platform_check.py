@@ -1,6 +1,6 @@
-"""Check which platforms let Pantrio read a post's caption (plan step 1 of social import).
+"""Check which platforms let Pantrila read a post's caption (plan step 1 of social import).
 
-Runs the real `social.fetch_post` (Pantrio's own user agent, the same guards as the app) on one
+Runs the real `social.fetch_post` (Pantrila's own user agent, the same guards as the app) on one
 post per platform and prints what came back, or the message the person would see. No model
 call, nothing saved. Run it where the platforms are reachable (not the cloud container):
 
@@ -15,8 +15,8 @@ from urllib.parse import quote
 
 import httpx
 
-from pantrio.recipe_import import USER_AGENT, ImportFailed
-from pantrio.social import clean_url, detect, fetch_post
+from pantrila.recipe_import import USER_AGENT, ImportFailed
+from pantrila.social import clean_url, detect, fetch_post
 
 DEFAULT_POSTS = [
     "https://www.tiktok.com/@jose.elcook/video/7448169436764212510",
@@ -26,7 +26,7 @@ DEFAULT_POSTS = [
 
 
 def raw_oembed(url: str) -> None:
-    """What TikTok's oEmbed endpoint answers Pantrio's user agent, redirects included."""
+    """What TikTok's oEmbed endpoint answers Pantrila's user agent, redirects included."""
     oembed = f"https://www.tiktok.com/oembed?url={quote(clean_url(url, 'tiktok'), safe='')}"
     r = httpx.get(oembed, headers={"User-Agent": USER_AGENT}, timeout=10)
     print(f"   oEmbed: {r.status_code} {r.headers.get('content-type', '-')}, "

@@ -19,11 +19,11 @@ from typing import Annotated, Literal, Protocol
 import psycopg
 from pydantic import BaseModel, Field, HttpUrl, field_validator, model_validator
 
-from pantrio.constraints import rule_problems
-from pantrio.foods import Food, UnitError, derive_allergens, derive_ingredient_diets, load_foods
-from pantrio.foods import to_grams as table_grams
-from pantrio.nutrition import nutrition_diets, recipe_nutrition
-from pantrio.schema import (
+from pantrila.constraints import rule_problems
+from pantrila.foods import Food, UnitError, derive_allergens, derive_ingredient_diets, load_foods
+from pantrila.foods import to_grams as table_grams
+from pantrila.nutrition import nutrition_diets, recipe_nutrition
+from pantrila.schema import (
     Allergen,
     DietTag,
     Ingredient,
@@ -41,7 +41,7 @@ Platform = Literal["tiktok", "instagram", "facebook"]
 
 
 class FoodFacts(BaseModel):
-    """Facts for a food missing from Pantrio's ingredient table, estimated by the model."""
+    """Facts for a food missing from Pantrila's ingredient table, estimated by the model."""
 
     description: str = Field(
         description="What the food is in plain words, e.g. 'gochujang (Korean chilli paste)'."
@@ -231,7 +231,7 @@ class SavedRecipe:
     recipe: CookbookRecipeIn
     created_at: datetime
     updated_at: datetime
-    photo_path: str | None = None  # in the recipe-photos bucket; see pantrio.photos
+    photo_path: str | None = None  # in the recipe-photos bucket; see pantrila.photos
 
 
 class Cookbook(Protocol):

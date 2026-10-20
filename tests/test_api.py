@@ -8,15 +8,15 @@ import pytest
 from fastapi.testclient import TestClient
 from openai.types.responses import ResponseFunctionToolCall
 
-from pantrio.api import Session, create_app
-from pantrio.auth import AuthError, User
-from pantrio.chats import MAX_THREADS_PER_USER, MemoryChats
-from pantrio.cookbook import MemoryCookbook
-from pantrio.pantry import MemoryKitchen
-from pantrio.photos import MemoryPhotos
-from pantrio.planner import PlanDraft
-from pantrio.records import MemoryRecords
-from pantrio.schema import MealType
+from pantrila.api import Session, create_app
+from pantrila.auth import AuthError, User
+from pantrila.chats import MAX_THREADS_PER_USER, MemoryChats
+from pantrila.cookbook import MemoryCookbook
+from pantrila.pantry import MemoryKitchen
+from pantrila.photos import MemoryPhotos
+from pantrila.planner import PlanDraft
+from pantrila.records import MemoryRecords
+from pantrila.schema import MealType
 from tests.conftest import CorpusStore
 
 OMELETTE, CHICKEN, CURRY, SALMON, NOODLES = (
@@ -114,9 +114,9 @@ def backend(corpus):
 
 @pytest.fixture
 def api(backend, monkeypatch):
-    monkeypatch.setenv("PANTRIO_PRICE_INPUT_PER_MTOK", "1")
-    monkeypatch.setenv("PANTRIO_PRICE_OUTPUT_PER_MTOK", "10")
-    monkeypatch.setenv("PANTRIO_MEDIA_SOURCE", "off")  # never the real video service
+    monkeypatch.setenv("PANTRILA_PRICE_INPUT_PER_MTOK", "1")
+    monkeypatch.setenv("PANTRILA_PRICE_OUTPUT_PER_MTOK", "10")
+    monkeypatch.setenv("PANTRILA_MEDIA_SOURCE", "off")  # never the real video service
     with TestClient(create_app(backend, verify)) as client:
         client.headers["Authorization"] = "Bearer alice"
         yield client
@@ -320,13 +320,13 @@ def test_planning_error_is_streamed_and_logged(api, backend):
 
 
 def test_daily_limits(api, backend, monkeypatch):
-    monkeypatch.setenv("PANTRIO_DAILY_CHATS", "1")
+    monkeypatch.setenv("PANTRILA_DAILY_CHATS", "1")
     backend.client.replies = [text_reply("Fold gently.")]
     assert api.post("/chat", json={"message": "Fluffy omelette?"}).status_code == 200
     r = api.post("/chat", json={"message": "Again?"})
     assert r.status_code == 429
 
-    monkeypatch.setenv("PANTRIO_DAILY_BUDGET_USD", "0.001")
+    monkeypatch.setenv("PANTRILA_DAILY_BUDGET_USD", "0.001")
     bob = {"Authorization": "Bearer bob"}
     assert api.post("/chat", json={"message": "Hi"}, headers=bob).status_code == 503
     assert api.post("/plans", headers=bob).status_code == 503
@@ -486,7 +486,7 @@ def test_cookbook_refuses_lines_it_cannot_derive(api):
 
 
 def imported_reply() -> SimpleNamespace:
-    from pantrio.recipe_import import ImportedRecipe
+    from pantrila.recipe_import import ImportedRecipe
 
     parsed = ImportedRecipe.model_validate({
         "is_recipe": True, "title": "Toast", "summary": "", "cuisine": "", "total_minutes": 5,
@@ -498,7 +498,7 @@ def imported_reply() -> SimpleNamespace:
 
 
 def test_link_import_returns_a_draft_logs_usage_and_saves_nothing(api, backend, monkeypatch):
-    import pantrio.recipe_import as ri
+    import pantrila.recipe_import as ri
 
     monkeypatch.setattr(ri, "fetch_page", lambda url, http=None, resolve=None:
                         (url, "<p>Toast: 2 slices of bread</p>"))  # fmt: skip
@@ -520,7 +520,7 @@ def test_bad_links_fail_before_any_paid_call(api):
 
 
 def test_post_import_reads_the_caption_and_keeps_the_credit(api, backend, monkeypatch):
-    import pantrio.recipe_import as ri
+    import pantrila.recipe_import as ri
 
     post = "https://www.tiktok.com/@toastqueen/video/7300000000000000001"
     oembed = json.dumps({"title": "Toast 🍞 2 slices of bread #breakfast",
@@ -557,7 +557,7 @@ def test_text_import_and_bad_handles(api, backend):
 
 
 def test_post_imports_share_the_daily_import_cap(api, backend, monkeypatch):
-    monkeypatch.setenv("PANTRIO_DAILY_IMPORTS", "1")
+    monkeypatch.setenv("PANTRILA_DAILY_IMPORTS", "1")
     backend.client.replies = [imported_reply()]
     assert api.post("/me/recipes/import/post", json={"caption": "Toast: bread"}).status_code == 200
     assert api.post("/me/recipes/import/post", json={"caption": "Toast"}).status_code == 429
@@ -569,7 +569,7 @@ def test_video_upload_endpoint_is_removed(api):
 
 
 def test_imports_are_capped_per_day(api, backend, monkeypatch):
-    monkeypatch.setenv("PANTRIO_DAILY_IMPORTS", "1")
+    monkeypatch.setenv("PANTRILA_DAILY_IMPORTS", "1")
     png = "data:image/png;base64,iVBORw0KGgo="
     backend.client.replies = [imported_reply()]
     assert api.post("/me/recipes/import/photos", json={"images": [png]}).status_code == 200
@@ -583,8 +583,8 @@ def test_imports_are_capped_per_day(api, backend, monkeypatch):
 @pytest.fixture
 def photo_env(monkeypatch):
     monkeypatch.setenv("SUPABASE_URL", "https://example.supabase.co")
-    monkeypatch.setenv("PANTRIO_PRICE_IMAGE_INPUT_PER_MTOK", "5")
-    monkeypatch.setenv("PANTRIO_PRICE_IMAGE_OUTPUT_PER_MTOK", "30")
+    monkeypatch.setenv("PANTRILA_PRICE_IMAGE_INPUT_PER_MTOK", "5")
+    monkeypatch.setenv("PANTRILA_PRICE_IMAGE_OUTPUT_PER_MTOK", "30")
 
 
 def test_corpus_recipes_carry_their_photo_url(api, backend, photo_env):
@@ -635,7 +635,7 @@ def test_cookbook_photo_can_be_removed(api, backend, photo_env):
 def test_cookbook_photos_are_capped_and_failures_logged(api, backend, photo_env, monkeypatch):
     import openai
 
-    monkeypatch.setenv("PANTRIO_DAILY_PHOTOS", "2")
+    monkeypatch.setenv("PANTRILA_DAILY_PHOTOS", "2")
     rid = api.post("/me/recipes", json=TOAST).json()["id"]
     backend.client.image_error = openai.APIConnectionError(request=None)
     r = api.post(f"/me/recipes/{rid}/photo")
@@ -697,7 +697,7 @@ def test_concurrent_chat_requests_cannot_share_the_last_allowance(api, backend, 
     import threading
     from concurrent.futures import ThreadPoolExecutor
 
-    monkeypatch.setenv("PANTRIO_DAILY_CHATS", "1")
+    monkeypatch.setenv("PANTRILA_DAILY_CHATS", "1")
     entered, release = threading.Event(), threading.Event()
 
     def respond(**kwargs):
@@ -720,23 +720,23 @@ def test_concurrent_chat_requests_cannot_share_the_last_allowance(api, backend, 
 
 
 def test_search_is_metered_and_budget_checked(api, backend, monkeypatch):
-    monkeypatch.setenv("PANTRIO_DAILY_SEARCHES", "1")
+    monkeypatch.setenv("PANTRILA_DAILY_SEARCHES", "1")
     assert api.get("/recipes", params={"q": "eggs"}).status_code == 200
     assert api.get("/recipes", params={"q": "eggs"}).status_code == 429
     assert api.get("/recipes").status_code == 200  # browsing has no embedding call
     assert api.get("/me/usage").json()["events"][0]["kind"] == "search"
-    monkeypatch.setenv("PANTRIO_DAILY_BUDGET_USD", "0.0001")
+    monkeypatch.setenv("PANTRILA_DAILY_BUDGET_USD", "0.0001")
     assert api.get("/recipes?q=salmon", headers={"Authorization": "Bearer bob"}).status_code == 503
 
 
 def test_unexpected_plan_failure_records_partial_usage(api, backend, monkeypatch):
-    from pantrio.planner import Usage
+    from pantrila.planner import Usage
 
     def failed(self, profile, on_step=None):
         self.usage = Usage(llm_calls=1, input_tokens=1000, output_tokens=100, embed_tokens=20)
         raise RuntimeError("failure after a successful paid call")
 
-    monkeypatch.setattr("pantrio.api.Planner.plan", failed)
+    monkeypatch.setattr("pantrila.api.Planner.plan", failed)
     events = sse(api.post("/plans").text)
     assert events[-1][0] == "error"
     event = api.get("/me/usage").json()["events"][0]
@@ -844,13 +844,13 @@ def test_dessert_swap_api_rejects_suggestions_and_direct_calls(api, backend, rep
 
 
 def test_post_import_hears_the_reel_under_its_own_daily_cap(backend, monkeypatch):
-    from pantrio import post_media
+    from pantrila import post_media
     from tests.test_post_media import CAPTION, MP4, FakeMedia, caption_only, heard
 
-    monkeypatch.setenv("PANTRIO_PRICE_INPUT_PER_MTOK", "1")
-    monkeypatch.setenv("PANTRIO_PRICE_OUTPUT_PER_MTOK", "10")
-    monkeypatch.setenv("PANTRIO_PRICE_TRANSCRIBE_PER_MIN", "0.003")
-    monkeypatch.setenv("PANTRIO_DAILY_REEL_FETCHES", "1")
+    monkeypatch.setenv("PANTRILA_PRICE_INPUT_PER_MTOK", "1")
+    monkeypatch.setenv("PANTRILA_PRICE_OUTPUT_PER_MTOK", "10")
+    monkeypatch.setenv("PANTRILA_PRICE_TRANSCRIBE_PER_MIN", "0.003")
+    monkeypatch.setenv("PANTRILA_DAILY_REEL_FETCHES", "1")
     monkeypatch.setattr(post_media, "fetch_video", lambda url, *args: MP4)
     media = FakeMedia()
     reply = lambda parsed: SimpleNamespace(output=[], output_parsed=parsed, usage=USAGE)  # noqa: E731
@@ -897,7 +897,7 @@ def test_estimated_amounts_survive_preview_save_read_and_edit(api):
 
 
 def test_import_repairs_amounts_under_one_quota_and_accounts_for_both_calls(api, backend):
-    from pantrio.recipe_import import AmountRepairs, ImportedRecipe
+    from pantrila.recipe_import import AmountRepairs, ImportedRecipe
 
     recipe = imported_reply().output_parsed.model_dump()
     recipe["ingredients"] = [
@@ -928,7 +928,7 @@ def test_import_repairs_amounts_under_one_quota_and_accounts_for_both_calls(api,
 def test_import_timing_is_scoped_to_the_user_and_costs_no_allowance(api, backend):
     from datetime import UTC, datetime, timedelta
 
-    from pantrio.records import UsageEvent
+    from pantrila.records import UsageEvent
 
     now = datetime.now(UTC)
     with backend.session("alice") as session:

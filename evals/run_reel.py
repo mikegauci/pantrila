@@ -32,14 +32,14 @@ from evals.run_import import draft_allergens
 from evals.run_video import amount_ok, pair_lines
 from evals.video_audio import AUDIO, frame_urls
 from evals.video_cases import load_cases as load_videos
-from pantrio import config, post_media
-from pantrio.cookbook import CookbookRecipeIn
-from pantrio.post_media import ACTORS, MediaFailed, PostVideo, VideoMedia
-from pantrio.recipe_import import NO_METHOD_STEP, Importer, ImportFailed
+from pantrila import config, post_media
+from pantrila.cookbook import CookbookRecipeIn
+from pantrila.post_media import ACTORS, MediaFailed, PostVideo, VideoMedia
+from pantrila.recipe_import import NO_METHOD_STEP, Importer, ImportFailed
 
 REPORTS = Path(__file__).parent / "reports"
 VIDEOS = {v["id"]: v for v in load_videos()}
-MEDIA_HOST = "https://media.pantrio-eval.example/"
+MEDIA_HOST = "https://media.pantrila-eval.example/"
 
 
 class EvalMedia:
@@ -60,7 +60,7 @@ class EvalMedia:
         self.calls += 1
         self.cost += self.fee_for(platform)
         return PostVideo([f"{MEDIA_HOST}{self.case['video']}.mp4"], self.case["service_caption"],
-                         "pantrio.eval")  # fmt: skip
+                         "pantrila.eval")  # fmt: skip
 
 
 def fake_fetch(url: str, http=None, resolve=None, headers=None) -> bytes:
@@ -187,7 +187,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         return "n/a" if v is None else f"{v:.0%}"
 
     def usd(v):
-        return "n/a (set PANTRIO_PRICE_*)" if v is None else f"${v:.4f}"
+        return "n/a (set PANTRILA_PRICE_*)" if v is None else f"${v:.4f}"
 
     def secs(v):
         return "n/a" if v is None else f"{v / 1000:.1f}s"
@@ -243,7 +243,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Pantrio reel eval")
+    parser = argparse.ArgumentParser(description="Pantrila reel eval")
     parser.add_argument("--only", help="comma-separated case ids")
     parser.add_argument("--media", choices=("on", "off"), default="on",
                         help="off is the before: caption and links only")  # fmt: skip

@@ -126,7 +126,7 @@ function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
         </Button>
       </div>
       <p className="text-[12px] text-muted-foreground">
-        Pantrio reads the recipe data the site publishes (or the page text) and keeps the link as the source.
+        Pantrila reads the recipe data the site publishes (or the page text) and keeps the link as the source.
       </p>
       {busy && estimatedSeconds !== null && <ImportCountdown estimatedSeconds={estimatedSeconds} />}
       {error && <p role="alert" className="text-[13px] text-danger">{error}</p>}
@@ -134,7 +134,7 @@ function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
   )
 }
 
-/** Mirrors `social.detect` on the server: links Pantrio reads as a post's caption. */
+/** Mirrors `social.detect` on the server: links Pantrila reads as a post's caption. */
 const POST_LINK = new RegExp(
   "^(https?://)?(" +
     "(vm|vt)\\.tiktok\\.com/|((www|m)\\.)?tiktok\\.com/(@[\\w.]+/(video|photo)/\\d|t/)" +
@@ -182,7 +182,7 @@ function PostImport({ onDone }: { onDone: (v: ImportView) => void }) {
                onChange={(e) => setUrl(e.target.value)} className="h-12 bg-surface text-[15px]" />
         {link && !POST_LINK.test(link) && (
           <p className="text-[12px] text-muted-foreground">
-            Pantrio will read this link as a recipe page.
+            Pantrila will read this link as a recipe page.
           </p>
         )}
       </div>
@@ -191,7 +191,7 @@ function PostImport({ onDone }: { onDone: (v: ImportView) => void }) {
       </Button>
       {busy && estimatedSeconds !== null && <ImportCountdown estimatedSeconds={estimatedSeconds} />}
       <p className="text-[12px] text-muted-foreground">
-        Pantrio reads the recipe from your post and credits the creator.
+        Pantrila reads the recipe from your post and credits the creator.
       </p>
       {error && <p role="alert" className="text-[13px] text-danger">{error}</p>}
     </form>

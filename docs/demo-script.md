@@ -7,14 +7,14 @@ fresh guest session so the daily caps are full.
 ## Before recording
 
 - Browser zoom 100%, a clean window, notifications off.
-- In a second tab: the LangSmith "Pantrio live" dashboard and one `plan` trace.
+- In a second tab: the LangSmith "Pantrila live" dashboard and one `plan` trace.
 - In a third tab: `evals/reports/planner-2026-10-16T084243Z.md` on GitHub.
 
 ## Script
 
 | Time | Screen | Say |
 |---|---|---|
-| 0:00 | Login page | "Pantrio plans a week of meals around your diet, allergies and what's already in your kitchen. The AI suggests, but every recipe and plan is checked by plain code before you see it." Click **Try it as a guest**. |
+| 0:00 | Login page | "Pantrila plans a week of meals around your diet, allergies and what's already in your kitchen. The AI suggests, but every recipe and plan is checked by plain code before you see it." Click **Try it as a guest**. |
 | 0:15 | Profile | Pick the vegetarian diet, peanut and tree nut allergies, 1900 kcal and an 80 g protein minimum, then Greek and Indian cuisines. "These are hard rules, except the targets, which are goals." Save. |
 | 0:35 | Pantry | Add spinach, feta, chickpeas, eggs. "Free text is matched to a table of 207 foods: 'Eggs' becomes egg, and a typo gets suggestions instead of a guess." |
 | 0:50 | Recipes | Search "quick dinner with chickpeas and spinach". Point at the green banner: "Only recipes that suit me. The allergy and diet filters are SQL clauses that run before the search, so the model never sees a recipe with nuts." Toggle **Only what suits me** off to show a red rule-breaking badge, then back on. |

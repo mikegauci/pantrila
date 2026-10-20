@@ -5,10 +5,10 @@ from types import SimpleNamespace
 import pytest
 from openai.types.responses import ResponseFunctionToolCall
 
-from pantrio import config
-from pantrio.constraints import check_plan, hard_violations
-from pantrio.planner import MAX_REPAIRS, MAX_TOOL_ROUNDS, PlanDraft, Planner, PlanningError
-from pantrio.schema import Allergen, MealType, NutritionTargets, UserProfile
+from pantrila import config
+from pantrila.constraints import check_plan, hard_violations
+from pantrila.planner import MAX_REPAIRS, MAX_TOOL_ROUNDS, PlanDraft, Planner, PlanningError
+from pantrila.schema import Allergen, MealType, NutritionTargets, UserProfile
 from tests.conftest import CorpusStore
 
 B, D = MealType.BREAKFAST, MealType.DINNER

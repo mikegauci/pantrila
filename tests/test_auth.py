@@ -6,7 +6,7 @@ import jwt
 import pytest
 from cryptography.hazmat.primitives.asymmetric import ec
 
-from pantrio.auth import AuthError, TokenVerifier
+from pantrila.auth import AuthError, TokenVerifier
 
 URL = "https://example.supabase.co"
 KEY = ec.generate_private_key(ec.SECP256R1())

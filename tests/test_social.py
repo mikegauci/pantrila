@@ -4,8 +4,8 @@ from urllib.parse import quote
 import httpx
 import pytest
 
-from pantrio.recipe_import import ImportedRecipe, Importer, ImportFailed
-from pantrio.social import (
+from pantrila.recipe_import import ImportedRecipe, Importer, ImportFailed
+from pantrila.social import (
     NO_RECIPE,
     caption_links,
     clean_handle,
@@ -105,7 +105,7 @@ def test_tiktok_short_link_to_somewhere_else_is_refused():
     http = mock_http({"https://vm.tiktok.com/ZMabc/": httpx.Response(
         302, headers={"location": "https://example.com/"}),
         "https://example.com/": httpx.Response(200, html="<p>hi</p>")})  # fmt: skip
-    with pytest.raises(ImportFailed, match="TikTok didn't let Pantrio read this post"):
+    with pytest.raises(ImportFailed, match="TikTok didn't let Pantrila read this post"):
         fetch_post("https://vm.tiktok.com/ZMabc/", http, resolve)
 
 
@@ -115,7 +115,7 @@ def test_tiktok_short_link_to_somewhere_else_is_refused():
 )
 def test_tiktok_refusal_or_empty_caption_suggests_another_link(response):
     http = mock_http({oembed(TIKTOK): response})
-    with pytest.raises(ImportFailed, match="TikTok didn't let Pantrio read this post"):
+    with pytest.raises(ImportFailed, match="TikTok didn't let Pantrila read this post"):
         fetch_post(TIKTOK, http, resolve)
 
 
@@ -144,7 +144,7 @@ def test_instagram_login_redirect_suggests_another_link():
     })  # fmt: skip
     with pytest.raises(
         ImportFailed,
-        match="Instagram didn't let Pantrio read this post. Try another public recipe link",
+        match="Instagram didn't let Pantrila read this post. Try another public recipe link",
     ):
         fetch_post(url, http, resolve)
 
@@ -239,7 +239,7 @@ def test_unreadable_links_are_skipped_and_no_recipe_anywhere_says_what_to_do_nex
 
 
 def test_plain_recipe_links_still_go_through_the_link_import(monkeypatch):
-    import pantrio.recipe_import as ri
+    import pantrila.recipe_import as ri
 
     monkeypatch.setattr(ri, "fetch_page", lambda url, http=None, resolve=None:
                         (url, "<p>Egg pasta: 2 eggs</p>"))  # fmt: skip
@@ -278,7 +278,7 @@ def test_profiles_and_sign_in_pages_are_not_posts():
 
 
 def test_facebook_query_keeps_only_the_post_id():
-    from pantrio.social import clean_url
+    from pantrila.social import clean_url
 
     url = "https://www.facebook.com/watch/?v=123&mibextid=abc&fbclid=XYZ#x"
     assert clean_url(url, "facebook") == "https://www.facebook.com/watch/?v=123"
@@ -290,7 +290,7 @@ def test_facebook_sign_in_wall_suggests_another_link():
     assert facebook_caption(wall) == ""
     url = "https://www.facebook.com/samcooks/videos/123/"
     page = f'<meta property="og:description" content="{wall["og:description"]}">'
-    with pytest.raises(ImportFailed, match="Facebook didn't let Pantrio read this post"):
+    with pytest.raises(ImportFailed, match="Facebook didn't let Pantrila read this post"):
         fetch_post(url, mock_http({url: httpx.Response(200, html=page)}), resolve)
 
 
@@ -355,12 +355,12 @@ def test_short_links_are_kept_so_print_recipe_links_work():
 def test_tiktok_oembed_with_only_the_player_suggests_another_link():
     player_only = {"version": "1.0", "type": "video", "html": "<iframe></iframe>"}
     http = mock_http({oembed(TIKTOK): httpx.Response(200, json=player_only)})
-    with pytest.raises(ImportFailed, match="TikTok didn't let Pantrio read this post"):
+    with pytest.raises(ImportFailed, match="TikTok didn't let Pantrila read this post"):
         fetch_post(TIKTOK, http, resolve)
 
 
 def test_from_a_link_suggests_another_public_recipe_link(monkeypatch):
-    from pantrio.social import NO_RECIPE_LINK
+    from pantrila.social import NO_RECIPE_LINK
 
     def no_recipe(self, *args):
         raise ImportFailed(NO_RECIPE)
@@ -384,7 +384,7 @@ LASAGNA = ("Spicy Sausage Vodka Lasagna 🤤 Full recipe in my bio :) #pasta\n\n
 
 
 def test_caption_with_only_ingredients_becomes_a_draft_that_asks_for_the_method():
-    from pantrio.recipe_import import NO_METHOD, NO_METHOD_STEP
+    from pantrila.recipe_import import NO_METHOD, NO_METHOD_STEP
 
     lines = ("1 lb spicy Italian sausage", "3 garlic cloves", "2 tbsp vodka")
     client = FakeClient(ingredients_only(*lines))

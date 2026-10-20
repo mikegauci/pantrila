@@ -73,7 +73,7 @@ export default function MyRecipesPage() {
       </div>
       <p className="text-[13px] text-muted-foreground">
         Recipes you add from a photo, a link or by typing them in. Only you can see them. Nutrition,
-        allergens and diets are worked out from the ingredients, as for every Pantrio recipe; they are
+        allergens and diets are worked out from the ingredients, as for every Pantrila recipe; they are
         not used in meal plans.
       </p>
       {error ? (

@@ -4,7 +4,7 @@ import io
 
 from PIL import Image
 
-from pantrio.photos import (
+from pantrila.photos import (
     STORED_SIZE,
     Dish,
     corpus_path,

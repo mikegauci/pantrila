@@ -13,8 +13,8 @@ from typing import Protocol
 
 import psycopg
 
-from pantrio.foods import load_foods, to_grams
-from pantrio.schema import PantryItem, Unit, UserProfile
+from pantrila.foods import load_foods, to_grams
+from pantrila.schema import PantryItem, Unit, UserProfile
 
 # Spellings people use that normalising alone does not reach.
 ALIASES = {

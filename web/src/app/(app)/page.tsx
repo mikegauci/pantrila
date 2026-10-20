@@ -3,7 +3,7 @@
 import { ArrowRight, CalendarDays, Refrigerator, ShoppingBasket } from "lucide-react"
 import Link from "next/link"
 
-import { AskPantrio } from "@/components/ask-pantrio"
+import { AskPantrila } from "@/components/ask-pantrila"
 import { EmptyState, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
 import { MacroRing } from "@/components/macro-ring"
 import { buttonVariants } from "@/components/ui/button"
@@ -36,7 +36,7 @@ export default function HomePage() {
         <p className="text-muted-foreground">Here is what is cooking today.</p>
       </div>
 
-      <AskPantrio />
+      <AskPantrila />
 
       {plan && (
         <ProblemAlert
@@ -86,7 +86,7 @@ export default function HomePage() {
               title="No meal plan yet"
               action={<Link href="/plan" className={buttonVariants({ size: "lg" })}>Plan my week</Link>}
             >
-              Pantrio picks a week of recipes that respects your allergies and diet, uses your pantry
+              Pantrila picks a week of recipes that respects your allergies and diet, uses your pantry
               first and aims at your nutrition targets.
             </EmptyState>
           )}
@@ -128,7 +128,7 @@ export default function HomePage() {
           ) : (
             <div className="flex items-start gap-3">
               <Refrigerator className="size-5 shrink-0 text-[#a65a00]" aria-hidden />
-              <p>Tell Pantrio what is in your kitchen and it will plan around it.</p>
+              <p>Tell Pantrila what is in your kitchen and it will plan around it.</p>
             </div>
           )}
         </Panel>

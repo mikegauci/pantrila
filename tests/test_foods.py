@@ -2,7 +2,7 @@ import csv
 
 import pytest
 
-from pantrio.foods import (
+from pantrila.foods import (
     DATA_DIR,
     UnitError,
     derive_allergens,
@@ -10,7 +10,7 @@ from pantrio.foods import (
     load_foods,
     to_grams,
 )
-from pantrio.schema import Allergen, DietTag, Unit
+from pantrila.schema import Allergen, DietTag, Unit
 
 
 def test_every_ingredient_has_usda_values():

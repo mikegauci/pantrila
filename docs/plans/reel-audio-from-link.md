@@ -8,7 +8,7 @@ plan builds on its `NO_METHOD` draft. Tick the checklist and record findings her
 
 Pasting a reel link today reads only the caption (and a recipe site it links). When the method
 is only spoken in the video, the person has to screen-record the reel and upload it (PR #37),
-which the owner finds too many steps. Goal: paste the link, tap "Read recipe", and Pantrio also
+which the owner finds too many steps. Goal: paste the link, tap "Read recipe", and Pantrila also
 hears the video, like ReciMe (caption -> audio -> original website).
 
 ## What was checked (20 October 2026)
@@ -16,8 +16,8 @@ hears the video, like ReciMe (caption -> audio -> original website).
 - Test reel: `instagram.com/reel/Dclv5Rgizvm` (@zachs.foods, "Spicy Sausage Vodka Lasagna").
   Its caption (497 characters, read fine from Open Graph tags) lists 15 ingredients with amounts
   and says "Full recipe in my bio"; the creator speaks the method in the video.
-- Instagram's public page gives apps like Pantrio no video: no `og:video` tag (owner's Mac,
-  Pantrio's user agent). TikTok gives neither caption nor video. So the audio can only come
+- Instagram's public page gives apps like Pantrila no video: no `og:video` tag (owner's Mac,
+  Pantrila's user agent). TikTok gives neither caption nor video. So the audio can only come
   from a third-party scraping service. Decision (owner): use one, knowing it goes against
   Instagram's terms more clearly than reading the caption does. ReciMe's help pages describe
   caption -> audio -> website but not how it gets the audio.
@@ -51,7 +51,7 @@ hears the video, like ReciMe (caption -> audio -> original website).
 2. A recipe website linked in the caption (free fetch, one paid call) -> done.
 3. **Audio** (new): only when 1 and 2 give no full recipe (no recipe, or the caption's
    ingredients with no method), the media source is configured, and the platform is one the
-   chosen actor supports. The service returns the video link -> Pantrio fetches the video
+   chosen actor supports. The service returns the video link -> Pantrila fetches the video
    (SSRF guards, size cap) -> extracts 16 kHz mono WAV and 4 frames in memory -> discards the
    video -> the existing video extraction (`VIDEO_INSTRUCTIONS`, `VideoRecipe`) reads
    transcript + frames + the caption. The caption's exact amounts and the spoken method end
@@ -65,9 +65,9 @@ transcription. Revisit if the eval shows otherwise.
 
 ### Code
 
-- `src/pantrio/post_media.py` (new): `MediaSource` protocol, `video_for(post_url) -> PostVideo
+- `src/pantrila/post_media.py` (new): `MediaSource` protocol, `video_for(post_url) -> PostVideo
   | None` (video link, caption and handle if the service gives them); `ApifyMedia`
-  (`APIFY_TOKEN`, `PANTRIO_APIFY_ACTOR`, one synchronous run with a timeout of about 60 s);
+  (`APIFY_TOKEN`, `PANTRILA_APIFY_ACTOR`, one synchronous run with a timeout of about 60 s);
   `NoMedia` (off). Built from settings like the photo store; tests pass a fake.
 - Video fetch: reuse `recipe_import.fetch_page` with `kinds=("video/mp4", ...)` and a separate
   byte cap (about 60 MB; one reel at 1080p for 90 s is roughly 10-30 MB). Never written to
@@ -79,10 +79,10 @@ transcription. Revisit if the eval shows otherwise.
 - `Importer.from_video` gets an internal entry that takes WAV bytes and frames directly (the
   browser path keeps its data URLs). `from_post` calls it at step 3 with the caption.
 - Settings (`.env.example`, `render.yaml` with `sync: false` for the token): `APIFY_TOKEN`,
-  `PANTRIO_MEDIA_SOURCE=apify|off` (default off, so the app works without an account),
-  `PANTRIO_APIFY_ACTOR`, `PANTRIO_PRICE_MEDIA_PER_FETCH` (USD per service run, for cost
-  reports), `PANTRIO_DAILY_REEL_FETCHES` (per-user cap, default 10; the service fee is real
-  money). Raise `PANTRIO_RESERVE_IMPORT_USD` if needed so a reel import's reservation covers
+  `PANTRILA_MEDIA_SOURCE=apify|off` (default off, so the app works without an account),
+  `PANTRILA_APIFY_ACTOR`, `PANTRILA_PRICE_MEDIA_PER_FETCH` (USD per service run, for cost
+  reports), `PANTRILA_DAILY_REEL_FETCHES` (per-user cap, default 10; the service fee is real
+  money). Raise `PANTRILA_RESERVE_IMPORT_USD` if needed so a reel import's reservation covers
   service + transcription + two model calls.
 - Usage: one `import` event as today; its cost adds the service fee and transcription;
   `ImportView` keeps `transcription_cost_usd` and gains `media_cost_usd`.
@@ -101,10 +101,10 @@ transcription. Revisit if the eval shows otherwise.
 
 ### Privacy and terms
 
-- README Limitations and the import screen's small print say that for posts Pantrio uses a
+- README Limitations and the import screen's small print say that for posts Pantrila uses a
   third-party service to hear the video, that the video is not stored, and that it may stop
   working when platforms change.
-- Only public posts; never the owner's login, cookies or a spoofed browser on Pantrio's side.
+- Only public posts; never the owner's login, cookies or a spoofed browser on Pantrila's side.
 
 ## Evals (before/after required: new path, and the video prompt is used for posts)
 
@@ -122,7 +122,7 @@ transcription. Revisit if the eval shows otherwise.
 
 - Order: full caption -> no service call; ingredients-only caption -> service -> merged draft;
   service failure / timeout / too-long video -> ingredients-only draft or the old message;
-  `PANTRIO_MEDIA_SOURCE=off` -> today's behaviour exactly.
+  `PANTRILA_MEDIA_SOURCE=off` -> today's behaviour exactly.
 - Video fetch: size cap, wrong content type, SSRF guards on the video link; temp file removed.
 - PyAV extraction on a small committed MP4 fixture (WAV rate, mono, length; 4 frames).
 - API: per-user reel cap, cost in the usage event, token never in responses or logs.
@@ -136,17 +136,17 @@ transcription. Revisit if the eval shows otherwise.
 - [x] Web progress text and notes; Playwright case with the service mocked
 - [x] Eval cases and before/after reports (numbers in the PR)
 - [x] Live check on the owner's Mac (below)
-- [ ] `APIFY_TOKEN` and `PANTRIO_MEDIA_SOURCE=apify` on Render (owner); live check on the
+- [ ] `APIFY_TOKEN` and `PANTRILA_MEDIA_SOURCE=apify` on Render (owner); live check on the
       deployed app (does Instagram's / Facebook's CDN serve Render's addresses?)
 - [x] README (Limitations, privacy line), CLAUDE.md Status/Layout/Commands
 
 ## Progress (20 October 2026, first PR)
 
-Built behind `PANTRIO_MEDIA_SOURCE` (default `off`, so production is unchanged until the owner
+Built behind `PANTRILA_MEDIA_SOURCE` (default `off`, so production is unchanged until the owner
 sets it), before step 0, so the actor choice only changes settings:
 
-- `post_media.py`: `ApifyMedia` (any actor: `PANTRIO_APIFY_ACTOR`, input template
-  `PANTRIO_APIFY_INPUT` with `{url}`, video link found by known keys such as `videoUrl` or any
+- `post_media.py`: `ApifyMedia` (any actor: `PANTRILA_APIFY_ACTOR`, input template
+  `PANTRILA_APIFY_INPUT` with `{url}`, video link found by known keys such as `videoUrl` or any
   `.mp4`; token in the `Authorization` header), `NoMedia`, `fetch_video` (the page fetcher's
   SSRF guards via the new `recipe_import.fetch_bytes`, 60 MB / 30 s, refused when larger),
   `read_video` (PyAV in memory: 16 kHz mono WAV and frames at 15/40/65/90%, over 3 min
@@ -155,7 +155,7 @@ sets it), before step 0, so the actor choice only changes settings:
   platform) -> fallback. A video draft that still has no method does not replace the caption's.
 - Cap and cost (a deviation from "one import event"): each service run is its own usage kind
   `reel` (migration `20261020100000_reel_usage`, applied on Supabase) so the per-user cap
-  (`PANTRIO_DAILY_REEL_FETCHES`, default 10) uses the same reservations as everything else; the
+  (`PANTRILA_DAILY_REEL_FETCHES`, default 10) uses the same reservations as everything else; the
   import event keeps model + transcription, the `reel` event the fee. `ImportView.cost_usd`
   adds both; `media_cost_usd` is the fee. Over the cap, the import quietly uses the caption.
 - Prompt: one line added to the steps rule ("only steps the source gives; no method -> empty")
@@ -178,7 +178,7 @@ Evals (`gpt-5.4-mini`, fake service at an assumed $0.003 per run):
   p95 12.6 -> 8.9 s.
 
 Next (owner): Apify account + `APIFY_TOKEN` in `.env`, run `scripts/reel_media_check.py` on
-2-3 actors, choose one, then on Render set `PANTRIO_MEDIA_SOURCE=apify`, `APIFY_TOKEN`, the
+2-3 actors, choose one, then on Render set `PANTRILA_MEDIA_SOURCE=apify`, `APIFY_TOKEN`, the
 actor, its input, platforms and fee; live check on the test reel and record it here.
 
 ## Risks
@@ -198,13 +198,13 @@ actor, its input, platforms and fee; live check on the test reel and record it h
 | Facebook | `apify~facebook-posts-scraper` (`startUrls`) | 5.2 s | 0.006 | `browser_native_sd_url` 3.3 MB / HD 10.5 MB, fbcdn.net; no audio-only link |
 
 Rejected: `easyapi~facebook-video-download` (has an m4a link, but $0.183 a run). TikTok's actor
-also returns the caption (`text`), which TikTok's oEmbed never gives Pantrio.
+also returns the caption (`text`), which TikTok's oEmbed never gives Pantrila.
 
 ## Progress (20 October 2026, second PR: all three platforms)
 
 - `post_media.ACTORS`: one actor per platform with its input, fee and the paths of video links
-  (best first), caption, handle and length. `PANTRIO_MEDIA_PLATFORMS` narrows them (default
-  all three); `PANTRIO_PRICE_MEDIA_<PLATFORM>` overrides a fee. The generic actor settings of
+  (best first), caption, handle and length. `PANTRILA_MEDIA_PLATFORMS` narrows them (default
+  all three); `PANTRILA_PRICE_MEDIA_<PLATFORM>` overrides a fee. The generic actor settings of
   the first PR are gone.
 - The token is sent only to `https://api.apify.com` (the actor run and TikTok's stored video),
   never after a redirect elsewhere (`fetch_bytes(headers=, header_host=)`).

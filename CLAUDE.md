@@ -2,10 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-# Pantrio
+# Pantrila
 
-AI cooking and meal-planning assistant. A user tells Pantrio what is in their kitchen, their
-diet, allergies and nutrition targets; Pantrio finds recipes with RAG over a recipe corpus,
+AI cooking and meal-planning assistant. A user tells Pantrila what is in their kitchen, their
+diet, allergies and nutrition targets; Pantrila finds recipes with RAG over a recipe corpus,
 plans a week of meals with a LangGraph agent that uses tool calling, builds a grocery list
 from what is missing, and answers cooking questions in a chat. Every plan is checked by
 deterministic rules (allergens, diet, nutrition targets) before the user sees it.
@@ -15,7 +15,7 @@ latency per plan, and clear architecture matter as much as features.
 
 ## Build plan
 
-1. **Recipe corpus + RAG + retrieval evals**: Python package `pantrio`, recipe and ingredient
+1. **Recipe corpus + RAG + retrieval evals**: Python package `pantrila`, recipe and ingredient
    models, ingestion into Postgres with pgvector embeddings, hybrid search (vector + full text
    + filters), labelled retrieval queries with recall@k and MRR.
 2. **Meal-planning agent**: LangGraph workflow (profile → retrieve → draft plan → check
@@ -33,6 +33,14 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Rename Pantrio -> Pantrila: package `pantrila`, CLI `pantrila`, env vars `PANTRILA_*`, web brand and
+localStorage keys (`pantrila-tour-done`, `pantrila-cook`; saved tour/cooking state resets once). Kept on
+purpose: table `pantrio_migrations`, applied migration files, and the hosted names (Vercel project and URL
+`pantrio-azure.vercel.app`, Render service `pantrio-api`, Supabase project `pantrio`) until renamed in
+their dashboards; Render env vars must be renamed to `PANTRILA_*` before this deploys. No prompt/model
+change, so no eval rerun. Historical eval reports keep the old name. 363 Python tests, Ruff, web
+typecheck and lint pass.
+
 Facebook shared-reel fix: Apify returns `/share/r/` posts with playback URLs under
 `short_form_video_context.playback_video.videoDeliveryLegacyFields`, captions in `message.text`
 and duration in `short_form_video_context.video.playable_duration_in_ms`. The Facebook adapter
@@ -46,7 +54,7 @@ change or new actor run; existing results were replayed for validation. All 363 
 passed locally (26 database/prerequisite skips, 8 paid live tests deselected); Ruff passed.
 
 Social import form is link-only: no caption toggle, caption field or screenshot fallback
-button. Placeholder: "Paste Instagram, Facebook or TikTok link". Helper text: "Pantrio reads
+button. Placeholder: "Paste Instagram, Facebook or TikTok link". Helper text: "Pantrila reads
 the recipe from your post and credits the creator." Read failures suggest another public
 recipe link. Backend caption/text import support remains for API/eval callers. This small
 follow-up is pushed directly to main at the owner's explicit request for this change.
@@ -87,7 +95,7 @@ Branch prefixes apply only to branches; commit messages are plain descriptive te
 Next planned work: **European nutrition data + 100 sourced recipes**, four sequential PRs.
 Read [`docs/plans/european-ingredients-and-recipe-expansion.md`](docs/plans/european-ingredients-and-recipe-expansion.md)
 before starting; it contains the full scope, safeguards, sources, checklists and handoff log.
-**PR 1 complete in [PR #38](https://github.com/mikegauci/pantrio/pull/38). Next: PR 2 only,
+**PR 1 complete in [PR #38](https://github.com/mikegauci/pantrila/pull/38). Next: PR 2 only,
 after confirming merge and live prerequisite deployment.**
 PR 1 adds eight ingredients (six Ciqual, two USDA), source identity, weight-only new foods,
 central dessert swap restrictions and corpus seed preservation. Original 300 recipes unchanged.
@@ -100,9 +108,9 @@ merely because this status entry exists; follow the user's selected task/PR.
 
 Reel audio from a link (plan `docs/plans/reel-audio-from-link.md`, first PR): `from_post`
 tries caption -> linked site -> the post's video, found by a third-party service
-(`post_media.py`, Apify, `PANTRIO_MEDIA_SOURCE`, default off) and read in memory with PyAV.
+(`post_media.py`, Apify, `PANTRILA_MEDIA_SOURCE`, default off) and read in memory with PyAV.
 Service runs are usage kind `reel` (migration `20261020100000_reel_usage`, applied on Supabase;
-cap `PANTRIO_DAILY_REEL_FETCHES`). Prompt: steps only as the source gives them. Reel eval
+cap `PANTRILA_DAILY_REEL_FETCHES`). Prompt: steps only as the source gives them. Reel eval
 before/after `reel-2026-10-20T082713Z` / `reel-2026-10-20T082734Z`: found 80% -> 100%, method
 67% -> 100%, 0 missed allergens; import eval `import-2026-10-20T082701Z` unchanged in quality.
 Second PR: one Apify actor per platform (`post_media.ACTORS`: Instagram, TikTok, Facebook;
@@ -111,7 +119,7 @@ alone work (caption from the service). Reel eval 7 cases, before/after
 `reel-2026-10-20T084302Z` / `reel-2026-10-20T084329Z`: found 57% -> 100%, method 67% -> 100%,
 0 missed allergens. Live on the test reel: 17 lines, 7 steps, ~60-90 s, ~$0.05 (the video
 read's reasoning tokens; effort low is a follow-up). Still to do (owner): `APIFY_TOKEN` and
-`PANTRIO_MEDIA_SOURCE=apify` on Render, then a live check on the deployed app.
+`PANTRILA_MEDIA_SOURCE=apify` on Render, then a live check on the deployed app.
 
 Social recipe import, two PRs; plan and checklists in `docs/plans/social-recipe-import.md`
 (read it before either PR). PR 1 (PR #36, merged): `social.py` (post detection, TikTok
@@ -129,8 +137,8 @@ captions (bzfd.it) are followed.
 PR 2 (uploaded video, PR #37, merged): the browser reads a saved or
 screen-recorded video (`web/src/lib/video.ts`: 16 kHz mono WAV via `decodeAudioData`, 4 JPEG
 frames at 15/40/65/90%, up to 3 min); `POST /me/recipes/import/video` checks the WAV in code,
-transcribes it (`PANTRIO_TRANSCRIBE_MODEL`, default `gpt-4o-mini-transcribe`, priced per minute
-with `PANTRIO_PRICE_TRANSCRIBE_PER_MIN`; the cost is in the import's usage event and shown
+transcribes it (`PANTRILA_TRANSCRIBE_MODEL`, default `gpt-4o-mini-transcribe`, priced per minute
+with `PANTRILA_PRICE_TRANSCRIBE_PER_MIN`; the cost is in the import's usage event and shown
 apart as `transcription_cost_usd`), then one extraction call with transcript + frames +
 caption. A video with no sound sends frames only (audio null, no transcription); a link that
 is not a post is kept as `source_url`. Video-only prompt lines (`VIDEO_INSTRUCTIONS`, `VideoRecipe.vague_amount`); page,
@@ -215,7 +223,7 @@ Step 4 (PR #7): FastAPI `api.py` (Supabase Auth ES256 tokens verified via JWKS; 
 `user_id`), migration 0004 (`meal_plans`, `usage_events`, RLS; applied on Supabase), plan
 progress as SSE, daily caps per user and a total daily budget; Next.js 16 app in `web/` (10
 screens per `DESIGN_SYSTEM.md`). Local end-to-end run on `gpt-5.4-mini`: plan 17 s / $0.012,
-chat turn 4.5 s / $0.0023. Deployed: web https://pantrio-azure.vercel.app (Vercel project `pantrio`,
+chat turn 4.5 s / $0.0023. Deployed: web https://pantrio-azure.vercel.app (Vercel project `pantrila`,
 root `web/`, auto-deploys `main`), API https://pantrio-api.onrender.com (Render Blueprint from
 `render.yaml`, free plan, sleeps when idle). Supabase Auth: anonymous sign-ins on, Site URL and
 `/auth/callback` redirects set for the Vercel URL and localhost:3000. Live check: guest sign-in,
@@ -225,7 +233,7 @@ Step 5 (this PR): README rewritten (mermaid architecture and planner diagrams, e
 design decisions, limitations, screenshots in `docs/screenshots/`), `docs/demo-script.md` for
 the video (to be recorded by the owner and linked in the README). Traces: root runs named
 `plan`/`chat`, tagged `api|cli|eval`, with feedback `targets_met`, `repairs`, `fallbacks`,
-`pantry_use` (plans) and `flagged_citations` (chat); "Pantrio live" LangSmith dashboard (EU)
+`pantry_use` (plans) and `flagged_citations` (chat); "Pantrila live" LangSmith dashboard (EU)
 built by `scripts/langsmith_dashboard.py`, filtered to `api` traffic. LangSmith's charts API
 only accepts V2 definitions (`metric_definition` + `filter_definition`). Fixed plan day cards
 overflowing at 1280 px. No prompt/model change, so no eval rerun. Paid evals workflow needs
@@ -247,20 +255,20 @@ tool or model change, so no eval rerun.
 Header avatar (PR #13): food emoji on a soft tint, picked from a hash of the Supabase user id
 (`web/src/lib/avatar.ts`); nothing stored, no backend change.
 Server wake-up notice (PR #14): any API request pending over 3 s shows one shared Sonner toast
-("Waking up the Pantrio server…") until every slow request answers (`request()` in
+("Waking up the Pantrila server…") until every slow request answers (`request()` in
 `web/src/lib/api.ts`); `AppShell` pings `/health` on mount to start the Render wake-up early.
 Recipe photos (this PR): migration 0007 (`recipe_photos`, `user_recipes.photo_path`, usage kind
-`photo`; applied on Supabase), public Storage bucket `recipe-photos` (created by `pantrio photos
+`photo`; applied on Supabase), public Storage bucket `recipe-photos` (created by `pantrila photos
 generate`; needs `SUPABASE_SERVICE_ROLE_KEY`, also set on Render). All 300 corpus recipes
 photographed with `gpt-image-2.5-flare` at 1536x1152 medium, stored as 1200x900 WebP: $4.15
 total, $0.0138 per photo (408 output tokens each), p50 ~14.5 s / p95 ~20 s. OpenAI allows ~20
 images/min, so the run uses 4 workers and SDK retries (6 workers hit 429s). Prompt chosen over
 7 sample rounds (owner-reviewed): only the recipe's ingredients as garnish and props, no
 generic herb bowls or salt dishes. Cookbook recipes get Generate/New/Remove photo
-(`PANTRIO_DAILY_PHOTOS`, default 5). Web uses `next/image` (Vercel Hobby: 5K transformations a
+(`PANTRILA_DAILY_PHOTOS`, default 5). Web uses `next/image` (Vercel Hobby: 5K transformations a
 month; `minimumCacheTTL` 31 days). No text-model prompt change, so no eval rerun.
 Assistant first (this PR): Assistant is second in the nav (sidebar and mobile tabs) and Home
-opens with an "Ask Pantrio" card (`web/src/components/ask-pantrio.tsx`: question box, starters,
+opens with an "Ask Pantrila" card (`web/src/components/ask-pantrila.tsx`: question box, starters,
 last 3 chats); it links to `/assistant?q=` (asked in a new chat) or `?thread=`. Web only.
 
 Profile picture (this PR): migration 0008 (`user_avatars`, path only; applied on Supabase), stored
@@ -277,7 +285,7 @@ emoji avatar. No model call, so no eval rerun.
 First-run tour (this PR): `web/src/components/tour.tsx`, 8 steps across Home, Assistant, Recipes,
 Plan and Grocery, pointing at elements marked `data-tour="…"` (nav links carry `nav-<key>`; the
 visible match wins because hidden pages stay mounted). Opens once per user id
-(`localStorage["pantrio-tour-done:<id>"]`), replay from the account menu ("App tour") or Profile
+(`localStorage["pantrila-tour-done:<id>"]`), replay from the account menu ("App tour") or Profile
 ("Help"). Web only, no new dependency, so no eval rerun.
 Favicon (this PR): `web/src/app/icon.svg` (white lucide Leaf on the #3fa34d rounded square, like
 `Logo`), with `apple-icon.png` (180 px) and `favicon.ico` (16/32/48) rendered from it with `sharp`.
@@ -289,7 +297,7 @@ Cooking mode (this PR): `/recipes/[id]/cook` and `/recipes/mine/[id]/cook` (full
 `CookingMode` in `web/src/components/cooking-mode.tsx`): one step at a time, ingredient
 checklist (with "for this step" chips matched from the step text), timers parsed from step text
 in code (`web/src/lib/cooking.ts`, lower bound of a range), Screen Wake Lock, progress in
-`localStorage["pantrio-cook:<user>:<corpus|mine>:<id>"]` for 12 h. "I cooked this" posts
+`localStorage["pantrila-cook:<user>:<corpus|mine>:<id>"]` for 12 h. "I cooked this" posts
 `/me/cooked` (migration `20261019160000_cooked_meals`, RLS, applied on Supabase; latest 500 per user), which by
 default takes the grams used out of measured pantry items (`cooking.py`; "some" items stay);
 `/me/cooked/preview` shows that first. No model call, so no eval rerun.
@@ -309,18 +317,18 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - Python 3.12, `uv`, Pydantic v2, FastAPI, pytest, ruff.
 - PostgreSQL + `pgvector`, SQL migrations in `supabase/migrations/` (add a new file; never
   edit an applied one). Plain SQL via `psycopg`, no ORM. Locally and in CI: Postgres 16 in
-  Docker. Deployed: Supabase project `pantrio` (ref `tlnigvzkselebbtetibt`, eu-north-1,
+  Docker. Deployed: Supabase project `pantrila` (ref `tlnigvzkselebbtetibt`, eu-north-1,
   Postgres 17, pgvector 0.8.2), reached through the session pooler; migrations and seed run
-  with `pantrio db migrate|seed`, not the Supabase CLI, so `pantrio_migrations` stays the
+  with `pantrila db migrate|seed`, not the Supabase CLI, so `pantrio_migrations` stays the
   record. The Supabase MCP server (claude.ai connector) can inspect tables and run SQL there.
   Tables in `public` are exposed by Supabase's REST API: enable row level security before any
   user data (pantry, profiles) lands. Migration 0003 enables RLS with no policies on every
   table: the REST roles see nothing; the API connects as the owner (`postgres`), which bypasses
   RLS. Create new tables with RLS enabled in the same migration.
 - OpenAI Python SDK (Responses API, structured outputs, tool calling). Default chat model
-  `gpt-5.4-mini`, the cheapest that passes the evals (override `PANTRIO_MODEL`; the first 144
+  `gpt-5.4-mini`, the cheapest that passes the evals (override `PANTRILA_MODEL`; the first 144
   corpus recipes came from `gpt-5.5`), embeddings `text-embedding-3-small`
-  (override `PANTRIO_EMBED_MODEL`). Do not use the Anthropic API.
+  (override `PANTRILA_EMBED_MODEL`). Do not use the Anthropic API.
 - LangGraph for the planner and chat agent.
 - LangSmith for tracing, datasets and experiments (`LANGSMITH_*`); everything works with
   tracing off when the variables are unset.
@@ -328,99 +336,99 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 
 ## Layout (keep this section current as code lands)
 
-- `src/pantrio/schema.py`: Pydantic models (Recipe, Ingredient, NutritionFacts; enums for the
+- `src/pantrila/schema.py`: Pydantic models (Recipe, Ingredient, NutritionFacts; enums for the
   14 EU allergens, diet tags, meal types, units; UserProfile, NutritionTargets, MealPlan,
   PantryItem, GroceryItem, GroceryList). Models sent as structured outputs carry field
   descriptions, which are part of the prompt.
-- `src/pantrio/foods.py`: the ingredient table (`data/ingredients.csv` joined to
+- `src/pantrila/foods.py`: the ingredient table (`data/ingredients.csv` joined to
   `data/usda_foods.csv` and `data/ciqual_foods.csv`): source identity/attribution, unit conversion
   to grams, allergens and diet class per food,
   allergen and diet derivation.
-- `src/pantrio/nutrition.py`: per-serving nutrition from ingredient grams (USDA SR Legacy
+- `src/pantrila/nutrition.py`: per-serving nutrition from ingredient grams (USDA SR Legacy
   and reviewed Ciqual 2025 additions; see `docs/nutrition-data.md`) and diet thresholds.
-- `src/pantrio/corpus.py`: `RecipeDraft` (the model's structured output), `build_recipe`
+- `src/pantrila/corpus.py`: `RecipeDraft` (the model's structured output), `build_recipe`
   (normalise, compute, derive, reject allergen disagreements), `check_recipe`, load/save.
-- `src/pantrio/embeddings.py`: embedding text builder and batched OpenAI embedding calls with
+- `src/pantrila/embeddings.py`: embedding text builder and batched OpenAI embedding calls with
   a content-hash cache (DB + `.cache/embeddings/`) so re-ingest is free.
-- `src/pantrio/search.py`: hybrid retrieval (pgvector cosine + Postgres full text, merged with
+- `src/pantrila/search.py`: hybrid retrieval (pgvector cosine + Postgres full text, merged with
   reciprocal rank fusion) with hard SQL filters for allergens, diets, time, meal, cuisine and
   excluded foods; optional LLM query parser.
-- `src/pantrio/config.py`: settings and prices from the environment; LangSmith helpers
+- `src/pantrila/config.py`: settings and prices from the environment; LangSmith helpers
   (`trace_config` names root runs `plan`/`chat` and tags them `api|cli|eval`; `log_feedback`
   attaches deterministic scores to a run; both no-ops with tracing off).
-- `src/pantrio/constraints.py`: deterministic plan checks, the single source of truth for "is
+- `src/pantrila/constraints.py`: deterministic plan checks, the single source of truth for "is
   this plan safe and valid". Hard rules (allergens and diets re-derived from ingredients,
   excluded foods, time, meal slot, structure, unknown ids) vs soft goals (daily kcal +/-10%,
   protein minimum, carb limit, repeats); `fit_portions` sets 0.5-2 servings per meal in code.
-- `src/pantrio/planner.py`: LangGraph graph profile -> retrieve -> draft -> check -> repair
+- `src/pantrila/planner.py`: LangGraph graph profile -> retrieve -> draft -> check -> repair
   (max 2) -> finalise; one `search_recipes` tool (max 4 rounds), `PlanDraft` structured output,
   `store=False`. Finalise replaces any meal still breaking a hard rule with a safe candidate
   or raises; it never returns an unsafe plan. `RecipeStore` protocol (`DbStore` in prod,
   `tests.conftest.CorpusStore` offline).
-- `src/pantrio/db.py`: connections, migrations (`pantrio_migrations` table), seeding,
+- `src/pantrila/db.py`: connections, migrations (`pantrio_migrations` table), seeding,
   `load_recipes` (the trusted recipe source for the checker).
-- `src/pantrio/cli.py`: `pantrio db migrate|seed`, `ingest`, `search`, `plan`, `pantry`,
+- `src/pantrila/cli.py`: `pantrila db migrate|seed`, `ingest`, `search`, `plan`, `pantry`,
   `profile`, `chat`, `corpus check`.
-- `src/pantrio/pantry.py`: `resolve_food` (free text to food key: normalise, plural, aliases,
+- `src/pantrila/pantry.py`: `resolve_food` (free text to food key: normalise, plural, aliases,
   else `UnknownFood` with suggestions), `make_item`, the `Kitchen` protocol (one user's profile
   and pantry) with `DbKitchen` (`user_profiles`, `pantry_items`) and `MemoryKitchen`.
-- `src/pantrio/grocery.py`: plan needs in grams (portions x people), minus the pantry, by aisle,
+- `src/pantrila/grocery.py`: plan needs in grams (portions x people), minus the pantry, by aisle,
   rounded up to shop amounts.
-- `src/pantrio/swaps.py`: same-weight ingredient swaps re-derived like the corpus (nutrition,
+- `src/pantrila/swaps.py`: same-weight ingredient swaps re-derived like the corpus (nutrition,
   allergens, diets) and checked with `constraints.recipe_problems`; suggestions from the same
   aisle (or any protein) ranked by nutrition distance.
-- `src/pantrio/meal_swap.py`: swap one meal of a saved plan, no model call. `meal_options`
+- `src/pantrila/meal_swap.py`: swap one meal of a saved plan, no model call. `meal_options`
   (candidates from `slot_filters` via `Catalog.browse`, re-checked with `recipe_violations`,
   ranked by distance to the day's targets, then pantry use, then calories) and `replace_meal`
   (re-checks the chosen recipe, fits portions with `constraints.fit_slot_portion`);
   `swapped_report` recomputes warnings and pantry use. `SwapError` carries the HTTP status.
-- `src/pantrio/assistant.py`: LangGraph chat agent agent -> tools (max 4 rounds) -> guard;
+- `src/pantrila/assistant.py`: LangGraph chat agent agent -> tools (max 4 rounds) -> guard;
   tools search_recipes, check_pantry, update_pantry, swap_ingredient, scale_recipe; replies
   cite recipes as `[recipe-id]` and the guard appends a note for any cited recipe that breaks
   a hard rule or does not exist.
-- `src/pantrio/auth.py`: verifies Supabase Auth access tokens (ES256 via the project JWKS,
+- `src/pantrila/auth.py`: verifies Supabase Auth access tokens (ES256 via the project JWKS,
   audience `authenticated`, issuer `SUPABASE_URL/auth/v1`); returns the user id.
-- `src/pantrio/records.py`: saved plans (`save_plan`, `latest_plan`, `update_plan` for a swap)
+- `src/pantrila/records.py`: saved plans (`save_plan`, `latest_plan`, `update_plan` for a swap)
   and the usage log per user (`Records` protocol, `DbRecords` on `meal_plans`/`usage_events`,
   `MemoryRecords` for tests).
-- `src/pantrio/chats.py`: saved assistant threads per user (`Chats` protocol, `DbChats` on
+- `src/pantrila/chats.py`: saved assistant threads per user (`Chats` protocol, `DbChats` on
   `chat_threads`, `MemoryChats`): model `history` plus the `messages` the app shows; titled
   from the first message; 100 threads per user, least recently used dropped.
-- `src/pantrio/cookbook.py`: the person's own recipes. `CookbookRecipeIn` (what is stored:
+- `src/pantrila/cookbook.py`: the person's own recipes. `CookbookRecipeIn` (what is stored:
   lines with a table `food` or a `FoodEstimate`), `derive` (grams, nutrition, allergens, diets
   in code; estimates join the food table for that recipe only), `problems_for`, the `Cookbook`
   protocol (`DbCookbook` on `user_recipes`, `MemoryCookbook`), 200 recipes per user.
-- `src/pantrio/recipe_import.py`: `Importer` (one structured-output call, effort medium,
+- `src/pantrila/recipe_import.py`: `Importer` (one structured-output call, effort medium,
   `store=False`) `from_link` / `from_html` / `from_photos` / `from_text` / `from_post` (caption,
   then a recipe site it links: a second call on the same import) / `estimate`; `fetch_page` with SSRF
   guards; `jsonld_recipe`, `page_text`; `to_draft` checks every line in code and returns notes;
   `with_named_allergens` adds the allergens of table foods an estimated line names.
-- `src/pantrio/social.py`: TikTok/Instagram/Facebook posts. `detect`, short links, `clean_url`
+- `src/pantrila/social.py`: TikTok/Instagram/Facebook posts. `detect`, short links, `clean_url`
   (tracking query dropped), `fetch_post` (TikTok oEmbed; Instagram/Facebook Open Graph tags;
-  all through `fetch_page`, Pantrio's own user agent; refusal or empty caption -> "Paste the
+  all through `fetch_page`, Pantrila's own user agent; refusal or empty caption -> "Paste the
   caption"), `pasted_post` (no fetch), `caption_links` (skips platforms, link-in-bio pages,
   and shops; short links are kept and followed), `platform_page` (profiles refused before a paid call). Never downloads or stores videos.
 - Video import (`recipe_import.py`): `check_audio` (WAV only, 1 s to 3 min, 12 MB),
   `Importer.transcribe` and `from_video(audio, frames, url, caption, guided)`; vague spoken
   amounts become notes ("the video only says ..."). Audio and frames are never stored.
-- `src/pantrio/post_media.py`: reel audio from a link. `MediaSource` (`ApifyMedia`: one actor
+- `src/pantrila/post_media.py`: reel audio from a link. `MediaSource` (`ApifyMedia`: one actor
   run per post, one actor per platform in `ACTORS`, token only to api.apify.com; `NoMedia`),
   `media_source()` from the environment (off by default),
   `fetch_video` (SSRF-guarded via `recipe_import.fetch_bytes`, 60 MB), `read_video` (PyAV in
   memory: 16 kHz mono WAV, 4 JPEG frames). `Importer(media=, meter=)` uses it in `from_post`
   only when the caption and links give no full recipe; `operations.ReelMeter` caps runs.
-- `src/pantrio/photos.py`: recipe photos. `photo_prompt` (the dish as the recipe makes it:
+- `src/pantrila/photos.py`: recipe photos. `photo_prompt` (the dish as the recipe makes it:
   ingredient names and final step, garnish and background props only from those ingredients,
   bread only if used or suggested and never for gluten-free; fixed stoneware/stone/linen
-  scene), `generate` (`PANTRIO_IMAGE_MODEL`, 1536x1152 = 4:3, stored as 1200x900 WebP),
+  scene), `generate` (`PANTRILA_IMAGE_MODEL`, 1536x1152 = 4:3, stored as 1200x900 WebP),
   `SupabasePhotos` (public bucket `recipe-photos`, service role key), `photograph_corpus`.
   The DB stores paths only (`recipe_photos`, `user_recipes.photo_path`); `public_url` builds
   URLs from `SUPABASE_URL`. Corpus paths carry a hash of prompt + model, so only changed
   recipes regenerate.
-- `src/pantrio/cooking.py`: "I cooked this": `grams_used` (per food for the servings cooked)
+- `src/pantrila/cooking.py`: "I cooked this": `grams_used` (per food for the servings cooked)
   and `use_from_pantry` (measured items go down in their own unit, removed under 0.5 g; items
   without an amount stay). The cooking log is in `records.py` (`Cooked`, `cooked_meals`).
-- `src/pantrio/api.py`: FastAPI app (`create_app(backend, verify)`; tests pass an in-memory
+- `src/pantrila/api.py`: FastAPI app (`create_app(backend, verify)`; tests pass an in-memory
   backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
   `/me/usage`, `/me/avatar` (PUT/DELETE), `/recipes` (search or browse, profile rules as filters unless `safe=false`),
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
@@ -430,15 +438,15 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `/me/cooked` (GET log, POST "I cooked this"; `/preview`), `/me/recipes` (cookbook CRUD,
   `/preview`, `/import/link`, `/import/photos`, `/import/post`, `/import/text`, `/import/video`, `/estimate`, `/{id}/photo` POST/DELETE). Every
   recipe returned carries the hard rules it breaks for the person's current profile and its
-  `photo_url` (or null). Paid calls are capped per user per day (`PANTRIO_DAILY_PLANS`,
-  `PANTRIO_DAILY_CHATS`, `PANTRIO_DAILY_IMPORTS`, `PANTRIO_DAILY_PHOTOS`) and in total
-  (`PANTRIO_DAILY_BUDGET_USD`).
+  `photo_url` (or null). Paid calls are capped per user per day (`PANTRILA_DAILY_PLANS`,
+  `PANTRILA_DAILY_CHATS`, `PANTRILA_DAILY_IMPORTS`, `PANTRILA_DAILY_PHOTOS`) and in total
+  (`PANTRILA_DAILY_BUDGET_USD`).
 - `render.yaml`: Render Blueprint for the API.
 - `data/`: `ingredients.csv` (hand-curated), `usda_foods.csv` (built by
   `scripts/build_usda_table.py`), `dish_briefs.csv` (300 fixed briefs), `recipes/*.json`
   (generated corpus, one file per recipe), `corpus_manifest.json` (generation runs and cost).
 - `scripts/`: `generate_corpus.py`, `build_usda_table.py`, `langsmith_dashboard.py` (rebuilds the
-  "Pantrio live" LangSmith dashboard via the charts API).
+  "Pantrila live" LangSmith dashboard via the charts API).
 - `docs/`: `demo-script.md` (video walkthrough), `screenshots/` (README images, taken from the
   web app at 1280 px wide).
 - `supabase/migrations/`: SQL migrations.
@@ -451,7 +459,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `run_assistant.py`, `run_import.py`, `run_video.py`, `reports/`.
 - `.github/workflows/evals.yml`: manual paid evals (needs `OPENAI_API_KEY`, `DATABASE_URL`
   repository secrets).
-- `tests/`: offline tests; OpenAI is mocked. DB tests run when `PANTRIO_TEST_DATABASE_URL` is
+- `tests/`: offline tests; OpenAI is mocked. DB tests run when `PANTRILA_TEST_DATABASE_URL` is
   set. Paid tests are marked `live`.
 - `web/`: Next.js 16 App Router (Cache Components on), Tailwind v4, shadcn/ui on Base UI;
   see `web/DESIGN_SYSTEM.md` (tokens live in `src/app/globals.css`). Signed-in screens are
@@ -462,7 +470,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   import the post directly, with an estimated countdown. The first-run tour
   is `src/components/tour.tsx` (`TourProvider` in `AppShell`, `useTour().start`). Cooking mode is
   `src/components/cooking-mode.tsx` with helpers in `src/lib/cooking.ts`. The assistant's
-  thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrio.tsx`. `RecipeArt` (`src/components/bits.tsx`)
+  thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrila.tsx`. `RecipeArt` (`src/components/bits.tsx`)
   shows the recipe photo with `next/image` (host allowed from `NEXT_PUBLIC_SUPABASE_URL` in
   `next.config.ts`) or the meal-type art when there is none. Read `web/AGENTS.md`: this Next.js differs from
   older versions (e.g. `proxy.ts` replaces middleware; check `node_modules/next/dist/docs/`).
@@ -474,24 +482,24 @@ uv sync                                  # install
 uv run pytest                            # offline tests (no API calls)
 uv run ruff check . && uv run ruff format --check .
 docker compose up -d db                  # local Postgres 16 + pgvector
-uv run pantrio db migrate && uv run pantrio db seed   # DATABASE_URL (config loads .env)
-uv run pantrio ingest                    # embed the corpus (needs OPENAI_API_KEY)
-uv run pantrio search "quick vegan dinner with chickpeas" [--parse] [--mode vector|fulltext]
-uv run pantrio corpus check              # re-derive nutrition/allergens/diets, report drift
+uv run pantrila db migrate && uv run pantrila db seed   # DATABASE_URL (config loads .env)
+uv run pantrila ingest                    # embed the corpus (needs OPENAI_API_KEY)
+uv run pantrila search "quick vegan dinner with chickpeas" [--parse] [--mode vector|fulltext]
+uv run pantrila corpus check              # re-derive nutrition/allergens/diets, report drift
 uv run python scripts/generate_corpus.py [--sample | --only ids | --force | --limit n]  # paid
-#   other model for one run: PANTRIO_MODEL=<model> PANTRIO_PRICE_INPUT_PER_MTOK=<usd> \
-#   PANTRIO_PRICE_OUTPUT_PER_MTOK=<usd> (shell variables override .env)
+#   other model for one run: PANTRILA_MODEL=<model> PANTRILA_PRICE_INPUT_PER_MTOK=<usd> \
+#   PANTRILA_PRICE_OUTPUT_PER_MTOK=<usd> (shell variables override .env)
 uv run python scripts/build_usda_table.py           # rebuild data/usda_foods.csv
 uv run python scripts/build_ciqual_table.py         # pinned workbook -> reviewed Ciqual subset
 uv run python -m evals.retrieval_queries # regenerate labelled queries from the corpus
 uv run python -m evals.run_retrieval     # retrieval eval (vector vs full text vs hybrid)
-uv run pantrio plan vegan-high-protein   # plan for an eval profile id or a UserProfile JSON file
+uv run pantrila plan vegan-high-protein   # plan for an eval profile id or a UserProfile JSON file
 uv run python -m evals.plan_profiles     # regenerate the planner eval profiles
 uv run python -m evals.run_planner [--only ids]   # planner eval (paid; ~$0.03/plan on mini)
-uv run pantrio plan --user me --grocery [--people 2]   # plan from a saved profile + grocery list
-uv run pantrio profile set coeliac --with-pantry [--user me]   # save a profile (file or eval id)
-uv run pantrio pantry add eggs 6 piece | remove eggs | list [--user me]   # or PANTRIO_USER
-uv run pantrio chat [--user me] [--message "..."]  # cooking assistant (paid)
+uv run pantrila plan --user me --grocery [--people 2]   # plan from a saved profile + grocery list
+uv run pantrila profile set coeliac --with-pantry [--user me]   # save a profile (file or eval id)
+uv run pantrila pantry add eggs 6 piece | remove eggs | list [--user me]   # or PANTRILA_USER
+uv run pantrila chat [--user me] [--message "..."]  # cooking assistant (paid)
 uv run python -m evals.chat_cases        # regenerate the assistant eval cases
 uv run python -m evals.run_assistant [--only ids] # assistant eval (paid; ~$0.002/turn)
 uv run python -m evals.import_cases      # regenerate the recipe-import eval pages
@@ -503,9 +511,9 @@ uv run python -m evals.reel_cases        # regenerate the reel eval cases
 uv run python -m evals.run_reel [--media off] [--fee usd] [--only ids]   # reel eval, fake service (paid)
 uv run python scripts/reel_media_check.py --actor <id> --input '<json with {url}>' <post links>  # Apify actor check
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
-uv run pantrio photos generate [--only ids] [--limit n] [--force] [--dry-run]  # corpus photos (paid; ~$0.014 each)
+uv run pantrila photos generate [--only ids] [--limit n] [--force] [--dry-run]  # corpus photos (paid; ~$0.014 each)
 uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # LangSmith dashboard
-uv run uvicorn pantrio.api:app --env-file .env --reload   # API on :8000 (SUPABASE_URL, DATABASE_URL)
+uv run uvicorn pantrila.api:app --env-file .env --reload   # API on :8000 (SUPABASE_URL, DATABASE_URL)
 cd web && npm ci && npm run dev          # :3000; web/.env.local from web/.env.example
 cd web && npm run lint && npm run typecheck && npm run build   # what CI runs for web
 ```
@@ -520,7 +528,7 @@ Update this block when commands change.
 - Extract and store what the source says; normalise units in code, not in prompts.
 - Any change to a prompt, schema, tool definition, retrieval setting or model comes with a
   before/after eval run, and the numbers go in the PR description.
-- Evals report quality, cost per call (from token usage and `PANTRIO_PRICE_*_PER_MTOK`) and
+- Evals report quality, cost per call (from token usage and `PANTRILA_PRICE_*_PER_MTOK`) and
   latency (p50/p95). The live gate fails on any constraint violation.
 - Eval data and seed data are generated deterministically and committed; tests check the
   committed files match the generators.

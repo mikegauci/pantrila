@@ -2,7 +2,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 
 let client: SupabaseClient | null = null
 
-/** Browser Supabase client, used only for sign-in. Data goes through the Pantrio API. */
+/** Browser Supabase client, used only for sign-in. Data goes through the Pantrila API. */
 export function supabase(): SupabaseClient {
   if (!client) {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL

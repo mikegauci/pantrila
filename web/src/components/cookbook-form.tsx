@@ -54,7 +54,7 @@ export const BLANK_RECIPE: CookbookRecipeIn = {
 }
 
 /** sessionStorage key: a recipe the assistant wrote, handed to the new-recipe page (read once). */
-export const CHAT_DRAFT = "pantrio-chat-draft"
+export const CHAT_DRAFT = "pantrila-chat-draft"
 
 const toKey = (text: string) => text.trim().toLowerCase().replaceAll("-", " ").split(/\s+/).join("_")
 
@@ -115,7 +115,7 @@ function FoodField({
   }
   return (
     <Input
-      list="pantrio-foods"
+      list="pantrila-foods"
       aria-label={`Food for ${line.name || "this ingredient"}`}
       placeholder="Match a food"
       value={text}
@@ -353,7 +353,7 @@ export function CookbookForm({
 
   return (
     <fieldset disabled={busy !== null} className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
-      <datalist id="pantrio-foods">
+      <datalist id="pantrila-foods">
         {foods?.map((f) => <option key={f.key} value={f.name} />)}
       </datalist>
       <div className="grid gap-5">
@@ -417,7 +417,7 @@ export function CookbookForm({
             Ingredients
           </PanelTitle>
           <p className="text-[12px] text-muted-foreground">
-            Each ingredient is matched to a food in Pantrio&apos;s table, which is how nutrition and
+            Each ingredient is matched to a food in Pantrila&apos;s table, which is how nutrition and
             allergens are worked out. Foods not in the table can be estimated by AI.
           </p>
           <ul>

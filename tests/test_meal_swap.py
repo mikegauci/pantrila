@@ -2,8 +2,8 @@
 
 import pytest
 
-from pantrio.constraints import PORTION_STEPS, day_nutrition, fit_slot_portion, target_miss
-from pantrio.meal_swap import (
+from pantrila.constraints import PORTION_STEPS, day_nutrition, fit_slot_portion, target_miss
+from pantrila.meal_swap import (
     MAX_OPTIONS,
     SwapError,
     find_meal,
@@ -11,7 +11,7 @@ from pantrio.meal_swap import (
     replace_meal,
     swapped_report,
 )
-from pantrio.schema import MealPlan, MealType, NutritionTargets, PlanDay, PlannedMeal, UserProfile
+from pantrila.schema import MealPlan, MealType, NutritionTargets, PlanDay, PlannedMeal, UserProfile
 from tests.conftest import CorpusStore
 
 OMELETTE, CHICKEN, CURRY, SALMON, NOODLES = (

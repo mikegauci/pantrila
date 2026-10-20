@@ -26,11 +26,11 @@ from pathlib import Path
 from evals.metrics import percentile
 from evals.plan_profiles import OUT as PROFILES
 from evals.plan_profiles import load_profiles
-from pantrio import config, db
-from pantrio.constraints import Severity, check_plan, hard_violations
-from pantrio.planner import MAX_REPAIRS, DbStore, Planner, PlanResult
-from pantrio.schema import UserProfile
-from pantrio.search import openai_query_embedder
+from pantrila import config, db
+from pantrila.constraints import Severity, check_plan, hard_violations
+from pantrila.planner import MAX_REPAIRS, DbStore, Planner, PlanResult
+from pantrila.schema import UserProfile
+from pantrila.search import openai_query_embedder
 
 REPORTS = Path(__file__).parent / "reports"
 
@@ -132,7 +132,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
     def num(v, fmt=".2f"):
         return "n/a" if v is None else format(v, fmt)
 
-    cost = "n/a (set PANTRIO_PRICE_*_PER_MTOK)" if s["cost_per_plan_usd"] is None else (
+    cost = "n/a (set PANTRILA_PRICE_*_PER_MTOK)" if s["cost_per_plan_usd"] is None else (
         f"${s['cost_per_plan_usd']:.4f}"
     )  # fmt: skip
     lines = [
@@ -191,9 +191,9 @@ def upload_to_langsmith(rows: list[dict], meta: dict) -> None:
 
     client = Client()
     digest = hashlib.sha256(PROFILES.read_bytes()).hexdigest()[:8]
-    name = f"pantrio-plan-profiles-{digest}"
+    name = f"pantrila-plan-profiles-{digest}"
     if not client.has_dataset(dataset_name=name):
-        ds = client.create_dataset(name, description="Pantrio meal-planning eval profiles")
+        ds = client.create_dataset(name, description="Pantrila meal-planning eval profiles")
         client.create_examples(
             dataset_id=ds.id,
             examples=[
@@ -231,7 +231,7 @@ def upload_to_langsmith(rows: list[dict], meta: dict) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Pantrio meal-planning eval")
+    parser = argparse.ArgumentParser(description="Pantrila meal-planning eval")
     parser.add_argument("--only", help="comma-separated profile ids")
     parser.add_argument("--effort", default="low", choices=["minimal", "low", "medium", "high"])
     parser.add_argument("--concurrency", type=int, default=4)

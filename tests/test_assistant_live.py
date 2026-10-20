@@ -22,7 +22,7 @@ def test_assistant_never_cites_an_unsafe_or_made_up_recipe(cid):
     if not (os.environ.get("OPENAI_API_KEY") and os.environ.get("DATABASE_URL")):
         pytest.skip("needs OPENAI_API_KEY and DATABASE_URL")
     from evals.run_assistant import run_one
-    from pantrio import config
+    from pantrila import config
 
     case = next(c for c in load_cases() if c["id"] == cid)
     row = run_one(case, config.model(), "low")

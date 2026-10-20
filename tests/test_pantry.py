@@ -1,8 +1,8 @@
 import pytest
 from pydantic import ValidationError
 
-from pantrio.foods import UnitError
-from pantrio.pantry import (
+from pantrila.foods import UnitError
+from pantrila.pantry import (
     ALIASES,
     DbKitchen,
     MemoryKitchen,
@@ -10,7 +10,7 @@ from pantrio.pantry import (
     make_item,
     resolve_food,
 )
-from pantrio.schema import Allergen, PantryItem, Unit, UserProfile
+from pantrila.schema import Allergen, PantryItem, Unit, UserProfile
 
 
 @pytest.mark.parametrize(
@@ -32,7 +32,7 @@ def test_unknown_food_comes_with_suggestions():
 
 
 def test_aliases_point_at_real_foods():
-    from pantrio.foods import load_foods
+    from pantrila.foods import load_foods
 
     assert set(ALIASES.values()) <= set(load_foods())
 

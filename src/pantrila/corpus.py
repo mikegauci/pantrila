@@ -16,7 +16,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field
 
-from pantrio.foods import (
+from pantrila.foods import (
     DATA_DIR,
     UnitError,
     derive_allergens,
@@ -24,8 +24,8 @@ from pantrio.foods import (
     food_keys,
     to_grams,
 )
-from pantrio.nutrition import nutrition_diets, recipe_nutrition
-from pantrio.schema import Allergen, DietTag, Ingredient, MealType, Recipe, Unit
+from pantrila.nutrition import nutrition_diets, recipe_nutrition
+from pantrila.schema import Allergen, DietTag, Ingredient, MealType, Recipe, Unit
 
 RECIPES_DIR = DATA_DIR / "recipes"
 BRIEFS_PATH = DATA_DIR / "dish_briefs.csv"
@@ -38,7 +38,7 @@ class DraftIngredient(BaseModel):
         description="Ingredient line as written in a recipe, e.g. 'red onion, finely diced'."
     )
     food: FoodKey = Field(  # type: ignore[valid-type]
-        description="Closest food in Pantrio's ingredient table. Pick the specific item when one "
+        description="Closest food in Pantrila's ingredient table. Pick the specific item when one "
         "exists (red_onion, not onion)."
     )
     quantity: float = Field(description="Amount in `unit`; must be greater than zero.")

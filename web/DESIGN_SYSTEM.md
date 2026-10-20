@@ -1,6 +1,6 @@
-# Pantrio design system
+# Pantrila design system
 
-Pantrio is an AI cooking and meal-planning assistant. Its UI follows the look of
+Pantrila is an AI cooking and meal-planning assistant. Its UI follows the look of
 **Nutrigo – Nutrition & Diet Dashboard** by Peterdraw
 ([Dribbble shot](https://dribbble.com/shots/25289981-Nutrigo-Nutrition-Diet-Dashboard-Figma-Template),
 [ThemeForest](https://themeforest.net/item/nutrigo-nutrition-diet-dashboard-figma-template/55056572),
@@ -34,7 +34,7 @@ system is built from the product listings.
    produce colours. Avoid hospital blue and dense tables.
 2. **One glance, one decision.** Each card answers one question ("What's for dinner?",
    "What do I need to buy?", "Am I on target today?").
-3. **Show the AI's working.** Anything Pantrio generated shows why: the recipes it
+3. **Show the AI's working.** Anything Pantrila generated shows why: the recipes it
    retrieved, the constraint it respected ("No peanuts: 3 recipes skipped"), the pantry
    items it used. Generated content carries a small sparkle badge.
 4. **Safety is loud.** Allergen and diet conflicts use the danger colour and never hide
@@ -117,11 +117,11 @@ Numbers in stats, macros and grocery quantities use `font-variant-numeric: tabul
   soft tint, both picked from a hash of the user id (`src/lib/avatar.ts`), so it stays the
   same for that user and nothing is stored; the email's first letter shows until the session loads.
 
-## Screen map (Nutrigo → Pantrio)
+## Screen map (Nutrigo → Pantrila)
 
-| Nutrigo screen | Pantrio screen | Notes |
+| Nutrigo screen | Pantrila screen | Notes |
 |---|---|---|
-| Dashboard | **Home** | Greeting, "Ask Pantrio" assistant card, today's meals, macro ring, pantry "use it up" card, grocery preview |
+| Dashboard | **Home** | Greeting, "Ask Pantrila" assistant card, today's meals, macro ring, pantry "use it up" card, grocery preview |
 | Healthy Menu | **Recipes** | Search box (hybrid RAG), filter chips (diet, time, cuisine), recipe card grid |
 | Recipe Details | **Recipe** | Hero image, macros, ingredients ticked against pantry, steps, "swap ingredient" |
 | Meal Plan + Calendar | **Meal plan** | Week grid (days × breakfast/lunch/dinner/snack), "Generate week" button, drag to swap |

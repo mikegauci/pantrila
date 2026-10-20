@@ -1,11 +1,11 @@
-"""Postgres tests; run when PANTRIO_TEST_DATABASE_URL points at a disposable database."""
+"""Postgres tests; run when PANTRILA_TEST_DATABASE_URL points at a disposable database."""
 
 import pytest
 
-from pantrio import db
-from pantrio.embeddings import FileCache, ingest
-from pantrio.schema import Allergen, DietTag, MealType
-from pantrio.search import Mode, SearchFilters, search
+from pantrila import db
+from pantrila.embeddings import FileCache, ingest
+from pantrila.schema import Allergen, DietTag, MealType
+from pantrila.search import Mode, SearchFilters, search
 from tests.conftest import fake_embed, fake_embed_query
 
 pytestmark = pytest.mark.db
@@ -106,8 +106,8 @@ def test_every_table_has_row_level_security(conn):
 def test_db_records_keep_plans_and_usage_per_user(conn):
     from datetime import UTC, datetime, timedelta
 
-    from pantrio.records import DbRecords, UsageEvent
-    from pantrio.schema import MealPlan, PlanDay, PlannedMeal
+    from pantrila.records import DbRecords, UsageEvent
+    from pantrila.schema import MealPlan, PlanDay, PlannedMeal
 
     alice, bob = DbRecords(conn, "alice"), DbRecords(conn, "bob")
     assert alice.latest_plan() is None
@@ -136,8 +136,8 @@ def test_db_records_keep_plans_and_usage_per_user(conn):
 
 
 def test_db_records_update_a_plan_only_for_its_owner(conn):
-    from pantrio.records import DbRecords
-    from pantrio.schema import MealPlan, PlanDay, PlannedMeal
+    from pantrila.records import DbRecords
+    from pantrila.schema import MealPlan, PlanDay, PlannedMeal
 
     alice, bob = DbRecords(conn, "alice"), DbRecords(conn, "bob")
     meals = [PlannedMeal(meal_type=MealType.DINNER, recipe_id="x")]
@@ -155,8 +155,8 @@ def test_db_records_update_a_plan_only_for_its_owner(conn):
 
 
 def test_db_cookbook_is_per_user_and_import_is_a_usage_kind(conn):
-    from pantrio.cookbook import CookbookRecipeIn, DbCookbook
-    from pantrio.records import DbRecords, UsageEvent
+    from pantrila.cookbook import CookbookRecipeIn, DbCookbook
+    from pantrila.records import DbRecords, UsageEvent
 
     recipe = CookbookRecipeIn.model_validate({
         "title": "Toast", "meal_types": ["breakfast"], "total_minutes": 5, "servings": 1,
@@ -175,7 +175,7 @@ def test_db_cookbook_is_per_user_and_import_is_a_usage_kind(conn):
 
 
 def test_db_chats_are_per_user_and_keep_history_and_messages(conn):
-    from pantrio.chats import DbChats
+    from pantrila.chats import DbChats
 
     alice, bob = DbChats(conn, "alice"), DbChats(conn, "bob")
     first = alice.create("Pasta", [], [])
@@ -192,7 +192,7 @@ def test_db_chats_are_per_user_and_keep_history_and_messages(conn):
 
 
 def test_recipe_photos_survive_reseeding_and_go_with_their_recipe(conn, corpus):
-    from pantrio.photos import corpus_paths, save_corpus_path
+    from pantrila.photos import corpus_paths, save_corpus_path
 
     db.seed(conn, corpus)
     a, b = corpus[0].id, corpus[1].id
@@ -209,8 +209,8 @@ def test_recipe_photos_survive_reseeding_and_go_with_their_recipe(conn, corpus):
 
 
 def test_db_cookbook_keeps_a_photo_path_and_photo_is_a_usage_kind(conn):
-    from pantrio.cookbook import CookbookRecipeIn, DbCookbook
-    from pantrio.records import DbRecords, UsageEvent
+    from pantrila.cookbook import CookbookRecipeIn, DbCookbook
+    from pantrila.records import DbRecords, UsageEvent
 
     recipe = CookbookRecipeIn.model_validate({
         "title": "Toast", "meal_types": ["breakfast"], "total_minutes": 5, "servings": 1,
@@ -235,13 +235,13 @@ def test_reservations_serialize_across_connections_and_settle_once(conn):
 
     import psycopg
 
-    from pantrio.records import DbRecords, QuotaExceeded, UsageEvent
+    from pantrila.records import DbRecords, QuotaExceeded, UsageEvent
 
     conn.commit()
     since = datetime.now(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
 
     def reserve(user):
-        with psycopg.connect(os.environ["PANTRIO_TEST_DATABASE_URL"], autocommit=True) as other:
+        with psycopg.connect(os.environ["PANTRILA_TEST_DATABASE_URL"], autocommit=True) as other:
             try:
                 return user, DbRecords(other, user).reserve("chat", since, 10, 0.15, 0.15)
             except QuotaExceeded:
@@ -265,13 +265,13 @@ def test_reservations_serialize_across_connections_and_settle_once(conn):
 def test_pooled_backend_does_not_hold_a_connection_during_external_work(conn, monkeypatch):
     import os
 
-    from pantrio.api import DbBackend
-    from pantrio.pantry import make_item
+    from pantrila.api import DbBackend
+    from pantrila.pantry import make_item
 
     conn.commit()
-    monkeypatch.setattr("pantrio.search.openai_query_embedder", lambda _: lambda _: ([0.0], 0))
-    monkeypatch.setattr("pantrio.backend.photo_store", lambda: None)
-    backend = DbBackend(os.environ["PANTRIO_TEST_DATABASE_URL"], max_size=1)
+    monkeypatch.setattr("pantrila.search.openai_query_embedder", lambda _: lambda _: ([0.0], 0))
+    monkeypatch.setattr("pantrila.backend.photo_store", lambda: None)
+    backend = DbBackend(os.environ["PANTRILA_TEST_DATABASE_URL"], max_size=1)
     backend.pool.wait()
 
     def embed(_):
@@ -296,10 +296,10 @@ def test_rest_role_cannot_read_or_write_user_data_even_with_table_grants(conn):
     import psycopg
     from psycopg import sql
 
-    from pantrio.pantry import DbKitchen, make_item
+    from pantrila.pantry import DbKitchen, make_item
 
     DbKitchen(conn, "alice").put(make_item("egg"))
-    role = sql.Identifier("pantrio_rest_" + uuid.uuid4().hex)
+    role = sql.Identifier("pantrila_rest_" + uuid.uuid4().hex)
     # A transaction-local test role with explicit grants distinguishes RLS from missing grants.
     with conn.transaction():
         conn.execute(sql.SQL("create role {} nologin").format(role))
@@ -321,7 +321,7 @@ def test_rest_role_cannot_read_or_write_user_data_even_with_table_grants(conn):
 
 
 def test_chat_updates_detect_conflicts_and_bound_retained_messages(conn):
-    from pantrio.chats import MAX_THREAD_MESSAGES, DbChats
+    from pantrila.chats import MAX_THREAD_MESSAGES, DbChats
 
     chats = DbChats(conn, "alice")
     thread = chats.create("Test", [], [])
@@ -343,8 +343,8 @@ def test_chat_updates_detect_conflicts_and_bound_retained_messages(conn):
 
 
 def test_db_cooking_log_is_per_user_newest_first_and_bounded(conn, monkeypatch):
-    from pantrio import records
-    from pantrio.records import Cooked, DbRecords
+    from pantrila import records
+    from pantrila.records import Cooked, DbRecords
 
     monkeypatch.setattr(records, "MAX_COOKED_PER_USER", 2)
     alice, bob = DbRecords(conn, "alice"), DbRecords(conn, "bob")
@@ -362,7 +362,7 @@ def test_db_cooking_log_is_per_user_newest_first_and_bounded(conn, monkeypatch):
 
 
 def test_seed_refuses_partial_empty_or_duplicate_corpus_before_writes(conn, corpus):
-    from pantrio.cookbook import CookbookRecipeIn, DbCookbook
+    from pantrila.cookbook import CookbookRecipeIn, DbCookbook
 
     db.seed(conn, corpus)
     conn.commit()

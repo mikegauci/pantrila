@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pantrio.api_models import (
+from pantrila.api_models import (
     CookbookCard,
     CookbookDetail,
     CookbookLine,
@@ -17,9 +17,9 @@ from pantrio.api_models import (
     RecipeDetail,
     SwapView,
 )
-from pantrio.backend import Catalog
-from pantrio.constraints import day_nutrition, recipe_problems
-from pantrio.cookbook import (
+from pantrila.backend import Catalog
+from pantrila.constraints import day_nutrition, recipe_problems
+from pantrila.cookbook import (
     CookbookError,
     Derived,
     LineView,
@@ -27,17 +27,17 @@ from pantrio.cookbook import (
     derive,
     problems_for,
 )
-from pantrio.meal_swap import MealOption, find_meal
-from pantrio.photos import (
+from pantrila.meal_swap import MealOption, find_meal
+from pantrila.photos import (
     public_url,
 )
-from pantrio.records import SavedPlan
-from pantrio.schema import (
+from pantrila.records import SavedPlan
+from pantrila.schema import (
     MealType,
     Recipe,
     UserProfile,
 )
-from pantrio.swaps import Swap
+from pantrila.swaps import Swap
 
 # --- Views --------------------------------------------------------------------------------
 
@@ -122,7 +122,7 @@ def plan_view(saved: SavedPlan, store: Catalog, profile: UserProfile) -> PlanVie
                         day=day.day,
                         meal_type=m.meal_type,
                         recipe_id=m.recipe_id,
-                        message="is no longer in Pantrio's recipes",
+                        message="is no longer in Pantrila's recipes",
                     )
                 )
                 continue

@@ -17,7 +17,7 @@ test("a post imports from its link and keeps the credit", async ({ page }) => {
   const imports: { url?: string; caption?: string | null }[] = []
   let saved = draft
   await page.setViewportSize({ width: 390, height: 844 })
-  await page.addInitScript((user) => localStorage.setItem(`pantrio-tour-done:${user}`, "1"), id)
+  await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname
@@ -27,7 +27,7 @@ test("a post imports from its link and keeps the credit", async ({ page }) => {
       imports.push(body)
       if (imports.length === 1) {
         return route.fulfill({ status: 422,
-          json: { detail: "Instagram didn't let Pantrio read this post. Try another public recipe link." } })
+          json: { detail: "Instagram didn't let Pantrila read this post. Try another public recipe link." } })
       }
       return route.fulfill({ json: { draft, notes: [], cost_usd: 0.004, latency_ms: 5000 } })
     }
@@ -59,11 +59,11 @@ test("a post imports from its link and keeps the credit", async ({ page }) => {
   await page.getByLabel("Post link").fill(post)
   await page.getByRole("button", { name: "Read recipe" }).click()
 
-  await expect(page.getByRole("alert").filter({ hasText: "Instagram didn't let Pantrio read this post" })).toBeVisible()
+  await expect(page.getByRole("alert").filter({ hasText: "Instagram didn't let Pantrila read this post" })).toBeVisible()
   await expect(page.getByRole("button", { name: "Paste the caption" })).toHaveCount(0)
   await expect(page.getByLabel("Caption", { exact: true })).toHaveCount(0)
   await expect(page.getByPlaceholder("Paste Instagram, Facebook or TikTok link")).toBeVisible()
-  await expect(page.getByText("Pantrio reads the recipe from your post and credits the creator.")).toBeVisible()
+  await expect(page.getByText("Pantrila reads the recipe from your post and credits the creator.")).toBeVisible()
   await page.getByRole("button", { name: "Read recipe" }).click()
 
   await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Crispy gnocchi")
@@ -81,12 +81,12 @@ test("a post imports from its link and keeps the credit", async ({ page }) => {
   await page.screenshot({ path: "test-results/post-import-recipe.png", fullPage: true })
 })
 
-test("where the service covers the platform, Pantrio says it is listening to the video", async ({ page }) => {
-  const heard = "Pantrio listened to the post's video for this recipe. Check the amounts and steps."
+test("where the service covers the platform, Pantrila says it is listening to the video", async ({ page }) => {
+  const heard = "Pantrila listened to the post's video for this recipe. Check the amounts and steps."
   let answer: () => void = () => {}
   const answered = new Promise<void>((resolve) => { answer = resolve })
   await page.clock.install()
-  await page.addInitScript((user) => localStorage.setItem(`pantrio-tour-done:${user}`, "1"), id)
+  await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname
@@ -119,7 +119,7 @@ test("where the service covers the platform, Pantrio says it is listening to the
   await page.getByRole("button", { name: /From a post/ }).click()
   await timingLoaded
   await page.getByLabel("Post link").fill(post)
-  await expect(page.getByText("Pantrio reads the recipe from your post and credits the creator.")).toBeVisible()
+  await expect(page.getByText("Pantrila reads the recipe from your post and credits the creator.")).toBeVisible()
   await page.clock.pauseAt(new Date(Date.now() + 5000))
   await page.getByRole("button", { name: "Read recipe" }).click()
   await expect(page.getByRole("button", { name: "Reading the post…" })).toBeVisible()

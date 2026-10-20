@@ -87,7 +87,7 @@ export function SwapMealSheet({ target, onClose }: { target: SwapTarget | null; 
         close()
       } else {
         setError({
-          message: e instanceof ApiError ? e.message : "Could not reach Pantrio. Try again.",
+          message: e instanceof ApiError ? e.message : "Could not reach Pantrila. Try again.",
           problems: e instanceof ApiError ? e.problems : [],
         })
       }

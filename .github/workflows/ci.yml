@@ -12,18 +12,18 @@ jobs:
       postgres:
         image: pgvector/pgvector:pg16
         env:
-          POSTGRES_USER: pantrio
-          POSTGRES_PASSWORD: pantrio
-          POSTGRES_DB: pantrio_test
+          POSTGRES_USER: pantrila
+          POSTGRES_PASSWORD: pantrila
+          POSTGRES_DB: pantrila_test
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U pantrio"
+          --health-cmd "pg_isready -U pantrila"
           --health-interval 2s
           --health-timeout 3s
           --health-retries 20
     env:
-      PANTRIO_TEST_DATABASE_URL: postgresql://pantrio:pantrio@localhost:5432/pantrio_test
+      PANTRILA_TEST_DATABASE_URL: postgresql://pantrila:pantrila@localhost:5432/pantrila_test
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6

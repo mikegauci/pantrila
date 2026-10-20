@@ -11,8 +11,8 @@ import math
 from collections import defaultdict
 from collections.abc import Mapping
 
-from pantrio.foods import ML_PER_UNIT, load_foods
-from pantrio.schema import GroceryItem, GroceryList, MealPlan, PantryItem, Recipe, Unit
+from pantrila.foods import ML_PER_UNIT, load_foods
+from pantrila.schema import GroceryItem, GroceryList, MealPlan, PantryItem, Recipe, Unit
 
 # Walking order through a typical supermarket; unknown aisles go last.
 AISLE_ORDER = [

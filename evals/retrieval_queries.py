@@ -17,13 +17,13 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from pantrio.corpus import Brief, load_briefs, load_corpus
-from pantrio.foods import load_foods
-from pantrio.schema import Allergen as A
-from pantrio.schema import DietTag as D
-from pantrio.schema import MealType as M
-from pantrio.schema import Recipe
-from pantrio.search import SearchFilters
+from pantrila.corpus import Brief, load_briefs, load_corpus
+from pantrila.foods import load_foods
+from pantrila.schema import Allergen as A
+from pantrila.schema import DietTag as D
+from pantrila.schema import MealType as M
+from pantrila.schema import Recipe
+from pantrila.search import SearchFilters
 
 OUT = Path(__file__).parent / "data" / "retrieval_queries.json"
 

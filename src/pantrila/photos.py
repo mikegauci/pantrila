@@ -25,8 +25,8 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 from typing import Protocol
 
-from pantrio import config
-from pantrio.planner import Usage
+from pantrila import config
+from pantrila.planner import Usage
 
 BUCKET = "recipe-photos"
 GENERATE_SIZE = "1536x1152"
@@ -268,7 +268,7 @@ def save_corpus_path(conn, recipe_id: str, path: str, model: str) -> str | None:
 
 
 def corpus_dish(recipe) -> Dish:
-    from pantrio.schema import DietTag
+    from pantrila.schema import DietTag
 
     return Dish(title=recipe.title, summary=recipe.summary,
                 ingredients=[i.name for i in recipe.ingredients], steps=recipe.steps,

@@ -1,14 +1,14 @@
-# Render Blueprint for the Pantrio API (FastAPI). New > Blueprint in the Render dashboard,
+# Render Blueprint for the Pantrila API (FastAPI). New > Blueprint in the Render dashboard,
 # pick this repo, then fill in the secrets marked sync: false.
 services:
   - type: web
-    name: pantrio-api
+    name: pantrila-api
     runtime: python
     region: frankfurt
     plan: free
     branch: main
     buildCommand: pip install uv && uv sync --locked --no-dev
-    startCommand: .venv/bin/uvicorn pantrio.api:app --host 0.0.0.0 --port $PORT --proxy-headers
+    startCommand: .venv/bin/uvicorn pantrila.api:app --host 0.0.0.0 --port $PORT --proxy-headers
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
@@ -21,47 +21,47 @@ services:
         value: https://tlnigvzkselebbtetibt.supabase.co
       - key: SUPABASE_SERVICE_ROLE_KEY # uploads cookbook photos to Supabase Storage
         sync: false
-      - key: PANTRIO_CORS_ORIGINS # the Vercel URL(s), comma separated
+      - key: PANTRILA_CORS_ORIGINS # the Vercel URL(s), comma separated
         sync: false
-      - key: PANTRIO_MODEL
+      - key: PANTRILA_MODEL
         value: gpt-5.4-mini
-      - key: PANTRIO_PRICE_INPUT_PER_MTOK
+      - key: PANTRILA_PRICE_INPUT_PER_MTOK
         value: "0.75"
-      - key: PANTRIO_PRICE_OUTPUT_PER_MTOK
+      - key: PANTRILA_PRICE_OUTPUT_PER_MTOK
         value: "4.50"
-      - key: PANTRIO_PRICE_EMBED_PER_MTOK
+      - key: PANTRILA_PRICE_EMBED_PER_MTOK
         value: "0.02"
-      - key: PANTRIO_TRANSCRIBE_MODEL
+      - key: PANTRILA_TRANSCRIBE_MODEL
         value: gpt-4o-mini-transcribe
-      - key: PANTRIO_PRICE_TRANSCRIBE_PER_MIN
+      - key: PANTRILA_PRICE_TRANSCRIBE_PER_MIN
         value: "0.003"
-      - key: PANTRIO_MEDIA_SOURCE
+      - key: PANTRILA_MEDIA_SOURCE
         sync: false
       - key: APIFY_TOKEN
         sync: false
-      - key: PANTRIO_MEDIA_PLATFORMS
+      - key: PANTRILA_MEDIA_PLATFORMS
         sync: false
-      - key: PANTRIO_IMAGE_MODEL
+      - key: PANTRILA_IMAGE_MODEL
         value: gpt-image-2.5-flare
-      - key: PANTRIO_PRICE_IMAGE_INPUT_PER_MTOK
+      - key: PANTRILA_PRICE_IMAGE_INPUT_PER_MTOK
         value: "5"
-      - key: PANTRIO_PRICE_IMAGE_OUTPUT_PER_MTOK
+      - key: PANTRILA_PRICE_IMAGE_OUTPUT_PER_MTOK
         value: "30"
-      - key: PANTRIO_DAILY_PLANS
+      - key: PANTRILA_DAILY_PLANS
         value: "5"
-      - key: PANTRIO_DAILY_CHATS
+      - key: PANTRILA_DAILY_CHATS
         value: "50"
-      - key: PANTRIO_DAILY_IMPORTS
+      - key: PANTRILA_DAILY_IMPORTS
         value: "20"
-      - key: PANTRIO_DAILY_PHOTOS
+      - key: PANTRILA_DAILY_PHOTOS
         value: "5"
-      - key: PANTRIO_DAILY_BUDGET_USD
+      - key: PANTRILA_DAILY_BUDGET_USD
         value: "2"
       - key: LANGSMITH_API_KEY
         sync: false
       - key: LANGSMITH_ENDPOINT
         value: https://eu.api.smith.langchain.com
       - key: LANGSMITH_PROJECT
-        value: pantrio
+        value: pantrila
       - key: LANGSMITH_TRACING
         value: "true"

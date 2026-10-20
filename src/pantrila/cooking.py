@@ -3,7 +3,7 @@
 Amounts are in grams, like the grocery list: each line's grams per serving times the servings
 cooked. A pantry item with an amount goes down by what the recipe used, in its own unit, and
 is removed once (almost) nothing is left. An item without an amount means "some" and stays,
-because Pantrio cannot know whether it ran out.
+because Pantrila cannot know whether it ran out.
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from collections.abc import Iterable
 
 from pydantic import BaseModel
 
-from pantrio.schema import PantryItem
+from pantrila.schema import PantryItem
 
 USED_UP_G = 0.5  # less than this left counts as used up, like the grocery list's EPSILON_G
 

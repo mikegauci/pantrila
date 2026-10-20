@@ -25,8 +25,8 @@ from langgraph.graph import END, START, StateGraph
 from openai.lib._pydantic import to_strict_json_schema
 from pydantic import BaseModel, Field, ValidationError
 
-from pantrio import config
-from pantrio.constraints import (
+from pantrila import config
+from pantrila.constraints import (
     Violation,
     check_plan,
     day_nutrition,
@@ -36,8 +36,8 @@ from pantrio.constraints import (
     recipe_violations,
     slot_filters,
 )
-from pantrio.foods import load_foods
-from pantrio.schema import (
+from pantrila.foods import load_foods
+from pantrila.schema import (
     MealPlan,
     MealType,
     NutritionFacts,
@@ -46,7 +46,7 @@ from pantrio.schema import (
     Recipe,
     UserProfile,
 )
-from pantrio.search import SearchFilters, rrf_merge
+from pantrila.search import SearchFilters, rrf_merge
 
 MAX_TOOL_ROUNDS = 4
 MAX_REPAIRS = 2
@@ -69,24 +69,24 @@ class DbStore:
         self.conn, self.embed_query, self.embed_tokens = conn, embed_query, 0
 
     def search(self, query: str, filters: SearchFilters, limit: int) -> list[str]:
-        from pantrio.search import search
+        from pantrila.search import search
 
         result = search(self.conn, query, filters, limit=limit, embed_query=self.embed_query)
         self.embed_tokens += result.embed_tokens
         return result.ids
 
     def browse(self, filters: SearchFilters, limit: int) -> list[str]:
-        from pantrio.search import browse
+        from pantrila.search import browse
 
         return browse(self.conn, filters, limit)
 
     def get(self, ids: Iterable[str]) -> dict[str, Recipe]:
-        from pantrio.db import load_recipes
+        from pantrila.db import load_recipes
 
         return load_recipes(self.conn, ids)
 
     def photos(self, ids: Iterable[str]) -> dict[str, str]:
-        from pantrio.photos import corpus_paths
+        from pantrila.photos import corpus_paths
 
         return corpus_paths(self.conn, ids)
 
@@ -133,7 +133,7 @@ SEARCH_TOOL = {
 }
 
 INSTRUCTIONS = """\
-You plan meals for one person from Pantrio's recipe corpus.
+You plan meals for one person from Pantrila's recipe corpus.
 
 Code has already removed every recipe that breaks the person's allergies, diets, excluded \
 foods or time limit, and it checks the finished plan again. Only choose recipes from the \

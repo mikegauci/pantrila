@@ -18,7 +18,7 @@ export const STARTERS = [
 ]
 
 /** Home card: a question typed or picked here opens a new chat on the Assistant page. */
-export function AskPantrio() {
+export function AskPantrila() {
   const router = useRouter()
   const [text, setText] = useState("")
   const { data: threads } = useChats()
@@ -29,9 +29,9 @@ export function AskPantrio() {
   }
 
   return (
-    <Panel className="min-w-0 bg-primary-soft" data-tour="ask-pantrio">
+    <Panel className="min-w-0 bg-primary-soft" data-tour="ask-pantrila">
       <div className="mb-3 flex flex-wrap items-center gap-2">
-        <h2 className="text-[18px] font-semibold leading-[26px]">Ask Pantrio</h2>
+        <h2 className="text-[18px] font-semibold leading-[26px]">Ask Pantrila</h2>
         <AiBadge>Cooking assistant</AiBadge>
         <Link href="/assistant" className={buttonVariants({ variant: "ghost", size: "sm", className: "ml-auto" })}>
           Open <ArrowRight />
@@ -49,7 +49,7 @@ export function AskPantrio() {
         }}
       >
         <Input
-          aria-label="Ask Pantrio"
+          aria-label="Ask Pantrila"
           placeholder="What should I cook tonight?"
           value={text}
           maxLength={2000}

@@ -18,8 +18,8 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from pantrio.foods import load_foods, to_grams
-from pantrio.schema import Unit
+from pantrila.foods import load_foods, to_grams
+from pantrila.schema import Unit
 
 OUT = Path(__file__).parent / "data" / "video_cases.json"
 AUDIO = Path(__file__).parent / "data" / "video_audio"
@@ -154,7 +154,7 @@ def generate() -> list[dict]:
         out.append({
             "id": c.id,
             "kind": c.kind,
-            "url": f"https://www.tiktok.com/@pantrio.eval/video/{7_400_000_000_000_000_000 + n}",
+            "url": f"https://www.tiktok.com/@pantrila.eval/video/{7_400_000_000_000_000_000 + n}",
             "caption": c.caption,
             "script": c.script,
             "tts": {"voice": c.voice, "speed": c.speed, "music": c.music},

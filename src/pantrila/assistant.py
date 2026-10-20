@@ -24,17 +24,17 @@ from langgraph.graph import END, START, StateGraph
 from openai.lib._pydantic import to_strict_json_schema
 from pydantic import BaseModel, Field, ValidationError
 
-from pantrio import config
-from pantrio.constraints import recipe_problems
-from pantrio.cookbook import CookbookError, CookbookRecipeIn, RecipeLine, derive, problems_for
-from pantrio.foods import UnitError, to_grams
-from pantrio.grocery import shop_amount
-from pantrio.pantry import Kitchen, UnknownFood, item_text, make_item, resolve_food
-from pantrio.planner import RecipeStore, Usage, as_input, recipe_line
-from pantrio.recipe_import import MAX_LINES, capped_draft, draft_line
-from pantrio.schema import MealType, Recipe, Unit, UserProfile
-from pantrio.search import SearchFilters
-from pantrio.swaps import Swap, UnsupportedDessertSwap, evaluate_swap, swap_options
+from pantrila import config
+from pantrila.constraints import recipe_problems
+from pantrila.cookbook import CookbookError, CookbookRecipeIn, RecipeLine, derive, problems_for
+from pantrila.foods import UnitError, to_grams
+from pantrila.grocery import shop_amount
+from pantrila.pantry import Kitchen, UnknownFood, item_text, make_item, resolve_food
+from pantrila.planner import RecipeStore, Usage, as_input, recipe_line
+from pantrila.recipe_import import MAX_LINES, capped_draft, draft_line
+from pantrila.schema import MealType, Recipe, Unit, UserProfile
+from pantrila.search import SearchFilters
+from pantrila.swaps import Swap, UnsupportedDessertSwap, evaluate_swap, swap_options
 
 MAX_TOOL_ROUNDS = 4
 SEARCH_LIMIT = 6
@@ -115,7 +115,7 @@ TOOL_ARGS: dict[str, type[BaseModel]] = {
     "write_recipe": WriteRecipeArgs,
 }
 TOOLS = [
-    _tool("search_recipes", SearchArgs, "Search Pantrio's recipes. Results already respect the "
+    _tool("search_recipes", SearchArgs, "Search Pantrila's recipes. Results already respect the "
           "person's allergies, diets, excluded foods and time limit."),
     _tool("check_pantry", CheckPantryArgs, "List the pantry, or show which ingredients of a "
           "recipe the person has and which they still need to buy."),
@@ -124,13 +124,13 @@ TOOLS = [
           "nutrition, any allergens or diets the swap changes, and whether it suits the person."),
     _tool("scale_recipe", ScaleArgs, "A recipe's ingredients for a number of servings, with its "
           "steps and nutrition per serving."),
-    _tool("write_recipe", WriteRecipeArgs, "Write your own recipe when Pantrio's recipes do not "
+    _tool("write_recipe", WriteRecipeArgs, "Write your own recipe when Pantrila's recipes do not "
           "have what the person asked for. Code checks it against their rules and the app "
           "offers to save it to their cookbook."),
 ]  # fmt: skip
 
 INSTRUCTIONS = """\
-You are Pantrio's cooking assistant. You help one person cook from their kitchen: find \
+You are Pantrila's cooking assistant. You help one person cook from their kitchen: find \
 recipes, check what they have, swap ingredients, scale recipes and answer cooking questions. \
 Talk to them as "you".
 
@@ -138,7 +138,7 @@ Talk to them as "you".
 title followed by its id in square brackets, copied exactly from the tool output, e.g. \
 Mushroom Omelette [french-mushroom-omelette]. Never invent ids or nutrition numbers; get them \
 from tools.
-- Your own recipes: when the person asks for a recipe Pantrio's recipes do not have (search \
+- Your own recipes: when the person asks for a recipe Pantrila's recipes do not have (search \
 finds nothing close) or asks for their own version, write it with write_recipe, then show it: \
 the ingredients with amounts and the method. Give it no id in square brackets. Pass on any \
 rule problem or unchecked ingredient the tool reports.
@@ -322,7 +322,7 @@ class Assistant:
         for rid in cited:
             if rid not in recipes:
                 flagged.append(rid)
-                notes.append(f"Pantrio has no recipe with the id {rid}.")
+                notes.append(f"Pantrila has no recipe with the id {rid}.")
             elif problems := recipe_problems(recipes[rid], s["profile"]):
                 flagged.append(rid)
                 why = "; ".join(msg.removeprefix(f"{rid} ") for _, msg in problems)
@@ -339,7 +339,7 @@ class Assistant:
             s["text"],
         )
         if notes:
-            text += "\n\nNote from Pantrio: " + " ".join(notes)
+            text += "\n\nNote from Pantrila: " + " ".join(notes)
         return {"text": text, "flagged": flagged, "draft_problems": draft_problems}
 
     # tools
@@ -507,7 +507,7 @@ def write_draft(a: WriteRecipeArgs, p: UserProfile) -> tuple[str, CookbookRecipe
         out.append(f"Allergens found: {', '.join(derived.allergens) or 'none'}.")
         if unknown:
             out.append(
-                f"Could not check for allergens or diets (not in Pantrio's table): "
+                f"Could not check for allergens or diets (not in Pantrila's table): "
                 f"{', '.join(unknown)} (the person fixes them when saving)."
             )
         else:
@@ -518,7 +518,7 @@ def write_draft(a: WriteRecipeArgs, p: UserProfile) -> tuple[str, CookbookRecipe
         if not problems and not unknown:
             out.append("It suits the person's allergies, diets and excluded foods.")
     elif unknown:
-        out.append(f"Could not check (not in Pantrio's table): {', '.join(unknown)}.")
+        out.append(f"Could not check (not in Pantrila's table): {', '.join(unknown)}.")
     return "\n".join(out), draft
 
 

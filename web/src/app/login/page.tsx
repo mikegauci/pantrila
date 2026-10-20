@@ -79,7 +79,7 @@ export default function LoginPage() {
       <section className="flex items-center justify-center p-6">
         <div className="w-full max-w-sm">
           <Logo className="mb-10 lg:hidden" />
-          <h1 className="text-[24px] font-bold leading-8">Try Pantrio</h1>
+          <h1 className="text-[24px] font-bold leading-8">Try Pantrila</h1>
           <p className="mt-1 text-muted-foreground">
             No account needed. Set your diet and allergies, add what is in your kitchen and plan
             a week.
@@ -99,7 +99,7 @@ export default function LoginPage() {
               <div className="mt-3">
                 <Mail className="mb-2 size-5 text-primary-text" aria-hidden />
                 <p>
-                  If <strong>{email}</strong> can receive Pantrio email, a link is on its way. Open
+                  If <strong>{email}</strong> can receive Pantrila email, a link is on its way. Open
                   it on this device.
                 </p>
                 <Button variant="link" className="mt-1 px-0" onClick={() => setSent(false)}>

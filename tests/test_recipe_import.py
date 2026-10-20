@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import httpx
 import pytest
 
-from pantrio.recipe_import import (
+from pantrila.recipe_import import (
     ImportedRecipe,
     Importer,
     ImportFailed,
@@ -142,7 +142,7 @@ def test_to_draft_checks_every_line_in_code():
     assert draft.steps == ["Whisk.", "Fry."] and draft.cuisine == "french"
     assert draft.source == "link" and draft.source_url == "https://a.example/r"
     joined = " ".join(notes)
-    assert "Ingredient 3 (a jar of gochujang): not in Pantrio's table" in joined
+    assert "Ingredient 3 (a jar of gochujang): not in Pantrila's table" in joined
     assert "Ingredient 4 (milk): check the amount" in joined
     assert "Ingredient 5 (dragon fruit): pick a food or estimate it" in joined
 
@@ -223,7 +223,7 @@ def test_fetch_pins_the_validated_address_without_a_second_dns_lookup(monkeypatc
     import socket
     from unittest.mock import Mock
 
-    from pantrio.safe_http import PinnedConnection
+    from pantrila.safe_http import PinnedConnection
 
     sock = Mock()
     sock.connect.side_effect = OSError("stop before network")
@@ -254,7 +254,7 @@ def test_dns_resolution_has_an_overall_deadline(monkeypatch):
     import threading
 
     release = threading.Event()
-    monkeypatch.setattr("pantrio.recipe_import.FETCH_TIMEOUT_S", 0.02)
+    monkeypatch.setattr("pantrila.recipe_import.FETCH_TIMEOUT_S", 0.02)
     try:
         with pytest.raises(ImportFailed, match="too long"):
             fetch_page("https://slow.example/", resolve=lambda *_: (release.wait(2), [PUBLIC])[1])
@@ -268,7 +268,7 @@ def test_trickling_headers_cannot_extend_socket_deadline():
     import time
     from contextlib import suppress
 
-    from pantrio.safe_http import pinned_page
+    from pantrila.safe_http import pinned_page
 
     listener = socket.socket()
     listener.bind(("127.0.0.1", 0))
@@ -305,7 +305,7 @@ def test_pinned_fetch_falls_back_only_to_other_validated_addresses():
     import time
     from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-    from pantrio.safe_http import pinned_page
+    from pantrila.safe_http import pinned_page
 
     hosts = []
     body = b"<html>recipe</html>"
@@ -427,7 +427,7 @@ def test_photos_without_a_method_are_still_refused():
 
 
 def amount_client(recipe, repairs):
-    from pantrio.recipe_import import AmountRepairs
+    from pantrila.recipe_import import AmountRepairs
 
     client = FakeClient(recipe)
     original_parse = client.parse
@@ -443,7 +443,7 @@ def amount_client(recipe, repairs):
 
 
 def test_import_repairs_sprigs_and_missing_pasta_without_manual_edits():
-    from pantrio.cookbook import derive
+    from pantrila.cookbook import derive
 
     raw = imported(
         servings=4,
@@ -484,7 +484,7 @@ def test_import_repairs_sprigs_and_missing_pasta_without_manual_edits():
 
 
 def test_cooked_reference_is_counted_once_but_explicit_extra_amount_is_kept():
-    from pantrio.cookbook import derive
+    from pantrila.cookbook import derive
 
     raw = imported(
         ingredients=[
@@ -562,7 +562,7 @@ def test_missing_amount_is_estimated_instead_of_silently_becoming_one_gram():
 
 
 def test_vague_video_amount_remains_estimated_after_saving():
-    from pantrio.cookbook import CookbookRecipeIn, derive
+    from pantrila.cookbook import CookbookRecipeIn, derive
 
     raw = video_recipe(vague_amount="a glug")
     result = Importer(client=FakeClient(raw)).from_video(wav(2), [])
@@ -572,7 +572,7 @@ def test_vague_video_amount_remains_estimated_after_saving():
 
 
 def test_estimated_food_unit_repair_keeps_its_allergens_and_facts():
-    from pantrio.cookbook import derive
+    from pantrila.cookbook import derive
 
     raw_line = imported().ingredients[2].model_dump()
     raw_line["unit"] = "piece"
@@ -587,7 +587,7 @@ def test_estimated_food_unit_repair_keeps_its_allergens_and_facts():
 
 
 def test_video_repair_failure_is_not_reported_as_no_recipe():
-    from pantrio.recipe_import import AmountEstimateFailed
+    from pantrila.recipe_import import AmountEstimateFailed
 
     raw = video_recipe(vague_amount="some eggs")
     raw.ingredients[0].unit = "piece"

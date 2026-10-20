@@ -9,8 +9,8 @@ from types import SimpleNamespace
 import httpx
 import pytest
 
-from pantrio import post_media
-from pantrio.post_media import (
+from pantrila import post_media
+from pantrila.post_media import (
     ApifyMedia,
     MediaFailed,
     NoMedia,
@@ -19,7 +19,7 @@ from pantrio.post_media import (
     media_source,
     read_video,
 )
-from pantrio.recipe_import import (
+from pantrila.recipe_import import (
     HEARD,
     NO_METHOD,
     ImportedRecipe,
@@ -174,7 +174,7 @@ def test_any_failure_falls_back_to_the_captions_ingredients(media, host):
 
 
 def test_no_recipe_anywhere_still_says_what_to_do_next():
-    from pantrio.social import VIDEO_INCOMPLETE
+    from pantrila.social import VIDEO_INCOMPLETE
 
     no_recipe = ImportedRecipe.model_validate({**caption_only().model_dump(), "is_recipe": False})
     no_video_recipe = VideoRecipe.model_validate({**heard().model_dump(), "is_recipe": False})
@@ -359,22 +359,22 @@ def test_tiktok_caption_comes_from_the_service_and_one_run_serves_both():
 
 def test_media_source_is_off_unless_configured(monkeypatch):
     for name in (
-        "PANTRIO_MEDIA_SOURCE",
+        "PANTRILA_MEDIA_SOURCE",
         "APIFY_TOKEN",
-        "PANTRIO_MEDIA_PLATFORMS",
-        "PANTRIO_PRICE_MEDIA_FACEBOOK",
+        "PANTRILA_MEDIA_PLATFORMS",
+        "PANTRILA_PRICE_MEDIA_FACEBOOK",
     ):
         monkeypatch.delenv(name, raising=False)
     assert isinstance(media_source(), NoMedia)
-    monkeypatch.setenv("PANTRIO_MEDIA_SOURCE", "apify")
+    monkeypatch.setenv("PANTRILA_MEDIA_SOURCE", "apify")
     assert isinstance(media_source(), NoMedia)  # no token
     monkeypatch.setenv("APIFY_TOKEN", "t")
     source = media_source()
     assert isinstance(source, ApifyMedia)
     assert source.platforms == frozenset({"instagram", "tiktok", "facebook"})
     assert source.fee_for("facebook") == 0.006
-    monkeypatch.setenv("PANTRIO_PRICE_MEDIA_FACEBOOK", "0.007")
-    monkeypatch.setenv("PANTRIO_MEDIA_PLATFORMS", "instagram, myspace")
+    monkeypatch.setenv("PANTRILA_PRICE_MEDIA_FACEBOOK", "0.007")
+    monkeypatch.setenv("PANTRILA_MEDIA_PLATFORMS", "instagram, myspace")
     source = media_source()
     assert source.platforms == frozenset({"instagram"}) and source.fee_for("facebook") == 0.007
 
@@ -414,7 +414,7 @@ def test_facebook_shared_reel_reads_video_when_the_caption_only_says_comment_rec
 
 
 def test_unreadable_video_is_not_reported_as_a_successfully_read_incomplete_recipe():
-    from pantrio.social import NO_RECIPE
+    from pantrila.social import NO_RECIPE
 
     no_recipe = caption_only().model_copy(update={"is_recipe": False})
     client = FakeClient(no_recipe)

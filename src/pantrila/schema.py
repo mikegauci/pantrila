@@ -1,4 +1,4 @@
-"""Pydantic models shared across Pantrio.
+"""Pydantic models shared across Pantrila.
 
 Models sent to the model as structured outputs carry field descriptions; those descriptions are
 part of the prompt, so change them with the same care as prompt text.
@@ -70,7 +70,7 @@ class Ingredient(BaseModel):
     name: str = Field(
         description="Ingredient line as a cook would write it, e.g. 'red onion, diced'."
     )
-    food: str = Field(description="Key of the food in Pantrio's ingredient table.")
+    food: str = Field(description="Key of the food in Pantrila's ingredient table.")
     quantity: float = Field(gt=0)
     unit: Unit
     grams: float = Field(ge=0, description="Quantity normalised to grams in code.")
@@ -176,7 +176,7 @@ class MealPlan(BaseModel):
 class PantryItem(BaseModel):
     """A food the person has at home. No quantity means "some", enough for any recipe."""
 
-    food: str = Field(description="Key of the food in Pantrio's ingredient table.")
+    food: str = Field(description="Key of the food in Pantrila's ingredient table.")
     quantity: float | None = Field(default=None, gt=0)
     unit: Unit | None = None
     grams: float | None = Field(default=None, ge=0, description="Quantity normalised in code.")

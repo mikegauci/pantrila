@@ -15,8 +15,8 @@ from pathlib import Path
 
 import psycopg
 
-from pantrio.foods import load_foods
-from pantrio.schema import Recipe
+from pantrila.foods import load_foods
+from pantrila.schema import Recipe
 
 CACHE_DIR = Path(__file__).resolve().parents[2] / ".cache" / "embeddings"
 BATCH_SIZE = 128

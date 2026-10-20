@@ -34,7 +34,7 @@ export default function GroceryPage() {
   // Ticks per plan, kept in this browser. The app renders only after sign-in on the client,
   // so reading localStorage during render is safe.
   const [edits, setEdits] = useState<Record<string, string[]>>({})
-  const storageKey = plan ? `pantrio-grocery-${session!.user.id}-${plan.id}` : null
+  const storageKey = plan ? `pantrila-grocery-${session!.user.id}-${plan.id}` : null
   const ticked = new Set(
     storageKey
       ? edits[storageKey] ?? (JSON.parse(localStorage.getItem(storageKey) ?? "[]") as string[])

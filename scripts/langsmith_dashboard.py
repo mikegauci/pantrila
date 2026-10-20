@@ -1,4 +1,4 @@
-"""Create (or rebuild) the "Pantrio live" LangSmith dashboard: quality, cost and latency of
+"""Create (or rebuild) the "Pantrila live" LangSmith dashboard: quality, cost and latency of
 the plans and chat turns the deployed API serves.
 
 Every root run is named `plan` or `chat` and tagged with where it ran (`api`, `cli`, `eval`;
@@ -9,7 +9,7 @@ charts read those. Re-running deletes the old dashboard with the same title and 
     uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]
 
 Needs LANGSMITH_API_KEY (and LANGSMITH_ENDPOINT for EU accounts); LANGSMITH_PROJECT
-defaults to `pantrio`.
+defaults to `pantrila`.
 """
 
 from __future__ import annotations
@@ -19,9 +19,9 @@ import os
 
 import httpx
 
-from pantrio import config  # noqa: F401  (loads .env)
+from pantrila import config  # noqa: F401  (loads .env)
 
-TITLE = "Pantrio live"
+TITLE = "Pantrila live"
 RUNS = ("plan", "chat")
 
 
@@ -89,7 +89,7 @@ def main() -> None:
     if not key:
         raise SystemExit("LANGSMITH_API_KEY is not set")
     base = (os.environ.get("LANGSMITH_ENDPOINT") or "https://api.smith.langchain.com").rstrip("/")
-    project = os.environ.get("LANGSMITH_PROJECT") or "pantrio"
+    project = os.environ.get("LANGSMITH_PROJECT") or "pantrila"
     http = httpx.Client(base_url=f"{base}/api/v1", headers={"x-api-key": key}, timeout=30)
 
     def call(method: str, path: str, **kw):

@@ -2,7 +2,7 @@ from collections import Counter
 
 import pytest
 
-from pantrio.constraints import (
+from pantrila.constraints import (
     PORTION_STEPS,
     Severity,
     check_plan,
@@ -13,7 +13,7 @@ from pantrio.constraints import (
     recipe_violations,
     slot_filters,
 )
-from pantrio.schema import (
+from pantrila.schema import (
     Allergen,
     DietTag,
     MealPlan,
@@ -152,7 +152,7 @@ def test_malformed_plan_is_checked_before_exponential_portion_fitting(recipes, m
     oversized = plan([(D, "indian-chickpea-curry")] * 10)
     p = profile(targets=NutritionTargets(kcal=2000))
     monkeypatch.setattr(
-        "pantrio.constraints.itertools.product",
+        "pantrila.constraints.itertools.product",
         lambda *a, **kw: pytest.fail("must not enumerate malformed meals"),
     )
     assert fit_portions(oversized, p, recipes) is oversized

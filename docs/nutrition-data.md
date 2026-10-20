@@ -1,8 +1,8 @@
 # Ingredient nutrition sources
 
-Pantrio ships a curated subset of USDA FoodData Central SR Legacy 2018-04 (public domain)
+Pantrila ships a curated subset of USDA FoodData Central SR Legacy 2018-04 (public domain)
 and **Anses. 2025. Ciqual French food composition table**, reused under the
-[French Open Licence](https://ciqual.anses.fr/cms/en/node/22). ANSES does not endorse Pantrio.
+[French Open Licence](https://ciqual.anses.fr/cms/en/node/22). ANSES does not endorse Pantrila.
 Ciqual supplies composition averages, not recipe instructions or kitchen testing.
 
 Each `Food` records source, source food code, dataset version, source URL and attribution.
@@ -19,7 +19,7 @@ selected descriptions, field headers, retrieval date and exclusions. Download th
 ```bash
 uv run python scripts/build_ciqual_table.py
 uv run python scripts/build_usda_table.py
-uv run pantrio corpus check
+uv run pantrila corpus check
 ```
 
 The Ciqual importer uses Python's standard library; no workbook parser or network access is
@@ -51,7 +51,7 @@ again when evaluating a low-carb target. New recipes inherit the disclosed appro
 
 Missing (`-`, empty), traces, non-finite and unsupported qualified values are rejected, never
 silently converted to zero. For fibre alone, `< x` uses the **upper bound x**, retained as a
-qualification in the CSV. Mascarpone has `< 0,5` g fibre: Pantrio uses 0.5 g fibre and 3.6 g
+qualification in the CSV. Mascarpone has `< 0,5` g fibre: Pantrila uses 0.5 g fibre and 3.6 g
 inclusive carbs (3.1 + 0.5). This is a conservative bound, not a measured exact value. It can
 raise a new recipe's carbohydrate estimate by less than 0.5 g per 100 g mascarpone. No other
 selected nutrient needs a fallback. This policy is not applied to arbitrary nutrient fields.

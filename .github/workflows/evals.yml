@@ -22,12 +22,12 @@ jobs:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
-      LANGSMITH_PROJECT: pantrio
+      LANGSMITH_PROJECT: pantrila
       LANGSMITH_ENDPOINT: https://eu.api.smith.langchain.com
-      PANTRIO_MODEL: ${{ inputs.model }}
-      PANTRIO_PRICE_INPUT_PER_MTOK: ${{ inputs.price_input }}
-      PANTRIO_PRICE_OUTPUT_PER_MTOK: ${{ inputs.price_output }}
-      PANTRIO_PRICE_EMBED_PER_MTOK: "0.02"
+      PANTRILA_MODEL: ${{ inputs.model }}
+      PANTRILA_PRICE_INPUT_PER_MTOK: ${{ inputs.price_input }}
+      PANTRILA_PRICE_OUTPUT_PER_MTOK: ${{ inputs.price_output }}
+      PANTRILA_PRICE_EMBED_PER_MTOK: "0.02"
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6

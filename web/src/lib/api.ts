@@ -47,7 +47,7 @@ let slow = 0
 
 function markSlow() {
   if (slow++ === 0)
-    toast.loading("Waking up the Pantrio server…", {
+    toast.loading("Waking up the Pantrila server…", {
       id: WAKE_TOAST,
       duration: Infinity,
       description: "It sleeps when idle. The first load can take a minute.",
@@ -74,7 +74,7 @@ async function request(path: string, init: RequestInit): Promise<Response> {
     const sent = typeof init.body === "string" ? ` (${(init.body.length / 1e6).toFixed(1)} MB sent)` : ""
     throw new ApiError(
       0,
-      `Could not reach the Pantrio server after ${secs}s${sent}: the connection dropped before it replied` +
+      `Could not reach the Pantrila server after ${secs}s${sent}: the connection dropped before it replied` +
         ` (${e instanceof Error ? e.message : "network error"}). The server may be waking up or the upload` +
         ` was too slow. Check your connection and try again.`,
     )
@@ -89,7 +89,7 @@ export function pingServer() {
   request("/health", {}).catch(() => {})
 }
 
-/** Call the Pantrio API with the signed-in user's token. */
+/** Call the Pantrila API with the signed-in user's token. */
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const res = await request(path, {
     ...init,

@@ -21,7 +21,7 @@ import wave
 from array import array
 
 from evals.video_cases import AUDIO, load_cases
-from pantrio import config
+from pantrila import config
 
 TTS_MODEL = "gpt-4o-mini-tts"
 TTS_RATE, RATE = 24_000, 16_000

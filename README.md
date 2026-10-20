@@ -1,4 +1,4 @@
-# Pantrio
+# Pantrila
 
 AI cooking and meal-planning assistant. Tell it what is in your kitchen, your diet, allergies
 and nutrition targets; it finds recipes with hybrid RAG search, plans your week with a
@@ -152,7 +152,7 @@ with the next message; the browser only says which thread it is in.
   model estimate, marked "Estimated" in the UI, with allergens you can correct. Links are
   fetched with SSRF guards (public addresses only, every redirect re-checked). Your recipes
   stay in your cookbook and never go into meal plans.
-- **Recipes from posts, credited.** For a TikTok, Instagram or Facebook post, Pantrio reads
+- **Recipes from posts, credited.** For a TikTok, Instagram or Facebook post, Pantrila reads
   its caption, a recipe site it links to, or the post's video when the method is only there.
   Media is discarded after reading. If a post cannot be read, paste its caption/text or add
   screenshots. The recipe keeps the post link and the creator's @handle.
@@ -180,7 +180,7 @@ named `plan` or `chat` and tagged with where it ran (`api`, `cli`, `eval`), with
 the metadata. Each run also gets deterministic feedback scores: `targets_met`, `repairs`,
 `fallbacks` and `pantry_use` for plans, and `flagged_citations` for chat turns.
 
-`uv run python scripts/langsmith_dashboard.py` builds a **"Pantrio live"** LangSmith
+`uv run python scripts/langsmith_dashboard.py` builds a **"Pantrila live"** LangSmith
 dashboard from these: requests, spend, cost per request, latency p50/p95, error rate, plan
 quality, repairs and the citation guard. By default it shows live API traffic only. The three
 eval runners upload datasets and experiments to LangSmith, so model or prompt changes can be
@@ -192,14 +192,14 @@ compared side by side.
 uv sync
 cp .env.example .env                     # add OPENAI_API_KEY; prices are pre-filled
 docker compose up -d db                  # Postgres 16 + pgvector
-uv run pantrio db migrate && uv run pantrio db seed
-uv run pantrio ingest                    # embed the corpus (about $0.002)
-uv run pantrio search "quick vegan dinner with chickpeas" --parse
-uv run pantrio plan vegan-high-protein   # a week of meals for an eval profile
-uv run pantrio chat                      # the cooking assistant in the terminal
+uv run pantrila db migrate && uv run pantrila db seed
+uv run pantrila ingest                    # embed the corpus (about $0.002)
+uv run pantrila search "quick vegan dinner with chickpeas" --parse
+uv run pantrila plan vegan-high-protein   # a week of meals for an eval profile
+uv run pantrila chat                      # the cooking assistant in the terminal
 
 # web app: API on :8000, web on :3000
-uv run uvicorn pantrio.api:app --env-file .env --reload
+uv run uvicorn pantrila.api:app --env-file .env --reload
 cd web && cp .env.example .env.local && npm ci && npm run dev
 ```
 
@@ -223,19 +223,19 @@ The paid evals are a manual GitHub Actions workflow.
 
 | Path | What |
 |---|---|
-| `src/pantrio/schema.py` | Pydantic models: recipes, the 14 EU allergens, diets, profiles, plans |
-| `src/pantrio/foods.py`, `nutrition.py` | Ingredient table, unit conversion, USDA/Ciqual nutrition, allergen and diet derivation |
-| `src/pantrio/corpus.py`, `scripts/generate_corpus.py` | Corpus generation and verification |
-| `src/pantrio/search.py`, `embeddings.py` | Hybrid search with SQL safety filters; cached embeddings |
-| `src/pantrio/constraints.py` | The deterministic checker: hard rules and soft targets |
-| `src/pantrio/planner.py` | Planner graph |
-| `src/pantrio/assistant.py`, `swaps.py`, `pantry.py`, `grocery.py` | Assistant graph and its tools |
-| `src/pantrio/meal_swap.py`, `web/src/components/swap-meal.tsx` | Swap one meal of a saved plan for another recipe that passes your rules (no model call) |
-| `src/pantrio/cookbook.py`, `recipe_import.py`, `social.py` | Your own recipes: derivation, storage, import from photos, links, post captions, video sound and pasted text |
-| `src/pantrio/photos.py` | Recipe photo prompt, generation and Supabase Storage |
-| `src/pantrio/cooking.py`, `web/src/components/cooking-mode.tsx` | Cooking mode: pantry use after "I cooked this", step timers, wake lock |
-| `src/pantrio/api.py`, `api_models.py`, `api_views.py`, `backend.py` | FastAPI routes, HTTP models, response views and pooled persistence |
-| `src/pantrio/auth.py`, `records.py`, `chats.py`, `operations.py` | Token checks, saved records, conversations and atomic paid-operation lifecycle |
+| `src/pantrila/schema.py` | Pydantic models: recipes, the 14 EU allergens, diets, profiles, plans |
+| `src/pantrila/foods.py`, `nutrition.py` | Ingredient table, unit conversion, USDA/Ciqual nutrition, allergen and diet derivation |
+| `src/pantrila/corpus.py`, `scripts/generate_corpus.py` | Corpus generation and verification |
+| `src/pantrila/search.py`, `embeddings.py` | Hybrid search with SQL safety filters; cached embeddings |
+| `src/pantrila/constraints.py` | The deterministic checker: hard rules and soft targets |
+| `src/pantrila/planner.py` | Planner graph |
+| `src/pantrila/assistant.py`, `swaps.py`, `pantry.py`, `grocery.py` | Assistant graph and its tools |
+| `src/pantrila/meal_swap.py`, `web/src/components/swap-meal.tsx` | Swap one meal of a saved plan for another recipe that passes your rules (no model call) |
+| `src/pantrila/cookbook.py`, `recipe_import.py`, `social.py` | Your own recipes: derivation, storage, import from photos, links, post captions, video sound and pasted text |
+| `src/pantrila/photos.py` | Recipe photo prompt, generation and Supabase Storage |
+| `src/pantrila/cooking.py`, `web/src/components/cooking-mode.tsx` | Cooking mode: pantry use after "I cooked this", step timers, wake lock |
+| `src/pantrila/api.py`, `api_models.py`, `api_views.py`, `backend.py` | FastAPI routes, HTTP models, response views and pooled persistence |
+| `src/pantrila/auth.py`, `records.py`, `chats.py`, `operations.py` | Token checks, saved records, conversations and atomic paid-operation lifecycle |
 | `supabase/migrations/` | SQL migrations (pgvector, full text, RLS) |
 | `evals/` | Eval generators, runners, committed reports |
 | `web/` | Next.js app ([`web/DESIGN_SYSTEM.md`](web/DESIGN_SYSTEM.md)) |
@@ -261,9 +261,9 @@ The paid evals are a manual GitHub Actions workflow.
 - TikTok doesn't share captions with other apps, so for TikTok you paste the caption (the link
   keeps the credit). Instagram and Facebook links work alone today, and if a platform stops
   sharing, the app asks for the caption instead. When the caption (and any recipe site it
-  links) has no method, Pantrio can hear the video from the link: a third-party scraping
+  links) has no method, Pantrila can hear the video from the link: a third-party scraping
   service (Apify, one actor per platform) finds the post's video (and a TikTok caption), and
-  Pantrio reads its sound and 4 frames in memory and drops it. This goes further against the
+  Pantrila reads its sound and 4 frames in memory and drops it. This goes further against the
   platforms' terms than reading the caption, works only for public posts, can stop working
   whenever a platform changes, costs $0.003-0.006 per post, and is off unless configured
   (capped per person per day). If it cannot read the recipe, paste its text or add screenshots.

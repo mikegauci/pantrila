@@ -1,5 +1,5 @@
 [project]
-name = "pantrio"
+name = "pantrila"
 version = "0.1.0"
 description = "AI cooking and meal-planning assistant"
 readme = "README.md"
@@ -22,7 +22,7 @@ dependencies = [
 ]
 
 [project.scripts]
-pantrio = "pantrio.cli:app"
+pantrila = "pantrila.cli:app"
 
 [dependency-groups]
 dev = [
@@ -36,7 +36,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/pantrio"]
+packages = ["src/pantrila"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -44,7 +44,7 @@ pythonpath = ["."]
 addopts = "-m 'not live'"
 markers = [
     "live: calls paid APIs (OpenAI); run with -m live",
-    "db: needs PANTRIO_TEST_DATABASE_URL",
+    "db: needs PANTRILA_TEST_DATABASE_URL",
 ]
 
 [tool.ruff]

@@ -1,7 +1,7 @@
 import pytest
 
-from pantrio.schema import Allergen, DietTag, MealType
-from pantrio.search import RRF_K, SearchFilters, filter_sql, rrf_merge
+from pantrila.schema import Allergen, DietTag, MealType
+from pantrila.search import RRF_K, SearchFilters, filter_sql, rrf_merge
 
 
 def test_rrf_merge_scores_and_order():
@@ -69,7 +69,7 @@ def test_python_violations_mirror_the_sql(corpus):
 
 
 def test_query_embedding_cache_reuses_vectors_without_counting_tokens_twice(monkeypatch):
-    from pantrio.search import openai_query_embedder
+    from pantrila.search import openai_query_embedder
 
     calls = []
 
@@ -77,7 +77,7 @@ def test_query_embedding_cache_reuses_vectors_without_counting_tokens_twice(monk
         calls.extend(texts)
         return [[0.1, 0.2]], 3
 
-    monkeypatch.setattr("pantrio.embeddings.openai_embedder", lambda *args: embed)
+    monkeypatch.setattr("pantrila.embeddings.openai_embedder", lambda *args: embed)
     query = openai_query_embedder("model")
     assert query("egg   curry") == ([0.1, 0.2], 3)
     assert query("egg curry") == ([0.1, 0.2], 0)

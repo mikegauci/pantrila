@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.testclient import TestClient
 
-from pantrio.request_limits import RequestSizeLimit
+from pantrila.request_limits import RequestSizeLimit
 
 
 def test_body_limit_counts_streamed_bytes_before_the_handler():

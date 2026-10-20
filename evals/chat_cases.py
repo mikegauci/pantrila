@@ -15,7 +15,7 @@ import json
 import re
 from pathlib import Path
 
-from pantrio.schema import UserProfile
+from pantrila.schema import UserProfile
 
 OUT = Path(__file__).parent / "data" / "chat_cases.json"
 CITED_IN_MESSAGE = re.compile(r"\[([a-z0-9-]+)\]")
