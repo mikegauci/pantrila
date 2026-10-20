@@ -22,8 +22,8 @@ from datetime import UTC, datetime
 
 from openai import APIError, AsyncOpenAI
 
-from pantrio import config
-from pantrio.corpus import (
+from pantrila import config
+from pantrila.corpus import (
     DATA_DIR,
     Brief,
     CorpusValidationError,
@@ -33,17 +33,17 @@ from pantrio.corpus import (
     recipe_path,
     save_recipe,
 )
-from pantrio.schema import Recipe
+from pantrila.schema import Recipe
 
 MANIFEST = DATA_DIR / "corpus_manifest.json"
 SAMPLE_IDS = ["indian-chana-masala", "british-kedgeree", "greek-salad"]
 MAX_ATTEMPTS = 3
 
 INSTRUCTIONS = """\
-You write reliable home-cooking recipes for Pantrio, a meal-planning app.
+You write reliable home-cooking recipes for Pantrila, a meal-planning app.
 
 - Write the dish described in the brief, in the stated cuisine, for the stated meal.
-- Every ingredient must map to a food in Pantrio's ingredient table (the `food` field). When the
+- Every ingredient must map to a food in Pantrila's ingredient table (the `food` field). When the
   authentic ingredient is missing, substitute the closest available food and name the
   substitute honestly in `name` (for example use `miso` for doenjang and say "miso").
 - Use realistic quantities for the number of servings, and include oil, salt and spices.

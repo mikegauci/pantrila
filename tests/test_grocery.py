@@ -1,6 +1,6 @@
-from pantrio.grocery import AISLE_ORDER, grocery_list, grocery_text, shop_amount
-from pantrio.pantry import make_item
-from pantrio.schema import MealPlan, PlanDay, PlannedMeal, Unit
+from pantrila.grocery import AISLE_ORDER, grocery_list, grocery_text, shop_amount
+from pantrila.pantry import make_item
+from pantrila.schema import MealPlan, PlanDay, PlannedMeal, Unit
 
 CURRY, CHICKEN = "indian-chickpea-curry", "greek-lemon-chicken"
 

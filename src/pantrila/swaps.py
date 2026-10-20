@@ -11,10 +11,10 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 
-from pantrio.constraints import recipe_problems
-from pantrio.foods import derive_allergens, derive_ingredient_diets, load_foods
-from pantrio.nutrition import nutrition_diets, recipe_nutrition
-from pantrio.schema import Allergen, DietTag, Ingredient, MealType, Recipe, Unit, UserProfile
+from pantrila.constraints import recipe_problems
+from pantrila.foods import derive_allergens, derive_ingredient_diets, load_foods
+from pantrila.nutrition import nutrition_diets, recipe_nutrition
+from pantrila.schema import Allergen, DietTag, Ingredient, MealType, Recipe, Unit, UserProfile
 
 PROTEIN_AISLES = {"meat", "seafood"}
 OTHER_PROTEINS = {

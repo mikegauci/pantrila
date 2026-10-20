@@ -1,8 +1,8 @@
-"""Hear a post's video from its link: a third-party service finds the video, Pantrio reads it.
+"""Hear a post's video from its link: a third-party service finds the video, Pantrila reads it.
 
-Instagram, Facebook and TikTok give apps like Pantrio no video on their public pages, so the
+Instagram, Facebook and TikTok give apps like Pantrila no video on their public pages, so the
 video link comes from a scraping service (Apify, one actor per platform;
-`PANTRIO_MEDIA_SOURCE=apify`, off by default). Pantrio then fetches the video itself with the
+`PANTRILA_MEDIA_SOURCE=apify`, off by default). Pantrila then fetches the video itself with the
 same SSRF guards as any page (size and time capped), turns it into 16 kHz mono WAV and 4 JPEG
 frames in memory with PyAV, and drops it. Nothing is written to disk or stored. Only public
 posts; never a login or cookies. The Apify token is sent only to api.apify.com.
@@ -19,7 +19,7 @@ from io import BytesIO
 from typing import Protocol
 from urllib.parse import urlsplit
 
-from pantrio.recipe_import import (
+from pantrila.recipe_import import (
     MAX_FRAMES,
     MAX_IMAGE_BYTES,
     MAX_VIDEO_S,
@@ -93,7 +93,7 @@ class NoMedia:
 
 @dataclass(frozen=True)
 class Actor:
-    """One Apify actor and where its result keeps what Pantrio needs (dotted paths; a number is
+    """One Apify actor and where its result keeps what Pantrila needs (dotted paths; a number is
     a list index). Checked on 20 October 2026 with scripts/reel_media_check.py."""
 
     id: str
@@ -115,7 +115,7 @@ ACTORS = {
     ),
     # TikTok's own links in the result are not the video: the actor stores it in Apify's
     # key-value store, fetched from api.apify.com with the token. Its caption is one TikTok's
-    # oEmbed never gives Pantrio.
+    # oEmbed never gives Pantrila.
     "tiktok": Actor(
         "clockworks~tiktok-video-scraper",
         '{"postURLs": ["{url}"], "shouldDownloadVideos": true}',
@@ -168,7 +168,7 @@ class ApifyMedia:
         self.platforms = frozenset(p for p in platforms if p in self.actors)
 
     def fee_for(self, platform: str) -> float | None:
-        override = os.environ.get(f"PANTRIO_PRICE_MEDIA_{platform.upper()}")
+        override = os.environ.get(f"PANTRILA_PRICE_MEDIA_{platform.upper()}")
         return float(override) if override else self.actors[platform].fee_usd
 
     def headers_for(self, url: str) -> dict[str, str]:
@@ -210,14 +210,14 @@ class ApifyMedia:
 
 
 def media_source() -> MediaSource:
-    """From the environment: `PANTRIO_MEDIA_SOURCE=apify` with `APIFY_TOKEN`, else off.
-    `PANTRIO_MEDIA_PLATFORMS` narrows the platforms (default: all three)."""
-    if (os.environ.get("PANTRIO_MEDIA_SOURCE") or "off").lower() != "apify":
+    """From the environment: `PANTRILA_MEDIA_SOURCE=apify` with `APIFY_TOKEN`, else off.
+    `PANTRILA_MEDIA_PLATFORMS` narrows the platforms (default: all three)."""
+    if (os.environ.get("PANTRILA_MEDIA_SOURCE") or "off").lower() != "apify":
         return NoMedia()
     token = os.environ.get("APIFY_TOKEN")
     if not token:
         return NoMedia()
-    platforms = os.environ.get("PANTRIO_MEDIA_PLATFORMS") or ",".join(ACTORS)
+    platforms = os.environ.get("PANTRILA_MEDIA_PLATFORMS") or ",".join(ACTORS)
     return ApifyMedia(token, frozenset(p.strip() for p in platforms.split(",") if p.strip()))
 
 

@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from pantrio.schema import Allergen, Recipe
+from pantrila.schema import Allergen, Recipe
 
 
 def test_fourteen_eu_allergens():

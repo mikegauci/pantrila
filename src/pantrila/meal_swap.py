@@ -11,8 +11,8 @@ from collections import Counter
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 
-from pantrio.backend import Catalog
-from pantrio.constraints import (
+from pantrila.backend import Catalog
+from pantrila.constraints import (
     MAX_REPEATS,
     Severity,
     check_plan,
@@ -23,7 +23,7 @@ from pantrio.constraints import (
     slot_filters,
     target_miss,
 )
-from pantrio.schema import (
+from pantrila.schema import (
     MealPlan,
     MealType,
     NutritionFacts,
@@ -131,7 +131,7 @@ def replace_meal(
     recipes = store.get({recipe_id} | {meal.recipe_id for meal in plan_day.meals})
     recipe = recipes.get(recipe_id)
     if recipe is None:
-        raise SwapError("That recipe is not in Pantrio's recipes.", 404)
+        raise SwapError("That recipe is not in Pantrila's recipes.", 404)
     if problems := recipe_violations(recipe, profile, meal_type):
         raise SwapError(
             "That recipe does not suit your rules.", 422,

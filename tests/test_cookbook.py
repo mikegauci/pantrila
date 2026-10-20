@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from pantrio.cookbook import (
+from pantrila.cookbook import (
     MAX_RECIPES_PER_USER,
     CookbookError,
     CookbookFull,
@@ -11,8 +11,8 @@ from pantrio.cookbook import (
     derive,
     problems_for,
 )
-from pantrio.nutrition import recipe_nutrition
-from pantrio.schema import Allergen, DietTag, UserProfile
+from pantrila.nutrition import recipe_nutrition
+from pantrila.schema import Allergen, DietTag, UserProfile
 
 GOCHUJANG = {
     "description": "gochujang (Korean chilli paste)", "diet_class": "plant",

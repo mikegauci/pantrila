@@ -13,7 +13,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from pantrio.schema import UserProfile
+from pantrila.schema import UserProfile
 
 OUT = Path(__file__).parent / "data" / "plan_profiles.json"
 

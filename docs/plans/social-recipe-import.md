@@ -6,7 +6,7 @@ record findings (platform check results, eval numbers) in this file.
 
 ## What the person does
 
-They paste a post's link (or its caption) into "From a post". Pantrio tries, in order:
+They paste a post's link (or its caption) into "From a post". Pantrila tries, in order:
 
 1. **Caption** of the post.
 2. **Recipe website linked in the caption** ("full recipe 👉 site.com/…"), via the existing
@@ -15,7 +15,7 @@ They paste a post's link (or its caption) into "From a post". Pantrio tries, in 
 4. **Pasted text or screenshots** (existing photo import).
 
 Every draft goes through the existing review form and is saved with the post link and the
-creator's @handle. Pantrio never downloads, stores or embeds the video itself: downloading from
+creator's @handle. Pantrila never downloads, stores or embeds the video itself: downloading from
 the platforms breaks their terms and is blocked from server addresses. (ReciMe does caption ->
 audio from the link -> original website; the audio-from-link step is the part we replace with
 an upload.)
@@ -45,11 +45,11 @@ The Claude Code cloud container cannot reach TikTok/Instagram; test from the dep
 - TikTok: public oEmbed `https://www.tiktok.com/oembed?url=<post>` (no key) should return the
   caption (`title`) and handle (`author_unique_id`).
 - Instagram / Facebook: does the public page's `og:description` / `og:title` carry the caption
-  when fetched with Pantrio's own `USER_AGENT`? Never spoof a browser or crawler user agent.
+  when fetched with Pantrila's own `USER_AGENT`? Never spoof a browser or crawler user agent.
 - Caption comes back -> paste-a-link works for that platform. Blocked or empty -> that
   platform asks for the pasted caption.
 
-Results (2026-10-20, owner's Mac, `scripts/platform_check.py`, Pantrio's own user agent):
+Results (2026-10-20, owner's Mac, `scripts/platform_check.py`, Pantrila's own user agent):
 
 | Platform | Post | Result |
 |---|---|---|
@@ -61,7 +61,7 @@ So TikTok links open the caption box straight away (with a line on copying it in
 keep the link for the credit; Instagram and Facebook links import from the link alone. The
 oEmbed call stays: it is fast and would pick captions up again if TikTok restores them.
 
-### 2. Backend: `src/pantrio/social.py` (new)
+### 2. Backend: `src/pantrila/social.py` (new)
 
 - `detect(url)`: `tiktok.com`, `vm.tiktok.com`, `instagram.com/p|reel/…`, `facebook.com`,
   `fb.watch`. Anything else keeps using `Importer.from_link`.
@@ -72,7 +72,7 @@ oEmbed call stays: it is fast and would pick captions up again if TikTok restore
   link shorteners it cannot check. (Changed in PR 1: short links are kept, since
   `fetch_page` checks every redirect and Tasty's Facebook captions link recipes via bzfd.it.)
 
-### 3. Backend: `src/pantrio/recipe_import.py`
+### 3. Backend: `src/pantrila/recipe_import.py`
 
 - `Importer.from_post(url=None, caption=None)` runs the order above: caption (pasted or
   fetched) -> if no recipe and the caption has a website link, `from_html` on that page
@@ -86,7 +86,7 @@ oEmbed call stays: it is fast and would pick captions up again if TikTok restore
 - Messages:
   - "The caption doesn't include the recipe. It may be in the video: upload it, or paste the
     recipe text or add screenshots." (mention upload only once PR 2 lands)
-  - "Instagram didn't let Pantrio read this post. Paste the caption below."
+  - "Instagram didn't let Pantrila read this post. Paste the caption below."
 
 ### 4. Data (no migration; `user_recipes.recipe` is JSONB)
 
@@ -99,7 +99,7 @@ oEmbed call stays: it is fast and would pick captions up again if TikTok restore
 
 - `POST /me/recipes/import/post` `{url?, caption?}` (422 when both are empty).
 - `POST /me/recipes/import/text` `{text}`.
-- Both via `import_view` / `paid_import`: same `PANTRIO_DAILY_IMPORTS` cap, budget reservation
+- Both via `import_view` / `paid_import`: same `PANTRILA_DAILY_IMPORTS` cap, budget reservation
   and `import` usage kind.
 - `CookbookDetail` and `web/src/lib/types.ts` carry the new fields.
 

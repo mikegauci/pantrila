@@ -1,12 +1,12 @@
 """Recipe posts on TikTok, Instagram and Facebook: which links are posts, and their captions.
 
-Pantrio reads only what a post shares publicly as text: the caption and the creator's handle.
+Pantrila reads only what a post shares publicly as text: the caption and the creator's handle.
 TikTok's public oEmbed endpoint (no key) is asked for the caption and handle; checked on
 2026-10-20 it sends only the player, and the post page is built in the browser with no
 preview tags, so TikTok posts need the pasted caption (the link still gives the credit).
 Instagram and Facebook pages carry the caption in their Open Graph tags.
 Every request goes through `recipe_import.fetch_page` (SSRF guards, size and time caps,
-Pantrio's own user agent: never a spoofed browser or crawler). Videos are never downloaded,
+Pantrila's own user agent: never a spoofed browser or crawler). Videos are never downloaded,
 stored or embedded. When a platform refuses, the person pastes the caption instead.
 """
 
@@ -18,9 +18,9 @@ from dataclasses import dataclass
 from html.parser import HTMLParser
 from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
-from pantrio import recipe_import
-from pantrio.cookbook import HANDLE, Platform
-from pantrio.recipe_import import ImportFailed, Resolver, resolve_host
+from pantrila import recipe_import
+from pantrila.cookbook import HANDLE, Platform
+from pantrila.recipe_import import ImportFailed, Resolver, resolve_host
 
 NAMES: dict[str, str] = {"tiktok": "TikTok", "instagram": "Instagram", "facebook": "Facebook"}
 MAX_CAPTION_CHARS = 10_000
@@ -43,7 +43,7 @@ INSTAGRAM_POST = re.compile(r"^/(?:[A-Za-z0-9._]+/)?(?:p|reel|reels|tv)/[A-Za-z0
 FACEBOOK_RESERVED = {"watch", "reel", "reels", "share", "story.php", "permalink.php", "photo",
                      "photo.php", "groups", "videos", "video.php", "events", "marketplace",
                      "profile.php", "people", "login", "hashtag", "pages", "plugins"}  # fmt: skip
-# Links a caption may carry that never lead to a recipe page Pantrio can read: the platforms
+# Links a caption may carry that never lead to a recipe page Pantrila can read: the platforms
 # themselves, link-in-bio pages and shops. Short links (bit.ly, bzfd.it) are kept: fetch_page
 # checks every redirect, and creators often link their recipe that way ("PRINT RECIPE:
 # bzfd.it/…" on Tasty's Facebook posts).
@@ -70,11 +70,11 @@ _BARE_OK = re.compile(
     + r"))$",
     re.S,
 )
-CAPTION_BLOCKED = "{platform} didn't let Pantrio read this post. Try another public recipe link."
-NO_RECIPE = "Pantrio couldn't read a full recipe from this post. Try another public recipe link."
+CAPTION_BLOCKED = "{platform} didn't let Pantrila read this post. Try another public recipe link."
+NO_RECIPE = "Pantrila couldn't read a full recipe from this post. Try another public recipe link."
 NO_RECIPE_LINK = NO_RECIPE
 VIDEO_INCOMPLETE = (
-    "Pantrio read this video but couldn't find a complete recipe. "
+    "Pantrila read this video but couldn't find a complete recipe. "
     "Try the creator's recipe-page link."
 )
 
@@ -139,7 +139,7 @@ def clean_url(url: str, platform: Platform) -> str:
 
 
 def clean_handle(value: str | None) -> str | None:
-    """A creator handle Pantrio can show: letters, digits, dots and underscores, up to 30."""
+    """A creator handle Pantrila can show: letters, digits, dots and underscores, up to 30."""
     if not value:
         return None
     value = value.strip().lstrip("@")

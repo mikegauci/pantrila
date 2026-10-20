@@ -1,8 +1,8 @@
 import pytest
 
-from pantrio.foods import load_foods
-from pantrio.nutrition import nutrition_diets, recipe_nutrition
-from pantrio.schema import DietTag, Ingredient, NutritionFacts, Unit
+from pantrila.foods import load_foods
+from pantrila.nutrition import nutrition_diets, recipe_nutrition
+from pantrila.schema import DietTag, Ingredient, NutritionFacts, Unit
 
 
 def ing(food, grams):

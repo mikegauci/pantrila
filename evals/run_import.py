@@ -30,10 +30,10 @@ import httpx
 
 from evals.import_cases import INJECTION_MARKERS, load_cases
 from evals.metrics import percentile
-from pantrio import config, recipe_import
-from pantrio.cookbook import CookbookError, CookbookRecipeIn, RecipeLine, derive
-from pantrio.foods import load_foods
-from pantrio.recipe_import import Importer, ImportFailed
+from pantrila import config, recipe_import
+from pantrila.cookbook import CookbookError, CookbookRecipeIn, RecipeLine, derive
+from pantrila.foods import load_foods
+from pantrila.recipe_import import Importer, ImportFailed
 
 REPORTS = Path(__file__).parent / "reports"
 TIME_TOLERANCE = 0.20
@@ -185,7 +185,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
     def num(v, fmt=".1f"):
         return "n/a" if v is None else format(v, fmt)
 
-    cost = "n/a (set PANTRIO_PRICE_*_PER_MTOK)" if s["cost_per_import_usd"] is None else (
+    cost = "n/a (set PANTRILA_PRICE_*_PER_MTOK)" if s["cost_per_import_usd"] is None else (
         f"${s['cost_per_import_usd']:.4f}"
     )  # fmt: skip
     missed = "; ".join(f"{k}: {', '.join(v)}" for k, v in s["missed_allergens"].items())
@@ -245,7 +245,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
 
 def instructions_at(ref: str) -> str:
     """`recipe_import.INSTRUCTIONS` as committed at a git ref, for a before/after run."""
-    source = subprocess.run(["git", "show", f"{ref}:src/pantrio/recipe_import.py"],
+    source = subprocess.run(["git", "show", f"{ref}:src/pantrila/recipe_import.py"],
                             check=True, capture_output=True, text=True).stdout  # fmt: skip
     for node in ast.parse(source).body:
         if isinstance(node, ast.Assign) and any(
@@ -256,7 +256,7 @@ def instructions_at(ref: str) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Pantrio recipe-import eval")
+    parser = argparse.ArgumentParser(description="Pantrila recipe-import eval")
     parser.add_argument("--only", help="comma-separated case ids")
     parser.add_argument("--effort", default="medium", choices=["minimal", "low", "medium", "high"])
     parser.add_argument("--concurrency", type=int, default=6)

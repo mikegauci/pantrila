@@ -24,7 +24,7 @@ import time
 
 import httpx
 
-from pantrio import config  # noqa: F401  (loads .env)
+from pantrila import config  # noqa: F401  (loads .env)
 
 API = "https://api.apify.com/v2/acts/{actor}/run-sync-get-dataset-items"
 VIDEO_HINTS = ("video", "mp4", "media", "download")

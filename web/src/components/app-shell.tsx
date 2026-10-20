@@ -41,7 +41,7 @@ function active(pathname: string, href: string) {
 function Sidebar({ pathname }: { pathname: string }) {
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-[76px] flex-col border-r bg-surface px-3 py-5 md:flex xl:w-[248px] xl:px-5">
-      <Link href="/" className="mb-8 flex justify-center xl:justify-start" aria-label="Pantrio home">
+      <Link href="/" className="mb-8 flex justify-center xl:justify-start" aria-label="Pantrila home">
         <Logo compact className="xl:hidden" />
         <Logo className="hidden xl:flex" />
       </Link>
@@ -186,7 +186,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     if (ready && !session) router.replace("/login")
   }, [ready, session, router])
 
-  const title = NAV.find((n) => active(pathname, n.href))?.label ?? "Pantrio"
+  const title = NAV.find((n) => active(pathname, n.href))?.label ?? "Pantrila"
 
   return (
     <TourProvider userId={ready && session ? session.user.id : null}>
@@ -194,7 +194,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar pathname={pathname} />
       <div className="md:pl-[76px] xl:pl-[248px]">
         <header className="sticky top-0 z-20 flex h-[72px] items-center gap-4 border-b bg-background/90 px-4 backdrop-blur md:px-8">
-          <Link href="/" className="md:hidden" aria-label="Pantrio home">
+          <Link href="/" className="md:hidden" aria-label="Pantrila home">
             <Logo compact />
           </Link>
           <h1 className="text-[20px] font-bold leading-8 md:text-[24px]">{title}</h1>

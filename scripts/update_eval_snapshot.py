@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SELECTION = ROOT / "evals" / "report_selection.json"
 OUT = ROOT / "web" / "src" / "lib" / "eval-snapshot.json"
-REPO = "https://github.com/mikegauci/pantrio/blob/main/evals/reports"
+REPO = "https://github.com/mikegauci/pantrila/blob/main/evals/reports"
 
 
 def render_snapshot() -> str:

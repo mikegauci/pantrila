@@ -160,7 +160,7 @@ export default function ProfilePage() {
         <Panel>
           <PanelTitle>Allergies</PanelTitle>
           <p className="mb-3 text-[13px] text-muted-foreground">
-            The 14 allergens EU law requires on labels. Pantrio never shows a recipe or plan with
+            The 14 allergens EU law requires on labels. Pantrila never shows a recipe or plan with
             one of yours without a red warning; it checks the ingredients in code, not the AI&apos;s word.
           </p>
           <div className="flex flex-wrap gap-2">

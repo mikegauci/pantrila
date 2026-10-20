@@ -1,7 +1,7 @@
 [
   {
     "name": "Recipe search",
-    "report": "https://github.com/mikegauci/pantrio/blob/main/evals/reports/retrieval-2026-10-15T195536Z.md",
+    "report": "https://github.com/mikegauci/pantrila/blob/main/evals/reports/retrieval-2026-10-15T195536Z.md",
     "what": "65 labelled queries over 300 recipes, hybrid (vector + full text)",
     "metrics": [
       [
@@ -16,7 +16,7 @@
   },
   {
     "name": "Meal planner",
-    "report": "https://github.com/mikegauci/pantrio/blob/main/evals/reports/planner-2026-10-16T084243Z.md",
+    "report": "https://github.com/mikegauci/pantrila/blob/main/evals/reports/planner-2026-10-16T084243Z.md",
     "what": "16 eval profiles on gpt-5.4-mini",
     "metrics": [
       [
@@ -39,7 +39,7 @@
   },
   {
     "name": "Cooking assistant",
-    "report": "https://github.com/mikegauci/pantrio/blob/main/evals/reports/assistant-2026-10-19T132325Z.md",
+    "report": "https://github.com/mikegauci/pantrila/blob/main/evals/reports/assistant-2026-10-19T132325Z.md",
     "what": "28 chat cases on gpt-5.4-mini",
     "metrics": [
       [

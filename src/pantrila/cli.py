@@ -1,4 +1,4 @@
-"""Command line: `pantrio db migrate|seed`, `ingest`, `search`, `plan`, `pantry`, `profile`,
+"""Command line: `pantrila db migrate|seed`, `ingest`, `search`, `plan`, `pantry`, `profile`,
 `chat`, `corpus check`, `photos generate`."""
 
 from __future__ import annotations
@@ -7,8 +7,8 @@ from typing import Annotated
 
 import typer
 
-from pantrio import config
-from pantrio.schema import Allergen, DietTag, MealType, Unit
+from pantrila import config
+from pantrila.schema import Allergen, DietTag, MealType, Unit
 
 app = typer.Typer(no_args_is_help=True, add_completion=False)
 db_app = typer.Typer(no_args_is_help=True, help="Database migrations and seed data.")
@@ -22,7 +22,7 @@ app.add_typer(pantry_app, name="pantry")
 app.add_typer(profile_app, name="profile")
 app.add_typer(photos_app, name="photos")
 
-User = Annotated[str, typer.Option("--user", envvar="PANTRIO_USER", help="user id")]
+User = Annotated[str, typer.Option("--user", envvar="PANTRILA_USER", help="user id")]
 
 
 def load_profile_arg(profile: str):
@@ -30,7 +30,7 @@ def load_profile_arg(profile: str):
     import json
     from pathlib import Path
 
-    from pantrio.schema import UserProfile
+    from pantrila.schema import UserProfile
 
     path = Path(profile)
     if path.exists():
@@ -45,7 +45,7 @@ def load_profile_arg(profile: str):
 @db_app.command("migrate")
 def db_migrate() -> None:
     """Apply new SQL files from supabase/migrations."""
-    from pantrio import db
+    from pantrila import db
 
     with db.connect(config.database_url()) as conn:
         ran = db.migrate(conn)
@@ -55,8 +55,8 @@ def db_migrate() -> None:
 @db_app.command("seed")
 def db_seed() -> None:
     """Load data/recipes into the recipe tables (upsert; removes recipes no longer present)."""
-    from pantrio import db
-    from pantrio.corpus import load_corpus
+    from pantrila import db
+    from pantrila.corpus import load_corpus
 
     with db.connect(config.database_url()) as conn:
         n = db.seed(conn, load_corpus())
@@ -66,10 +66,10 @@ def db_seed() -> None:
 @app.command()
 def ingest() -> None:
     """Embed every recipe whose embedding text changed; cached vectors cost nothing."""
-    from pantrio import db
-    from pantrio.corpus import load_corpus
-    from pantrio.embeddings import ingest as run_ingest
-    from pantrio.embeddings import openai_embedder
+    from pantrila import db
+    from pantrila.corpus import load_corpus
+    from pantrila.embeddings import ingest as run_ingest
+    from pantrila.embeddings import openai_embedder
 
     model = config.embed_model()
     with db.connect(config.database_url()) as conn:
@@ -94,10 +94,10 @@ def search(
     without: Annotated[list[str] | None, typer.Option(help="food key to exclude")] = None,
     parse: Annotated[bool, typer.Option(help="turn the query into filters with the LLM")] = False,
 ) -> None:
-    """Search recipes, e.g. pantrio search "quick vegan dinner with chickpeas" --parse."""
-    from pantrio import db
-    from pantrio.search import Mode, SearchFilters, openai_query_embedder, parse_query
-    from pantrio.search import search as run_search
+    """Search recipes, e.g. pantrila search "quick vegan dinner with chickpeas" --parse."""
+    from pantrila import db
+    from pantrila.search import Mode, SearchFilters, openai_query_embedder, parse_query
+    from pantrila.search import search as run_search
 
     text = query
     filters = SearchFilters(
@@ -146,13 +146,13 @@ def plan(
     grocery: Annotated[bool, typer.Option(help="print the grocery list too")] = False,
     people: Annotated[int, typer.Option(help="people the grocery list feeds")] = 1,
 ) -> None:
-    """Plan meals, e.g. pantrio plan vegan-high-protein (ids from evals/data/plan_profiles.json)
-    or pantrio plan --user me --grocery."""
-    from pantrio import db
-    from pantrio.grocery import grocery_list, grocery_text
-    from pantrio.pantry import DbKitchen, make_item
-    from pantrio.planner import DbStore, Planner
-    from pantrio.search import openai_query_embedder
+    """Plan meals, e.g. pantrila plan vegan-high-protein (ids from evals/data/plan_profiles.json)
+    or pantrila plan --user me --grocery."""
+    from pantrila import db
+    from pantrila.grocery import grocery_list, grocery_text
+    from pantrila.pantry import DbKitchen, make_item
+    from pantrila.planner import DbStore, Planner
+    from pantrila.search import openai_query_embedder
 
     if (profile is None) == (user is None):
         raise typer.BadParameter("give a profile or --user, not both")
@@ -191,8 +191,8 @@ def plan(
 @pantry_app.command("list")
 def pantry_list(user: User = "local") -> None:
     """Show the pantry."""
-    from pantrio import db
-    from pantrio.pantry import DbKitchen, item_text
+    from pantrila import db
+    from pantrila.pantry import DbKitchen, item_text
 
     with db.connect(config.database_url()) as conn:
         items = DbKitchen(conn, user).pantry()
@@ -206,10 +206,10 @@ def pantry_add(
     unit: Annotated[Unit | None, typer.Argument()] = None,
     user: User = "local",
 ) -> None:
-    """Add a food, e.g. pantrio pantry add eggs 6 piece (no amount means "some")."""
-    from pantrio import db
-    from pantrio.foods import UnitError
-    from pantrio.pantry import DbKitchen, UnknownFood, item_text, make_item
+    """Add a food, e.g. pantrila pantry add eggs 6 piece (no amount means "some")."""
+    from pantrila import db
+    from pantrila.foods import UnitError
+    from pantrila.pantry import DbKitchen, UnknownFood, item_text, make_item
 
     try:
         item = make_item(food, quantity, unit)
@@ -223,8 +223,8 @@ def pantry_add(
 @pantry_app.command("remove")
 def pantry_remove(food: str, user: User = "local") -> None:
     """Remove a food."""
-    from pantrio import db
-    from pantrio.pantry import DbKitchen, UnknownFood, resolve_food
+    from pantrila import db
+    from pantrila.pantry import DbKitchen, UnknownFood, resolve_food
 
     try:
         key = resolve_food(food)
@@ -242,8 +242,8 @@ def profile_set(
     with_pantry: Annotated[bool, typer.Option(help="also put its pantry foods in")] = False,
 ) -> None:
     """Save a profile (allergies, diets, targets...) for a user."""
-    from pantrio import db
-    from pantrio.pantry import DbKitchen, make_item
+    from pantrila import db
+    from pantrila.pantry import DbKitchen, make_item
 
     person = load_profile_arg(profile)
     with db.connect(config.database_url()) as conn:
@@ -258,8 +258,8 @@ def profile_set(
 @profile_app.command("show")
 def profile_show(user: User = "local") -> None:
     """Print a user's profile as JSON."""
-    from pantrio import db
-    from pantrio.pantry import DbKitchen
+    from pantrila import db
+    from pantrila.pantry import DbKitchen
 
     with db.connect(config.database_url()) as conn:
         typer.echo(DbKitchen(conn, user).profile().model_dump_json(indent=2))
@@ -272,11 +272,11 @@ def chat(
     effort: Annotated[str, typer.Option(help="reasoning effort")] = "low",
 ) -> None:
     """Chat with the cooking assistant about recipes and the user's pantry."""
-    from pantrio import db
-    from pantrio.assistant import Assistant
-    from pantrio.pantry import DbKitchen
-    from pantrio.planner import DbStore
-    from pantrio.search import openai_query_embedder
+    from pantrila import db
+    from pantrila.assistant import Assistant
+    from pantrila.pantry import DbKitchen
+    from pantrila.planner import DbStore
+    from pantrila.search import openai_query_embedder
 
     with db.connect(config.database_url()) as conn:
         conn.autocommit = True
@@ -290,7 +290,7 @@ def chat(
             result = bot.reply(text, history)
             history = result.history
             u = result.usage
-            typer.echo(f"\npantrio> {result.text}\n")
+            typer.echo(f"\npantrila> {result.text}\n")
             typer.echo(
                 f"[{', '.join(c.name for c in result.tool_calls) or 'no tools'}; "
                 f"cost {config.fmt_cost(u.cost())}, {result.latency_ms / 1000:.1f}s]\n"
@@ -302,7 +302,7 @@ def chat(
 @corpus_app.command("check")
 def corpus_check() -> None:
     """Re-derive grams, nutrition, allergens and diets for every recipe and report drift."""
-    from pantrio.corpus import check_recipe, load_briefs, load_corpus
+    from pantrila.corpus import check_recipe, load_briefs, load_corpus
 
     recipes = load_corpus()
     bad = 0
@@ -334,8 +334,8 @@ def photos_generate(
     Needs SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY; creates the public bucket if missing."""
     import statistics
 
-    from pantrio import db, photos
-    from pantrio.corpus import load_corpus
+    from pantrila import db, photos
+    from pantrila.corpus import load_corpus
 
     recipes = load_corpus()
     if only:

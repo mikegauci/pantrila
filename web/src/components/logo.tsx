@@ -8,7 +8,7 @@ export function Logo({ compact = false, className }: { compact?: boolean; classN
       <span className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground">
         <Leaf className="size-5" strokeWidth={2} />
       </span>
-      {!compact && <span className="text-[20px] tracking-tight">Pantrio</span>}
+      {!compact && <span className="text-[20px] tracking-tight">Pantrila</span>}
     </span>
   )
 }

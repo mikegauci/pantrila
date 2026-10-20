@@ -232,7 +232,7 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
             {page === 0 && (
               <>
                 <h2 ref={heading} tabIndex={-1} className="text-[24px] font-bold leading-8 outline-none">Get your ingredients out</h2>
-                <p className="-mt-3 text-muted-foreground">Tick each one off as you set it out. Pantrio will show one step at a time.</p>
+                <p className="-mt-3 text-muted-foreground">Tick each one off as you set it out. Pantrila will show one step at a time.</p>
                 <div className="flex items-center gap-3" aria-label="Servings">
                   <Button variant="outline" size="icon" aria-label="Fewer servings" disabled={servings <= 1}
                           onClick={() => setServings(servings - 1)}><Minus /></Button>
@@ -339,7 +339,7 @@ function WakeBadge({ state }: { state: "on" | "off" | "unsupported" }) {
     <span
       className={cn("inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full px-2 text-[12px] font-medium sm:px-2.5",
                     on ? "bg-yellow-soft text-foreground" : "bg-surface-muted text-muted-foreground")}
-      title={on ? "Pantrio is keeping your screen on while you cook." : "This browser may let the screen dim; tap it to wake it."}
+      title={on ? "Pantrila is keeping your screen on while you cook." : "This browser may let the screen dim; tap it to wake it."}
     >
       <Icon className="size-3.5" aria-hidden />
       <span className="sr-only sm:not-sr-only">{on ? "Screen stays on" : "Screen may dim"}</span>
@@ -476,7 +476,7 @@ function Finish({ recipe, servings, result, onDone, onBack, heading }: {
       <span className="grid size-14 place-items-center rounded-full bg-yellow-soft"><ChefHat className="size-7" /></span>
       <h2 ref={heading} tabIndex={-1} className="text-[24px] font-bold leading-8 outline-none">That is every step</h2>
       <p className="-mt-3 text-muted-foreground">
-        Tap &ldquo;I cooked this&rdquo; to log it. Pantrio can also take what you used out of your pantry, so your
+        Tap &ldquo;I cooked this&rdquo; to log it. Pantrila can also take what you used out of your pantry, so your
         grocery list stays right.
       </p>
       <div className="rounded-[20px] border bg-surface p-4 sm:p-5">

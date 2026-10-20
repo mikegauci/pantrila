@@ -20,7 +20,7 @@ test("cooking mode walks the steps, rings a timer and logs the cook", async ({ p
   const posted: unknown[] = []
   await page.clock.install()
   await page.addInitScript((user) => {
-    localStorage.setItem(`pantrio-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-tour-done:${user}`, "1")
     const sentinel = { released: false, release: async () => {}, addEventListener: () => {} }
     Object.defineProperty(navigator, "wakeLock", { value: { request: async () => sentinel } })
   }, id)

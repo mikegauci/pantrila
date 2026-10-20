@@ -20,12 +20,12 @@ interface Step {
 export const STEPS: Step[] = [
   {
     path: "/",
-    title: "Welcome to Pantrio",
-    body: "Pantrio finds recipes that suit you, plans your week and builds the shopping list. This tour takes about a minute.",
+    title: "Welcome to Pantrila",
+    body: "Pantrila finds recipes that suit you, plans your week and builds the shopping list. This tour takes about a minute.",
   },
   {
     path: "/",
-    anchor: "ask-pantrio",
+    anchor: "ask-pantrila",
     title: "Ask anything about cooking",
     body: "Type a question or pick a starter here. The answer opens in the Assistant.",
   },
@@ -51,7 +51,7 @@ export const STEPS: Step[] = [
     path: "/recipes",
     anchor: "my-recipes",
     title: "Your own cookbook",
-    body: "Add your own recipes from a photo, a web link, or by typing them in. Pantrio works out the nutrition and allergens for you.",
+    body: "Add your own recipes from a photo, a web link, or by typing them in. Pantrila works out the nutrition and allergens for you.",
   },
   {
     path: "/plan",
@@ -67,7 +67,7 @@ export const STEPS: Step[] = [
   },
 ]
 
-const doneKey = (userId: string) => `pantrio-tour-done:${userId}`
+const doneKey = (userId: string) => `pantrila-tour-done:${userId}`
 const PAD = 8
 const GAP = 16
 const CARD_W = 380

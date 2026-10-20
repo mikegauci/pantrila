@@ -29,11 +29,11 @@ from evals.metrics import percentile
 from evals.run_import import draft_allergens, line_ok
 from evals.video_audio import audio_url, frame_urls
 from evals.video_cases import SPONSOR_MARKERS, load_cases
-from pantrio import config
-from pantrio.cookbook import CookbookRecipeIn
-from pantrio.foods import UnitError, to_grams
-from pantrio.recipe_import import Importer, ImportFailed
-from pantrio.schema import Unit
+from pantrila import config
+from pantrila.cookbook import CookbookRecipeIn
+from pantrila.foods import UnitError, to_grams
+from pantrila.recipe_import import Importer, ImportFailed
+from pantrila.schema import Unit
 
 REPORTS = Path(__file__).parent / "reports"
 TIME_TOLERANCE = 0.20
@@ -161,7 +161,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         return "n/a" if v is None else f"{v:.0%}"
 
     def usd(v):
-        return "n/a (set PANTRIO_PRICE_*)" if v is None else f"${v:.4f}"
+        return "n/a (set PANTRILA_PRICE_*)" if v is None else f"${v:.4f}"
 
     def secs(v):
         return "n/a" if v is None else f"{v / 1000:.1f}s"
@@ -218,19 +218,19 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Pantrio video-import eval")
+    parser = argparse.ArgumentParser(description="Pantrila video-import eval")
     parser.add_argument("--only", help="comma-separated case ids")
     parser.add_argument("--plain", action="store_true", help="the plain import prompt (before)")
     parser.add_argument("--transcribe-model", default=None)
     parser.add_argument("--transcribe-price", type=float, metavar="USD_PER_MIN",
-                        help="its price (else PANTRIO_PRICE_TRANSCRIBE_PER_MIN)")  # fmt: skip
+                        help="its price (else PANTRILA_PRICE_TRANSCRIBE_PER_MIN)")  # fmt: skip
     parser.add_argument("--no-frames", action="store_true", help="send the audio only")
     parser.add_argument("--concurrency", type=int, default=6)
     args = parser.parse_args()
     if args.transcribe_model and args.transcribe_price is None:
         parser.error("--transcribe-model needs --transcribe-price, so its cost is not mispriced")
     if args.transcribe_price is not None:
-        os.environ["PANTRIO_PRICE_TRANSCRIBE_PER_MIN"] = str(args.transcribe_price)
+        os.environ["PANTRILA_PRICE_TRANSCRIBE_PER_MIN"] = str(args.transcribe_price)
 
     cases = load_cases()
     if args.only:

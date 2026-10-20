@@ -1,4 +1,4 @@
-from pantrio.embeddings import content_hash, embedding_text, to_pgvector
+from pantrila.embeddings import content_hash, embedding_text, to_pgvector
 
 
 def test_embedding_text_has_key_facts_and_skips_seasoning(curry):

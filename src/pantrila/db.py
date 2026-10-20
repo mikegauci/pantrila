@@ -7,7 +7,7 @@ from pathlib import Path
 
 import psycopg
 
-from pantrio.schema import Recipe
+from pantrila.schema import Recipe
 
 MIGRATIONS_DIR = Path(__file__).resolve().parents[2] / "supabase" / "migrations"
 

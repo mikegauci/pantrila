@@ -30,7 +30,7 @@ const plan = (dinner: typeof CHICKEN) => ({
 
 async function openPlan(page: Page, onSwap: (body: unknown) => { status: number; json: unknown }) {
   let current = CHICKEN
-  await page.addInitScript((user) => localStorage.setItem(`pantrio-tour-done:${user}`, "1"), id)
+  await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const request = route.request()

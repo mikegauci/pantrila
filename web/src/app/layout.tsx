@@ -8,7 +8,7 @@ import "./globals.css"
 const sans = Plus_Jakarta_Sans({ variable: "--font-sans", subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: { default: "Pantrio", template: "%s · Pantrio" },
+  title: { default: "Pantrila", template: "%s · Pantrila" },
   description:
     "AI cooking and meal-planning assistant: recipes from your pantry, a week of meals that " +
     "respects your allergies and targets, and a grocery list.",

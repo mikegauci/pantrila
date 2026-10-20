@@ -1,7 +1,7 @@
 from datetime import UTC, datetime, timedelta
 
-from pantrio.operations import reel_import_timing
-from pantrio.records import UsageEvent
+from pantrila.operations import reel_import_timing
+from pantrila.records import UsageEvent
 
 
 def event(kind, ms, at, ok=True):

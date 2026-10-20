@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
 import { useAuth } from "@/components/auth-provider"
-import { STARTERS } from "@/components/ask-pantrio"
+import { STARTERS } from "@/components/ask-pantrila"
 import { AiBadge, ProblemAlert } from "@/components/bits"
 import { ChatThreads } from "@/components/chat-threads"
 import { CHAT_DRAFT } from "@/components/cookbook-form"
@@ -26,7 +26,7 @@ interface Message extends ChatMessage {
   error?: boolean
 }
 
-const LAST_THREAD = "pantrio-chat-thread"
+const LAST_THREAD = "pantrila-chat-thread"
 
 function toolSummary(c: ToolCall): { icon: typeof Search; text: string } {
   const a = c.arguments as Record<string, string | number | null>
@@ -232,7 +232,7 @@ export default function AssistantPage() {
       if (reply.pantry_changed) refreshKitchen()
     } catch (e) {
       if (e instanceof ApiError && e.status === 409 && thread) await mutate(`/me/chats/${thread}`)
-      const msg = e instanceof ApiError ? e.message : "Could not reach Pantrio. Try again."
+      const msg = e instanceof ApiError ? e.message : "Could not reach Pantrila. Try again."
       setPending([asked, { role: "assistant", text: msg, error: true }])
     } finally {
       setBusy(false)
@@ -314,7 +314,7 @@ export default function AssistantPage() {
         >
           <Textarea
             aria-label="Message"
-            placeholder="Ask Pantrio…"
+            placeholder="Ask Pantrila…"
             value={text}
             maxLength={2000}
             rows={1}

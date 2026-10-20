@@ -27,7 +27,7 @@ test(`estimated import saves and retains its nutrition notes when photo ${photoF
   let finishPhoto: () => void = () => {}
   const photoReady = new Promise<void>((resolve) => { finishPhoto = resolve })
   await page.setViewportSize({ width: 390, height: 844 })
-  await page.addInitScript((id) => localStorage.setItem(`pantrio-tour-done:${id}`, "1"), user)
+  await page.addInitScript((id) => localStorage.setItem(`pantrila-tour-done:${id}`, "1"), user)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(user) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname

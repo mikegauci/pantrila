@@ -17,8 +17,8 @@ test("switching accounts drops cached data and remembered chat state", async ({ 
   let releaseB: (() => void) | undefined
   const waiting = new Promise<void>((resolve) => { releaseB = resolve })
   await page.addInitScript(({ a, b }) => {
-    localStorage.setItem(`pantrio-tour-done:${a}`, "1")
-    localStorage.setItem(`pantrio-tour-done:${b}`, "1")
+    localStorage.setItem(`pantrila-tour-done:${a}`, "1")
+    localStorage.setItem(`pantrila-tour-done:${b}`, "1")
   }, { a: A, b: B })
   await page.route("http://127.0.0.1:54321/**", async (route) => {
     if (route.request().url().includes("/signup")) {
@@ -47,7 +47,7 @@ test("switching accounts drops cached data and remembered chat state", async ({ 
   await page.goto("/login")
   await page.getByRole("button", { name: "Try it as a guest" }).click()
   await expect(page.getByText("Alice secret eggs")).toBeVisible()
-  await page.evaluate((id) => localStorage.setItem(`pantrio-chat-thread:${id}`, "42"), A)
+  await page.evaluate((id) => localStorage.setItem(`pantrila-chat-thread:${id}`, "42"), A)
   await page.getByRole("button", { name: "Account menu" }).click()
   await page.getByRole("menuitem", { name: "Sign out" }).click()
   await expect(page).toHaveURL(/\/login$/)

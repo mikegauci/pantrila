@@ -8,9 +8,9 @@ from datetime import UTC, datetime, timedelta
 
 from fastapi import HTTPException
 
-from pantrio import config
-from pantrio.planner import Usage
-from pantrio.records import Kind, QuotaExceeded, Records, UsageEvent
+from pantrila import config
+from pantrila.planner import Usage
+from pantrila.records import Kind, QuotaExceeded, Records, UsageEvent
 
 # Seeded from production reel imports on 2026-10-20: 75.1 s and 103.1 s.
 DEFAULT_REEL_IMPORT_SECONDS = 105
@@ -50,8 +50,8 @@ def daily_cap(kind: Kind) -> int:
         "chat": lim.chats_per_user,
         "import": lim.imports_per_user,
         "photo": lim.photos_per_user,
-        "search": int(os.environ.get("PANTRIO_DAILY_SEARCHES") or 100),
-        "reel": int(os.environ.get("PANTRIO_DAILY_REEL_FETCHES") or 10),
+        "search": int(os.environ.get("PANTRILA_DAILY_SEARCHES") or 100),
+        "reel": int(os.environ.get("PANTRILA_DAILY_REEL_FETCHES") or 10),
     }[kind]
 
 
@@ -102,7 +102,7 @@ class ReelMeter:
         self.operation: PaidOperation | None = None
 
     def start(self) -> None:
-        from pantrio.recipe_import import ImportFailed
+        from pantrila.recipe_import import ImportFailed
 
         try:
             self.operation = PaidOperation(self.records, "reel", self.actor)

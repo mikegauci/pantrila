@@ -7,18 +7,18 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from pantrio.cookbook import (
+from pantrila.cookbook import (
     CookbookRecipeIn,
     LineView,
     Platform,
     Source,
 )
-from pantrio.recipe_import import (
+from pantrila.recipe_import import (
     MAX_IMAGES,
     MAX_PAGE_CHARS,
     NamedEstimate,
 )
-from pantrio.schema import (
+from pantrila.schema import (
     Allergen,
     DietTag,
     MealType,
@@ -26,8 +26,8 @@ from pantrio.schema import (
     NutritionTargets,
     Unit,
 )
-from pantrio.search import SearchFilters
-from pantrio.social import MAX_CAPTION_CHARS
+from pantrila.search import SearchFilters
+from pantrila.social import MAX_CAPTION_CHARS
 
 MAX_MESSAGE_CHARS = 2000
 
@@ -112,7 +112,7 @@ class CookRequest(BaseModel):
         default=None,
         min_length=1,
         max_length=200,
-        description="A Pantrio recipe; or set cookbook_id.",
+        description="A Pantrila recipe; or set cookbook_id.",
     )
     cookbook_id: int | None = Field(default=None, description="A cookbook recipe.")
     servings: int = Field(ge=1, le=24)
@@ -160,7 +160,7 @@ class Meta(BaseModel):
     cuisines: list[str]
     reel_platforms: list[str] = Field(
         default_factory=list,
-        description="Platforms whose post videos Pantrio can hear from the link; empty when off.",
+        description="Platforms whose post videos Pantrila can hear from the link; empty when off.",
     )
 
 

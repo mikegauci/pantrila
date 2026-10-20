@@ -21,10 +21,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from evals.video_cases import CASES as VIDEOS
-from pantrio.foods import load_foods
+from pantrila.foods import load_foods
 
 OUT = Path(__file__).parent / "data" / "reel_cases.json"
-SITE = "https://pantrio-eval.example/peanut-noodles"
+SITE = "https://pantrila-eval.example/peanut-noodles"
 
 
 @dataclass
@@ -93,7 +93,7 @@ CASES = [
         "and cook 6-8 min. #brunch"
     ), "video-music-shakshuka", 0, SHAKSHUKA.lines, "Shakshuka"),
     Case("reel-linked-site", "linked-site", (
-        "Peanut noodles in 15 min 🥜🍜 Recipe: pantrio-eval.example/peanut-noodles #noodles"
+        "Peanut noodles in 15 min 🥜🍜 Recipe: pantrila-eval.example/peanut-noodles #noodles"
     ), "video-fast-peanut-noodles", 0, PEANUT.lines, "Peanut Noodles", PEANUT_PAGE),
     Case("reel-not-recipe", "not-recipe", "New toy in the kitchen 😍 #kitchen #mixer",
          "video-not-recipe", 1),
@@ -106,9 +106,9 @@ CASES = [
 ]  # fmt: skip
 
 URLS = {
-    "instagram": "https://www.instagram.com/reel/PantrioEval{n}/",
-    "tiktok": "https://www.tiktok.com/@pantrio.eval/video/74100000000000000{n:02d}",
-    "facebook": "https://www.facebook.com/pantrio.eval/videos/{n}/",
+    "instagram": "https://www.instagram.com/reel/PantrilaEval{n}/",
+    "tiktok": "https://www.tiktok.com/@pantrila.eval/video/74100000000000000{n:02d}",
+    "facebook": "https://www.facebook.com/pantrila.eval/videos/{n}/",
 }
 
 

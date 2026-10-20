@@ -21,9 +21,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from evals.metrics import normalized_recall_at_k, percentile, reciprocal_rank
-from pantrio import config, db
-from pantrio.corpus import load_corpus
-from pantrio.search import Mode, SearchFilters, openai_query_embedder, search
+from pantrila import config, db
+from pantrila.corpus import load_corpus
+from pantrila.search import Mode, SearchFilters, openai_query_embedder, search
 
 QUERIES = Path(__file__).parent / "data" / "retrieval_queries.json"
 REPORTS = Path(__file__).parent / "reports"
@@ -120,9 +120,9 @@ def upload_to_langsmith(queries: list[dict], results: dict[str, list[dict]], met
 
     client = Client()
     digest = hashlib.sha256(QUERIES.read_bytes()).hexdigest()[:8]
-    name = f"pantrio-retrieval-{digest}"
+    name = f"pantrila-retrieval-{digest}"
     if not client.has_dataset(dataset_name=name):
-        ds = client.create_dataset(name, description="Pantrio labelled recipe retrieval queries")
+        ds = client.create_dataset(name, description="Pantrila labelled recipe retrieval queries")
         client.create_examples(
             dataset_id=ds.id,
             examples=[
@@ -169,7 +169,7 @@ def upload_to_langsmith(queries: list[dict], results: dict[str, list[dict]], met
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Pantrio retrieval eval")
+    parser = argparse.ArgumentParser(description="Pantrila retrieval eval")
     parser.add_argument("--modes", default="vector,fulltext,hybrid")
     args = parser.parse_args()
     modes = [Mode(m) for m in args.modes.split(",")]

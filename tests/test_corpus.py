@@ -7,14 +7,14 @@ from types import SimpleNamespace
 
 import pytest
 
-from pantrio.corpus import (
+from pantrila.corpus import (
     CorpusValidationError,
     build_recipe,
     check_recipe,
     load_briefs,
     load_corpus,
 )
-from pantrio.schema import Allergen, DietTag, MealType
+from pantrila.schema import Allergen, DietTag, MealType
 from tests.conftest import brief, draft
 
 ROOT = Path(__file__).resolve().parents[1]

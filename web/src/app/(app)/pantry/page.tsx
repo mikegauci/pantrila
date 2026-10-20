@@ -116,7 +116,7 @@ export default function PantryPage() {
           <Skeleton className="h-48 rounded-2xl" />
         ) : !items?.length ? (
           <EmptyState icon={Refrigerator} title="Your pantry is empty">
-            Add what you have and Pantrio will plan meals that use it up first.
+            Add what you have and Pantrila will plan meals that use it up first.
           </EmptyState>
         ) : (
           <div className="grid gap-5">

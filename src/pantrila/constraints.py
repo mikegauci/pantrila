@@ -17,9 +17,9 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from enum import StrEnum
 
-from pantrio.foods import derive_allergens, derive_ingredient_diets
-from pantrio.nutrition import nutrition_diets
-from pantrio.schema import (
+from pantrila.foods import derive_allergens, derive_ingredient_diets
+from pantrila.nutrition import nutrition_diets
+from pantrila.schema import (
     Allergen,
     DietTag,
     MealPlan,
@@ -29,7 +29,7 @@ from pantrio.schema import (
     Recipe,
     UserProfile,
 )
-from pantrio.search import SearchFilters
+from pantrila.search import SearchFilters
 
 # Which recipe meal types can fill each slot in a plan.
 SLOT_MEALS: dict[MealType, list[MealType]] = {

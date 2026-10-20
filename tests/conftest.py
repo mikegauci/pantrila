@@ -7,8 +7,8 @@ import re
 
 import pytest
 
-from pantrio.corpus import Brief, RecipeDraft, build_recipe
-from pantrio.schema import DietTag, MealType, Recipe
+from pantrila.corpus import Brief, RecipeDraft, build_recipe
+from pantrila.schema import DietTag, MealType, Recipe
 
 
 @pytest.fixture(autouse=True)
@@ -158,10 +158,10 @@ def fake_embed_query(text):
 
 @pytest.fixture
 def conn():
-    url = os.environ.get("PANTRIO_TEST_DATABASE_URL")
+    url = os.environ.get("PANTRILA_TEST_DATABASE_URL")
     if not url:
-        pytest.skip("PANTRIO_TEST_DATABASE_URL is not set")
-    from pantrio import db
+        pytest.skip("PANTRILA_TEST_DATABASE_URL is not set")
+    from pantrila import db
 
     with db.connect(url) as c:
         c.autocommit = True

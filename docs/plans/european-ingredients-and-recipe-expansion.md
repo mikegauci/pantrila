@@ -6,7 +6,7 @@ keep context small. This file is the implementation brief and progress record. R
 
 ## Current handoff
 
-- **Status: PR 1 complete in [PR #38](https://github.com/mikegauci/pantrio/pull/38).** Eight ingredient additions;
+- **Status: PR 1 complete in [PR #38](https://github.com/mikegauci/pantrila/pull/38).** Eight ingredient additions;
   no new recipes, production database writes, embeddings or photos.
 - **Next action: confirm PR #38 merged and live prerequisites, then implement PR 2 only.** Begin with public corpus provenance
   and per-page licensing review for the 5–10 dessert pilot. Verify live prerequisites below
@@ -26,7 +26,7 @@ keep context small. This file is the implementation brief and progress record. R
 
 | PR | Scope | Dependency | Status |
 |---|---|---|---|
-| 1 | European ingredient support and dessert safeguards | None | Complete — [#38](https://github.com/mikegauci/pantrio/pull/38) |
+| 1 | European ingredient support and dessert safeguards | None | Complete — [#38](https://github.com/mikegauci/pantrila/pull/38) |
 | 2 | Recipe provenance, attribution and 5–10 dessert pilot | PR 1 merged | Not started |
 | 3 | Expand to 60 added desserts, including pilot | PR 2 merged | Not started |
 | 4 | Add 40 everyday recipes | PR 3 merged | Not started |
@@ -43,8 +43,8 @@ deployment complete based only on local checks.
 
 ### Nutrition and ingredient data
 
-Pantrio currently joins `ingredients.csv` to `usda_foods.csv` by `fdc_id`. USDA provides
-nutrition; Pantrio's curated metadata provides allergens, diet classes and unit conversions.
+Pantrila currently joins `ingredients.csv` to `usda_foods.csv` by `fdc_id`. USDA provides
+nutrition; Pantrila's curated metadata provides allergens, diet classes and unit conversions.
 
 - Support multiple nutrition sources without pretending Ciqual codes are USDA IDs. Store
   source, source food code, dataset version, source URL and required attribution per ingredient.
@@ -160,7 +160,7 @@ Deliver the data foundation and safeguards together, before publishing new recip
 Starting points: `foods.py`, `nutrition.py`, `corpus.py`, `cookbook.py`, `recipe_import.py`,
 `schema.py`, `swaps.py`, `db.py`, `scripts/build_usda_table.py`, `data/ingredients.csv`,
 `data/usda_foods.csv`, `tests/test_foods.py`, `tests/test_nutrition.py`, `tests/test_corpus.py`.
-Python modules are under `src/pantrio/`. Inspect API and web consumers before changing shapes.
+Python modules are under `src/pantrila/`. Inspect API and web consumers before changing shapes.
 
 ## PR 2: Recipe provenance and 5–10 dessert pilot
 
@@ -205,7 +205,7 @@ Candidate pages to inspect, not pre-approved recipes:
 Run checks appropriate to each PR and the repository's required CI. Useful existing commands:
 
 ```bash
-uv run pantrio corpus check
+uv run pantrila corpus check
 uv run pytest
 uv run ruff check .
 uv run ruff format --check .
@@ -254,7 +254,7 @@ from repository instructions or this scope. Do not implement all four PRs in one
 ### 2026-10-20 — PR 1 implementation and verification
 
 PR number/title/URL: #38 — Add mixed-source nutrition data and dessert safeguards;
-https://github.com/mikegauci/pantrio/pull/38
+https://github.com/mikegauci/pantrila/pull/38
 Status and commit: complete on `feat/european-ingredients`; implementation commits `eb51fd0`
 and `af3ad63`, followed by the feat/ handoff commit containing this entry. Merge through the
 standing repository workflow after the final commit passes every check.

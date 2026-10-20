@@ -1,4 +1,4 @@
-// Mirrors the Pantrio API models in src/pantrio/api.py and schema.py.
+// Mirrors the Pantrila API models in src/pantrila/api.py and schema.py.
 
 export type Allergen =
   | "celery" | "gluten" | "crustaceans" | "eggs" | "fish" | "lupin" | "milk" | "molluscs"
@@ -118,7 +118,7 @@ export interface Meta {
   meal_types: MealType[]
   units: Unit[]
   cuisines: string[]
-  /** Platforms whose post videos Pantrio can hear from the link; empty when off. */
+  /** Platforms whose post videos Pantrila can hear from the link; empty when off. */
   reel_platforms?: string[]
 }
 

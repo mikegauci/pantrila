@@ -1,1 +1,1 @@
-"""Pantrio evals: datasets, scorers and runners."""
+"""Pantrila evals: datasets, scorers and runners."""

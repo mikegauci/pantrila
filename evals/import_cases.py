@@ -24,7 +24,7 @@ import re
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 
-from pantrio.foods import load_foods
+from pantrila.foods import load_foods
 
 OUT = Path(__file__).parent / "data" / "import_cases.json"
 
@@ -414,7 +414,7 @@ def is_recipe(case: Case) -> bool:
 
 def caption_fields(case: Case, n: int) -> dict:
     """The post (pasted with its caption) and the page its caption links to, if any."""
-    post = f"https://www.tiktok.com/@pantrio.eval/video/{7_300_000_000_000_000_000 + n}"
+    post = f"https://www.tiktok.com/@pantrila.eval/video/{7_300_000_000_000_000_000 + n}"
     linked = {"caption-link": "jsonld", "caption-link-none": "no-recipe"}.get(case.kind)
     if linked is None:
         return {"url": post, "caption": case.caption}

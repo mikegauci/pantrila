@@ -46,36 +46,36 @@ class Prices:
 
 
 def model() -> str:
-    return os.environ.get("PANTRIO_MODEL") or DEFAULT_MODEL
+    return os.environ.get("PANTRILA_MODEL") or DEFAULT_MODEL
 
 
 def embed_model() -> str:
-    return os.environ.get("PANTRIO_EMBED_MODEL") or DEFAULT_EMBED_MODEL
+    return os.environ.get("PANTRILA_EMBED_MODEL") or DEFAULT_EMBED_MODEL
 
 
 def image_model() -> str:
-    return os.environ.get("PANTRIO_IMAGE_MODEL") or DEFAULT_IMAGE_MODEL
+    return os.environ.get("PANTRILA_IMAGE_MODEL") or DEFAULT_IMAGE_MODEL
 
 
 def transcribe_model() -> str:
-    return os.environ.get("PANTRIO_TRANSCRIBE_MODEL") or DEFAULT_TRANSCRIBE_MODEL
+    return os.environ.get("PANTRILA_TRANSCRIBE_MODEL") or DEFAULT_TRANSCRIBE_MODEL
 
 
 def image_prices() -> Prices:
     """Text input and image output rates of the image model."""
     return Prices(
-        input=_float("PANTRIO_PRICE_IMAGE_INPUT_PER_MTOK"),
-        output=_float("PANTRIO_PRICE_IMAGE_OUTPUT_PER_MTOK"),
+        input=_float("PANTRILA_PRICE_IMAGE_INPUT_PER_MTOK"),
+        output=_float("PANTRILA_PRICE_IMAGE_OUTPUT_PER_MTOK"),
         embed=None,
     )
 
 
 def prices() -> Prices:
     return Prices(
-        input=_float("PANTRIO_PRICE_INPUT_PER_MTOK"),
-        output=_float("PANTRIO_PRICE_OUTPUT_PER_MTOK"),
-        embed=_float("PANTRIO_PRICE_EMBED_PER_MTOK"),
-        transcribe_per_min=_float("PANTRIO_PRICE_TRANSCRIBE_PER_MIN"),
+        input=_float("PANTRILA_PRICE_INPUT_PER_MTOK"),
+        output=_float("PANTRILA_PRICE_OUTPUT_PER_MTOK"),
+        embed=_float("PANTRILA_PRICE_EMBED_PER_MTOK"),
+        transcribe_per_min=_float("PANTRILA_PRICE_TRANSCRIBE_PER_MIN"),
     )
 
 
@@ -150,7 +150,7 @@ def supabase_service_key() -> str | None:
 
 
 def cors_origins() -> list[str]:
-    raw = os.environ.get("PANTRIO_CORS_ORIGINS") or "http://localhost:3000"
+    raw = os.environ.get("PANTRILA_CORS_ORIGINS") or "http://localhost:3000"
     return [o.strip().rstrip("/") for o in raw.split(",") if o.strip()]
 
 
@@ -167,16 +167,16 @@ class Limits:
 
 def limits() -> Limits:
     return Limits(
-        plans_per_user=int(os.environ.get("PANTRIO_DAILY_PLANS") or 5),
-        chats_per_user=int(os.environ.get("PANTRIO_DAILY_CHATS") or 50),
-        imports_per_user=int(os.environ.get("PANTRIO_DAILY_IMPORTS") or 20),
-        photos_per_user=int(os.environ.get("PANTRIO_DAILY_PHOTOS") or 5),
-        budget_usd=float(os.environ.get("PANTRIO_DAILY_BUDGET_USD") or 2.0),
+        plans_per_user=int(os.environ.get("PANTRILA_DAILY_PLANS") or 5),
+        chats_per_user=int(os.environ.get("PANTRILA_DAILY_CHATS") or 50),
+        imports_per_user=int(os.environ.get("PANTRILA_DAILY_IMPORTS") or 20),
+        photos_per_user=int(os.environ.get("PANTRILA_DAILY_PHOTOS") or 5),
+        budget_usd=float(os.environ.get("PANTRILA_DAILY_BUDGET_USD") or 2.0),
     )
 
 
 def fmt_cost(usd: float | None) -> str:
-    return "n/a (set PANTRIO_PRICE_*_PER_MTOK)" if usd is None else f"${usd:.4f}"
+    return "n/a (set PANTRILA_PRICE_*_PER_MTOK)" if usd is None else f"${usd:.4f}"
 
 
 def reservation_usd(kind: str) -> float:
@@ -194,5 +194,5 @@ def reservation_usd(kind: str) -> float:
         "reel": 0.02,
     }
     return max(
-        0.000001, float(os.environ.get(f"PANTRIO_RESERVE_{kind.upper()}_USD") or defaults[kind])
+        0.000001, float(os.environ.get(f"PANTRILA_RESERVE_{kind.upper()}_USD") or defaults[kind])
     )

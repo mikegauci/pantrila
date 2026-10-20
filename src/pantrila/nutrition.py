@@ -5,8 +5,8 @@ from __future__ import annotations
 import re
 from collections.abc import Iterable, Mapping
 
-from pantrio.foods import Food, load_foods
-from pantrio.schema import DietTag, Ingredient, NutritionFacts
+from pantrila.foods import Food, load_foods
+from pantrila.schema import DietTag, Ingredient, NutritionFacts
 
 # Thresholds per serving for the nutrition-based diet tags.
 LOW_CARB_MAX_CARBS_G = 20.0

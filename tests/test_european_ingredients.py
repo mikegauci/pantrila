@@ -7,9 +7,9 @@ import json
 import pytest
 from pydantic import ValidationError
 
-from pantrio.cookbook import CookbookRecipeIn, FoodEstimate, derive
-from pantrio.corpus import CorpusValidationError, build_recipe, check_recipe, load_corpus
-from pantrio.foods import (
+from pantrila.cookbook import CookbookRecipeIn, FoodEstimate, derive
+from pantrila.corpus import CorpusValidationError, build_recipe, check_recipe, load_corpus
+from pantrila.foods import (
     DATA_DIR,
     UnitError,
     derive_allergens,
@@ -17,8 +17,8 @@ from pantrio.foods import (
     load_foods,
     to_grams,
 )
-from pantrio.nutrition import recipe_nutrition
-from pantrio.schema import Allergen, DietTag, Ingredient, Unit, UserProfile
+from pantrila.nutrition import recipe_nutrition
+from pantrila.schema import Allergen, DietTag, Ingredient, Unit, UserProfile
 from scripts.build_ciqual_table import normalize, numeric
 from tests.conftest import brief, draft
 

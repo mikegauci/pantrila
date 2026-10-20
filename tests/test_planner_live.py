@@ -8,7 +8,7 @@ import os
 import pytest
 
 from evals.plan_profiles import load_profiles
-from pantrio.constraints import check_plan, hard_violations
+from pantrila.constraints import check_plan, hard_violations
 
 pytestmark = pytest.mark.live
 
@@ -19,9 +19,9 @@ GATE = ["vegan-high-protein", "seafood-sesame-soy-allergy", "picky-eater"]
 def test_planner_never_returns_a_hard_violation(pid):
     if not (os.environ.get("OPENAI_API_KEY") and os.environ.get("DATABASE_URL")):
         pytest.skip("needs OPENAI_API_KEY and DATABASE_URL")
-    from pantrio import config, db
-    from pantrio.planner import DbStore, Planner
-    from pantrio.search import openai_query_embedder
+    from pantrila import config, db
+    from pantrila.planner import DbStore, Planner
+    from pantrila.search import openai_query_embedder
 
     profile = dict(load_profiles())[pid]
     with db.connect(config.database_url()) as conn:

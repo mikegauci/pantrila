@@ -4,7 +4,7 @@ import pytest
 
 from evals.metrics import normalized_recall_at_k, percentile, reciprocal_rank
 from evals.retrieval_queries import OUT, SPECS, generate, render
-from pantrio.corpus import load_briefs, load_corpus
+from pantrila.corpus import load_briefs, load_corpus
 
 
 def test_normalized_recall_at_k_is_capped_by_k():
@@ -48,7 +48,7 @@ def test_committed_queries_match_generator():
 def test_committed_queries_never_label_filter_breakers_relevant():
     if not OUT.exists():
         pytest.skip("retrieval queries not generated yet")
-    from pantrio.search import SearchFilters
+    from pantrila.search import SearchFilters
 
     recipes = {r.id: r for r in load_corpus()}
     for q in json.loads(OUT.read_text()):
@@ -71,8 +71,8 @@ def test_every_plan_profile_is_feasible():
     import math
 
     from evals.plan_profiles import load_profiles
-    from pantrio.constraints import MAX_REPEATS, recipe_violations
-    from pantrio.foods import load_foods
+    from pantrila.constraints import MAX_REPEATS, recipe_violations
+    from pantrila.foods import load_foods
 
     recipes = load_corpus()
     foods = load_foods()
@@ -94,8 +94,8 @@ def test_committed_chat_cases_match_generator():
 def test_chat_cases_point_at_real_recipes_tools_and_foods():
     from evals.chat_cases import CITED_IN_MESSAGE, load_cases
     from evals.run_assistant import kitchen_for
-    from pantrio.assistant import TOOL_ARGS
-    from pantrio.foods import load_foods
+    from pantrila.assistant import TOOL_ARGS
+    from pantrila.foods import load_foods
 
     ids = {r.id for r in load_corpus()}
     foods = load_foods()
@@ -112,7 +112,7 @@ def test_committed_import_cases_match_generator_and_use_real_foods():
     from evals.import_cases import OUT as IMPORTS
     from evals.import_cases import generate
     from evals.import_cases import render as render_imports
-    from pantrio.foods import load_foods
+    from pantrila.foods import load_foods
 
     assert IMPORTS.read_text() == render_imports(generate())
     foods = load_foods()
@@ -124,7 +124,7 @@ def test_committed_import_cases_match_generator_and_use_real_foods():
 def test_import_scoring_counts_estimates_and_missed_allergens():
     from evals.import_cases import load_cases
     from evals.run_import import score
-    from pantrio.cookbook import CookbookRecipeIn
+    from pantrila.cookbook import CookbookRecipeIn
 
     case = next(c for c in load_cases() if c["id"] == "graph-tteokbokki")
     lines = [{"name": li["text"], "quantity": 1, "unit": "g", "food": (li["foods"] or [None])[0]}
@@ -142,7 +142,7 @@ def test_committed_video_cases_match_generator_and_use_real_foods():
     from evals.video_cases import OUT as VIDEOS
     from evals.video_cases import generate
     from evals.video_cases import render as render_videos
-    from pantrio.foods import load_foods
+    from pantrila.foods import load_foods
 
     assert VIDEOS.read_text() == render_videos(generate())
     foods = load_foods()
@@ -178,7 +178,7 @@ def test_video_media_matches_what_the_browser_sends():
 def test_video_scoring_counts_flags_and_stated_amounts():
     from evals.run_video import score
     from evals.video_cases import load_cases
-    from pantrio.cookbook import CookbookRecipeIn
+    from pantrila.cookbook import CookbookRecipeIn
 
     case = next(c for c in load_cases() if c["kind"] == "vague")
     lines = [{"name": li["text"], "quantity": (li["amount"] or [1])[0],
@@ -210,8 +210,8 @@ def test_committed_reel_cases_match_generator_and_pair_real_videos():
     from evals.reel_cases import generate
     from evals.reel_cases import render as render_reels
     from evals.video_cases import AUDIO
-    from pantrio.foods import load_foods
-    from pantrio.social import detect
+    from pantrila.foods import load_foods
+    from pantrila.social import detect
 
     assert REELS.read_text() == render_reels(generate())
     foods = load_foods()
@@ -225,8 +225,8 @@ def test_committed_reel_cases_match_generator_and_pair_real_videos():
 def test_reel_scoring_counts_service_calls_and_the_method():
     from evals.reel_cases import load_cases
     from evals.run_reel import fake_fetch, fake_read, score
-    from pantrio.cookbook import CookbookRecipeIn
-    from pantrio.recipe_import import NO_METHOD_STEP
+    from pantrila.cookbook import CookbookRecipeIn
+    from pantrila.recipe_import import NO_METHOD_STEP
 
     case = next(c for c in load_cases() if c["kind"] == "ingredients-only")
     lines = [{"name": li["text"], "quantity": li["amount"][0], "unit": li["amount"][1],
@@ -237,5 +237,5 @@ def test_reel_scoring_counts_service_calls_and_the_method():
     assert row["lines_matched"] == row["stated_right"] == 5 and row["missed_allergens"] == []
     assert not row["method"] and not row["calls_ok"]
     assert score(case, draft, 0, media_on=False)["calls_ok"]
-    media = fake_read(fake_fetch(f"https://media.pantrio-eval.example/{case['video']}.mp4"))
+    media = fake_read(fake_fetch(f"https://media.pantrila-eval.example/{case['video']}.mp4"))
     assert media.seconds > 1 and len(media.frames) == 4

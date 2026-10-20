@@ -17,8 +17,8 @@ from enum import StrEnum
 import psycopg
 from pydantic import BaseModel, Field
 
-from pantrio.embeddings import to_pgvector
-from pantrio.schema import Allergen, DietTag, MealType, Recipe
+from pantrila.embeddings import to_pgvector
+from pantrila.schema import Allergen, DietTag, MealType, Recipe
 
 RRF_K = 60
 CANDIDATES = 50
@@ -207,7 +207,7 @@ def search(
 
 
 def openai_query_embedder(model: str, client=None) -> QueryEmbedFn:
-    from pantrio.embeddings import openai_embedder
+    from pantrila.embeddings import openai_embedder
 
     embed = openai_embedder(model, client)
 
@@ -247,7 +247,7 @@ class ParsedQuery(BaseModel):
     )
     meal_types: list[MealType] = Field(description="Meals named in the ask, if any.")
     exclude_foods: list[str] = Field(
-        description="Pantrio food keys for ingredients the person says to avoid ('no "
+        description="Pantrila food keys for ingredients the person says to avoid ('no "
         "mushrooms' gives ['mushroom', 'shiitake'])."
     )
 
@@ -262,7 +262,7 @@ def parse_query(text: str, model: str, client=None) -> tuple[str, SearchFilters,
     """Returns (search_text, filters, usage). Unknown food keys are dropped, not trusted."""
     from openai import OpenAI
 
-    from pantrio.foods import load_foods
+    from pantrila.foods import load_foods
 
     client = client or OpenAI()
     resp = client.responses.parse(

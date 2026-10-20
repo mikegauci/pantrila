@@ -6,9 +6,9 @@ from types import SimpleNamespace
 import pytest
 from openai.types.responses import ResponseFunctionToolCall
 
-from pantrio.assistant import MAX_TOOL_ROUNDS, TOOLS, Assistant
-from pantrio.pantry import MemoryKitchen, make_item
-from pantrio.schema import Allergen, DietTag, Unit, UserProfile
+from pantrila.assistant import MAX_TOOL_ROUNDS, TOOLS, Assistant
+from pantrila.pantry import MemoryKitchen, make_item
+from pantrila.schema import Allergen, DietTag, Unit, UserProfile
 from tests.conftest import CorpusStore
 
 OMELETTE, CHICKEN, CURRY, SALMON = (
@@ -102,7 +102,7 @@ def test_guard_flags_unsafe_and_made_up_recipes(corpus, kitchen):
     assert result.flagged == [SALMON, "made-up-stew"]
     assert result.text.startswith(reply.replace("[made-up-stew]", "(unverified recipe)"))
     assert "made-up-stew" not in result.cited
-    assert "Note from Pantrio:" in result.text
+    assert "Note from Pantrila:" in result.text
     assert "Creamy Salmon Pasta [italian-salmon-pasta] does not suit you: it contains fish" in (
         result.text
     )
@@ -219,7 +219,7 @@ def test_write_recipe_leaves_unknown_foods_for_review(corpus, kitchen):
     args = cake(("plain flour", 200, "g"), ("unicorn sprinkles", 1, "tbsp"), ("eggs", -1, "piece"))
     out = a.run_tool("write_recipe", json.dumps(args), kitchen.profile(), drafts)
     assert (
-        "Could not check for allergens or diets (not in Pantrio's table): unicorn sprinkles" in out
+        "Could not check for allergens or diets (not in Pantrila's table): unicorn sprinkles" in out
     )
     assert "suits the person" not in out and "Per serving" not in out
     [draft] = drafts
@@ -258,7 +258,7 @@ def test_guard_checks_drafts_even_when_model_calls_them_safe(corpus, profile, pr
     )
     result = a.reply("Write a cake")
     assert problem in result.draft_problems[0]
-    assert problem in result.text.split("Note from Pantrio:")[1]
+    assert problem in result.text.split("Note from Pantrila:")[1]
     assert result.cited == []
 
 
@@ -273,7 +273,7 @@ def test_guard_warns_about_unchecked_ingredients_independently_of_model(corpus):
 
 def test_safety_eval_does_not_accept_an_allergen_name_as_a_warning():
     from evals.run_assistant import unwarned
-    from pantrio.assistant import WriteRecipeArgs, write_draft
+    from pantrila.assistant import WriteRecipeArgs, write_draft
 
     profile = UserProfile(allergies=[Allergen.PEANUTS])
     _, draft = write_draft(WriteRecipeArgs(**cake(("peanut butter", 30, "g"))), profile)
@@ -291,7 +291,7 @@ def test_unknown_single_word_ids_are_blocked_like_hyphenated_ids(corpus, kitchen
 
 @pytest.mark.parametrize("replacement", [None, "olive_oil"])
 def test_assistant_dessert_swap_tool_cannot_bypass_restriction(corpus, kitchen, replacement):
-    from pantrio.schema import MealType
+    from pantrila.schema import MealType
 
     corpus[0] = corpus[0].model_copy(update={"meal_types": [MealType.DESSERT]})
     a, _ = bot(

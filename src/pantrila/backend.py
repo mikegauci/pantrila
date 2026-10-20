@@ -7,19 +7,19 @@ from contextlib import AbstractContextManager, contextmanager
 from dataclasses import dataclass
 from typing import Any, Protocol
 
-from pantrio import config
-from pantrio.chats import Chats
-from pantrio.cookbook import (
+from pantrila import config
+from pantrila.chats import Chats
+from pantrila.cookbook import (
     Cookbook,
 )
-from pantrio.pantry import Kitchen
-from pantrio.photos import (
+from pantrila.pantry import Kitchen
+from pantrila.photos import (
     PhotoStore,
     photo_store,
 )
-from pantrio.planner import RecipeStore
-from pantrio.records import Records
-from pantrio.search import SearchFilters
+from pantrila.planner import RecipeStore
+from pantrila.records import Records
+from pantrila.search import SearchFilters
 
 # --- Backends ---------------------------------------------------------------------------------
 
@@ -58,7 +58,7 @@ class DbBackend:
     def __init__(self, url: str, max_size: int = 8):
         from psycopg_pool import ConnectionPool
 
-        from pantrio.search import openai_query_embedder
+        from pantrila.search import openai_query_embedder
 
         self.pool = ConnectionPool(url, min_size=1, max_size=max_size,
                                    kwargs={"autocommit": True}, open=True)  # fmt: skip
@@ -68,10 +68,10 @@ class DbBackend:
 
     @contextmanager
     def session(self, user_id: str) -> Iterator[Session]:
-        from pantrio.chats import DbChats
-        from pantrio.cookbook import DbCookbook
-        from pantrio.pantry import DbKitchen
-        from pantrio.records import DbRecords
+        from pantrila.chats import DbChats
+        from pantrila.cookbook import DbCookbook
+        from pantrila.pantry import DbKitchen
+        from pantrila.records import DbRecords
 
         yield Session(
             PooledCatalog(self.pool, self.embed_query),
@@ -103,13 +103,13 @@ class PooledRepository:
 
 class PooledCatalog(PooledRepository):
     def __init__(self, pool, embed_query):
-        from pantrio.planner import DbStore
+        from pantrila.planner import DbStore
 
         super().__init__(pool, DbStore, embed_query)
         self.embed_query, self.embed_tokens = embed_query, 0
 
     def search(self, query, filters, limit):
-        from pantrio.search import search
+        from pantrila.search import search
 
         # Embedding I/O happens before acquiring a database connection.
         vector, tokens = self.embed_query(query)

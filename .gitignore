@@ -219,7 +219,7 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Pantrio
+# Pantrila
 .cache/
 !web/src/lib/
 supabase/.temp/

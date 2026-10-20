@@ -6,7 +6,7 @@ const id = "00000000-0000-4000-8000-000000000005"
 
 test("an interrupted plan stream shows a failure instead of silently finishing", async ({ page }) => {
   let requests = 0
-  await page.addInitScript((user) => localStorage.setItem(`pantrio-tour-done:${user}`, "1"), id)
+  await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname

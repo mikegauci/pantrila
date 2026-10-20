@@ -7,8 +7,8 @@ const id = "00000000-0000-4000-8000-000000000003"
 test("saving an allergy refreshes warnings in an already visited chat", async ({ page }) => {
   let allergies: string[] = []
   await page.addInitScript((user) => {
-    localStorage.setItem(`pantrio-tour-done:${user}`, "1")
-    localStorage.setItem(`pantrio-chat-thread:${user}`, "1")
+    localStorage.setItem(`pantrila-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-chat-thread:${user}`, "1")
   }, id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {

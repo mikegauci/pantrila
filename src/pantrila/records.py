@@ -17,8 +17,8 @@ from typing import Literal, Protocol
 
 import psycopg
 
-from pantrio.planner import Usage
-from pantrio.schema import MealPlan
+from pantrila.planner import Usage
+from pantrila.schema import MealPlan
 
 Kind = Literal["plan", "chat", "import", "photo", "search", "reel"]
 MAX_COOKED_PER_USER = 500  # older cooking log entries are dropped
@@ -34,7 +34,7 @@ def enforce_quota(count: int, spend: float, cap: int, budget: float, reserve: fl
     if count >= cap:
         raise QuotaExceeded("Your daily allowance is used up. Try again tomorrow.", 429)
     if spend + reserve > budget + 1e-9:
-        raise QuotaExceeded("Pantrio’s demo budget is used or reserved. Try again later.", 503)
+        raise QuotaExceeded("Pantrila’s demo budget is used or reserved. Try again later.", 503)
 
 
 @dataclass

@@ -132,7 +132,7 @@ export default function PlanPage() {
         if (event === "error") setError((data as { message: string }).message)
       }, abort.current.signal)
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Could not reach Pantrio. Try again.")
+      setError(e instanceof ApiError ? e.message : "Could not reach Pantrila. Try again.")
     } finally {
       setSteps(null)
       refreshMe()
@@ -203,7 +203,7 @@ export default function PlanPage() {
           />
           {plan.notes && (
             <div className="flex flex-wrap items-start gap-3 rounded-2xl bg-yellow-soft p-4">
-              <AiBadge>Pantrio&apos;s note</AiBadge>
+              <AiBadge>Pantrila&apos;s note</AiBadge>
               <p className="min-w-0 flex-1">{plan.notes}</p>
             </div>
           )}

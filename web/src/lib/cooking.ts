@@ -108,7 +108,7 @@ export interface CookProgress {
 
 const KEEP_MS = 12 * 3600 * 1000
 
-export const progressKey = (userId: string, recipe: string) => `pantrio-cook:${userId}:${recipe}`
+export const progressKey = (userId: string, recipe: string) => `pantrila-cook:${userId}:${recipe}`
 
 export function loadProgress(key: string): CookProgress | null {
   try {

@@ -18,13 +18,13 @@ nutrition, allergens and diets are derived in code on every read, like the corpu
 recipe can get a generated photo (POST /me/recipes/{id}/photo), capped per user per day.
 
 Cooking mode ends with "I cooked this" (POST /me/cooked): it logs the cook and, unless the
-person opts out, takes the amounts used out of their pantry (see pantrio.cooking).
+person opts out, takes the amounts used out of their pantry (see pantrila.cooking).
 /me/cooked/preview shows that pantry change first without saving anything.
 
-Recipes carry `photo_url` when they have a photo (Supabase Storage; see pantrio.photos), else
+Recipes carry `photo_url` when they have a photo (Supabase Storage; see pantrila.photos), else
 null and the web app shows its placeholder art.
 
-Run: uv run uvicorn pantrio.api:app --env-file .env --reload
+Run: uv run uvicorn pantrila.api:app --env-file .env --reload
 """
 
 from __future__ import annotations
@@ -44,8 +44,8 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Res
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 
-from pantrio import config
-from pantrio.api_models import (
+from pantrila import config
+from pantrila.api_models import (
     AvatarIn,
     ChatMessage,
     ChatReply,
@@ -83,7 +83,7 @@ from pantrio.api_models import (
     UsageEventView,
     UsageView,
 )
-from pantrio.api_views import (
+from pantrila.api_views import (
     cookbook_card,
     cookbook_detail,
     food_name,
@@ -94,15 +94,15 @@ from pantrio.api_views import (
     recipe_detail,
     swap_view,
 )
-from pantrio.assistant import Assistant, draft_warnings
-from pantrio.auth import AuthError, User, verifier
-from pantrio.backend import (
+from pantrila.assistant import Assistant, draft_warnings
+from pantrila.auth import AuthError, User, verifier
+from pantrila.backend import (
     Backend,
     DbBackend,
     Session,
 )
-from pantrio.chats import SavedThread, title_for
-from pantrio.cookbook import (
+from pantrila.chats import SavedThread, title_for
+from pantrila.cookbook import (
     CookbookError,
     CookbookFull,
     CookbookRecipeIn,
@@ -110,19 +110,19 @@ from pantrio.cookbook import (
     derive,
     problems_for,
 )
-from pantrio.cooking import grams_used, use_from_pantry
-from pantrio.foods import UnitError, load_foods
-from pantrio.grocery import grocery_list
-from pantrio.meal_swap import SwapError, meal_options, replace_meal, swapped_report
-from pantrio.operations import (
+from pantrila.cooking import grams_used, use_from_pantry
+from pantrila.foods import UnitError, load_foods
+from pantrila.grocery import grocery_list
+from pantrila.meal_swap import SwapError, meal_options, replace_meal, swapped_report
+from pantrila.operations import (
     EmbeddingUsage,
     PaidOperation,
     ReelMeter,
     daily_cap,
     reel_import_timing,
 )
-from pantrio.pantry import UnknownFood, make_item, resolve_food
-from pantrio.photos import (
+from pantrila.pantry import UnknownFood, make_item, resolve_food
+from pantrila.photos import (
     Dish,
     PhotoStore,
     PhotoUsage,
@@ -132,16 +132,16 @@ from pantrio.photos import (
     public_url,
     to_avatar_webp,
 )
-from pantrio.planner import Planner, PlanningError, Usage
-from pantrio.post_media import MediaSource, media_source
-from pantrio.recipe_import import (
+from pantrila.planner import Planner, PlanningError, Usage
+from pantrila.post_media import MediaSource, media_source
+from pantrila.recipe_import import (
     Importer,
     ImportFailed,
     check_image,
 )
-from pantrio.records import Cooked, Records
-from pantrio.request_limits import RequestSizeLimit
-from pantrio.schema import (
+from pantrila.records import Cooked, Records
+from pantrila.request_limits import RequestSizeLimit
+from pantrila.schema import (
     Allergen,
     DietTag,
     GroceryList,
@@ -150,10 +150,10 @@ from pantrio.schema import (
     Unit,
     UserProfile,
 )
-from pantrio.search import SearchFilters
-from pantrio.swaps import UnsupportedDessertSwap, evaluate_swap, swap_options
+from pantrila.search import SearchFilters
+from pantrila.swaps import UnsupportedDessertSwap, evaluate_swap, swap_options
 
-log = logging.getLogger("pantrio.api")
+log = logging.getLogger("pantrila.api")
 
 MAX_CHAT_HISTORY = 20
 
@@ -235,7 +235,7 @@ def create_app(
         yield
         app.state.backend.close()
 
-    app = FastAPI(title="Pantrio API", version="0.4.0", lifespan=lifespan)
+    app = FastAPI(title="Pantrila API", version="0.4.0", lifespan=lifespan)
     app.add_middleware(RequestSizeLimit)
     app.add_middleware(
         CORSMiddleware,
@@ -256,7 +256,7 @@ def create_app(
 
     @app.get("/meta")
     def meta(request: Request, _: UserDep) -> Meta:
-        from pantrio.corpus import load_briefs
+        from pantrila.corpus import load_briefs
 
         return Meta(allergens=list(Allergen), diets=list(DietTag), meal_types=list(MealType),
                     units=list(Unit), cuisines=sorted({b.cuisine for b in load_briefs()}),
@@ -285,7 +285,7 @@ def create_app(
         except ImportFailed as exc:
             raise HTTPException(422, str(exc)) from exc
         except Exception as exc:  # Pillow raises many types for a corrupt file
-            raise HTTPException(422, "That file is not a picture Pantrio can read.") from exc
+            raise HTTPException(422, "That file is not a picture Pantrila can read.") from exc
         old, path = s.records.avatar_path(), avatar_path(user.id)
         try:
             backend.photos.put(path, webp)
@@ -671,7 +671,7 @@ def create_app(
             raise swap_http_error(exc) from exc
         view = meal_options_view(saved, day, meal_type, options, s.store, profile)
         if view is None:
-            raise HTTPException(404, "That meal's recipe is no longer in Pantrio's recipes.")
+            raise HTTPException(404, "That meal's recipe is no longer in Pantrila's recipes.")
         return view
 
     @app.put("/plans/latest/meals/{day}/{meal_type}")

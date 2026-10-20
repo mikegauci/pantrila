@@ -27,14 +27,14 @@ from pathlib import Path
 from evals.chat_cases import OUT as CASES
 from evals.chat_cases import load_cases
 from evals.metrics import percentile
-from pantrio import config, db
-from pantrio.assistant import Assistant, ChatResult
-from pantrio.constraints import recipe_problems
-from pantrio.cookbook import CookbookRecipeIn, derive, problems_for
-from pantrio.pantry import MemoryKitchen, make_item
-from pantrio.planner import DbStore
-from pantrio.schema import UserProfile
-from pantrio.search import openai_query_embedder
+from pantrila import config, db
+from pantrila.assistant import Assistant, ChatResult
+from pantrila.constraints import recipe_problems
+from pantrila.cookbook import CookbookRecipeIn, derive, problems_for
+from pantrila.pantry import MemoryKitchen, make_item
+from pantrila.planner import DbStore
+from pantrila.schema import UserProfile
+from pantrila.search import openai_query_embedder
 
 REPORTS = Path(__file__).parent / "reports"
 
@@ -170,7 +170,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
     def num(v, fmt=".1f"):
         return "n/a" if v is None else format(v, fmt)
 
-    cost = "n/a (set PANTRIO_PRICE_*_PER_MTOK)" if s["cost_per_turn_usd"] is None else (
+    cost = "n/a (set PANTRILA_PRICE_*_PER_MTOK)" if s["cost_per_turn_usd"] is None else (
         f"${s['cost_per_turn_usd']:.4f}"
     )  # fmt: skip
     by_kind = ", ".join(f"{k} {pct(v)}" for k, v in s["tools_ok_by_kind"].items())
@@ -231,9 +231,9 @@ def upload_to_langsmith(rows: list[dict], meta: dict) -> None:
 
     client = Client()
     digest = hashlib.sha256(CASES.read_bytes()).hexdigest()[:8]
-    name = f"pantrio-chat-cases-{digest}"
+    name = f"pantrila-chat-cases-{digest}"
     if not client.has_dataset(dataset_name=name):
-        ds = client.create_dataset(name, description="Pantrio cooking-assistant eval cases")
+        ds = client.create_dataset(name, description="Pantrila cooking-assistant eval cases")
         client.create_examples(
             dataset_id=ds.id,
             examples=[{"inputs": {"case_id": c["id"], **c}} for c in load_cases()],
@@ -265,7 +265,7 @@ def upload_to_langsmith(rows: list[dict], meta: dict) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Pantrio cooking-assistant eval")
+    parser = argparse.ArgumentParser(description="Pantrila cooking-assistant eval")
     parser.add_argument("--only", help="comma-separated case ids")
     parser.add_argument("--effort", default="low", choices=["minimal", "low", "medium", "high"])
     parser.add_argument("--concurrency", type=int, default=6)
