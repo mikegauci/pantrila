@@ -6,11 +6,12 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 import { useAuth } from "@/components/auth-provider"
+import { GoogleMark } from "@/components/google-mark"
 import { Logo } from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { supabase } from "@/lib/supabase"
+import { signInWithGoogle, supabase } from "@/lib/supabase"
 
 const POINTS = [
   { icon: ChefHat, text: "Find recipes from what is already in your kitchen" },
@@ -24,7 +25,7 @@ export default function LoginPage() {
   const { session, ready } = useAuth()
   const [email, setEmail] = useState("")
   const [sent, setSent] = useState(false)
-  const [busy, setBusy] = useState<"email" | "guest" | null>(null)
+  const [busy, setBusy] = useState<"email" | "google" | "guest" | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -42,6 +43,17 @@ export default function LoginPage() {
     setBusy(null)
     if (error) setError(error.message)
     else setSent(true)
+  }
+
+  async function google() {
+    setBusy("google")
+    setError(null)
+    const message = await signInWithGoogle()
+    // On success the browser is already leaving for Google, so keep the button busy.
+    if (message) {
+      setBusy(null)
+      setError(`Google sign-in is not available: ${message}`)
+    }
   }
 
   async function guest() {
@@ -81,14 +93,20 @@ export default function LoginPage() {
           <Logo className="mb-10 lg:hidden" />
           <h1 className="text-[24px] font-bold leading-8">Try Pantrila</h1>
           <p className="mt-1 text-muted-foreground">
-            No account needed. Set your diet and allergies, add what is in your kitchen and plan
-            a week.
+            Set your diet and allergies, add what is in your kitchen and plan a week.
           </p>
-          <Button size="lg" className="mt-8 w-full" onClick={guest} disabled={!ready || busy !== null}>
+          <Button size="lg" className="mt-8 w-full" onClick={google} disabled={!ready || busy !== null}>
+            <GoogleMark /> {busy === "google" ? "Opening Google…" : "Continue with Google"}
+          </Button>
+          <p className="mt-2 text-center text-[12px] text-muted-foreground">
+            Keeps your pantry, plans and cookbook on any device.
+          </p>
+          <Button size="lg" variant="outline" className="mt-6 w-full" onClick={guest} disabled={!ready || busy !== null}>
             <UserRound /> {busy === "guest" ? "Starting…" : "Try it as a guest"}
           </Button>
           <p className="mt-2 text-center text-[12px] text-muted-foreground">
-            Your guest data stays with this browser session.
+            No account needed. Your guest data stays with this browser session; add Google later
+            to keep it.
           </p>
 
           <details className="mt-10 rounded-[20px] border bg-surface p-4 text-[13px]">

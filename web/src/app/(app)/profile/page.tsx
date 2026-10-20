@@ -7,6 +7,7 @@ import { toast } from "sonner"
 import { UserAvatar } from "@/components/app-shell"
 import { useAuth } from "@/components/auth-provider"
 import { Panel, PanelTitle } from "@/components/bits"
+import { GoogleMark } from "@/components/google-mark"
 import { useTour } from "@/components/tour"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,6 +18,7 @@ import { ApiError, send } from "@/lib/api"
 import { label } from "@/lib/format"
 import { useFoods, useMe, useMeta, useProfile, useRefreshKitchen } from "@/lib/hooks"
 import { toAvatarDataUrl } from "@/lib/images"
+import { linkGoogle } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
 import type { Allergen, DietTag, MealType, Me, Profile } from "@/lib/types"
 
@@ -39,6 +41,49 @@ function HelpCard() {
       <p className="mb-4 text-muted-foreground">A one-minute walk through the Assistant, recipes, your cookbook and the meal plan.</p>
       <Button variant="outline" onClick={tour.start}>
         <Compass /> Replay the tour
+      </Button>
+    </Panel>
+  )
+}
+
+function AccountCard() {
+  const { session } = useAuth()
+  const [busy, setBusy] = useState(false)
+  const user = session?.user
+  if (!user) return null
+  const google = user.identities?.some((i) => i.provider === "google")
+
+  if (!user.is_anonymous) {
+    return (
+      <Panel>
+        <PanelTitle>Account</PanelTitle>
+        <p className="flex items-center gap-2 text-muted-foreground">
+          {google && <GoogleMark className="size-4" />}
+          Signed in{google ? " with Google" : ""} as <strong className="text-foreground">{user.email}</strong>
+        </p>
+      </Panel>
+    )
+  }
+  return (
+    <Panel>
+      <PanelTitle>Keep your data</PanelTitle>
+      <p className="mb-4 text-muted-foreground">
+        You are a guest, so everything lives in this browser session. Add Google to keep your
+        profile, pantry, plans, cookbook and chats and open them on any device.
+      </p>
+      <Button
+        disabled={busy}
+        onClick={async () => {
+          setBusy(true)
+          const error = await linkGoogle()
+          // On success the browser is leaving for Google.
+          if (error) {
+            setBusy(false)
+            toast.error(`Could not add Google: ${error}`)
+          }
+        }}
+      >
+        <GoogleMark /> {busy ? "Opening Google…" : "Continue with Google"}
       </Button>
     </Panel>
   )
@@ -154,7 +199,8 @@ export default function ProfilePage() {
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <div className="lg:col-span-2">
+        <div className="grid gap-5 lg:col-span-2">
+          <AccountCard />
           <PictureCard />
         </div>
         <Panel>
