@@ -580,6 +580,7 @@ class Importer:
         self.effort = effort
         self.media, self.meter = media, meter
         self.media_runs = 0
+        self._video_without_recipe: set[str] = set()
         self._runs: dict = {}  # post url -> the service's result, so one import pays once
         self.media_cost: float | None = 0.0  # the video service's fees; None if unpriced
         self.usage = Usage()
@@ -843,6 +844,8 @@ class Importer:
             if heard is not None and (result is None or NO_METHOD not in heard.notes):
                 result, recipe_url = heard, None
         if result is None:
+            if post and post.url in self._video_without_recipe:
+                raise ImportFailed(social.VIDEO_INCOMPLETE)
             raise ImportFailed(social.NO_RECIPE)
         result.draft = result.draft.model_copy(update={
             "source": "post", "source_url": post.url if post else None,
@@ -922,7 +925,9 @@ class Importer:
         sound = (media.audio, media.seconds) if media.audio else None
         try:
             result = self.read_video(sound, media.frames, caption or found.caption, post)
-        except ImportFailed:
+        except ImportFailed as exc:
+            if str(exc) == NO_VIDEO_RECIPE:
+                self._video_without_recipe.add(post.url)
             return None
         result.notes.insert(0, HEARD)
         return result

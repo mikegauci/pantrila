@@ -1,0 +1,12 @@
+{
+  "ok": false,
+  "error": "Pantrio couldn't read a full recipe from this post. Try another public recipe link.",
+  "model_cost_usd": 0.03138091665,
+  "llm_calls": 3,
+  "video_read": true,
+  "complete_recipe_found": false,
+  "duration_seconds": 20.433333,
+  "source_limit": "Preview narration names the finished dish; caption asks viewers to comment EAT. The import could not ground a complete recipe.",
+  "message_after_fix": "Pantrio read this video but couldn't find a complete recipe. Try the creator's recipe-page link.",
+  "alternative_recipe_url": "https://www.chelseasmessyapron.com/chicken-broth-bowl/"
+}

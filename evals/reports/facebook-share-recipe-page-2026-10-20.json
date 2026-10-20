@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "url": "https://www.chelseasmessyapron.com/chicken-broth-bowl/",
+  "title": "Chicken Broth Bowl",
+  "ingredient_count": 25,
+  "step_count": 10,
+  "allergens": [
+    "celery",
+    "gluten",
+    "crustaceans",
+    "mustard",
+    "sesame",
+    "soy"
+  ],
+  "latency_ms": 65489,
+  "model_cost_usd": 0.04896975
+}

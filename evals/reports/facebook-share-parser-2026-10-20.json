@@ -1,0 +1,55 @@
+{
+  "checked_at": "2026-10-20T15:01:29.092095+00:00",
+  "source": "Three existing Apify results; no new actor or model calls. Signed media URLs are omitted.",
+  "cost_usd": 0,
+  "results": [
+    {
+      "run_id": "CrIOOLBVm579ghTFX",
+      "kind": "shared-reel",
+      "before": {
+        "video_found": false,
+        "caption_found": false,
+        "seconds": null,
+        "latency_ms": 0.867
+      },
+      "after": {
+        "video_found": true,
+        "caption_found": true,
+        "seconds": 20.431,
+        "latency_ms": 0.575
+      }
+    },
+    {
+      "run_id": "nrrejj0E4NWF3frwc",
+      "kind": "shared-reel",
+      "before": {
+        "video_found": false,
+        "caption_found": false,
+        "seconds": null,
+        "latency_ms": 0.691
+      },
+      "after": {
+        "video_found": true,
+        "caption_found": true,
+        "seconds": 20.431,
+        "latency_ms": 0.662
+      }
+    },
+    {
+      "run_id": "z7UAOMgMgnphyrn6W",
+      "kind": "ordinary-video",
+      "before": {
+        "video_found": true,
+        "caption_found": true,
+        "seconds": 66.73,
+        "latency_ms": 0.895
+      },
+      "after": {
+        "video_found": true,
+        "caption_found": true,
+        "seconds": 66.73,
+        "latency_ms": 0.723
+      }
+    }
+  ]
+}

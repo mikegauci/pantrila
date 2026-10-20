@@ -33,6 +33,18 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Facebook shared-reel fix: Apify returns `/share/r/` posts with playback URLs under
+`short_form_video_context.playback_video.videoDeliveryLegacyFields`, captions in `message.text`
+and duration in `short_form_video_context.video.playable_duration_in_ms`. The Facebook adapter
+now reads these in addition to ordinary video fields. Three recorded results: media/caption
+recognition 1/3 -> 3/3; ordinary videos unchanged. Videos read successfully but lacking a
+complete extractable recipe now suggest the creator's recipe-page link, distinct from a
+fetch/decode failure. Owner's 20-second Chelsea reel still lacks a complete recipe; the
+creator's `/chicken-broth-bowl/` page imported successfully (25 ingredients, 10 steps).
+Reports: `evals/reports/facebook-share-2026-10-20.md` and accompanying JSON. No prompt/model
+change or new actor run; existing results were replayed for validation. All 363 Python tests
+passed locally (26 database/prerequisite skips, 8 paid live tests deselected); Ruff passed.
+
 Social import form is link-only: no caption toggle, caption field or screenshot fallback
 button. Placeholder: "Paste Instagram, Facebook or TikTok link". Helper text: "Pantrio reads
 the recipe from your post and credits the creator." Read failures suggest another public

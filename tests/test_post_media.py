@@ -174,14 +174,14 @@ def test_any_failure_falls_back_to_the_captions_ingredients(media, host):
 
 
 def test_no_recipe_anywhere_still_says_what_to_do_next():
-    from pantrio.social import NO_RECIPE
+    from pantrio.social import VIDEO_INCOMPLETE
 
     no_recipe = ImportedRecipe.model_validate({**caption_only().model_dump(), "is_recipe": False})
     no_video_recipe = VideoRecipe.model_validate({**heard().model_dump(), "is_recipe": False})
     client = FakeClient(no_recipe, no_video_recipe)
     with pytest.raises(ImportFailed) as exc:
         importer(client, FakeMedia()).from_post(REEL, "Comment RECIPE 👇", video_host(), resolve)
-    assert str(exc.value) == NO_RECIPE
+    assert str(exc.value) == VIDEO_INCOMPLETE
 
 
 def test_video_without_a_method_does_not_replace_the_caption_draft():
@@ -259,6 +259,14 @@ def apify(answer: httpx.Response, seen: list) -> httpx.Client:
                       "browser_native_hd_url": "https://video.fbcdn.net/hd.mp4"}},
      PostVideo(["https://video.fbcdn.net/sd.mp4", "https://video.fbcdn.net/hd.mp4"],
                "Meatball pasta", None, 66.73)),
+    ("facebook", {"message": {"text": "Comment PASTA for the recipe"}, "pageName": "samcooks",
+                  "short_form_video_context": {
+                      "video": {"playable_duration_in_ms": 20431},
+                      "playback_video": {"videoDeliveryLegacyFields": {
+                          "browser_native_sd_url": "https://video.fbcdn.net/reel-sd.mp4",
+                          "browser_native_hd_url": "https://video.fbcdn.net/reel-hd.mp4"}}}},
+     PostVideo(["https://video.fbcdn.net/reel-sd.mp4", "https://video.fbcdn.net/reel-hd.mp4"],
+               "Comment PASTA for the recipe", "samcooks", 20.431)),
 ])  # fmt: skip
 def test_apify_reads_each_platforms_actor(platform, item, want):
     seen: list[httpx.Request] = []
@@ -369,3 +377,47 @@ def test_media_source_is_off_unless_configured(monkeypatch):
     monkeypatch.setenv("PANTRIO_MEDIA_PLATFORMS", "instagram, myspace")
     source = media_source()
     assert source.platforms == frozenset({"instagram"}) and source.fee_for("facebook") == 0.007
+
+
+def test_facebook_shared_reel_reads_video_when_the_caption_only_says_comment_recipe():
+    share = "https://www.facebook.com/share/r/Example123/"
+    requested = []
+    item = {
+        "message": {"text": "Comment RECIPE"},
+        "pageName": "samcooks",
+        "short_form_video_context": {
+            "video": {"playable_duration_in_ms": 20431},
+            "playback_video": {"videoDeliveryLegacyFields": {"browser_native_sd_url": VIDEO}},
+        },
+    }
+
+    def handle(req):
+        requested.append(req)
+        if req.url.host == "api.apify.com":
+            return httpx.Response(200, json=[item])
+        if str(req.url) == VIDEO:
+            return httpx.Response(200, content=MP4, headers={"content-type": "video/mp4"})
+        return httpx.Response(403)
+
+    http = httpx.Client(transport=httpx.MockTransport(handle))
+    no_recipe = caption_only().model_copy(update={"is_recipe": False})
+    client, meter = FakeClient(no_recipe, heard()), Meter()
+    source = ApifyMedia("secret-token", http=http)
+    result = importer(client, source, meter).from_post(share, http=http, resolve=resolve)
+    assert result.notes[0] == HEARD
+    assert result.draft.source_url == share and result.draft.source_platform == "facebook"
+    assert result.draft.source_author == "samcooks"
+    assert result.draft.steps == ["Brown the sausage.", "Layer and bake."]
+    assert meter.runs == [(0.006, True)]
+    assert len([r for r in requested if r.url.host == "api.apify.com"]) == 1
+    assert all("authorization" not in r.headers for r in requested if r.url.host != "api.apify.com")
+
+
+def test_unreadable_video_is_not_reported_as_a_successfully_read_incomplete_recipe():
+    from pantrio.social import NO_RECIPE
+
+    no_recipe = caption_only().model_copy(update={"is_recipe": False})
+    client = FakeClient(no_recipe)
+    with pytest.raises(ImportFailed) as exc:
+        importer(client, FakeMedia()).from_post(REEL, "Comment RECIPE", video_host(b"bad"), resolve)
+    assert str(exc.value) == NO_RECIPE

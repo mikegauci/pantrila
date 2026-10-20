@@ -122,15 +122,19 @@ ACTORS = {
         0.0043, ("mediaUrls.0",), ("text",), ("authorMeta.name",),
         (("videoMeta.duration", 1.0),),
     ),
-    # Facebook has no audio-only link: the SD video (a few MB), then HD.
+    # Ordinary Facebook videos use root fields; shared reels nest their playback data.
+    # Neither has an audio-only link: prefer the SD video, then HD.
     "facebook": Actor(
         "apify~facebook-posts-scraper",
         '{"startUrls": [{"url": "{url}"}], "resultsLimit": 1}',
         0.006,
         ("videoDeliveryLegacyFields.browser_native_sd_url",
-         "videoDeliveryLegacyFields.browser_native_hd_url"),
-        ("previewTitle", "text"), ("user.name", "pageName"),
-        (("playable_duration_in_ms", 0.001),),
+         "short_form_video_context.playback_video.videoDeliveryLegacyFields.browser_native_sd_url",
+         "videoDeliveryLegacyFields.browser_native_hd_url",
+         "short_form_video_context.playback_video.videoDeliveryLegacyFields.browser_native_hd_url"),
+        ("previewTitle", "text", "message.text"), ("user.name", "pageName"),
+        (("playable_duration_in_ms", 0.001),
+         ("short_form_video_context.video.playable_duration_in_ms", 0.001)),
     ),
 }  # fmt: skip
 
