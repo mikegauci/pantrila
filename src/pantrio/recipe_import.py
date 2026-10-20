@@ -1,4 +1,5 @@
-"""Turn a web page or recipe photos into a cookbook draft the person reviews before saving.
+"""Turn a web page, recipe photos, a social post's caption or pasted text into a cookbook draft
+the person reviews before saving.
 
 Links: the page is fetched with SSRF guards (http/https on the default ports, every address
 the host resolves to must be public, redirects re-checked, 2 MB and 10 s caps). Most recipe
@@ -11,6 +12,10 @@ call per import, no tools, `store=False`, reasoning effort medium (low missed sh
 Thai curry paste in about a third of eval runs). Code then checks every line (food key, unit) and
 returns notes for whatever the person has to fix in the form. Page and photo content is
 untrusted: it can only fill recipe fields the person sees before anything is saved.
+
+Posts (TikTok, Instagram, Facebook; see `social.py`): the caption is read first; when it holds
+no recipe but links a recipe website, that page is imported like a link (a second paid call,
+on the same import). The draft keeps the post link and the creator's handle as its credit.
 """
 
 from __future__ import annotations
@@ -44,6 +49,7 @@ MAX_PAGE_BYTES = 2_000_000
 MAX_PAGE_CHARS = 30_000  # text sent to the model
 FETCH_TIMEOUT_S = 10.0
 MAX_REDIRECTS = 4
+LINKS_BUDGET_S = 20.0  # a post import stops trying caption links after this long
 MAX_IMAGES = 4
 MAX_LINES, MAX_STEPS = 60, 40  # what a cookbook recipe holds
 MAX_IMAGE_BYTES = 4_000_000
@@ -209,11 +215,18 @@ def _resolve_before(resolve: Resolver, host: str, port: int, deadline: float) ->
         raise ImportFailed("The page took too long to load.") from exc
 
 
-def fetch_page(url: str, http=None, resolve: Resolver = resolve_host) -> tuple[str, str]:
-    """(final url, html). Follows redirects by hand so each hop is checked."""
+PAGE_TYPES = ("text/html", "application/xhtml+xml")
+
+
+def fetch_page(url: str, http=None, resolve: Resolver = resolve_host,
+               kinds: tuple[str, ...] = PAGE_TYPES, stop: Callable[[str], bool] | None = None
+               ) -> tuple[str, str]:  # fmt: skip
+    """(final url, body). Follows redirects by hand so each hop is checked. `kinds` are the
+    content types accepted (a missing content type is too). With `stop`, a redirect to a URL
+    it accepts ends the fetch there: (that url, "") without loading it."""
     import httpx
 
-    headers = {"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml"}
+    headers = {"User-Agent": USER_AGENT, "Accept": ",".join(kinds)}
     from pantrio.safe_http import pinned_page
 
     deadline = time.monotonic() + FETCH_TIMEOUT_S
@@ -230,13 +243,15 @@ def fetch_page(url: str, http=None, resolve: Resolver = resolve_host) -> tuple[s
             with stream as r:
                 if r.is_redirect and "location" in r.headers:
                     url = urljoin(url, r.headers["location"])
+                    if stop is not None and stop(url):
+                        return url, ""
                     continue
                 if r.status_code in (401, 402, 403, 429):
                     raise ImportFailed(BLOCKED)
                 if r.status_code >= 400:
                     raise ImportFailed(f"The page answered with an error ({r.status_code}).")
                 kind = r.headers.get("content-type", "").split(";")[0].strip().lower()
-                if kind not in ("text/html", "application/xhtml+xml", ""):
+                if kind not in (*kinds, ""):
                     raise ImportFailed("That link is not a web page.")
                 body = bytearray()
                 for chunk in r.iter_bytes():
@@ -446,11 +461,83 @@ class Importer:
         return self._extract([{"type": "input_text", "text": text[:MAX_PAGE_CHARS]}], "link", url)
 
     def from_link(self, url: str, http=None, resolve: Resolver = resolve_host) -> ImportResult:
+        from pantrio import social
+
+        if social.detect(url) is not None:  # a post: read its caption, not the app's page
+            return self.from_post(url, None, http, resolve)
+        if social.platform_page(url):  # its page is the app's login wall: no paid call
+            raise ImportFailed(social.NOT_A_POST)
         start = time.perf_counter()
         final_url, html = fetch_page(url.strip(), http, resolve)
         result = self.from_html(final_url, html)
         result.latency_ms = (time.perf_counter() - start) * 1000
         return result
+
+    def from_text(self, text: str) -> ImportResult:
+        """Recipe text the person pasted (a caption, a message, notes)."""
+        text = f"Recipe text pasted by the person:\n\n{text.strip()}"
+        return self._extract([{"type": "input_text", "text": text[:MAX_PAGE_CHARS]}], "text", None)
+
+    def from_post(self, url: str | None = None, caption: str | None = None, http=None,
+                  resolve: Resolver = resolve_host) -> ImportResult:  # fmt: skip
+        """A TikTok, Instagram or Facebook post: its caption (pasted, else fetched), then a
+        recipe website the caption links to. Any other link alone is a plain link import; with
+        a pasted caption, it is the first page to try when the caption holds no recipe."""
+        from pantrio import social
+
+        start = time.perf_counter()
+        url = (url or "").strip() or None
+        caption = (caption or "").strip()[: social.MAX_CAPTION_CHARS] or None
+        if url and social.detect(url) is None:
+            if not caption:
+                return self.from_link(social.with_scheme(url), http, resolve)
+            post, links = None, [social.with_scheme(url)]
+        elif caption:
+            post, links = social.pasted_post(url, caption), []
+        else:
+            post, links = social.fetch_post(url or "", http, resolve), []
+        caption = post.caption if post else caption or ""
+        where = f"{social.NAMES[post.platform]} post" if post else "social media post"
+        by = f" by @{post.handle}" if post and post.handle else ""
+        text = f"Caption of a {where}{by}:\n\n{caption}"
+        recipe_url = None
+        try:
+            result = self._extract([{"type": "input_text", "text": text}], "post", None)
+        except ImportFailed:
+            links += [u for u in social.caption_links(caption) if u not in links]
+            page = self._linked_page(links[: social.MAX_CAPTION_LINKS], start, http, resolve)
+            if page is None:
+                raise ImportFailed(social.NO_RECIPE) from None
+            recipe_url = page[0] if len(page[0]) <= 2000 else None
+            try:
+                result = self.from_html(*page)
+            except ImportFailed as exc:
+                raise ImportFailed(social.NO_RECIPE) from exc
+        result.draft = result.draft.model_copy(update={
+            "source": "post", "source_url": post.url if post else None,
+            "source_platform": post.platform if post else None,
+            "source_author": post.handle if post else None, "recipe_url": recipe_url,
+        })  # fmt: skip
+        result.latency_ms = (time.perf_counter() - start) * 1000
+        return result
+
+    def _linked_page(self, links: list[str], start: float, http, resolve: Resolver
+                     ) -> tuple[str, str] | None:  # fmt: skip
+        """The page to read among a caption's links (fetching is free; reading is one paid
+        call): the first with schema.org Recipe data, else the first that loads. Stops
+        fetching after LINKS_BUDGET_S so one import stays well under a request timeout."""
+        first = None
+        for link in links:
+            if time.perf_counter() - start > LINKS_BUDGET_S:
+                break
+            try:
+                page = fetch_page(link, http, resolve)
+            except ImportFailed:
+                continue
+            if jsonld_recipe(page[1]) is not None:
+                return page
+            first = first or page
+        return first
 
     def from_photos(self, images: list[str]) -> ImportResult:
         """Images as data URLs (JPEG, PNG or WebP), in page order."""

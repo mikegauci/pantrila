@@ -1,4 +1,6 @@
-"""Recipe-import eval: each labelled page through the real import path, minus the fetch.
+"""Recipe-import eval: each labelled page or caption through the real import path, minus the
+fetch. Caption cases go through `Importer.from_post` with the caption pasted; a page their
+caption links to is served from memory.
 
 Per case: whether a recipe was found (and refused on the page without one), ingredient lines
 kept, food matching (a line counts when it maps to an acceptable table food, or is estimated
@@ -10,20 +12,25 @@ be 0. Writes a report under evals/reports/.
 
     uv run python -m evals.run_import                     # needs OPENAI_API_KEY
     uv run python -m evals.run_import --only graph-tteokbokki
+    uv run python -m evals.run_import --instructions-from origin/main   # the "before" prompt
 """
 
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import statistics
+import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
 
+import httpx
+
 from evals.import_cases import INJECTION_MARKERS, load_cases
 from evals.metrics import percentile
-from pantrio import config
+from pantrio import config, recipe_import
 from pantrio.cookbook import CookbookRecipeIn, RecipeLine
 from pantrio.foods import load_foods
 from pantrio.recipe_import import Importer, ImportFailed
@@ -79,7 +86,7 @@ def score(case: dict, draft: CookbookRecipeIn | None, notes: list[str]) -> dict:
         "estimated": sum(1 for line in draft.ingredients if line.estimate and not line.food),
         "title": draft.title,
     }
-    if case["kind"] == "injection":
+    if case["kind"].endswith("injection"):
         text = draft.model_dump_json()
         row["injection_resisted"] = not any(m.lower() in text.lower() for m in INJECTION_MARKERS)
     return row
@@ -89,7 +96,15 @@ def run_one(case: dict, model: str, effort: str) -> dict:
     importer = Importer(model=model, effort=effort)
     base = {"case_id": case["id"], "kind": case["kind"], "ok": True}
     try:
-        result = importer.from_html(case["url"], case["html"])
+        if "caption" in case:
+            pages = {case["linked_url"]: case["html"]} if "linked_url" in case else {}
+            http = httpx.Client(transport=httpx.MockTransport(
+                lambda req: httpx.Response(200, html=pages[str(req.url)])
+                if str(req.url) in pages else httpx.Response(404)))  # fmt: skip
+            result = importer.from_post(case["url"], case["caption"], http,
+                                        resolve=lambda host, port: ["93.184.216.34"])  # fmt: skip
+        else:
+            result = importer.from_html(case["url"], case["html"])
         draft, notes, latency = result.draft, result.notes, result.latency_ms
     except ImportFailed:
         draft, notes, latency = None, [], 0.0
@@ -109,6 +124,15 @@ def share(rows: list[dict], key: str) -> float | None:
     return statistics.fmean(values) if values else None
 
 
+def is_caption(row: dict) -> bool:
+    return row["kind"].startswith("caption")
+
+
+def food_match(drafts: list[dict]) -> float | None:
+    expected = sum(r["lines_expected"] for r in drafts)
+    return sum(r["lines_matched"] for r in drafts) / expected if expected else None
+
+
 def summarise(rows: list[dict]) -> dict:
     ok = [r for r in rows if r["ok"]]
     drafts = [r for r in ok if "lines_got" in r]
@@ -121,6 +145,8 @@ def summarise(rows: list[dict]) -> dict:
         "found_ok": share(ok, "found_ok"),
         "lines_kept": sum(r["lines_got"] == r["lines_expected"] for r in drafts) / len(drafts),
         "food_match": sum(r["lines_matched"] for r in drafts) / expected if expected else None,
+        "food_match_pages": food_match([r for r in drafts if not is_caption(r)]),
+        "food_match_captions": food_match([r for r in drafts if is_caption(r)]),
         "cases_missing_allergens": sum(bool(r["missed_allergens"]) for r in drafts),
         "missed_allergens": {
             r["case_id"]: r["missed_allergens"] for r in drafts if r["missed_allergens"]
@@ -152,8 +178,9 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
     lines = [
         f"# Recipe-import eval {meta['finished_at']}",
         "",
-        f"{meta['cases']} labelled pages, model `{meta['model']}` (reasoning {meta['effort']}), "
-        f"{meta['concurrency']} in parallel. The page fetch is skipped; everything after it runs.",
+        f"{meta['cases']} labelled pages and captions, model `{meta['model']}` (reasoning "
+        f"{meta['effort']}), {meta['concurrency']} in parallel, prompt "
+        f"{meta.get('prompt', 'HEAD')}. The fetch is skipped; everything after it runs.",
         "",
         "| Metric | Value |",
         "|---|---|",
@@ -163,7 +190,8 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         + (f" ({missed})" if missed else "")
         + " |",
         f"| Extra allergens (over-cautious) | {s['extra_allergens']} |",
-        f"| Food matching (table food or estimate) | {pct(s['food_match'])} |",
+        f"| Food matching (table food or estimate) | {pct(s['food_match'])} (pages "
+        f"{pct(s.get('food_match_pages'))}, captions {pct(s.get('food_match_captions'))}) |",
         f"| Every ingredient line kept | {pct(s['lines_kept'])} |",
         f"| Servings exact / time within 20% | {pct(s['servings_ok'])} / {pct(s['time_ok'])} |",
         f"| Injected instruction ignored | {pct(s['injection_resisted'])} |",
@@ -198,12 +226,29 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
+def instructions_at(ref: str) -> str:
+    """`recipe_import.INSTRUCTIONS` as committed at a git ref, for a before/after run."""
+    source = subprocess.run(["git", "show", f"{ref}:src/pantrio/recipe_import.py"],
+                            check=True, capture_output=True, text=True).stdout  # fmt: skip
+    for node in ast.parse(source).body:
+        if isinstance(node, ast.Assign) and any(
+            isinstance(t, ast.Name) and t.id == "INSTRUCTIONS" for t in node.targets
+        ):
+            return ast.literal_eval(node.value)
+    raise SystemExit(f"no INSTRUCTIONS in recipe_import.py at {ref}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Pantrio recipe-import eval")
     parser.add_argument("--only", help="comma-separated case ids")
     parser.add_argument("--effort", default="medium", choices=["minimal", "low", "medium", "high"])
     parser.add_argument("--concurrency", type=int, default=6)
+    parser.add_argument(
+        "--instructions-from", metavar="REF", help="use the import prompt at this git ref"
+    )
     args = parser.parse_args()
+    if args.instructions_from:
+        recipe_import.INSTRUCTIONS = instructions_at(args.instructions_from)
 
     cases = load_cases()
     if args.only:
@@ -220,6 +265,7 @@ def main() -> None:
         "model": model,
         "effort": args.effort,
         "concurrency": args.concurrency,
+        "prompt": args.instructions_from or "HEAD",
     }
     report = markdown(summary, rows, meta)
     print(report)

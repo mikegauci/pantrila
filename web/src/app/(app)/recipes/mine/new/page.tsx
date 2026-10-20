@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, Camera, Link2, MessageCircle, PenLine, Sparkles, X } from "lucide-react"
+import { ArrowLeft, Camera, ClipboardPaste, Link2, MessageCircle, PenLine, Share2, Sparkles, X } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
@@ -11,6 +11,8 @@ import { Panel, PanelTitle } from "@/components/bits"
 import { BLANK_RECIPE, CHAT_DRAFT, CookbookForm } from "@/components/cookbook-form"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { send } from "@/lib/api"
 import { seconds, usd } from "@/lib/format"
 import { useMe } from "@/lib/hooks"
@@ -19,13 +21,18 @@ import { cn } from "@/lib/utils"
 import type { CookbookRecipeIn, ImportView } from "@/lib/types"
 
 const MAX_PHOTOS = 4
-type Method = "photo" | "link" | "manual"
+type Method = "photo" | "link" | "post" | "manual"
 
 const METHODS: { key: Method; icon: typeof Camera; title: string; text: string }[] = [
   { key: "photo", icon: Camera, title: "From photos", text: "A cookbook page, a card or a screenshot. Up to 4 photos." },
   { key: "link", icon: Link2, title: "From a link", text: "Paste a recipe page from any site." },
+  { key: "post", icon: Share2, title: "From a post", text: "A TikTok, Instagram or Facebook post, or its caption." },
   { key: "manual", icon: PenLine, title: "Type it in", text: "Fill in the form yourself." },
 ]
+
+const IMPORT_TITLE: Record<Exclude<Method, "manual">, string> = {
+  photo: "Upload photos", link: "Paste a link", post: "Paste a post",
+}
 
 function PhotoImport({ onDone }: { onDone: (v: ImportView) => void }) {
   const [photos, setPhotos] = useState<string[]>([])
@@ -123,6 +130,99 @@ function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
   )
 }
 
+/** Mirrors `social.detect` on the server: links Pantrio reads as a post's caption. */
+const POST_LINK = new RegExp(
+  "^(https?://)?(" +
+    "(vm|vt)\\.tiktok\\.com/|((www|m)\\.)?tiktok\\.com/(@[\\w.]+/(video|photo)/\\d|t/)" +
+    "|((www|m)\\.)?instagram\\.com/([\\w.]+/)?(p|reels?|tv)/" +
+    "|((www|m|web)\\.)?(facebook|fb)\\.com/(?!login|checkpoint|$)|fb\\.watch/" +
+  ")",
+  "i",
+)
+
+function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void; onScreenshots: () => void }) {
+  const [url, setUrl] = useState("")
+  const [caption, setCaption] = useState("")
+  const [showCaption, setShowCaption] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const captionRef = useRef<HTMLTextAreaElement>(null)
+  const link = url.trim()
+  const text = caption.trim()
+  // TikTok doesn't share captions with apps like Pantrio, so its caption box starts open.
+  const tiktok = /^(https?:\/\/)?([a-z]+\.)?tiktok\.com\//i.test(link)
+  const captionOpen = showCaption || tiktok
+
+  async function read() {
+    setBusy(true)
+    setError(null)
+    try {
+      // A caption with no post link is plain pasted text: there is no post to credit.
+      onDone(link
+        ? await send<ImportView>("/me/recipes/import/post", "POST", { url: link, caption: text || null })
+        : await send<ImportView>("/me/recipes/import/text", "POST", { text }))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not read that post.")
+      // The link could not be read (or held no recipe): the caption box is the next step.
+      if (!text) {
+        setShowCaption(true)
+        requestAnimationFrame(() => captionRef.current?.focus())
+      }
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <form className="grid gap-3" onSubmit={(e) => { e.preventDefault(); read() }}>
+      <div className="grid gap-1.5">
+        <Label htmlFor="post-link">Post link</Label>
+        <Input id="post-link" type="text" inputMode="url" autoCapitalize="none" spellCheck={false} placeholder="https://www.tiktok.com/@…" value={url}
+               onChange={(e) => setUrl(e.target.value)} className="h-12 bg-surface text-[15px]" />
+        {link && !POST_LINK.test(link) && (
+          <p className="text-[12px] text-muted-foreground">
+            {text
+              ? "Not a TikTok, Instagram or Facebook post, so Pantrio reads the caption and, if it has no recipe, this page."
+              : "Not a TikTok, Instagram or Facebook post, so Pantrio reads it as a recipe page."}
+          </p>
+        )}
+      </div>
+      {captionOpen ? (
+        <div className="grid gap-1.5">
+          <Label htmlFor="post-caption">Caption</Label>
+          {tiktok && !text && (
+            <p className="text-[12px] text-muted-foreground">
+              TikTok doesn&apos;t share captions with other apps. Copy it in TikTok (tap the caption, then hold to copy) and paste it here; the link keeps the credit.
+            </p>
+          )}
+          <Textarea id="post-caption" ref={captionRef} value={caption} rows={6} maxLength={10000}
+                    placeholder="Copy the caption from the app (under the post: … then Copy, or hold the text) and paste it here."
+                    onChange={(e) => setCaption(e.target.value)} className="min-h-32 bg-surface text-[15px]" />
+        </div>
+      ) : (
+        <Button type="button" variant="ghost" size="sm" className="w-fit" onClick={() => setShowCaption(true)}>
+          <ClipboardPaste /> Paste the caption
+        </Button>
+      )}
+      <Button type="submit" size="lg" className="h-12 w-full sm:w-fit" disabled={busy || (!link && !text)}>
+        <Sparkles /> {busy ? "Reading the post…" : "Read recipe"}
+      </Button>
+      <p className="text-[12px] text-muted-foreground">
+        Pantrio reads the caption (and a recipe site it links to), never the video. The post link and
+        creator are kept as the credit.
+      </p>
+      {error && (
+        <div role="alert" className="grid gap-2 text-[13px]">
+          <p className="text-danger">{error}</p>
+          <Button type="button" variant="outline" size="sm" className="w-fit" onClick={onScreenshots}>
+            <Camera /> Add screenshots instead
+          </Button>
+        </div>
+      )}
+    </form>
+  )
+}
+
 export default function NewRecipePage() {
   const { session } = useAuth()
   const draftKey = `${CHAT_DRAFT}:${session!.user.id}`
@@ -190,7 +290,7 @@ export default function NewRecipePage() {
         <ArrowLeft /> My recipes
       </Link>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {METHODS.map(({ key, icon: Icon, title, text }) => (
           <button
             key={key}
@@ -215,8 +315,10 @@ export default function NewRecipePage() {
         <div ref={sectionRef} className="grid scroll-mt-24 gap-5">
           {showUpload && (
             <Panel>
-              <PanelTitle>{method === "photo" ? "Upload photos" : "Paste a link"}</PanelTitle>
-              {method === "photo" ? <PhotoImport onDone={imported} /> : <LinkImport onDone={imported} />}
+              <PanelTitle>{IMPORT_TITLE[method as Exclude<Method, "manual">]}</PanelTitle>
+              {method === "photo" && <PhotoImport onDone={imported} />}
+              {method === "link" && <LinkImport onDone={imported} />}
+              {method === "post" && <PostImport onDone={imported} onScreenshots={() => pick("photo")} />}
               {me && (
                 <p className="mt-3 text-[12px] text-muted-foreground">
                   {me.limits.imports_left} of {me.limits.imports_per_day} AI imports left today.

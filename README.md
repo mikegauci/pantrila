@@ -3,7 +3,8 @@
 AI cooking and meal-planning assistant. Tell it what is in your kitchen, your diet, allergies
 and nutrition targets; it finds recipes with hybrid RAG search, plans your week with a
 LangGraph agent, builds a grocery list from what is missing and answers cooking questions in
-a chat. You can add your own recipes from photos, a link or by typing them in, and cook any
+a chat. You can add your own recipes from photos, a link, a TikTok, Instagram or Facebook post
+or by typing them in, and cook any
 recipe in cooking mode. **The model proposes; deterministic code decides.** Every recipe and plan is
 re-checked against your allergens and diet before you see it.
 
@@ -145,11 +146,16 @@ with the next message; the browser only says which thread it is in.
   for in-flight work, then reconciles actual cost. Reservation sizes are estimates rather than
   provider billing ceilings. Every paid call is logged with tokens, cost and latency (the Insights page).
 - **Your recipes, checked like ours.** Imports (a photo, a web page's schema.org data or its
-  text) come back as a draft you review; nothing is saved first. Each ingredient maps to the
+  text, a social post's caption) come back as a draft you review; nothing is saved first. Each ingredient maps to the
   food table, so nutrition and allergens are computed in code. A food the table lacks gets a
   model estimate, marked "Estimated" in the UI, with allergens you can correct. Links are
   fetched with SSRF guards (public addresses only, every redirect re-checked). Your recipes
   stay in your cookbook and never go into meal plans.
+- **Recipes from posts, credited, without the video.** For a TikTok, Instagram or Facebook
+  post Pantrio reads only the caption (TikTok's public oEmbed, else the page's Open Graph tags,
+  with Pantrio's own user agent), then a recipe site the caption links to if the caption has
+  no recipe. When a platform won't share the caption, you paste it. The video is never
+  downloaded, stored or embedded. The recipe keeps the post link and the creator's @handle.
 - **Photos that show the recipe, not a stock dish.** Every recipe has a 4:3 photo from
   `gpt-image-2.5-flare`, prompted with the recipe's own ingredients and final step: garnish
   and background props may only come from that list (no parsley on a recipe without parsley,
@@ -202,7 +208,7 @@ uv run pytest                            # offline: OpenAI mocked, no network
 uv run python -m evals.run_retrieval     # retrieval eval (embeddings only)
 uv run python -m evals.run_planner       # planner eval, about $0.40 for 16 profiles
 uv run python -m evals.run_assistant     # assistant eval, about $0.05 for 24 cases
-uv run python -m evals.run_import        # recipe-import eval, about $0.08 for 12 pages
+uv run python -m evals.run_import        # recipe-import eval, about $0.15 for 12 pages + 10 captions
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 ```
 
@@ -221,7 +227,7 @@ The paid evals are a manual GitHub Actions workflow.
 | `src/pantrio/planner.py` | Planner graph |
 | `src/pantrio/assistant.py`, `swaps.py`, `pantry.py`, `grocery.py` | Assistant graph and its tools |
 | `src/pantrio/meal_swap.py`, `web/src/components/swap-meal.tsx` | Swap one meal of a saved plan for another recipe that passes your rules (no model call) |
-| `src/pantrio/cookbook.py`, `recipe_import.py` | Your own recipes: derivation, storage, import from photos and links |
+| `src/pantrio/cookbook.py`, `recipe_import.py`, `social.py` | Your own recipes: derivation, storage, import from photos, links, post captions and pasted text |
 | `src/pantrio/photos.py` | Recipe photo prompt, generation and Supabase Storage |
 | `src/pantrio/cooking.py`, `web/src/components/cooking-mode.tsx` | Cooking mode: pantry use after "I cooked this", step timers, wake lock |
 | `src/pantrio/api.py`, `api_models.py`, `api_views.py`, `backend.py` | FastAPI routes, HTTP models, response views and pooled persistence |
@@ -243,8 +249,12 @@ The paid evals are a manual GitHub Actions workflow.
 - Nutrition is computed from ingredient weights and USDA averages. It is an estimate, not
   medical advice.
 - Some recipe sites block bots (Allrecipes answers 402/403), so link import fails there; the
-  app suggests a screenshot instead. The import eval covers web pages only; photos were
-  checked by hand.
+  app suggests a screenshot instead. The import eval covers web pages and synthetic captions;
+  photos were checked by hand.
+- TikTok doesn't share captions with other apps, so for TikTok you paste the caption (the link
+  keeps the credit). Instagram and Facebook links work alone today, and if a platform stops
+  sharing, the app asks for the caption instead. A recipe that is only spoken in the video
+  can't be imported from the link.
 - Estimated foods are a best guess. Check the label of anything you buy.
 - Recipe photos are AI-generated and marked as such. The prompt keeps them to the recipe's
   ingredients, but the plating is the model's guess (a steak kebab can come out as kofta).

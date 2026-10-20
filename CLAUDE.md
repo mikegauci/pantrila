@@ -33,6 +33,21 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Social recipe import, two PRs; plan and checklists in `docs/plans/social-recipe-import.md`
+(read it before either PR). PR 1 (PR #36, merged): `social.py` (post detection, TikTok
+oEmbed / Open Graph captions, caption links), `Importer.from_post` (caption, then the linked
+recipe site) and `from_text`, `/me/recipes/import/post|text`, cookbook credit fields
+(`source_platform`, `source_author`, `recipe_url`; no migration), web "From a post" and
+credit, 10 caption eval cases. Prompt unchanged: caption lines were tried and dropped, since
+the old prompt already scored the same on all 22 cases (`import-2026-10-20T061450Z` old prompt
+vs `import-2026-10-20T061631Z` with the lines: 0 missed allergens, food matching 100%, 4/4
+no-recipe captions refused; the lines cost +7%, $0.0054 -> $0.0058). Platform check
+(2026-10-20, `scripts/platform_check.py` on the owner's Mac): Instagram and Facebook links
+import from the link (Open Graph captions); TikTok oEmbed sends only the player and its page
+has no preview tags, so TikTok links open the caption box straight away. Short links in
+captions (bzfd.it) are followed.
+PR 2 (uploaded video audio) starts after PR 1 merges.
+
 Review maintenance: API models/views/backend construction now live in `api_models.py`,
 `api_views.py`, and `backend.py`; `api.py` owns routes and app lifecycle. Insights is generated
 from `evals/report_selection.json` with `scripts/update_eval_snapshot.py`, checked by pytest.
@@ -267,9 +282,15 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   in code; estimates join the food table for that recipe only), `problems_for`, the `Cookbook`
   protocol (`DbCookbook` on `user_recipes`, `MemoryCookbook`), 200 recipes per user.
 - `src/pantrio/recipe_import.py`: `Importer` (one structured-output call, effort medium,
-  `store=False`) `from_link` / `from_html` / `from_photos` / `estimate`; `fetch_page` with SSRF
+  `store=False`) `from_link` / `from_html` / `from_photos` / `from_text` / `from_post` (caption,
+  then a recipe site it links: a second call on the same import) / `estimate`; `fetch_page` with SSRF
   guards; `jsonld_recipe`, `page_text`; `to_draft` checks every line in code and returns notes;
   `with_named_allergens` adds the allergens of table foods an estimated line names.
+- `src/pantrio/social.py`: TikTok/Instagram/Facebook posts. `detect`, short links, `clean_url`
+  (tracking query dropped), `fetch_post` (TikTok oEmbed; Instagram/Facebook Open Graph tags;
+  all through `fetch_page`, Pantrio's own user agent; refusal or empty caption -> "Paste the
+  caption"), `pasted_post` (no fetch), `caption_links` (skips platforms, link-in-bio pages,
+  and shops; short links are kept and followed), `platform_page` (profiles refused before a paid call). Never downloads or stores videos.
 - `src/pantrio/photos.py`: recipe photos. `photo_prompt` (the dish as the recipe makes it:
   ingredient names and final step, garnish and background props only from those ingredients,
   bread only if used or suggested and never for gluten-free; fixed stoneware/stone/linen
@@ -289,7 +310,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   GET, PUT to swap), `POST /chat` (continues `thread_id` or starts a
   thread; the server supplies the thread's history), `/me/chats` (list, get, delete),
   `/me/cooked` (GET log, POST "I cooked this"; `/preview`), `/me/recipes` (cookbook CRUD,
-  `/preview`, `/import/link`, `/import/photos`, `/estimate`, `/{id}/photo` POST/DELETE). Every
+  `/preview`, `/import/link`, `/import/photos`, `/import/post`, `/import/text`, `/estimate`, `/{id}/photo` POST/DELETE). Every
   recipe returned carries the hard rules it breaks for the person's current profile and its
   `photo_url` (or null). Paid calls are capped per user per day (`PANTRIO_DAILY_PLANS`,
   `PANTRIO_DAILY_CHATS`, `PANTRIO_DAILY_IMPORTS`, `PANTRIO_DAILY_PHOTOS`) and in total
@@ -305,8 +326,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - `supabase/migrations/`: SQL migrations.
 - `evals/`: `retrieval_queries.py` (deterministic query generator) -> `data/retrieval_queries.json`,
   `plan_profiles.py` (16 eval profiles) -> `data/plan_profiles.json`, `chat_cases.py` (24
-  assistant cases) -> `data/chat_cases.json`, `import_cases.py` (12 synthetic recipe pages)
-  -> `data/import_cases.json`, `metrics.py`, `run_retrieval.py`, `run_planner.py`,
+  assistant cases) -> `data/chat_cases.json`, `import_cases.py` (12 synthetic recipe pages,
+  10 post captions) -> `data/import_cases.json`, `metrics.py`, `run_retrieval.py`, `run_planner.py`,
   `run_assistant.py`, `run_import.py`, `reports/`.
 - `.github/workflows/evals.yml`: manual paid evals (needs `OPENAI_API_KEY`, `DATABASE_URL`
   repository secrets).
@@ -352,7 +373,7 @@ uv run pantrio chat [--user me] [--message "..."]  # cooking assistant (paid)
 uv run python -m evals.chat_cases        # regenerate the assistant eval cases
 uv run python -m evals.run_assistant [--only ids] # assistant eval (paid; ~$0.002/turn)
 uv run python -m evals.import_cases      # regenerate the recipe-import eval pages
-uv run python -m evals.run_import [--only ids]    # recipe-import eval (paid; ~$0.006/import)
+uv run python -m evals.run_import [--only ids] [--instructions-from <git ref>]  # recipe-import eval (paid; ~$0.006/import)
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 uv run pantrio photos generate [--only ids] [--limit n] [--force] [--dry-run]  # corpus photos (paid; ~$0.014 each)
 uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # LangSmith dashboard
