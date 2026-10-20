@@ -285,7 +285,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   (tracking query dropped), `fetch_post` (TikTok oEmbed; Instagram/Facebook Open Graph tags;
   all through `fetch_page`, Pantrio's own user agent; refusal or empty caption -> "Paste the
   caption"), `pasted_post` (no fetch), `caption_links` (skips platforms, link-in-bio pages,
-  shorteners). Never downloads or stores videos.
+  shorteners, shops), `platform_page` (profiles refused before a paid call). Never downloads or stores videos.
 - `src/pantrio/photos.py`: recipe photos. `photo_prompt` (the dish as the recipe makes it:
   ingredient names and final step, garnish and background props only from those ingredients,
   bread only if used or suggested and never for gluten-free; fixed stoneware/stone/linen

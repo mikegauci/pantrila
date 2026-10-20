@@ -251,3 +251,94 @@ def test_pasted_text_import():
     result = Importer(client=client, model="m").from_text("  Egg pasta: 2 eggs, cook  ")
     assert result.draft.source == "text" and result.draft.source_url is None
     assert sent(client) == "Recipe text pasted by the person:\n\nEgg pasta: 2 eggs, cook"
+
+
+# --- Review fixes ---------------------------------------------------------------------------
+
+
+def test_words_joined_by_a_dot_are_not_links():
+    caption = ("Stir it all together.It's so good. Cook 10 min.Me and the kids love it, "
+               "the sauce.then bake. Recipe: example.com and blog.example.org/pie")  # fmt: skip
+    assert caption_links(caption) == ["https://example.com", "https://blog.example.org/pie"]
+
+
+def test_shops_and_platform_subdomains_are_skipped_and_brackets_kept():
+    caption = ("m.youtube.com/x music.youtube.com/y amazon.co.uk/z www.amazon.de/w "
+               "https://example.com/a(b) (see sambakes.com/r)")  # fmt: skip
+    assert caption_links(caption) == ["https://example.com/a(b)", "https://sambakes.com/r"]
+
+
+def test_profiles_and_sign_in_pages_are_not_posts():
+    assert detect("https://www.tiktok.com/@chef") is None
+    assert detect("https://www.facebook.com/") is None
+    assert detect("https://www.facebook.com/unsupportedbrowser") is None
+
+
+def test_facebook_query_keeps_only_the_post_id():
+    from pantrio.social import clean_url
+
+    url = "https://www.facebook.com/watch/?v=123&mibextid=abc&fbclid=XYZ#x"
+    assert clean_url(url, "facebook") == "https://www.facebook.com/watch/?v=123"
+
+
+def test_facebook_sign_in_wall_asks_for_the_caption():
+    assert facebook_caption({"og:title": "Sam Cooks", "og:description": ""}) == ""
+    wall = {"og:description": "Log into Facebook to start sharing and connecting."}
+    assert facebook_caption(wall) == ""
+    url = "https://www.facebook.com/samcooks/videos/123/"
+    page = f'<meta property="og:description" content="{wall["og:description"]}">'
+    with pytest.raises(ImportFailed, match="Facebook didn't let Pantrio read this post"):
+        fetch_post(url, mock_http({url: httpx.Response(200, html=page)}), resolve)
+
+
+def test_cut_short_instagram_caption_is_still_read():
+    meta = {"og:description": '3 likes - chef.a on May 1, 2026: "Pasta 200g spaghetti, 2 eggs...'}
+    assert instagram_caption(meta) == ("chef.a", "Pasta 200g spaghetti, 2 eggs...")
+
+
+def test_tiktok_short_link_stops_at_the_post_url_without_loading_it():
+    data = {"title": "Pasta: 200g pasta", "author_unique_id": "sam"}
+    http = mock_http({
+        "https://vm.tiktok.com/ZMabc/": httpx.Response(301, headers={"location": TIKTOK}),
+        TIKTOK: httpx.Response(403),  # the app page refuses bots; oEmbed does not
+        oembed(TIKTOK): httpx.Response(200, json=data),
+    })  # fmt: skip
+    assert fetch_post("https://vm.tiktok.com/ZMabc/", http, resolve).url == TIKTOK
+
+
+def test_linked_page_with_recipe_data_wins_over_earlier_links():
+    client = FakeClient(recipe(is_recipe=False), recipe())
+    caption = "My knives: shop.example.com/k. Recipe: sambakes.com/pasta"
+    recipe_page = '<script type="application/ld+json">{"@type": "Recipe", "name": "P"}</script>'
+    http = mock_http({
+        "https://shop.example.com/k.": httpx.Response(404),
+        "https://shop.example.com/k": httpx.Response(200, html="<p>Knives</p>"),
+        "https://sambakes.com/pasta": httpx.Response(200, html=recipe_page),
+    })  # fmt: skip
+    result = Importer(client=client, model="m").from_post(TIKTOK, caption, http, resolve)
+    assert result.draft.recipe_url == "https://sambakes.com/pasta"
+    assert len(client.calls) == 2  # the knife page was fetched but never sent to the model
+
+
+def test_pasted_caption_with_a_recipe_link_tries_that_link():
+    client = FakeClient(recipe(is_recipe=False), recipe())
+    http = mock_http({"https://myblog.com/pasta": httpx.Response(200, html="<p>2 eggs</p>")})
+    result = Importer(client=client, model="m").from_post(
+        "myblog.com/pasta", "Best pasta ever 🍝", http, resolve)  # fmt: skip
+    assert result.draft.recipe_url == "https://myblog.com/pasta"
+
+
+def test_post_links_in_the_link_import_read_the_caption():
+    client = FakeClient(recipe())
+    http = mock_http({oembed(TIKTOK): httpx.Response(200, json={"title": "Pasta: 2 eggs"})})
+    result = Importer(client=client, model="m").from_link(TIKTOK, http, resolve)
+    assert result.draft.source == "post" and result.draft.source_platform == "tiktok"
+
+
+def test_profile_links_fail_before_any_paid_call():
+    client = FakeClient()
+    with pytest.raises(ImportFailed, match="not a post"):
+        Importer(client=client, model="m").from_post("https://www.tiktok.com/@chef")
+    with pytest.raises(ImportFailed, match="not a post"):
+        Importer(client=client, model="m").from_link("instagram.com/chef")
+    assert client.calls == []

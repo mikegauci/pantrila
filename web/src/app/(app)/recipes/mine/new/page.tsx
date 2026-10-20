@@ -130,7 +130,15 @@ function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
   )
 }
 
-const POST_LINK = /^(https?:\/\/)?([a-z0-9-]+\.)*(tiktok\.com|instagram\.com|facebook\.com|fb\.watch|fb\.com)(\/|$)/i
+/** Mirrors `social.detect` on the server: links Pantrio reads as a post's caption. */
+const POST_LINK = new RegExp(
+  "^(https?://)?(" +
+    "(vm|vt)\\.tiktok\\.com/|((www|m)\\.)?tiktok\\.com/(@[\\w.]+/(video|photo)/\\d|t/)" +
+    "|((www|m)\\.)?instagram\\.com/([\\w.]+/)?(p|reels?|tv)/" +
+    "|((www|m|web)\\.)?(facebook|fb)\\.com/(?!login|checkpoint|$)|fb\\.watch/" +
+  ")",
+  "i",
+)
 
 function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void; onScreenshots: () => void }) {
   const [url, setUrl] = useState("")
@@ -166,10 +174,14 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
     <form className="grid gap-3" onSubmit={(e) => { e.preventDefault(); read() }}>
       <div className="grid gap-1.5">
         <Label htmlFor="post-link">Post link</Label>
-        <Input id="post-link" type="url" inputMode="url" placeholder="https://www.tiktok.com/@…" value={url}
+        <Input id="post-link" type="text" inputMode="url" autoCapitalize="none" spellCheck={false} placeholder="https://www.tiktok.com/@…" value={url}
                onChange={(e) => setUrl(e.target.value)} className="h-12 bg-surface text-[15px]" />
         {link && !POST_LINK.test(link) && (
-          <p className="text-[12px] text-muted-foreground">Not a TikTok, Instagram or Facebook link, so Pantrio reads it as a recipe page.</p>
+          <p className="text-[12px] text-muted-foreground">
+            {text
+              ? "Not a TikTok, Instagram or Facebook post, so Pantrio reads the caption and, if it has no recipe, this page."
+              : "Not a TikTok, Instagram or Facebook post, so Pantrio reads it as a recipe page."}
+          </p>
         )}
       </div>
       {showCaption ? (

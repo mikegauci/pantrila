@@ -147,7 +147,15 @@ Notes from building PR 1:
   doesn't fetch, so the handle comes from the link when it carries one (TikTok `/@handle/`,
   Instagram `/<handle>/reel/`) and the person can type it in the form's Credit panel.
 - A non-social link pasted into "From a post" falls through to the link import.
-- Up to 3 caption links are fetched (free) until one loads; only that page is sent to the model.
+- Up to 3 caption links are fetched (free, 20 s budget); the first with schema.org Recipe data
+  is sent to the model, else the first that loaded. A non-post link pasted with a caption is
+  tried first.
+- Code review fixes: bare domains count as links only when lowercase with a path or a common
+  ending (no "together.It"); platform subdomains and every Amazon site are skipped; Facebook
+  sign-in walls and og:title-only pages count as blocked; TikTok short links stop at the post
+  URL without loading the app page; Facebook links keep only the post-id query keys; cut-short
+  Instagram captions are read; TikTok/Instagram/Facebook profile links fail before any paid
+  call; post links pasted in "From a link" read the caption.
 
 ---
 

@@ -14,7 +14,7 @@ import json
 import re
 from dataclasses import dataclass
 from html.parser import HTMLParser
-from urllib.parse import quote, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 from pantrio import recipe_import
 from pantrio.cookbook import HANDLE, Platform
@@ -28,7 +28,14 @@ TIKTOK_HOSTS = {"tiktok.com", "www.tiktok.com", "m.tiktok.com", "vm.tiktok.com",
 INSTAGRAM_HOSTS = {"instagram.com", "www.instagram.com", "m.instagram.com"}
 FACEBOOK_HOSTS = {"facebook.com", "www.facebook.com", "m.facebook.com", "web.facebook.com",
                   "fb.watch", "fb.com", "www.fb.com"}  # fmt: skip
-FACEBOOK_LOGIN = re.compile(r"^/(?:login|checkpoint)")
+# Facebook pages that are never a post: sign-in walls and browser notices.
+FACEBOOK_NOT_POST = re.compile(r"^/(?:login|checkpoint|unsupportedbrowser|recover|r\.php)")
+FACEBOOK_ID_KEYS = ("v", "story_fbid", "fbid", "id")  # the query keys that name a post
+FACEBOOK_LOGIN_TEXT = re.compile(  # a sign-in wall's text, which mentions Facebook itself
+    r"\b(?:log ?in|log into|sign up)\b[^.]*\bfacebook\b|\bfacebook\b[^.]*\b(?:log ?in|sign up)\b",
+    re.IGNORECASE,
+)
+TIKTOK_POST = re.compile(r"^/(?:@[A-Za-z0-9._]+/(?:video|photo)/\d+|t/[A-Za-z0-9]+)")
 INSTAGRAM_POST = re.compile(r"^/(?:[A-Za-z0-9._]+/)?(?:p|reel|reels|tv)/[A-Za-z0-9_-]+")
 # First path segments on Facebook that are not a page or person.
 FACEBOOK_RESERVED = {"watch", "reel", "reels", "share", "story.php", "permalink.php", "photo",
@@ -41,18 +48,24 @@ SKIP_HOSTS = {
     "twitter.com", "pinterest.com", "pin.it", "threads.net", "snapchat.com", "linktr.ee",
     "lnk.bio", "beacons.ai", "linkin.bio", "bio.link", "stan.store", "bit.ly", "tinyurl.com",
     "t.co", "ow.ly", "buff.ly", "rebrand.ly", "shorturl.at", "tiny.cc", "is.gd", "goo.gl",
-    "amzn.to", "amazon.com", "liketk.it", "shopmy.us",
+    "amzn.to", "liketk.it", "shopmy.us",
 }  # fmt: skip
-# Domains written without http(s):// count as links only with one of these endings, so
-# "sauce.then" in a run-on caption is not taken for a website.
-BARE_TLDS = ("com", "co.uk", "org", "net", "io", "co", "uk", "ie", "de", "fr", "it", "es",
-             "nl", "au", "com.au", "ca", "nz", "co.nz", "us", "eu", "mt", "me", "blog",
-             "kitchen", "recipes", "food", "cooking")  # fmt: skip
+SKIP_SITES = re.compile(r"(?:^|\.)amazon\.[a-z.]+$")  # every Amazon country site
+# A domain written without http(s):// counts as a link only when it is lowercase and has a
+# path ("site.com/pasta") or a common website ending, so "together.It's" or "sauce.then" in a
+# run-on caption is not taken for a website.
+BARE_TLDS = ("com", "co.uk", "org", "net", "com.au", "co.nz", "blog", "kitchen", "recipes",
+             "food", "cooking")  # fmt: skip
 _LINK = re.compile(
-    r"(?<![@\w.])(?:https?://[^\s<>\"']+|(?:www\.)?(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+"
-    r"(?:" + "|".join(re.escape(t) for t in sorted(BARE_TLDS, key=len, reverse=True)) + r")"
-    r"(?![a-z0-9-])(?:/[^\s<>\"']*)?)",
+    r"(?<![@\w.])(?:https?://[^\s<>\"']+|(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+"
+    r"[a-z]{2,}(?:\.[a-z]{2})?(?![\w-])(?:/[^\s<>\"']*)?)",
     re.IGNORECASE,
+)
+_BARE_OK = re.compile(
+    r"^(?:www\.[a-z0-9.-]+|[a-z0-9.-]+/.*|[a-z0-9.-]+\.(?:"
+    + "|".join(re.escape(t) for t in BARE_TLDS)
+    + r"))$",
+    re.S,
 )
 
 CAPTION_BLOCKED = "{platform} didn't let Pantrio read this post. Paste the caption below."
@@ -84,12 +97,22 @@ def detect(url: str) -> Platform | None:
     host = _host(with_scheme(url))
     path = urlsplit(with_scheme(url)).path
     if host in TIKTOK_HOSTS:
-        return "tiktok"
+        short = host in {"vm.tiktok.com", "vt.tiktok.com"}
+        return "tiktok" if short or TIKTOK_POST.match(path) else None
     if host in INSTAGRAM_HOSTS:
         return "instagram" if INSTAGRAM_POST.match(path) else None
     if host in FACEBOOK_HOSTS:
-        return None if FACEBOOK_LOGIN.match(path) else "facebook"
+        return None if FACEBOOK_NOT_POST.match(path) or path in ("", "/") else "facebook"
     return None
+
+
+NOT_A_POST = "That's a profile or page, not a post. Open the post and copy its link."
+
+
+def platform_page(url: str) -> bool:
+    """A TikTok, Instagram or Facebook link that is not a post (a profile, a sign-in page)."""
+    host = _host(with_scheme(url))
+    return detect(url) is None and host in TIKTOK_HOSTS | INSTAGRAM_HOSTS | FACEBOOK_HOSTS
 
 
 def is_short_link(url: str) -> bool:
@@ -101,10 +124,13 @@ def is_short_link(url: str) -> bool:
 
 
 def clean_url(url: str, platform: Platform) -> str:
-    """The post link to keep: no tracking query on TikTok and Instagram (Facebook keeps its
-    query, which can be the post id), never a fragment."""
+    """The post link to keep: no tracking query (Facebook keeps only the keys that name the
+    post, such as ?v= or ?story_fbid=), never a fragment."""
     parts = urlsplit(with_scheme(url))
-    query = parts.query if platform == "facebook" else ""
+    query = ""
+    if platform == "facebook":
+        kept = [(k, v) for k, v in parse_qsl(parts.query) if k in FACEBOOK_ID_KEYS]
+        query = urlencode(kept)
     return urlunsplit(("https", parts.netloc.lower(), parts.path, query, ""))
 
 
@@ -128,14 +154,33 @@ def handle_from_url(url: str, platform: Platform) -> str | None:
     return None if first.lower() in FACEBOOK_RESERVED else clean_handle(first)
 
 
+def _trim(link: str) -> str:
+    """Drop trailing punctuation, keeping a closing bracket the link itself opened."""
+    while link and link[-1] in ".,;:!?)]}\"'…":
+        if link[-1] == ")" and link.count("(") >= link.count(")"):
+            break
+        link = link[:-1]
+    return link
+
+
+def skipped(host: str) -> bool:
+    """A platform, link-in-bio page, shortener or shop: never a recipe page to read."""
+    return any(host == h or host.endswith(f".{h}") for h in SKIP_HOSTS) or bool(
+        SKIP_SITES.search(host)
+    )
+
+
 def caption_links(caption: str) -> list[str]:
     """Website links in a caption, in order, as https URLs; skips the social platforms,
-    link-in-bio pages and link shorteners."""
+    link-in-bio pages, link shorteners and shops."""
     out: list[str] = []
     for match in _LINK.finditer(caption):
-        url = with_scheme(match.group(0).rstrip(".,;:!?)]}\"'…"))
+        link = _trim(match.group(0))
+        if not re.match(r"https?://", link, re.IGNORECASE) and not _BARE_OK.match(link):
+            continue  # "together.It", "min.Me": words, not a website
+        url = with_scheme(link)
         host = _host(url)
-        if not host or host in SKIP_HOSTS or host.removeprefix("www.") in SKIP_HOSTS:
+        if not host or skipped(host):
             continue
         if url not in out:
             out.append(url)
@@ -164,10 +209,11 @@ def meta_tags(html: str) -> dict[str, str]:
 
 # Instagram: og:description is '12 likes, 3 comments - handle on May 1, 2026: "caption"' and
 # og:title 'Name on Instagram: "caption"'.
+# Long captions are cut short, sometimes without the closing quote.
 _IG_DESCRIPTION = re.compile(
-    r"-\s*([A-Za-z0-9._]{1,30}) on [^:]+:\s*[\"“](.*)[\"”]\s*\.?\s*$", re.S
+    r"-\s*([A-Za-z0-9._]{1,30}) on [^:]+:\s*[\"“](.*?)(?:[\"”]\s*\.?)?\s*$", re.S
 )
-_QUOTED = re.compile(r":\s*[\"“](.*)[\"”]\s*$", re.S)
+_QUOTED = re.compile(r":\s*[\"“](.*?)(?:[\"”])?\s*$", re.S)
 
 
 def instagram_caption(meta: dict[str, str]) -> tuple[str | None, str]:
@@ -181,10 +227,10 @@ def instagram_caption(meta: dict[str, str]) -> tuple[str | None, str]:
 
 
 def facebook_caption(meta: dict[str, str]) -> str:
-    """Facebook puts the post text in og:description (cut short on long posts) and sometimes
-    in og:title; the longer one wins."""
-    texts = [meta.get("og:description", ""), meta.get("og:title", "")]
-    return max((t.strip() for t in texts), key=len)
+    """The post text Facebook puts in og:description (cut short on long posts). og:title is
+    only the page or person's name, and a sign-in wall's text is no caption: both give ''."""
+    text = meta.get("og:description", "").strip()
+    return "" if FACEBOOK_LOGIN_TEXT.search(text) and len(text) < 200 else text
 
 
 def fetch_post(url: str, http=None, resolve: Resolver = resolve_host) -> Post:
@@ -197,8 +243,13 @@ def fetch_post(url: str, http=None, resolve: Resolver = resolve_host) -> Post:
     url = with_scheme(url)
     try:
         if platform == "tiktok":
-            if is_short_link(url):
-                url, _ = recipe_import.fetch_page(url, http, resolve)
+            if is_short_link(url):  # follow the redirects only as far as the post's URL
+                url, _ = recipe_import.fetch_page(
+                    url,
+                    http,
+                    resolve,
+                    stop=lambda u: detect(u) == "tiktok" and not is_short_link(u),
+                )
             if detect(url) != platform:  # a short link that led somewhere else
                 raise ImportFailed(blocked)
             post_url = clean_url(url, platform)
