@@ -84,6 +84,8 @@ Now a draft with no method is kept when every ingredient line names a word found
 source text (`grounded`; photos stay strict), with the step "Add the method here." and the
 `NO_METHOD` note; `from_post` still tries a linked site first and keeps the caption's draft if
 that fails. New eval case `caption-ingredients-only` (23 import cases).
+Next: hearing a reel from its link (no screen recording) through a scraping service; plan in
+`docs/plans/reel-audio-from-link.md` (Instagram gives no `og:video`, checked 2026-10-20).
 
 Review maintenance: API models/views/backend construction now live in `api_models.py`,
 `api_views.py`, and `backend.py`; `api.py` owns routes and app lifecycle. Insights is generated
