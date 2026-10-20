@@ -31,7 +31,17 @@ def raw_oembed(url: str) -> None:
     r = httpx.get(oembed, headers={"User-Agent": USER_AGENT}, timeout=10)
     print(f"   oEmbed: {r.status_code} {r.headers.get('content-type', '-')}, "
           f"{len(r.history)} redirect(s) -> {r.url}")  # fmt: skip
-    print(f"   body: {' '.join(r.text.split())[:200]}")
+    try:
+        data = r.json()
+    except ValueError:
+        print(f"   body: {' '.join(r.text.split())[:200]}")
+        return
+    print(f"   keys: {', '.join(data) if isinstance(data, dict) else type(data).__name__}")
+    for key, value in data.items() if isinstance(data, dict) else []:
+        if key != "html":
+            print(f"   {key}: {' '.join(str(value).split())[:200]!r}")
+    if isinstance(data, dict) and "html" in data:
+        print(f"   html (start): {' '.join(str(data['html']).split())[:400]}")
 
 
 def check(url: str) -> None:
