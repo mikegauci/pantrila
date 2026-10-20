@@ -77,7 +77,7 @@ def test_handles_are_cleaned_or_dropped():
 def test_caption_links_skip_platforms_shorteners_and_non_links():
     caption = (
         "Crispy gnocchi 🥔 full recipe 👉 sambakes.co.uk/gnocchi. Also on www.example.com/x! "
-        "Follow @sam.cooks, link in bio linktr.ee/sam or bit.ly/abc, "
+        "Follow @sam.cooks, link in bio linktr.ee/sam, "
         "tiktok.com/@sam. Toss with the sauce.Then bake 1.5kg e.g. hi@mail.com "
         "https://Blog.example.org/a?b=1)"
     )
@@ -342,3 +342,8 @@ def test_profile_links_fail_before_any_paid_call():
     with pytest.raises(ImportFailed, match="not a post"):
         Importer(client=client, model="m").from_link("instagram.com/chef")
     assert client.calls == []
+
+
+def test_short_links_are_kept_so_print_recipe_links_work():
+    caption = "One-Pot Swedish Meatball Pasta PRINT RECIPE: http://bzfd.it/1VThGfV"
+    assert caption_links(caption) == ["http://bzfd.it/1VThGfV"]

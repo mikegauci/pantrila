@@ -42,13 +42,14 @@ FACEBOOK_RESERVED = {"watch", "reel", "reels", "share", "story.php", "permalink.
                      "photo.php", "groups", "videos", "video.php", "events", "marketplace",
                      "profile.php", "people", "login", "hashtag", "pages", "plugins"}  # fmt: skip
 # Links a caption may carry that never lead to a recipe page Pantrio can read: the platforms
-# themselves, link-in-bio pages and shorteners.
+# themselves, link-in-bio pages and shops. Short links (bit.ly, bzfd.it) are kept: fetch_page
+# checks every redirect, and creators often link their recipe that way ("PRINT RECIPE:
+# bzfd.it/…" on Tasty's Facebook posts).
 SKIP_HOSTS = {
     *TIKTOK_HOSTS, *INSTAGRAM_HOSTS, *FACEBOOK_HOSTS, "youtube.com", "youtu.be", "x.com",
     "twitter.com", "pinterest.com", "pin.it", "threads.net", "snapchat.com", "linktr.ee",
-    "lnk.bio", "beacons.ai", "linkin.bio", "bio.link", "stan.store", "bit.ly", "tinyurl.com",
-    "t.co", "ow.ly", "buff.ly", "rebrand.ly", "shorturl.at", "tiny.cc", "is.gd", "goo.gl",
-    "amzn.to", "liketk.it", "shopmy.us",
+    "lnk.bio", "beacons.ai", "linkin.bio", "bio.link", "stan.store", "amzn.to", "liketk.it",
+    "shopmy.us",
 }  # fmt: skip
 SKIP_SITES = re.compile(r"(?:^|\.)amazon\.[a-z.]+$")  # every Amazon country site
 # A domain written without http(s):// counts as a link only when it is lowercase and has a
@@ -164,7 +165,7 @@ def _trim(link: str) -> str:
 
 
 def skipped(host: str) -> bool:
-    """A platform, link-in-bio page, shortener or shop: never a recipe page to read."""
+    """A platform, link-in-bio page or shop: never a recipe page to read."""
     return any(host == h or host.endswith(f".{h}") for h in SKIP_HOSTS) or bool(
         SKIP_SITES.search(host)
     )
@@ -172,7 +173,7 @@ def skipped(host: str) -> bool:
 
 def caption_links(caption: str) -> list[str]:
     """Website links in a caption, in order, as https URLs; skips the social platforms,
-    link-in-bio pages, link shorteners and shops."""
+    link-in-bio pages and shops."""
     out: list[str] = []
     for match in _LINK.finditer(caption):
         link = _trim(match.group(0))

@@ -11,9 +11,12 @@ call, nothing saved. Run it where the platforms are reachable (not the cloud con
 from __future__ import annotations
 
 import sys
+from urllib.parse import quote
 
-from pantrio.recipe_import import ImportFailed
-from pantrio.social import detect, fetch_post
+import httpx
+
+from pantrio.recipe_import import USER_AGENT, ImportFailed
+from pantrio.social import clean_url, detect, fetch_post
 
 DEFAULT_POSTS = [
     "https://www.tiktok.com/@jose.elcook/video/7448169436764212510",
@@ -22,12 +25,27 @@ DEFAULT_POSTS = [
 ]
 
 
+def raw_oembed(url: str) -> None:
+    """What TikTok's oEmbed endpoint answers Pantrio's user agent, redirects included."""
+    oembed = f"https://www.tiktok.com/oembed?url={quote(clean_url(url, 'tiktok'), safe='')}"
+    r = httpx.get(oembed, headers={"User-Agent": USER_AGENT}, timeout=10)
+    print(f"   oEmbed: {r.status_code} {r.headers.get('content-type', '-')}, "
+          f"{len(r.history)} redirect(s) -> {r.url}")  # fmt: skip
+    print(f"   body: {' '.join(r.text.split())[:200]}")
+
+
 def check(url: str) -> None:
     print(f"== {detect(url) or 'not a post link'}: {url}")
     try:
         post = fetch_post(url)
     except ImportFailed as exc:
         print(f"   BLOCKED: {exc}")
+        cause = exc.__cause__
+        while cause is not None:  # why: the HTTP status, a redirect, unreadable JSON...
+            print(f"   because: {type(cause).__name__}: {cause}")
+            cause = cause.__cause__
+        if detect(url) == "tiktok":
+            raw_oembed(url)
         return
     caption = " ".join(post.caption.split())
     print(f"   OK: @{post.handle or '?'} | saved as {post.url}")

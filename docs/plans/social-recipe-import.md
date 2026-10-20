@@ -69,7 +69,8 @@ curl -sLA "PantrioBot/1.0 (+https://pantrio-azure.vercel.app; recipe import for 
   `recipe_import.fetch_page` (same limits). Short links follow the checked redirects, so the
   full post URL is what gets saved.
 - `caption_links(caption)`: website links in the caption, ignoring the social platforms and
-  link shorteners it cannot check.
+  link shorteners it cannot check. (Changed in PR 1: short links are kept, since
+  `fetch_page` checks every redirect and Tasty's Facebook captions link recipes via bzfd.it.)
 
 ### 3. Backend: `src/pantrio/recipe_import.py`
 
