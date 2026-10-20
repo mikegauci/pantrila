@@ -209,7 +209,7 @@ uv run pytest                            # offline: OpenAI mocked, no network
 uv run python -m evals.run_retrieval     # retrieval eval (embeddings only)
 uv run python -m evals.run_planner       # planner eval, about $0.40 for 16 profiles
 uv run python -m evals.run_assistant     # assistant eval, about $0.05 for 24 cases
-uv run python -m evals.run_import        # recipe-import eval, about $0.15 for 12 pages + 10 captions
+uv run python -m evals.run_import        # recipe-import eval, about $0.15 for 12 pages + 11 captions
 uv run python -m evals.video_audio       # once: text-to-speech audio for the video eval (committed)
 uv run python -m evals.run_video [--plain]   # video-import eval, 6 spoken cooking videos
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds

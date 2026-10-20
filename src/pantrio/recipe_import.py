@@ -70,6 +70,11 @@ BLOCKED = (
     "That site does not let Pantrio read its pages. Take a screenshot of the recipe and add it "
     "as a photo instead."
 )
+NO_METHOD_STEP = "Add the method here."
+NO_METHOD = (
+    "The source lists the ingredients but not the method: add the steps before saving. For a "
+    "post, uploading the video can read them."
+)
 NO_SPEECH = (
     "Pantrio couldn't read any sound or pictures from this video. Paste the recipe text or add "
     "screenshots instead."
@@ -448,18 +453,32 @@ def capped_draft(r, lines: list[RecipeLine], source: Source, source_url: str | N
         total_minutes=_clamp(r.total_minutes, 1, 24 * 60),
         servings=_clamp(r.servings, 1, 24),
         ingredients=lines[:MAX_LINES],
-        steps=steps or ["See the source."],
+        steps=steps or [NO_METHOD_STEP],
         source=source,
         source_url=source_url,
     )
 
 
-def to_draft(imported: ImportedRecipe, source: Source, source_url: str | None
-             ) -> tuple[CookbookRecipeIn, list[str]]:  # fmt: skip
-    """Check the model's transcription in code; return the draft and what to review."""
-    if not imported.is_recipe or not imported.ingredients or not imported.steps:
+def grounded(lines: list[ImportedLine], text: str) -> bool:
+    """Whether the ingredient lines come from `text`: each names a word (3+ letters) found in
+    it. Guards drafts with no method, where nothing else shows the list was not invented."""
+    words = set(re.findall(r"[a-z]{3,}", text.lower()))
+    named = [set(re.findall(r"[a-z]{3,}", line.name.lower())) & words for line in lines]
+    return len(lines) >= 2 and all(named)
+
+
+def to_draft(imported: ImportedRecipe, source: Source, source_url: str | None,
+             source_text: str | None = None) -> tuple[CookbookRecipeIn, list[str]]:  # fmt: skip
+    """Check the model's transcription in code; return the draft and what to review. With no
+    method (a caption that lists only the ingredients), the draft is kept only when its lines
+    are found in `source_text`, and a note asks for the steps."""
+    if not imported.is_recipe or not imported.ingredients:
         raise ImportFailed("Could not find a recipe there.")
     notes: list[str] = []
+    if not any(s.strip() for s in imported.steps):
+        if source_text is None or not grounded(imported.ingredients, source_text):
+            raise ImportFailed("Could not find a recipe there.")
+        notes.append(NO_METHOD)
     lines = [
         draft_line(n, line.name, line.quantity, line.unit,
                    str(line.food) if line.food is not None else None, checked(line.estimate),
@@ -495,7 +514,8 @@ class Importer:
     def _extract(self, content: list[dict], source: Source, url: str | None) -> ImportResult:
         start = time.perf_counter()
         imported = self._parse(INSTRUCTIONS, content, ImportedRecipe)
-        draft, notes = to_draft(imported, source, url)
+        text = "\n".join(c["text"] for c in content if c["type"] == "input_text")
+        draft, notes = to_draft(imported, source, url, None if source == "photo" else text)
         return ImportResult(draft, notes, self.usage, (time.perf_counter() - start) * 1000)
 
     def transcribe(self, audio: bytes, seconds: float) -> str:
@@ -542,7 +562,7 @@ class Importer:
             INSTRUCTIONS, ImportedRecipe)  # fmt: skip
         imported = self._parse(instructions, content, shape)
         try:
-            draft, notes = to_draft(imported, "post" if post else "video", None)
+            draft, notes = to_draft(imported, "post" if post else "video", None, text)
         except ImportFailed as exc:
             raise ImportFailed(NO_VIDEO_RECIPE) from exc
         for n, line in enumerate(imported.ingredients[:MAX_LINES], start=1):
@@ -613,17 +633,22 @@ class Importer:
         text = f"Caption of a {where}{by}:\n\n{caption}"
         recipe_url = None
         try:
-            result = self._extract([{"type": "input_text", "text": text}], "post", None)
+            result: ImportResult | None = self._extract(
+                [{"type": "input_text", "text": text}], "post", None
+            )
         except ImportFailed:
+            result = None
+        if result is None or NO_METHOD in result.notes:  # a linked site may have it all
             links += [u for u in social.caption_links(caption) if u not in links]
             page = self._linked_page(links[: social.MAX_CAPTION_LINKS], start, http, resolve)
-            if page is None:
-                raise ImportFailed(social.NO_RECIPE) from None
-            recipe_url = page[0] if len(page[0]) <= 2000 else None
             try:
-                result = self.from_html(*page)
+                if page is None:
+                    raise ImportFailed(social.NO_RECIPE)
+                linked = self.from_html(*page)
+                result, recipe_url = linked, page[0] if len(page[0]) <= 2000 else None
             except ImportFailed as exc:
-                raise ImportFailed(social.NO_RECIPE) from exc
+                if result is None:  # keep the caption's ingredients when there is nothing else
+                    raise ImportFailed(social.NO_RECIPE) from exc
         result.draft = result.draft.model_copy(update={
             "source": "post", "source_url": post.url if post else None,
             "source_platform": post.platform if post else None,

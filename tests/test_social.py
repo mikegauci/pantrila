@@ -366,3 +366,50 @@ def test_from_a_link_points_to_the_video_upload_in_from_a_post(monkeypatch):
     with pytest.raises(ImportFailed) as exc:
         Importer(client=FakeClient(recipe()), model="m").from_link(TIKTOK)
     assert str(exc.value) == NO_RECIPE_LINK and "From a post" in NO_RECIPE_LINK
+
+
+def ingredients_only(*names: str) -> ImportedRecipe:
+    data = recipe().model_dump()
+    data["steps"] = []
+    data["ingredients"] = [{"name": n, "quantity": 1, "unit": "piece", "food": "egg",
+                            "estimate": None} for n in names]  # fmt: skip
+    return ImportedRecipe.model_validate(data)
+
+
+LASAGNA = ("Spicy Sausage Vodka Lasagna 🤤 Full recipe in my bio :) #pasta\n\n"
+           "For the sauce:\n1 lb spicy Italian sausage\n3 garlic cloves\n2 tbsp vodka")  # fmt: skip
+
+
+def test_caption_with_only_ingredients_becomes_a_draft_that_asks_for_the_method():
+    from pantrio.recipe_import import NO_METHOD, NO_METHOD_STEP
+
+    lines = ("1 lb spicy Italian sausage", "3 garlic cloves", "2 tbsp vodka")
+    client = FakeClient(ingredients_only(*lines))
+    url = "https://www.instagram.com/reel/Dclv5Rgizvm/"
+    result = Importer(client=client, model="m").from_post(url, LASAGNA)
+    assert [i.name for i in result.draft.ingredients] == list(lines)
+    assert result.draft.steps == [NO_METHOD_STEP] and NO_METHOD in result.notes
+    assert result.draft.source_url == url and len(client.calls) == 1  # no link to try
+
+
+def test_invented_ingredients_without_a_method_are_still_refused():
+    client = FakeClient(ingredients_only("200 g flour", "2 eggs", "300 ml milk"))
+    with pytest.raises(ImportFailed) as exc:
+        Importer(client=client, model="m").from_post(
+            TIKTOK, "3-ingredient pancakes 🥞 Comment RECIPE and I'll DM you!", mock_http({}),
+            resolve)  # fmt: skip
+    assert str(exc.value) == NO_RECIPE
+
+
+def test_caption_with_only_ingredients_prefers_a_linked_full_recipe():
+    lines = ("1 lb spicy Italian sausage", "3 garlic cloves")
+    client = FakeClient(ingredients_only(*lines), recipe())
+    caption = LASAGNA + "\nMethod on sambakes.com/lasagna"
+    http = mock_http({"https://sambakes.com/lasagna": httpx.Response(200, html="<p>Lasagna</p>")})
+    result = Importer(client=client, model="m").from_post(TIKTOK, caption, http, resolve)
+    assert result.draft.steps == ["Cook."] and result.draft.recipe_url.endswith("/lasagna")
+
+    client = FakeClient(ingredients_only(*lines))  # the linked page fails: keep the caption's
+    result = Importer(client=client, model="m").from_post(TIKTOK, caption, mock_http({}), resolve)
+    assert [i.name for i in result.draft.ingredients] == list(lines)
+    assert result.draft.recipe_url is None

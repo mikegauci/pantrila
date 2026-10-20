@@ -414,3 +414,10 @@ def test_video_without_sound_reads_the_frames_and_keeps_other_links():
     assert result.usage.audio_seconds == 0 and result.usage.llm_calls == 1
     assert result.draft.source == "video"
     assert result.draft.source_url == "https://youtube.com/shorts/abc"
+
+
+def test_photos_without_a_method_are_still_refused():
+    png = "data:image/png;base64," + base64.b64encode(b"\x89PNG fake").decode()
+    client = FakeClient(imported(steps=[]))
+    with pytest.raises(ImportFailed, match="Could not find a recipe"):
+        Importer(client=client, model="m").from_photos([png])

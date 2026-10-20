@@ -253,6 +253,16 @@ Notes from building PR 2:
 - WAV, not a compressed format, so the server can check the length in code with the standard
   library (`wave`): 90 s is 2.9 MB, 3 min 5.8 MB, under the 24 MB request cap.
 
+## Follow-up: captions with only the ingredients
+
+Owner's test, 2026-10-20: `instagram.com/reel/Dclv5Rgizvm` (@zachs.foods) read fine (497
+characters, 15 ingredient lines) but said "Full recipe in my bio" and had no method, so the
+model returned `is_recipe: true`, 15 ingredients, 0 steps, and `to_draft` refused it ("no
+steps = no recipe"). Fixed in `fix/ingredients-only-captions`: such a draft is kept when its
+lines are grounded in the caption (each names a word in it), with a placeholder step and a
+note asking for the method (or the video). The steps rule was also guarding against invented
+recipes ("3-ingredient pancakes, comment RECIPE"), which the grounding check keeps refusing.
+
 ## Main risk
 
 Platforms can change what they share at any time. As checked on 2026-10-20, Instagram and
