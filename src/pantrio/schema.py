@@ -129,7 +129,7 @@ class UserProfile(BaseModel):
     allergies: list[Allergen] = Field(default_factory=list, max_length=14)
     diets: list[DietTag] = Field(default_factory=list, max_length=8)
     exclude_foods: list[Annotated[str, Field(max_length=80)]] = Field(
-        default_factory=list, max_length=207, description="Food keys the person will not eat."
+        default_factory=list, max_length=512, description="Food keys the person will not eat."
     )
     max_minutes: int | None = Field(default=None, gt=0, description="Longest recipe to cook.")
     days: int = Field(default=7, ge=1, le=7)
@@ -139,7 +139,7 @@ class UserProfile(BaseModel):
     targets: NutritionTargets = Field(default_factory=NutritionTargets)
     pantry: list[Annotated[str, Field(max_length=80)]] = Field(
         default_factory=list,
-        max_length=207,
+        max_length=512,
         description="Food keys already in the kitchen, to use up first.",
     )
     cuisines: list[Annotated[str, Field(max_length=40)]] = Field(

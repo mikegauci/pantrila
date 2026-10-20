@@ -126,12 +126,12 @@ with the next message; the browser only says which thread it is in.
 ## Design decisions
 
 - **Safety in code, not in the prompt.** Allergens and diets are derived from ingredients
-  (a table of 207 foods joined to USDA data), filtered in SQL before retrieval, checked again
+  (a table of 218 foods joined to USDA and Ciqual data), filtered in SQL before retrieval, checked again
   on the final plan and on every recipe the API returns. The model's word is never the
   source of truth.
 - **The corpus is generated, then verified.** 300 fixed dish briefs (15 cuisines × 20) go to
   the model as structured outputs. Code converts every quantity to grams, computes
-  nutrition from USDA FoodData Central (SR Legacy, public domain) and rejects any recipe
+  nutrition from USDA FoodData Central (SR Legacy, public domain) and reviewed Ciqual additions and rejects any recipe
   whose stated allergens disagree with the derived ones.
 - **Hybrid retrieval with reciprocal rank fusion.** Vector search handles vague queries
   ("something cosy for a cold night"). Full text handles exact ingredients and dish names.
@@ -223,7 +223,7 @@ The paid evals are a manual GitHub Actions workflow.
 | Path | What |
 |---|---|
 | `src/pantrio/schema.py` | Pydantic models: recipes, the 14 EU allergens, diets, profiles, plans |
-| `src/pantrio/foods.py`, `nutrition.py` | Ingredient table, unit conversion, USDA nutrition, allergen and diet derivation |
+| `src/pantrio/foods.py`, `nutrition.py` | Ingredient table, unit conversion, USDA/Ciqual nutrition, allergen and diet derivation |
 | `src/pantrio/corpus.py`, `scripts/generate_corpus.py` | Corpus generation and verification |
 | `src/pantrio/search.py`, `embeddings.py` | Hybrid search with SQL safety filters; cached embeddings |
 | `src/pantrio/constraints.py` | The deterministic checker: hard rules and soft targets |
@@ -249,7 +249,7 @@ The paid evals are a manual GitHub Actions workflow.
   has few lean, protein-dense dishes, so retrieval can't fix it; more recipes would.
 - Vague queries are the weakest retrieval kind (normalized recall@10 0.55). A query rewriter
   (`--parse`) exists but is off in the evals.
-- Nutrition is computed from ingredient weights and USDA averages. It is an estimate, not
+- Nutrition is computed from ingredient weights and USDA/Ciqual averages (see [data conventions](docs/nutrition-data.md)). It is an estimate, not
   medical advice.
 - Some recipe sites block bots (Allrecipes answers 402/403), so link import fails there; the
   app suggests a screenshot instead. The import eval covers web pages and synthetic captions;

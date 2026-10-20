@@ -47,3 +47,20 @@ def test_unsafe_swap_is_reported(by_id):
 def test_swap_needs_a_food_the_recipe_uses(by_id):
     with pytest.raises(ValueError):
         swap_options(by_id["indian-chickpea-curry"], "butter", UserProfile())
+
+
+@pytest.mark.parametrize("food", ["egg", "butter", "mushroom"])
+def test_dessert_swaps_cannot_bypass_restriction(by_id, food):
+    from pantrio.schema import MealType
+    from pantrio.swaps import UnsupportedDessertSwap, swapped_recipe
+
+    dessert = by_id["french-mushroom-omelette"].model_copy(
+        update={"meal_types": [MealType.BREAKFAST, MealType.DESSERT]}
+    )
+    for action in [
+        lambda: swap_options(dessert, food, UserProfile()),
+        lambda: evaluate_swap(dessert, food, "tofu", UserProfile()),
+        lambda: swapped_recipe(dessert, food, "tofu"),
+    ]:
+        with pytest.raises(UnsupportedDessertSwap, match="setting, rising and texture"):
+            action()

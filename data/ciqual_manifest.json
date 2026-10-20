@@ -1,0 +1,31 @@
+{
+  "source": "Anses. 2025. Ciqual French food composition table",
+  "dataset_version": "Ciqual 2025; English workbook 2025-11-03",
+  "retrieved": "2026-10-20",
+  "url": "https://ciqual.anses.fr/cms/sites/default/files/inline-files/Table%20Ciqual%202025_ENG_2025_11_03.xlsx",
+  "sha256": "021d80f202fa184d7d1e6c6283da7d94a408fef0fbca0c28293243673c0778b0",
+  "methodology_url": "https://ciqual.anses.fr/cms/sites/default/files/inline-files/Table%20Ciqual%202025%20doc%20ENG_2025_11_19.pdf",
+  "terms_url": "https://ciqual.anses.fr/cms/en/node/22",
+  "licence": "French Open Licence 2.0",
+  "columns": {
+    "G": "alim_code",
+    "H": "alim_nom_eng",
+    "M": "Energy, N x\nJones'\nfactor, with\nfibres (kcal\n100g)",
+    "O": "Protein\n(g\n100g)",
+    "Q": "Carbohydrate\n(g\n100g)",
+    "R": "Fat (g\n100g)",
+    "AA": "Fibres\n(g\n100g)"
+  },
+  "selected": {
+    "23424": "Puff pastry, pure butter, prepacked, raw",
+    "19027": "Condensed milk, with sugar(s), whole",
+    "19584": "Mascarpone cheese, from cow's milk",
+    "31004": "Milk chocolate, bar",
+    "31010": "White chocolate, bar",
+    "24430": "Biscuit (cookie), sponge fingers or lady fingers"
+  },
+  "excluded": {
+    "11007": "Generic dried gelatin: animal origin and fish-allergen status unresolved."
+  },
+  "carbohydrate_policy": "Available carbohydrate plus fibre, approximating existing USDA total carbohydrate inclusive of fibre. Not an exact reconstruction of carbohydrate by difference. Mascarpone fibre <0.5 is represented by conservative upper bound 0.5, retaining original qualifier."
+}

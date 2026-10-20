@@ -1,5 +1,6 @@
 "use client"
 
+import { NutritionSource } from "@/components/nutrition-source"
 import { ArrowLeft, Camera, Check, Clock, ExternalLink, ImageOff, Loader2, Pencil, Trash2, Users } from "lucide-react"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
@@ -222,7 +223,7 @@ export default function MyRecipePage() {
           <p className="mt-4 text-[12px] text-muted-foreground">
             {r.estimated
               ? "Some foods are estimated by AI, so these numbers and allergens are a best guess."
-              : "Computed from the ingredients with USDA FoodData Central values."}{" "}
+              : <NutritionSource />}{" "}
             Macros means protein, carbs and fat.
           </p>
         </Panel>

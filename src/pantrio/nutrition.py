@@ -1,4 +1,4 @@
-"""Per-serving nutrition from ingredient grams and USDA FoodData Central values per 100 g."""
+"""Per-serving nutrition from ingredient grams and reviewed source-specific values per 100 g."""
 
 from __future__ import annotations
 

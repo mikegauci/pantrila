@@ -1,5 +1,6 @@
 "use client"
 
+import { NutritionSource } from "@/components/nutrition-source"
 import { Camera, Clapperboard, ClipboardPaste, Link2, PenLine, Plus, Share2, Sparkles, Trash2, TriangleAlert, X } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { toast } from "sonner"
@@ -227,7 +228,7 @@ function Preview({ recipe }: { recipe: CookbookRecipeIn }) {
           <p className="text-[12px] text-muted-foreground">
             {preview.estimated
               ? "Some foods are estimated by AI, so these numbers and allergens are a best guess. Check the label of anything you buy."
-              : "Computed in code from the ingredients with USDA FoodData Central values."}
+              : <NutritionSource />}
           </p>
         </>
       )}

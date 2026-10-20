@@ -145,7 +145,7 @@ from pantrio.schema import (
     UserProfile,
 )
 from pantrio.search import SearchFilters
-from pantrio.swaps import evaluate_swap, swap_options
+from pantrio.swaps import UnsupportedDessertSwap, evaluate_swap, swap_options
 
 log = logging.getLogger("pantrio.api")
 
@@ -400,7 +400,7 @@ def create_app(
                 options = [evaluate_swap(r, key, resolve_food(replacement), profile)]
             else:
                 options = swap_options(r, key, profile)
-        except UnknownFood as exc:
+        except (UnknownFood, UnsupportedDessertSwap) as exc:
             raise HTTPException(422, str(exc)) from exc
         return SwapList(recipe_id=r.id, food=key, swaps=[swap_view(o) for o in options])
 

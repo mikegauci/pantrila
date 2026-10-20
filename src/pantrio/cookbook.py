@@ -88,7 +88,7 @@ class FoodEstimate(FoodFacts):
 
     def food(self, key: str) -> Food:
         return Food(
-            key=key, fdc_id=0, description=self.description, aisle="other",
+            key=key, fdc_id=None, description=self.description, aisle="other",
             diet_class=self.diet_class, allergens=frozenset(self.allergens),
             grams_per_ml=self.grams_per_ml, grams_per_piece=self.grams_per_piece,
             per_100g=NutritionFacts(kcal=self.kcal, protein_g=self.protein_g,

@@ -33,6 +33,20 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Next planned work: **European nutrition data + 100 sourced recipes**, four sequential PRs.
+Read [`docs/plans/european-ingredients-and-recipe-expansion.md`](docs/plans/european-ingredients-and-recipe-expansion.md)
+before starting; it contains the full scope, safeguards, sources, checklists and handoff log.
+**PR 1 complete in [PR #38](https://github.com/mikegauci/pantrio/pull/38). Next: PR 2 only,
+after confirming merge and live prerequisite deployment.**
+PR 1 adds eight ingredients (six Ciqual, two USDA), source identity, weight-only new foods,
+central dessert swap restrictions and corpus seed preservation. Original 300 recipes unchanged.
+See the plan for verification and deployment status. PR 2: recipe provenance/licensing + 5–10 dessert
+pilot; PR 3: expand to **60 added desserts including the pilot**; PR 4: **40 everyday recipes**.
+Target is 100 additions / 400 total, subject to review. Initial recipe source is Wikibooks;
+Ciqual supplies nutrition, not recipe testing. Preserve the original 300 recipes. Start a fresh
+chat per PR and update the plan's progress/handoff after each. Do not implement this feature
+merely because this status entry exists; follow the user's selected task/PR.
+
 Social recipe import, two PRs; plan and checklists in `docs/plans/social-recipe-import.md`
 (read it before either PR). PR 1 (PR #36, merged): `social.py` (post detection, TikTok
 oEmbed / Open Graph captions, caption links), `Importer.from_post` (caption, then the linked
@@ -242,10 +256,11 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   PantryItem, GroceryItem, GroceryList). Models sent as structured outputs carry field
   descriptions, which are part of the prompt.
 - `src/pantrio/foods.py`: the ingredient table (`data/ingredients.csv` joined to
-  `data/usda_foods.csv`): unit conversion to grams, allergens and diet class per food,
+  `data/usda_foods.csv` and `data/ciqual_foods.csv`): source identity/attribution, unit conversion
+  to grams, allergens and diet class per food,
   allergen and diet derivation.
-- `src/pantrio/nutrition.py`: per-serving nutrition from ingredient grams (USDA FoodData
-  Central SR Legacy values, public domain) and the low-carb/high-protein thresholds.
+- `src/pantrio/nutrition.py`: per-serving nutrition from ingredient grams (USDA SR Legacy
+  and reviewed Ciqual 2025 additions; see `docs/nutrition-data.md`) and diet thresholds.
 - `src/pantrio/corpus.py`: `RecipeDraft` (the model's structured output), `build_recipe`
   (normalise, compute, derive, reject allergen disagreements), `check_recipe`, load/save.
 - `src/pantrio/embeddings.py`: embedding text builder and batched OpenAI embedding calls with
@@ -384,6 +399,7 @@ uv run python scripts/generate_corpus.py [--sample | --only ids | --force | --li
 #   other model for one run: PANTRIO_MODEL=<model> PANTRIO_PRICE_INPUT_PER_MTOK=<usd> \
 #   PANTRIO_PRICE_OUTPUT_PER_MTOK=<usd> (shell variables override .env)
 uv run python scripts/build_usda_table.py           # rebuild data/usda_foods.csv
+uv run python scripts/build_ciqual_table.py         # pinned workbook -> reviewed Ciqual subset
 uv run python -m evals.retrieval_queries # regenerate labelled queries from the corpus
 uv run python -m evals.run_retrieval     # retrieval eval (vector vs full text vs hybrid)
 uv run pantrio plan vegan-high-protein   # plan for an eval profile id or a UserProfile JSON file

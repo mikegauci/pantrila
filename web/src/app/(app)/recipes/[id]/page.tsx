@@ -1,5 +1,6 @@
 "use client"
 
+import { NutritionSource } from "@/components/nutrition-source"
 import { ArrowLeft, Check, Clock, Minus, Plus, Repeat, ShoppingBasket, Users } from "lucide-react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
@@ -172,7 +173,7 @@ export default function RecipePage() {
           <PanelTitle>Per serving</PanelTitle>
           <MacroRing nutrition={r.nutrition} size={150} />
           <p className="mt-4 text-[12px] text-muted-foreground">
-            Computed from the ingredients with USDA FoodData Central values. Macros means protein,
+            <NutritionSource /> Macros means protein,
             carbs and fat.
           </p>
         </Panel>
