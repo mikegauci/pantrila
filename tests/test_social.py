@@ -142,7 +142,10 @@ def test_instagram_login_redirect_suggests_another_link():
         url: httpx.Response(302, headers={"location": "https://www.instagram.com/accounts/login/"}),
         "https://www.instagram.com/accounts/login/": httpx.Response(200, html="<p>Log in</p>"),
     })  # fmt: skip
-    with pytest.raises(ImportFailed, match="Instagram didn't let Pantrio read this post. Try another public recipe link"):
+    with pytest.raises(
+        ImportFailed,
+        match="Instagram didn't let Pantrio read this post. Try another public recipe link",
+    ):
         fetch_post(url, http, resolve)
 
 
