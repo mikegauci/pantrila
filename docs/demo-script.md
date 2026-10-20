@@ -1,6 +1,6 @@
 # Demo video script
 
-About 3 minutes, recorded on the live demo (https://pantrio-azure.vercel.app) at 1280×800.
+About 3 minutes, recorded on the live demo (https://pantrila.vercel.app) at 1280×800.
 Open the API's `/health` a minute before recording so Render's free instance is awake. Use a
 fresh guest session so the daily caps are full.
 
