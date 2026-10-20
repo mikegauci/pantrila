@@ -250,7 +250,7 @@ def create_app(
             raise HTTPException(404, f"No recipe {recipe_id}.")
         return r
 
-    @app.get("/health")
+    @app.api_route("/health", methods=["GET", "HEAD"])
     def health() -> dict:
         return {"ok": True}
 
