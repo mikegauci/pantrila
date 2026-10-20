@@ -287,3 +287,20 @@ def test_unknown_single_word_ids_are_blocked_like_hyphenated_ids(corpus, kitchen
     result = a.reply("Ideas?")
     assert result.cited == [] and result.flagged == ["invented"]
     assert "[invented]" not in result.text and "unverified recipe" in result.text
+
+
+@pytest.mark.parametrize("replacement", [None, "olive_oil"])
+def test_assistant_dessert_swap_tool_cannot_bypass_restriction(corpus, kitchen, replacement):
+    from pantrio.schema import MealType
+
+    corpus[0] = corpus[0].model_copy(update={"meal_types": [MealType.DESSERT]})
+    a, _ = bot(
+        corpus,
+        kitchen,
+        tool_reply(
+            "swap_ingredient", recipe_id=corpus[0].id, food="onion", replacement=replacement
+        ),
+        text_reply("Use a recipe developed for those ingredients."),
+    )
+    result = a.reply("Can I swap the onion in this dessert?")
+    assert "Automatic dessert swaps are unavailable" in result.tool_calls[0].output

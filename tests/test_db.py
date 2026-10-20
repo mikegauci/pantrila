@@ -30,7 +30,7 @@ def test_migrate_is_idempotent(conn):
 
 def test_seed_upserts_and_removes(conn, corpus):
     assert db.seed(conn, corpus) == 5
-    assert db.seed(conn, corpus[:3]) == 3
+    assert db.seed(conn, corpus[:3], allow_delete=True) == 3
     assert conn.execute("select count(*) from recipes").fetchone()[0] == 3
     n_ing = sum(len(r.ingredients) for r in corpus[:3])
     assert conn.execute("select count(*) from recipe_ingredients").fetchone()[0] == n_ing
@@ -204,7 +204,7 @@ def test_recipe_photos_survive_reseeding_and_go_with_their_recipe(conn, corpus):
         a: f"recipes/{a}-2.webp",
         b: f"recipes/{b}-1.webp",
     }
-    db.seed(conn, [r for r in corpus if r.id != b])
+    db.seed(conn, [r for r in corpus if r.id != b], allow_delete=True)
     assert corpus_paths(conn, [a, b]) == {a: f"recipes/{a}-2.webp"}
 
 
@@ -359,3 +359,29 @@ def test_db_cooking_log_is_per_user_newest_first_and_bounded(conn, monkeypatch):
     with pytest.raises(Exception, match="check"):
         alice.log_cooked(Cooked(title="Both", servings=1, pantry_updated=True, recipe_id="x",
                                 cookbook_id=1))  # fmt: skip
+
+
+def test_seed_refuses_partial_empty_or_duplicate_corpus_before_writes(conn, corpus):
+    from pantrio.cookbook import CookbookRecipeIn, DbCookbook
+
+    db.seed(conn, corpus)
+    conn.commit()
+    cookbook = DbCookbook(conn, "alice")
+    saved = cookbook.add(
+        CookbookRecipeIn(
+            title="Mine",
+            meal_types=["dessert"],
+            total_minutes=5,
+            servings=1,
+            steps=["Serve."],
+            ingredients=[dict(name="sugar", quantity=10, unit="g", food="sugar")],
+        )
+    )
+    conn.commit()
+    changed = corpus[0].model_copy(update={"title": "Must not persist"})
+    for invalid in [[changed], [], [changed, changed]]:
+        with pytest.raises(ValueError):
+            db.seed(conn, invalid)
+        assert db.load_recipes(conn, [corpus[0].id])[corpus[0].id] == corpus[0]
+        assert conn.execute("select count(*) from recipes").fetchone()[0] == len(corpus)
+        assert cookbook.get(saved.id).recipe == saved.recipe

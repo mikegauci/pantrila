@@ -14,13 +14,28 @@ from dataclasses import dataclass
 from pantrio.constraints import recipe_problems
 from pantrio.foods import derive_allergens, derive_ingredient_diets, load_foods
 from pantrio.nutrition import nutrition_diets, recipe_nutrition
-from pantrio.schema import Allergen, DietTag, Ingredient, Recipe, Unit, UserProfile
+from pantrio.schema import Allergen, DietTag, Ingredient, MealType, Recipe, Unit, UserProfile
 
 PROTEIN_AISLES = {"meat", "seafood"}
 OTHER_PROTEINS = {
-    "egg", "tofu", "tempeh", "edamame", "canned_tuna", "sardines", "chickpeas", "black_beans",
+    "egg", "egg_white", "egg_yolk", "tofu", "tempeh", "edamame", "canned_tuna", "sardines",
+    "chickpeas", "black_beans",
     "kidney_beans", "cannellini_beans", "red_lentils", "green_lentils",
 }  # fmt: skip
+
+
+class UnsupportedDessertSwap(ValueError):
+    """Equal-weight swaps cannot establish that a dessert's method still works."""
+
+
+def check_swap_supported(recipe: Recipe) -> None:
+    # No verified dessert substitution rules exist yet. Even fruit/fat/dairy can be
+    # structural (pectin, water, emulsification); treat the whole dessert conservatively.
+    if MealType.DESSERT in recipe.meal_types:
+        raise UnsupportedDessertSwap(
+            "Automatic dessert swaps are unavailable: changing ingredients can affect "
+            "setting, rising and texture. Use a recipe developed for those ingredients."
+        )
 
 
 def swap_group(food: str) -> str:
@@ -47,6 +62,7 @@ class Swap:
 
 
 def swapped_recipe(recipe: Recipe, food: str, replacement: str) -> Recipe:
+    check_swap_supported(recipe)
     if food not in recipe.foods:
         raise ValueError(f"{recipe.id} does not use {food}")
     if replacement not in load_foods():
@@ -98,6 +114,7 @@ def swap_options(recipe: Recipe, food: str, profile: UserProfile, limit: int = 4
     """Safe replacements for `food`, closest in nutrition first."""
     if food not in recipe.foods:
         raise ValueError(f"{recipe.id} does not use {food}")
+    check_swap_supported(recipe)
     group = swap_group(food)
     candidates = sorted(
         (k for k in load_foods() if k not in recipe.foods and swap_group(k) == group),

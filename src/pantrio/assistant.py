@@ -34,7 +34,7 @@ from pantrio.planner import RecipeStore, Usage, as_input, recipe_line
 from pantrio.recipe_import import MAX_LINES, capped_draft, draft_line
 from pantrio.schema import MealType, Recipe, Unit, UserProfile
 from pantrio.search import SearchFilters
-from pantrio.swaps import Swap, evaluate_swap, swap_options
+from pantrio.swaps import Swap, UnsupportedDessertSwap, evaluate_swap, swap_options
 
 MAX_TOOL_ROUNDS = 4
 SEARCH_LIMIT = 6
@@ -444,7 +444,7 @@ class Assistant:
                     _swap_line(s) for s in options
                 )
             swap = evaluate_swap(r, food, resolve_food(a.replacement), p)
-        except UnknownFood as exc:
+        except (UnknownFood, UnsupportedDessertSwap) as exc:
             return str(exc)
         verdict = (
             "suits the person"

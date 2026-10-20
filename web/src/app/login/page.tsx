@@ -1,5 +1,6 @@
 "use client"
 
+import { NutritionSource } from "@/components/nutrition-source"
 import { CalendarDays, ChefHat, Mail, ShieldCheck, ShoppingBasket, UserRound } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -71,7 +72,7 @@ export default function LoginPage() {
           </ul>
         </div>
         <p className="text-[12px] text-muted-foreground">
-          Nutrition values from USDA FoodData Central. Not medical advice.
+          <NutritionSource /> Not medical advice.
         </p>
       </section>
 

@@ -39,10 +39,19 @@ def ingredient_text(recipe: Recipe) -> str:
     return " ".join(i.food.replace("_", " ") for i in recipe.ingredients)
 
 
-def seed(conn: psycopg.Connection, recipes: Iterable[Recipe]) -> int:
-    """Make the recipe tables match the corpus: upsert every recipe, drop ones that are gone."""
+def seed(conn: psycopg.Connection, recipes: Iterable[Recipe], *, allow_delete: bool = False) -> int:
+    """Upsert a complete corpus; deletions require an explicit maintenance opt-in."""
     recipes = list(recipes)
+    ids = [r.id for r in recipes]
+    if not ids or len(ids) != len(set(ids)):
+        raise ValueError("seed requires a non-empty corpus with unique recipe IDs")
     with conn.transaction(), conn.cursor() as cur:
+        # Serialize seeds and block concurrent corpus writers during the preservation check.
+        cur.execute("lock table recipes in share row exclusive mode")
+        existing = {row[0] for row in cur.execute("select id from recipes").fetchall()}
+        missing = existing - set(ids)
+        if missing and not allow_delete:
+            raise ValueError(f"seed would delete {len(missing)} recipes; supply the full corpus")
         for r in recipes:
             n = r.nutrition
             cur.execute(

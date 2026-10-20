@@ -876,3 +876,15 @@ def test_i_cooked_this_can_leave_the_pantry_alone_and_works_for_the_cookbook(api
     both = {"recipe_id": OMELETTE, "cookbook_id": toast["id"], "servings": 1}
     assert api.post("/me/cooked", json=both).status_code == 422
     assert api.post("/me/cooked", json={"recipe_id": OMELETTE, "servings": 0}).status_code == 422
+
+
+@pytest.mark.parametrize("replacement", [None, "olive_oil"])
+def test_dessert_swap_api_rejects_suggestions_and_direct_calls(api, backend, replacement):
+    recipe = backend.store.recipes[OMELETTE]
+    backend.store.recipes[OMELETTE] = recipe.model_copy(update={"meal_types": [MealType.DESSERT]})
+    params = {"food": "butter"}
+    if replacement:
+        params["replacement"] = replacement
+    response = api.get(f"/recipes/{OMELETTE}/swaps", params=params)
+    assert response.status_code == 422
+    assert "Automatic dessert swaps are unavailable" in response.json()["detail"]

@@ -119,10 +119,10 @@ def build_recipe(brief: Brief, draft: RecipeDraft) -> Recipe:
         problems.append("a recipe needs at least 3 ingredients")
     if len(draft.steps) < 2:
         problems.append("a recipe needs at least 2 steps")
-    if not 1 <= draft.servings <= 12:
-        problems.append(f"servings must be 1-12, got {draft.servings}")
-    if not 2 <= draft.total_minutes <= 600:
-        problems.append(f"total_minutes must be 2-600, got {draft.total_minutes}")
+    if not 1 <= draft.servings <= 24:
+        problems.append(f"servings must be 1-24, got {draft.servings}")
+    if not 1 <= draft.total_minutes <= 1440:
+        problems.append(f"total_minutes must be 1-1440, got {draft.total_minutes}")
     if brief.meal_type not in draft.meal_types:
         problems.append(f"meal_types must include '{brief.meal_type}'")
 
