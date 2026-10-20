@@ -3,7 +3,7 @@
 import { ArrowLeft, Camera, Link2, MessageCircle, PenLine, Share2, Sparkles, X } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
+import { type FocusEvent, useEffect, useRef, useState } from "react"
 import { useSWRConfig } from "swr"
 
 import { useAuth } from "@/components/auth-provider"
@@ -95,6 +95,12 @@ function PhotoImport({ onDone }: { onDone: (v: ImportView) => void }) {
   )
 }
 
+/** Brings a focused field above the on-screen keyboard; the keyboard animates in first. */
+function revealOnFocus(e: FocusEvent<HTMLInputElement>) {
+  const field = e.currentTarget
+  setTimeout(() => field.scrollIntoView({ block: "center", behavior: "smooth" }), 300)
+}
+
 function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
   const [url, setUrl] = useState("")
   const [busy, setBusy] = useState(false)
@@ -118,17 +124,19 @@ function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
         }
       }}
     >
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <Input type="url" required aria-label="Recipe link" placeholder="https://…" value={url}
-               onChange={(e) => setUrl(e.target.value)} className="h-12 flex-1 bg-surface text-[15px]" />
-        <Button type="submit" size="lg" className="h-12" disabled={busy}>
-          <Sparkles /> {busy ? "Reading the page…" : "Import"}
-        </Button>
+      <div className="grid gap-1.5">
+        <Label htmlFor="recipe-link">Recipe link</Label>
+        <Input id="recipe-link" type="url" required inputMode="url" autoCapitalize="none" spellCheck={false}
+               placeholder="https://…" value={url} onFocus={revealOnFocus}
+               onChange={(e) => setUrl(e.target.value)} className="h-12 bg-surface text-[15px]" />
       </div>
+      <Button type="submit" size="lg" className="h-12 w-full sm:w-fit" disabled={busy}>
+        <Sparkles /> {busy ? "Reading the page…" : "Read recipe"}
+      </Button>
+      {busy && estimatedSeconds !== null && <ImportCountdown estimatedSeconds={estimatedSeconds} />}
       <p className="text-[12px] text-muted-foreground">
         Pantrila reads the recipe data the site publishes (or the page text) and keeps the link as the source.
       </p>
-      {busy && estimatedSeconds !== null && <ImportCountdown estimatedSeconds={estimatedSeconds} />}
       {error && <p role="alert" className="text-[13px] text-danger">{error}</p>}
     </form>
   )
@@ -179,7 +187,7 @@ function PostImport({ onDone }: { onDone: (v: ImportView) => void }) {
       <div className="grid gap-1.5">
         <Label htmlFor="post-link">Post link</Label>
         <Input id="post-link" type="text" inputMode="url" autoCapitalize="none" spellCheck={false} placeholder="Paste Instagram, Facebook or TikTok link" value={url}
-               onChange={(e) => setUrl(e.target.value)} className="h-12 bg-surface text-[15px]" />
+               onFocus={revealOnFocus} onChange={(e) => setUrl(e.target.value)} className="h-12 bg-surface text-[15px]" />
         {link && !POST_LINK.test(link) && (
           <p className="text-[12px] text-muted-foreground">
             Pantrila will read this link as a recipe page.
