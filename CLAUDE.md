@@ -41,9 +41,11 @@ recipe site) and `from_text`, `/me/recipes/import/post|text`, cookbook credit fi
 credit, 10 caption eval cases. Prompt unchanged: caption lines were tried and dropped, since
 the old prompt already scored the same on all 22 cases (`import-2026-10-20T061450Z` old prompt
 vs `import-2026-10-20T061631Z` with the lines: 0 missed allergens, food matching 100%, 4/4
-no-recipe captions refused; the lines cost +7%, $0.0054 -> $0.0058). Still owed before
-merging: the platform check from the owner's machine (the cloud container can't reach the
-platforms).
+no-recipe captions refused; the lines cost +7%, $0.0054 -> $0.0058). Platform check
+(2026-10-20, `scripts/platform_check.py` on the owner's Mac): Instagram and Facebook links
+import from the link (Open Graph captions); TikTok oEmbed sends only the player and its page
+has no preview tags, so TikTok links open the caption box straight away. Short links in
+captions (bzfd.it) are followed.
 PR 2 (uploaded video audio) starts after PR 1 merges.
 
 Review maintenance: API models/views/backend construction now live in `api_models.py`,

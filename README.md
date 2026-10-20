@@ -251,8 +251,10 @@ The paid evals are a manual GitHub Actions workflow.
 - Some recipe sites block bots (Allrecipes answers 402/403), so link import fails there; the
   app suggests a screenshot instead. The import eval covers web pages and synthetic captions;
   photos were checked by hand.
-- Instagram and Facebook may refuse to show a post's caption to Pantrio; then you paste the
-  caption. A recipe that is only spoken in the video can't be imported from the link.
+- TikTok doesn't share captions with other apps, so for TikTok you paste the caption (the link
+  keeps the credit). Instagram and Facebook links work alone today, and if a platform stops
+  sharing, the app asks for the caption instead. A recipe that is only spoken in the video
+  can't be imported from the link.
 - Estimated foods are a best guess. Check the label of anything you buy.
 - Recipe photos are AI-generated and marked as such. The prompt keeps them to the recipe's
   ingredients, but the plating is the model's guess (a steak kebab can come out as kofta).

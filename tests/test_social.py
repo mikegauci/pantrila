@@ -349,15 +349,8 @@ def test_short_links_are_kept_so_print_recipe_links_work():
     assert caption_links(caption) == ["http://bzfd.it/1VThGfV"]
 
 
-def test_tiktok_oembed_without_caption_falls_back_to_the_page_tags():
+def test_tiktok_oembed_with_only_the_player_asks_for_the_caption():
     player_only = {"version": "1.0", "type": "video", "html": "<iframe></iframe>"}
-    page = '<meta property="og:description" content="Feta pasta: 16oz tomatoes, 4oz feta">'
-    http = mock_http({oembed(TIKTOK): httpx.Response(200, json=player_only),
-                      TIKTOK: httpx.Response(200, html=page)})  # fmt: skip
-    post = fetch_post(TIKTOK, http, resolve)
-    assert post.caption.startswith("Feta pasta") and post.handle == "cookwithsam"
-
-    http = mock_http({oembed(TIKTOK): httpx.Response(200, json=player_only),
-                      TIKTOK: httpx.Response(403)})  # fmt: skip
+    http = mock_http({oembed(TIKTOK): httpx.Response(200, json=player_only)})
     with pytest.raises(ImportFailed, match="TikTok didn't let Pantrio read this post"):
         fetch_post(TIKTOK, http, resolve)

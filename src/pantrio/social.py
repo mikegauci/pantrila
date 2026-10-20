@@ -1,9 +1,10 @@
 """Recipe posts on TikTok, Instagram and Facebook: which links are posts, and their captions.
 
 Pantrio reads only what a post shares publicly as text: the caption and the creator's handle.
-TikTok's public oEmbed endpoint (no key) gives the caption and handle on some posts and only
-the player on others; then the post page's Open Graph tags are tried. Instagram and Facebook
-pages carry the caption in their Open Graph tags when they let a client read them at all.
+TikTok's public oEmbed endpoint (no key) is asked for the caption and handle; checked on
+2026-10-20 it sends only the player, and the post page is built in the browser with no
+preview tags, so TikTok posts need the pasted caption (the link still gives the credit).
+Instagram and Facebook pages carry the caption in their Open Graph tags.
 Every request goes through `recipe_import.fetch_page` (SSRF guards, size and time caps,
 Pantrio's own user agent: never a spoofed browser or crawler). Videos are never downloaded,
 stored or embedded. When a platform refuses, the person pastes the caption instead.
@@ -235,12 +236,6 @@ def facebook_caption(meta: dict[str, str]) -> str:
     return "" if FACEBOOK_LOGIN_TEXT.search(text) and len(text) < 200 else text
 
 
-def tiktok_caption(meta: dict[str, str]) -> str:
-    """The caption from a TikTok post page's preview tags; '' for TikTok's generic text."""
-    text = (meta.get("og:description") or meta.get("description") or "").strip()
-    return "" if text.lower().startswith(("tiktok - make your day", "watch more")) else text
-
-
 def fetch_post(url: str, http=None, resolve: Resolver = resolve_host) -> Post:
     """The post's caption and creator, read the way the platform publishes them. Raises
     `ImportFailed` asking for the pasted caption when the platform refuses or shows none."""
@@ -270,11 +265,6 @@ def fetch_post(url: str, http=None, resolve: Resolver = resolve_host) -> Post:
             handle = clean_handle(str(data.get("author_unique_id") or "")) or handle_from_url(
                 post_url, platform
             )
-            if not caption.strip():  # oEmbed now often sends only the player: try the page
-                final_url, html = recipe_import.fetch_page(post_url, http, resolve)
-                if detect(final_url) != platform:
-                    raise ImportFailed(blocked)
-                caption = tiktok_caption(meta_tags(html))
         else:
             final_url, html = recipe_import.fetch_page(url, http, resolve)
             if detect(final_url) != platform:  # e.g. sent to a login page

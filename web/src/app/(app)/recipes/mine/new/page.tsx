@@ -149,6 +149,9 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
   const captionRef = useRef<HTMLTextAreaElement>(null)
   const link = url.trim()
   const text = caption.trim()
+  // TikTok doesn't share captions with apps like Pantrio, so its caption box starts open.
+  const tiktok = /^(https?:\/\/)?([a-z]+\.)?tiktok\.com\//i.test(link)
+  const captionOpen = showCaption || tiktok
 
   async function read() {
     setBusy(true)
@@ -184,9 +187,14 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
           </p>
         )}
       </div>
-      {showCaption ? (
+      {captionOpen ? (
         <div className="grid gap-1.5">
           <Label htmlFor="post-caption">Caption</Label>
+          {tiktok && !text && (
+            <p className="text-[12px] text-muted-foreground">
+              TikTok doesn&apos;t share captions with other apps. Copy it in TikTok (tap the caption, then hold to copy) and paste it here; the link keeps the credit.
+            </p>
+          )}
           <Textarea id="post-caption" ref={captionRef} value={caption} rows={6} maxLength={10000}
                     placeholder="Copy the caption from the app (under the post: … then Copy, or hold the text) and paste it here."
                     onChange={(e) => setCaption(e.target.value)} className="min-h-32 bg-surface text-[15px]" />

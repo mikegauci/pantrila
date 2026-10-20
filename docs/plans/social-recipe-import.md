@@ -49,17 +49,17 @@ The Claude Code cloud container cannot reach TikTok/Instagram; test from the dep
 - Caption comes back -> paste-a-link works for that platform. Blocked or empty -> that
   platform asks for the pasted caption.
 
-Results: _not run yet._ The cloud container's proxy refuses tiktok.com, instagram.com and
-facebook.com (403 on CONNECT), so the check still has to be run from Render or the owner's
-machine. The code does not depend on the answer: every platform tries the link and falls back to
-the pasted caption, so a blocked platform is paste-only without code changes. To check:
+Results (2026-10-20, owner's Mac, `scripts/platform_check.py`, Pantrio's own user agent):
 
-```bash
-curl -sA "PantrioBot/1.0 (+https://pantrio-azure.vercel.app; recipe import for one user)" \
-  "https://www.tiktok.com/oembed?url=<post>" | jq '{title, author_unique_id}'
-curl -sLA "PantrioBot/1.0 (+https://pantrio-azure.vercel.app; recipe import for one user)" \
-  "<instagram or facebook post>" | grep -o '<meta property="og:[a-z]*" content="[^"]*"'
-```
+| Platform | Post | Result |
+|---|---|---|
+| Instagram | `instagram.com/reel/DTtm5zrkfHA` | **Works.** og:description carries the handle (`cheesegal`) and the full caption. |
+| Facebook | Tasty video `buzzfeedtasty/videos/…/1746461835606458` | **Works.** og:description carries the caption ("PRINT RECIPE: http://bzfd.it/…"); the handle comes from the URL. Short links are therefore followed, not skipped. |
+| TikTok | `@jose.elcook/video/7448169436764212510` | **Paste only.** oEmbed answers 200 with just the player (no `title`, no `author_unique_id`); the post page answers 200 but is built in the browser with no preview tags. |
+
+So TikTok links open the caption box straight away (with a line on copying it in TikTok) and
+keep the link for the credit; Instagram and Facebook links import from the link alone. The
+oEmbed call stays: it is fast and would pick captions up again if TikTok restores them.
 
 ### 2. Backend: `src/pantrio/social.py` (new)
 
@@ -130,7 +130,7 @@ curl -sLA "PantrioBot/1.0 (+https://pantrio-azure.vercel.app; recipe import for 
 
 ### Checklist
 
-- [ ] Platform check results recorded above
+- [x] Platform check results recorded above
 - [x] `social.py` + tests
 - [x] `from_post` / `from_text` (prompt change tried and dropped: no gain, see below)
 - [x] Data fields, API routes, types
@@ -207,5 +207,6 @@ Branch `feat/video-recipe-import`. Start after PR 1 merges.
 
 ## Main risk
 
-If Instagram and Facebook always block Pantrio's request (step 1 of PR 1), those platforms
-are paste-only or video upload. TikTok links still work alone.
+Platforms can change what they share at any time. As checked on 2026-10-20, Instagram and
+Facebook links work alone and TikTok is paste-only (or video upload after PR 2); any platform
+that stops sharing falls back to the pasted caption with no code change.
