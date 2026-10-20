@@ -5,7 +5,8 @@ Each page case is a page as a recipe site would serve it: schema.org JSON-LD (pl
 adverts), plus a page with no recipe and one whose recipe text tries to instruct the model.
 Caption cases are social post captions pasted with the post link: emoji lists, a run-on
 paragraph, hashtag noise, metric and US-cup amounts, captions with no recipe ("link in bio",
-"comment RECIPE"), an injection attempt, and captions whose recipe is on a linked page (served
+"comment RECIPE"), an injection attempt, a caption with the ingredients but no method (a
+draft that asks for the steps), and captions whose recipe is on a linked page (served
 from memory by the eval, never fetched) or whose linked page holds none. Everything is
 written here, not copied from real sites or posts. Labels per ingredient line: the acceptable
 food keys, or None when the food is not in the ingredient table and must be estimated (with
@@ -293,6 +294,20 @@ CAPTION_CASES = [
     Case("caption-link-not-a-recipe", "caption-link-none", "", 0, 0, caption=(
         "My new favourite knife 🔪 everything I use is linked at shop.example.com/knives "
         "#kitchentools #knifeskills")),
+    Case("caption-ingredients-only", "caption", "Ricotta Meatballs in Tomato Sauce", 4, 45, [
+        line("500 g beef mince", known("beef_mince")),
+        line("100 g ricotta", known("ricotta")),
+        line("30 g breadcrumbs", known("breadcrumbs")),
+        line("1 egg", known("egg")),
+        line("1 tbsp olive oil", known("olive_oil")),
+        line("2 garlic cloves", known("garlic")),
+        line("400 g can chopped tomatoes", known("canned_tomatoes")),
+        line("a handful of basil", known("basil")),
+    ], caption=(
+        "Ricotta meatballs in tomato sauce 🍝 Method in my bio :) #meatballs #pasta #comfortfood"
+        "\n\nServes 4 · 45 min\n\nFor the meatballs:\n500 g beef mince\n100 g ricotta\n"
+        "30 g breadcrumbs\n1 egg\nFor the sauce:\n1 tbsp olive oil\n2 garlic cloves\n"
+        "400 g can chopped tomatoes\na handful of basil")),
 ]  # fmt: skip
 
 INJECTION_MARKERS = ("HACKED", "peanuts")

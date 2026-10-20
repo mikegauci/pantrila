@@ -1216,5 +1216,80 @@
       "lines": [],
       "allergens": []
     }
+  },
+  {
+    "id": "caption-ingredients-only",
+    "kind": "caption",
+    "url": "https://www.tiktok.com/@pantrio.eval/video/7300000000000000022",
+    "caption": "Ricotta meatballs in tomato sauce 🍝 Method in my bio :) #meatballs #pasta #comfortfood\n\nServes 4 · 45 min\n\nFor the meatballs:\n500 g beef mince\n100 g ricotta\n30 g breadcrumbs\n1 egg\nFor the sauce:\n1 tbsp olive oil\n2 garlic cloves\n400 g can chopped tomatoes\na handful of basil",
+    "expect": {
+      "is_recipe": true,
+      "title": "Ricotta Meatballs in Tomato Sauce",
+      "servings": 4,
+      "minutes": 45,
+      "lines": [
+        {
+          "text": "500 g beef mince",
+          "foods": [
+            "beef_mince"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "100 g ricotta",
+          "foods": [
+            "ricotta"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "30 g breadcrumbs",
+          "foods": [
+            "breadcrumbs"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 egg",
+          "foods": [
+            "egg"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 tbsp olive oil",
+          "foods": [
+            "olive_oil"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "2 garlic cloves",
+          "foods": [
+            "garlic"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "400 g can chopped tomatoes",
+          "foods": [
+            "canned_tomatoes"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "a handful of basil",
+          "foods": [
+            "basil"
+          ],
+          "estimate_allergens": null
+        }
+      ],
+      "allergens": [
+        "eggs",
+        "gluten",
+        "milk"
+      ]
+    }
   }
 ]
