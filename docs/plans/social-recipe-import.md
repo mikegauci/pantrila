@@ -242,6 +242,14 @@ Notes from building PR 2:
 - Prices (checked 2026-10-20): `gpt-4o-mini-transcribe` ~$0.003/min, `gpt-4o-transcribe`
   ~$0.006/min. One report says OpenAI plans to retire both on 2027-02-26 in favour of
   `gpt-transcribe` ($0.0045/min); not confirmed with OpenAI, so worth checking before choosing.
+- Code review fixes: iOS Safari loads no picture until a video plays, so the browser starts and
+  stops the muted video before grabbing frames, and frames are optional (a stuck seek keeps
+  what it has); a video with no sound sends frames only (`audio` null, no transcription); a
+  video of unknown length (MediaRecorder WebM) is measured from its decoded sound; only the
+  first decode try copies the file's buffer; a link that is not a post is kept as the source;
+  "From a link" points to "From a post" for the video; the post form can't start a second
+  import while a video is being read; `run_video --transcribe-model` needs
+  `--transcribe-price` and reports the rate. No prompt change, so no eval rerun.
 - WAV, not a compressed format, so the server can check the length in code with the standard
   library (`wave`): 90 s is 2.9 MB, 3 min 5.8 MB, under the 24 MB request cap.
 

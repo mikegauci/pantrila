@@ -71,7 +71,7 @@ BLOCKED = (
     "as a photo instead."
 )
 NO_SPEECH = (
-    "Pantrio couldn't hear anyone speaking in this video. Paste the recipe text or add "
+    "Pantrio couldn't read any sound or pictures from this video. Paste the recipe text or add "
     "screenshots instead."
 )
 NO_VIDEO_RECIPE = (
@@ -509,26 +509,28 @@ class Importer:
         self.usage.audio_seconds += seconds
         return (resp.text or "").strip()
 
-    def from_video(self, audio: str, frames: list[str], url: str | None = None,
+    def from_video(self, audio: str | None, frames: list[str], url: str | None = None,
                    caption: str | None = None, guided: bool = True) -> ImportResult:  # fmt: skip
-        """A cooking video's audio (a WAV data URL) and frames (image data URLs), with the
-        post's link and caption when the person has them. `guided=False` reads it with the
-        plain import prompt (the eval's "before")."""
+        """A cooking video's audio (a WAV data URL; None when the video has no sound) and
+        frames (image data URLs), with the link and caption when the person has them. A post
+        link is kept as the credit, any other link as the source. `guided=False` reads it with
+        the plain import prompt (the eval's "before")."""
         from pantrio import social
 
         start = time.perf_counter()
-        wav, seconds = check_audio(audio)
+        sound = check_audio(audio) if audio else None
         frames = [check_image(f) for f in frames[:MAX_FRAMES]]
+        if sound is None and not frames:
+            raise ImportFailed(NO_SPEECH)
         url = (url or "").strip() or None
         caption = (caption or "").strip()[: social.MAX_CAPTION_CHARS] or None
         post = social.pasted_post(url, caption or "") if url else None
-        transcript = self.transcribe(wav, seconds)[:MAX_PAGE_CHARS]
-        if not transcript and not frames and not caption:
-            raise ImportFailed(NO_SPEECH)
+        transcript = self.transcribe(*sound)[:MAX_PAGE_CHARS] if sound else ""
+        seconds = round(sound[1]) if sound else 0
         where = f"{social.NAMES[post.platform]} " if post else ""
         by = f" by @{post.handle}" if post and post.handle else ""
         text = (f"Transcript of the audio of a {where}cooking video{by} "
-                f"({round(seconds)} s):\n\n{transcript or '(no speech)'}")  # fmt: skip
+                f"({seconds} s):\n\n{transcript or '(no speech)'}")  # fmt: skip
         if caption:
             text += f"\n\nThe post's caption:\n\n{caption}"
         content: list[dict] = [{"type": "input_text", "text": text}]
@@ -553,6 +555,8 @@ class Importer:
                 "source_url": post.url, "source_platform": post.platform,
                 "source_author": post.handle,
             })  # fmt: skip
+        elif url and urlsplit(link := social.with_scheme(url)).scheme in ("http", "https"):
+            draft = draft.model_copy(update={"source_url": link})
         return ImportResult(draft, notes, self.usage, (time.perf_counter() - start) * 1000)
 
     def from_html(self, url: str, html: str) -> ImportResult:
@@ -566,7 +570,12 @@ class Importer:
         from pantrio import social
 
         if social.detect(url) is not None:  # a post: read its caption, not the app's page
-            return self.from_post(url, None, http, resolve)
+            try:
+                return self.from_post(url, None, http, resolve)
+            except ImportFailed as exc:  # this screen has no video upload: say where it is
+                if str(exc) == social.NO_RECIPE:
+                    raise ImportFailed(social.NO_RECIPE_LINK) from exc
+                raise
         if social.platform_page(url):  # its page is the app's login wall: no paid call
             raise ImportFailed(social.NOT_A_POST)
         start = time.perf_counter()

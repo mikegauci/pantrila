@@ -6,9 +6,10 @@ const MAX_VIDEO_BYTES = 500_000_000
 const RATE = 16_000
 const FRAME_AT = [0.15, 0.4, 0.65, 0.9]
 const FRAME_MAX = 960
+const TOO_LONG = "Use a video under 3 minutes. Trim it to the recipe in your Photos app."
 
 export interface VideoParts {
-  audio: string // data:audio/wav;base64,…
+  audio: string | null // data:audio/wav;base64,…, or null when the video has no sound
   frames: string[] // data:image/jpeg;base64,…
   seconds: number
 }
@@ -36,38 +37,50 @@ async function openVideo(file: File): Promise<HTMLVideoElement> {
   video.playsInline = true
   video.preload = "auto"
   video.src = URL.createObjectURL(file)
-  await once(video, "loadeddata")
+  await once(video, "loadedmetadata")
+  // iOS Safari ignores preload and loads no picture until the video plays; a muted inline
+  // video may play without a tap, so start and stop it to have frames to draw.
+  const started = video.play().then(() => video.pause(), () => {})
+  await Promise.race([started, new Promise((resolve) => setTimeout(resolve, 3_000))])
   return video
 }
 
-/** Frames at 15/40/65/90% of the video, longest side 960 px. */
+/** Frames at 15/40/65/90% of the video, longest side 960 px. Frames help but are optional:
+ * a seek that never finishes (or a video of unknown length) ends with what was drawn so far. */
 async function grabFrames(video: HTMLVideoElement): Promise<string[]> {
+  if (!Number.isFinite(video.duration) || !video.videoWidth) return []
   const scale = Math.min(1, FRAME_MAX / Math.max(video.videoWidth, video.videoHeight, 1))
   const canvas = document.createElement("canvas")
   canvas.width = Math.max(1, Math.round(video.videoWidth * scale))
   canvas.height = Math.max(1, Math.round(video.videoHeight * scale))
   const ctx = canvas.getContext("2d")!
   const frames: string[] = []
-  for (const at of FRAME_AT) {
-    video.currentTime = Math.min(video.duration * at, Math.max(0, video.duration - 0.05))
-    await once(video, "seeked")
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-    frames.push(canvas.toDataURL("image/jpeg", 0.8))
+  try {
+    for (const at of FRAME_AT) {
+      video.currentTime = Math.min(video.duration * at, Math.max(0, video.duration - 0.05))
+      await once(video, "seeked", 5_000)
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+      frames.push(canvas.toDataURL("image/jpeg", 0.8))
+    }
+  } catch {
+    // keep the frames drawn so far
   }
   return frames
 }
 
-async function decode(data: ArrayBuffer): Promise<AudioBuffer> {
-  // Decoding into a 16 kHz context resamples in the browser; some browsers only decode at
-  // their usual rates, so fall back to 44.1 kHz and resample below.
-  for (const rate of [RATE, 44_100]) {
+/** The decoded sound, or null when the video has none this browser can read. Decoding into a
+ * 16 kHz context resamples in the browser; some browsers only decode at their usual rates, so
+ * the second try is 44.1 kHz (resampled below). decodeAudioData takes over the buffer it is
+ * given, so only the first try gets a copy. */
+async function decode(data: ArrayBuffer): Promise<AudioBuffer | null> {
+  for (const [rate, buffer] of [[RATE, data.slice(0)], [44_100, data]] as const) {
     try {
-      return await new OfflineAudioContext(1, 1, rate).decodeAudioData(data.slice(0))
+      return await new OfflineAudioContext(1, 1, rate).decodeAudioData(buffer)
     } catch {
       // try the next rate
     }
   }
-  throw new Error("Pantrio couldn't read the sound in that video. Try another file.")
+  return null
 }
 
 /** Mono 16 kHz samples: channels averaged, resampled by linear interpolation. */
@@ -119,19 +132,25 @@ export async function readVideo(file: File): Promise<VideoParts> {
     throw new Error("That isn't a video. Pick the video you saved or screen-recorded.")
   }
   if (file.size > MAX_VIDEO_BYTES) throw new Error("That video is too large. Trim it to the recipe first.")
-  const video = await openVideo(file)
+  // A video this browser can't show (or one that never loads) can still have readable sound.
+  const video = await openVideo(file).catch(() => null)
   try {
-    const seconds = video.duration
-    if (!Number.isFinite(seconds)) throw new Error("Pantrio couldn't tell how long that video is. Try an MP4.")
-    if (seconds > MAX_VIDEO_SECONDS + 1) {
-      throw new Error("Use a video under 3 minutes. Trim it to the recipe in your Photos app.")
+    if (video && Number.isFinite(video.duration) && video.duration > MAX_VIDEO_SECONDS + 1) {
+      throw new Error(TOO_LONG)
     }
-    const frames = await grabFrames(video)
-    const audio = wavDataUrl(monoAt16k(await decode(await file.arrayBuffer())))
-    return { audio, frames, seconds }
+    const frames = video ? await grabFrames(video) : []
+    const sound = await decode(await file.arrayBuffer())
+    if (sound && sound.duration > MAX_VIDEO_SECONDS + 1) throw new Error(TOO_LONG)
+    if (!sound && !frames.length) {
+      throw new Error("Pantrio couldn't read that video's sound or pictures. Try an MP4, or add screenshots.")
+    }
+    return { audio: sound ? wavDataUrl(monoAt16k(sound)) : null, frames,
+             seconds: sound?.duration ?? video?.duration ?? 0 }
   } finally {
-    URL.revokeObjectURL(video.src)
-    video.removeAttribute("src")
-    video.load()
+    if (video) {
+      URL.revokeObjectURL(video.src)
+      video.removeAttribute("src")
+      video.load()
+    }
   }
 }

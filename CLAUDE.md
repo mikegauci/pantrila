@@ -46,13 +46,14 @@ no-recipe captions refused; the lines cost +7%, $0.0054 -> $0.0058). Platform ch
 import from the link (Open Graph captions); TikTok oEmbed sends only the player and its page
 has no preview tags, so TikTok links open the caption box straight away. Short links in
 captions (bzfd.it) are followed.
-PR 2 (uploaded video, branch `claude/wizardly-gauss-eaua3w`): the browser reads a saved or
+PR 2 (uploaded video, PR #37): the browser reads a saved or
 screen-recorded video (`web/src/lib/video.ts`: 16 kHz mono WAV via `decodeAudioData`, 4 JPEG
 frames at 15/40/65/90%, up to 3 min); `POST /me/recipes/import/video` checks the WAV in code,
 transcribes it (`PANTRIO_TRANSCRIBE_MODEL`, default `gpt-4o-mini-transcribe`, priced per minute
 with `PANTRIO_PRICE_TRANSCRIBE_PER_MIN`; the cost is in the import's usage event and shown
 apart as `transcription_cost_usd`), then one extraction call with transcript + frames +
-caption. Video-only prompt lines (`VIDEO_INSTRUCTIONS`, `VideoRecipe.vague_amount`); page,
+caption. A video with no sound sends frames only (audio null, no transcription); a link that
+is not a post is kept as `source_url`. Video-only prompt lines (`VIDEO_INSTRUCTIONS`, `VideoRecipe.vague_amount`); page,
 photo, text and caption imports keep the old prompt. Source `"video"` without a post link.
 Eval: 6 spoken cases (`evals/video_cases.py`), audio from `evals.video_audio` (`gpt-4o-mini-tts`,
 committed in `evals/data/video_audio/`), `evals.run_video` (`--plain` is the before). Reports
@@ -398,7 +399,7 @@ uv run python -m evals.import_cases      # regenerate the recipe-import eval pag
 uv run python -m evals.run_import [--only ids] [--instructions-from <git ref>]  # recipe-import eval (paid; ~$0.006/import)
 uv run python -m evals.video_cases       # regenerate the video-import eval cases
 uv run python -m evals.video_audio [--only ids] [--force]   # their audio, once (paid TTS)
-uv run python -m evals.run_video [--plain] [--transcribe-model m] [--only ids]  # video-import eval (paid)
+uv run python -m evals.run_video [--plain] [--transcribe-model m --transcribe-price usd] [--only ids]  # video eval (paid)
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 uv run pantrio photos generate [--only ids] [--limit n] [--force] [--dry-run]  # corpus photos (paid; ~$0.014 each)
 uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # LangSmith dashboard

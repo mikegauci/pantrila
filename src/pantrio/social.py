@@ -70,11 +70,15 @@ _BARE_OK = re.compile(
     + r"))$",
     re.S,
 )
-
 CAPTION_BLOCKED = "{platform} didn't let Pantrio read this post. Paste the caption below."
 NO_RECIPE = (
     "The caption doesn't include the recipe. It may be in the video: upload the video, or paste "
     "the recipe text or add screenshots."
+)
+# The same, from "From a link", which has no video upload.
+NO_RECIPE_LINK = (
+    "The caption doesn't include the recipe. It may be in the video: upload it in \"From a "
+    'post", or add screenshots.'
 )
 
 

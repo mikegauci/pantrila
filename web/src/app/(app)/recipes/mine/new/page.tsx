@@ -149,7 +149,9 @@ function videoHelp(link: string): string {
   return "Save the video (TikTok: Share, then Save video) or screen-record it (Instagram, Facebook), then pick it here."
 }
 
-function VideoUpload({ link, caption, onDone }: { link: string; caption: string; onDone: (v: ImportView) => void }) {
+function VideoUpload({ link, caption, disabled, onBusy, onDone }: {
+  link: string; caption: string; disabled: boolean; onBusy: (busy: boolean) => void; onDone: (v: ImportView) => void
+}) {
   const [file, setFile] = useState<File | null>(null)
   const [step, setStep] = useState<"idle" | "reading" | "sending">("idle")
   const [error, setError] = useState<string | null>(null)
@@ -157,6 +159,7 @@ function VideoUpload({ link, caption, onDone }: { link: string; caption: string;
   async function read() {
     if (!file) return
     setError(null)
+    onBusy(true)
     try {
       setStep("reading")
       const { audio, frames } = await readVideo(file)
@@ -168,6 +171,7 @@ function VideoUpload({ link, caption, onDone }: { link: string; caption: string;
       setError(err instanceof Error ? err.message : "Could not read that video.")
     } finally {
       setStep("idle")
+      onBusy(false)
     }
   }
 
@@ -182,7 +186,7 @@ function VideoUpload({ link, caption, onDone }: { link: string; caption: string;
         <input type="file" accept="video/*" aria-label="Video file" className="sr-only"
                onChange={(e) => { setFile(e.target.files?.[0] ?? null); setError(null); e.target.value = "" }} />
       </label>
-      <Button type="button" size="lg" className="h-12 w-full sm:w-fit" disabled={!file || step !== "idle"} onClick={read}>
+      <Button type="button" size="lg" className="h-12 w-full sm:w-fit" disabled={!file || step !== "idle" || disabled} onClick={read}>
         <Sparkles /> {step === "reading" ? "Getting the sound…" : step === "sending" ? "Listening to the recipe…" : "Read the video"}
       </Button>
       <p className="text-[12px] text-muted-foreground">
@@ -198,6 +202,7 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
   const [caption, setCaption] = useState("")
   const [showCaption, setShowCaption] = useState(false)
   const [showVideo, setShowVideo] = useState(false)
+  const [videoBusy, setVideoBusy] = useState(false)
   const videoRef = useRef<HTMLDivElement>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -234,7 +239,7 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
   }
 
   return (
-    <form className="grid gap-3" onSubmit={(e) => { e.preventDefault(); read() }}>
+    <form className="grid gap-3" onSubmit={(e) => { e.preventDefault(); if (!busy && !videoBusy) read() }}>
       <div className="grid gap-1.5">
         <Label htmlFor="post-link">Post link</Label>
         <Input id="post-link" type="text" inputMode="url" autoCapitalize="none" spellCheck={false} placeholder="https://www.tiktok.com/@…" value={url}
@@ -264,7 +269,7 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
           <ClipboardPaste /> Paste the caption
         </Button>
       )}
-      <Button type="submit" size="lg" className="h-12 w-full sm:w-fit" disabled={busy || (!link && !text)}>
+      <Button type="submit" size="lg" className="h-12 w-full sm:w-fit" disabled={busy || videoBusy || (!link && !text)}>
         <Sparkles /> {busy ? "Reading the post…" : "Read recipe"}
       </Button>
       <p className="text-[12px] text-muted-foreground">
@@ -288,7 +293,7 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
       )}
       {showVideo ? (
         <div ref={videoRef} className="scroll-mt-24">
-          <VideoUpload link={link} caption={text} onDone={onDone} />
+          <VideoUpload link={link} caption={text} disabled={busy} onBusy={setVideoBusy} onDone={onDone} />
         </div>
       ) : !error && (
         <Button type="button" variant="ghost" size="sm" className="w-fit" onClick={openVideo}>

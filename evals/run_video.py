@@ -11,13 +11,14 @@ should be 0. Writes a report under evals/reports/.
     uv run python -m evals.video_audio                    # once: make missing audio (paid)
     uv run python -m evals.run_video                      # needs OPENAI_API_KEY
     uv run python -m evals.run_video --plain              # the "before": plain import prompt
-    uv run python -m evals.run_video --transcribe-model gpt-4o-transcribe
+    uv run python -m evals.run_video --transcribe-model gpt-4o-transcribe --transcribe-price 0.006
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import statistics
 from concurrent.futures import ThreadPoolExecutor
@@ -171,8 +172,8 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"# Video-import eval {meta['finished_at']}",
         "",
         f"{meta['cases']} labelled cooking videos (16 kHz WAV + {meta['frames']} frames), "
-        f"transcription `{meta['transcribe_model']}`, model `{meta['model']}` (reasoning "
-        f"medium), prompt {meta['prompt']}.",
+        f"transcription `{meta['transcribe_model']}` (${meta['transcribe_usd_per_min']}/min), "
+        f"model `{meta['model']}` (reasoning medium), prompt {meta['prompt']}.",
         "",
         "| Metric | Value |",
         "|---|---|",
@@ -221,9 +222,15 @@ def main() -> None:
     parser.add_argument("--only", help="comma-separated case ids")
     parser.add_argument("--plain", action="store_true", help="the plain import prompt (before)")
     parser.add_argument("--transcribe-model", default=None)
+    parser.add_argument("--transcribe-price", type=float, metavar="USD_PER_MIN",
+                        help="its price (else PANTRIO_PRICE_TRANSCRIBE_PER_MIN)")  # fmt: skip
     parser.add_argument("--no-frames", action="store_true", help="send the audio only")
     parser.add_argument("--concurrency", type=int, default=6)
     args = parser.parse_args()
+    if args.transcribe_model and args.transcribe_price is None:
+        parser.error("--transcribe-model needs --transcribe-price, so its cost is not mispriced")
+    if args.transcribe_price is not None:
+        os.environ["PANTRIO_PRICE_TRANSCRIBE_PER_MIN"] = str(args.transcribe_price)
 
     cases = load_cases()
     if args.only:
@@ -240,6 +247,7 @@ def main() -> None:
         "cases": len(rows),
         "model": model,
         "transcribe_model": transcribe,
+        "transcribe_usd_per_min": config.prices().transcribe_per_min,
         "frames": 0 if args.no_frames else 4,
         "prompt": "plain import (before)" if args.plain else "video (HEAD)",
     }

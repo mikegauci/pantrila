@@ -355,8 +355,10 @@ class PhotoImport(BaseModel):
 
 
 class VideoImport(BaseModel):
-    audio: str = Field(
-        max_length=17_000_000, description="Data URL: the video's sound as WAV, up to 3 minutes."
+    audio: str | None = Field(
+        default=None,
+        max_length=17_000_000,
+        description="Data URL: the video's sound as WAV, up to 3 minutes; null when it has none.",
     )
     frames: list[str] = Field(
         default_factory=list, max_length=MAX_FRAMES, description="Data URLs of video frames."

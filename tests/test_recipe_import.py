@@ -395,11 +395,22 @@ def test_video_import_plain_prompt_and_failures():
     assert client.calls[-1]["text_format"] is ImportedRecipe
     assert "cooking video" not in client.calls[-1]["instructions"]
 
-    silent = FakeClient(imported(), transcript="  ")
-    with pytest.raises(ImportFailed, match="couldn't hear anyone"):
-        Importer(client=silent, model="m").from_video(wav(5), [])
-    assert len(silent.calls) == 1  # transcribed, never read
+    nothing = FakeClient(imported())
+    with pytest.raises(ImportFailed, match="couldn't read any sound or pictures"):
+        Importer(client=nothing, model="m").from_video(None, [])
+    assert nothing.calls == []  # refused before any paid call
 
     vlog = FakeClient(imported(is_recipe=False), transcript="Welcome to my kitchen tour")
     with pytest.raises(ImportFailed, match="couldn't find a recipe in this video"):
         Importer(client=vlog, model="m").from_video(wav(5), [])
+
+
+def test_video_without_sound_reads_the_frames_and_keeps_other_links():
+    png = "data:image/png;base64," + base64.b64encode(b"\x89PNG fake").decode()
+    client = FakeClient(imported())
+    result = Importer(client=client, model="m").from_video(None, [png], "youtube.com/shorts/abc")
+    (read,) = client.calls  # no transcription
+    assert "(no speech)" in read["input"][0]["content"][0]["text"]
+    assert result.usage.audio_seconds == 0 and result.usage.llm_calls == 1
+    assert result.draft.source == "video"
+    assert result.draft.source_url == "https://youtube.com/shorts/abc"

@@ -75,3 +75,35 @@ test("a post whose recipe is only in the video imports from the uploaded video",
   expect(Math.abs(wavBytes.length - 44 - 128_000)).toBeLessThan(3_200)
   await page.screenshot({ path: "test-results/video-import-draft.png", fullPage: true })
 })
+
+test("a video with no sound still sends its frames", async ({ page }) => {
+  let videoBody: { audio: string | null; frames: string[] } | null = null
+  await page.addInitScript((user) => localStorage.setItem(`pantrio-tour-done:${user}`, "1"), id)
+  await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
+  await page.route("http://127.0.0.1:8000/**", async (route) => {
+    const p = new URL(route.request().url()).pathname
+    if (p === "/me/recipes/import/video") {
+      videoBody = route.request().postDataJSON()
+      return route.fulfill({ status: 422, json: { detail: "Pantrio couldn't find a recipe in this video." } })
+    }
+    const data = p === "/me" ? { id, email: null, avatar_url: null, anonymous: true,
+      limits: { imports_left: 9, imports_per_day: 10, photos_left: 5, photos_per_day: 5 } }
+      : p === "/health" ? { ok: true } : p === "/plans/latest" ? null : []
+    if (data === null) return route.fulfill({ status: 404, json: {} })
+    await route.fulfill({ json: data })
+  })
+
+  await page.goto("/login")
+  await page.getByRole("button", { name: "Try it as a guest" }).click()
+  await expect(page).not.toHaveURL(/login/)
+  await page.goto("/recipes/mine/new")
+  await page.getByRole("button", { name: /From a post/ }).click()
+  await page.getByRole("button", { name: "Upload the video" }).click()
+  await page.getByLabel("Video file").setInputFiles(path.join(__dirname, "fixtures", "silent.webm"))
+  await page.getByRole("button", { name: "Read the video" }).click()
+
+  await expect(page.getByRole("alert").filter({ hasText: "couldn't find a recipe in this video" })).toBeVisible()
+  expect(videoBody).not.toBeNull()
+  expect(videoBody!.audio).toBeNull()
+  expect(videoBody!.frames).toHaveLength(4)
+})
