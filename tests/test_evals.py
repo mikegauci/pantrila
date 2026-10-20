@@ -138,6 +138,67 @@ def test_import_scoring_counts_estimates_and_missed_allergens():
     assert row["servings_ok"] and row["time_ok"]
 
 
+def test_committed_video_cases_match_generator_and_use_real_foods():
+    from evals.video_cases import OUT as VIDEOS
+    from evals.video_cases import generate
+    from evals.video_cases import render as render_videos
+    from pantrio.foods import load_foods
+
+    assert VIDEOS.read_text() == render_videos(generate())
+    foods = load_foods()
+    for case in generate():
+        assert len(case["frames"]) == 4, case["id"]
+        for line in case["expect"]["lines"]:
+            assert set(line["foods"]) <= set(foods), case["id"]
+            assert line["vague"] == (line["amount"] is None), case["id"]
+
+
+def test_video_media_matches_what_the_browser_sends():
+    import base64
+    import io
+    import math
+    import wave
+    from array import array
+
+    from evals.video_audio import RATE, frame_urls, resample, wav_bytes, with_music
+    from evals.video_cases import load_cases
+
+    tone = array("h", (int(8000 * math.sin(2 * math.pi * 440 * j / 24_000))
+                       for j in range(24_000)))  # fmt: skip
+    speech = resample(tone.tobytes())
+    assert len(speech) == RATE and max(speech) <= 8000
+    with wave.open(io.BytesIO(wav_bytes(with_music(speech)))) as w:
+        assert (w.getnchannels(), w.getframerate(), w.getnframes()) == (1, RATE, RATE)
+    case = next(c for c in load_cases() if c["kind"] == "on-screen")
+    frames = frame_urls(case)
+    assert len(frames) == 4 and all(f.startswith("data:image/jpeg;base64,") for f in frames)
+    assert len(base64.b64decode(frames[1].split(",")[1])) < 200_000
+
+
+def test_video_scoring_counts_flags_and_stated_amounts():
+    from evals.run_video import score
+    from evals.video_cases import load_cases
+    from pantrio.cookbook import CookbookRecipeIn
+
+    case = next(c for c in load_cases() if c["kind"] == "vague")
+    lines = [{"name": li["text"], "quantity": (li["amount"] or [1])[0],
+              "unit": (li["amount"] or [0, "tbsp"])[1], "food": li["foods"][0]}
+             for li in case["expect"]["lines"]]  # fmt: skip
+    draft = CookbookRecipeIn(title="T", meal_types=["dinner"], total_minutes=15, servings=2,
+                             ingredients=lines, steps=["Cook."])  # fmt: skip
+    notes = [
+        "Ingredient 2 (olive oil): the video only says \u201ca glug\u201d, so the amount "
+        "is a guess. Set it.",
+        "Ingredient 3 (garlic): the video only says \u201cfour\u201d",
+    ]
+    row = score(case, draft, notes)
+    assert row["lines_matched"] == 5 and row["missed_allergens"] == []
+    assert (row["vague_flagged"], row["vague_expected"]) == (1, 3)
+    assert (row["stated_right"], row["stated_expected"], row["stated_flagged"]) == (2, 2, 1)
+    assert row["sponsor_ignored"] and row["servings_ok"]
+    assert score(case, None, []) == {"found_ok": False}
+
+
 def test_insights_snapshot_matches_the_selected_eval_reports():
     from scripts.update_eval_snapshot import OUT, render_snapshot
 

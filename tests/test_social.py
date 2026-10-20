@@ -354,3 +354,15 @@ def test_tiktok_oembed_with_only_the_player_asks_for_the_caption():
     http = mock_http({oembed(TIKTOK): httpx.Response(200, json=player_only)})
     with pytest.raises(ImportFailed, match="TikTok didn't let Pantrio read this post"):
         fetch_post(TIKTOK, http, resolve)
+
+
+def test_from_a_link_points_to_the_video_upload_in_from_a_post(monkeypatch):
+    from pantrio.social import NO_RECIPE_LINK
+
+    def no_recipe(self, *args):
+        raise ImportFailed(NO_RECIPE)
+
+    monkeypatch.setattr(Importer, "from_post", no_recipe)
+    with pytest.raises(ImportFailed) as exc:
+        Importer(client=FakeClient(recipe()), model="m").from_link(TIKTOK)
+    assert str(exc.value) == NO_RECIPE_LINK and "From a post" in NO_RECIPE_LINK

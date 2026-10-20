@@ -1,6 +1,6 @@
 "use client"
 
-import { Camera, ClipboardPaste, Link2, PenLine, Plus, Share2, Sparkles, Trash2, TriangleAlert, X } from "lucide-react"
+import { Camera, Clapperboard, ClipboardPaste, Link2, PenLine, Plus, Share2, Sparkles, Trash2, TriangleAlert, X } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { toast } from "sonner"
 
@@ -25,6 +25,7 @@ export const RECIPE_SOURCE: Record<RecipeSource, { icon: typeof Camera; text: st
   link: { icon: Link2, text: "From a link" },
   post: { icon: Share2, text: "From a post" },
   text: { icon: ClipboardPaste, text: "Pasted text" },
+  video: { icon: Clapperboard, text: "From a video" },
   manual: { icon: PenLine, text: "Typed in" },
 }
 

@@ -15,6 +15,7 @@ load_dotenv()
 DEFAULT_MODEL = "gpt-5.4-mini"
 DEFAULT_EMBED_MODEL = "text-embedding-3-small"
 DEFAULT_IMAGE_MODEL = "gpt-image-2.5-flare"
+DEFAULT_TRANSCRIBE_MODEL = "gpt-4o-mini-transcribe"
 EMBED_DIM = 1536
 
 
@@ -30,6 +31,7 @@ class Prices:
     input: float | None
     output: float | None
     embed: float | None
+    transcribe_per_min: float | None = None  # USD per minute of audio, not per token
 
     def chat_cost(self, input_tokens: int, output_tokens: int) -> float | None:
         if self.input is None or self.output is None:
@@ -38,6 +40,9 @@ class Prices:
 
     def embed_cost(self, tokens: int) -> float | None:
         return None if self.embed is None else tokens * self.embed / 1e6
+
+    def transcribe_cost(self, seconds: float) -> float | None:
+        return None if self.transcribe_per_min is None else seconds / 60 * self.transcribe_per_min
 
 
 def model() -> str:
@@ -50,6 +55,10 @@ def embed_model() -> str:
 
 def image_model() -> str:
     return os.environ.get("PANTRIO_IMAGE_MODEL") or DEFAULT_IMAGE_MODEL
+
+
+def transcribe_model() -> str:
+    return os.environ.get("PANTRIO_TRANSCRIBE_MODEL") or DEFAULT_TRANSCRIBE_MODEL
 
 
 def image_prices() -> Prices:
@@ -66,6 +75,7 @@ def prices() -> Prices:
         input=_float("PANTRIO_PRICE_INPUT_PER_MTOK"),
         output=_float("PANTRIO_PRICE_OUTPUT_PER_MTOK"),
         embed=_float("PANTRIO_PRICE_EMBED_PER_MTOK"),
+        transcribe_per_min=_float("PANTRIO_PRICE_TRANSCRIBE_PER_MIN"),
     )
 
 

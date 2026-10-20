@@ -31,6 +31,10 @@ services:
         value: "4.50"
       - key: PANTRIO_PRICE_EMBED_PER_MTOK
         value: "0.02"
+      - key: PANTRIO_TRANSCRIBE_MODEL
+        value: gpt-4o-mini-transcribe
+      - key: PANTRIO_PRICE_TRANSCRIBE_PER_MIN
+        value: "0.003"
       - key: PANTRIO_IMAGE_MODEL
         value: gpt-image-2.5-flare
       - key: PANTRIO_PRICE_IMAGE_INPUT_PER_MTOK

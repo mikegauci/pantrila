@@ -146,7 +146,8 @@ with the next message; the browser only says which thread it is in.
   for in-flight work, then reconciles actual cost. Reservation sizes are estimates rather than
   provider billing ceilings. Every paid call is logged with tokens, cost and latency (the Insights page).
 - **Your recipes, checked like ours.** Imports (a photo, a web page's schema.org data or its
-  text, a social post's caption) come back as a draft you review; nothing is saved first. Each ingredient maps to the
+  text, a social post's caption, or a cooking video's sound and frames, read in your browser so
+  the video never leaves your phone) come back as a draft you review; nothing is saved first. Each ingredient maps to the
   food table, so nutrition and allergens are computed in code. A food the table lacks gets a
   model estimate, marked "Estimated" in the UI, with allergens you can correct. Links are
   fetched with SSRF guards (public addresses only, every redirect re-checked). Your recipes
@@ -209,6 +210,8 @@ uv run python -m evals.run_retrieval     # retrieval eval (embeddings only)
 uv run python -m evals.run_planner       # planner eval, about $0.40 for 16 profiles
 uv run python -m evals.run_assistant     # assistant eval, about $0.05 for 24 cases
 uv run python -m evals.run_import        # recipe-import eval, about $0.15 for 12 pages + 10 captions
+uv run python -m evals.video_audio       # once: text-to-speech audio for the video eval (committed)
+uv run python -m evals.run_video [--plain]   # video-import eval, 6 spoken cooking videos
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 ```
 
@@ -227,7 +230,7 @@ The paid evals are a manual GitHub Actions workflow.
 | `src/pantrio/planner.py` | Planner graph |
 | `src/pantrio/assistant.py`, `swaps.py`, `pantry.py`, `grocery.py` | Assistant graph and its tools |
 | `src/pantrio/meal_swap.py`, `web/src/components/swap-meal.tsx` | Swap one meal of a saved plan for another recipe that passes your rules (no model call) |
-| `src/pantrio/cookbook.py`, `recipe_import.py`, `social.py` | Your own recipes: derivation, storage, import from photos, links, post captions and pasted text |
+| `src/pantrio/cookbook.py`, `recipe_import.py`, `social.py` | Your own recipes: derivation, storage, import from photos, links, post captions, video sound and pasted text |
 | `src/pantrio/photos.py` | Recipe photo prompt, generation and Supabase Storage |
 | `src/pantrio/cooking.py`, `web/src/components/cooking-mode.tsx` | Cooking mode: pantry use after "I cooked this", step timers, wake lock |
 | `src/pantrio/api.py`, `api_models.py`, `api_views.py`, `backend.py` | FastAPI routes, HTTP models, response views and pooled persistence |
@@ -254,7 +257,9 @@ The paid evals are a manual GitHub Actions workflow.
 - TikTok doesn't share captions with other apps, so for TikTok you paste the caption (the link
   keeps the credit). Instagram and Facebook links work alone today, and if a platform stops
   sharing, the app asks for the caption instead. A recipe that is only spoken in the video
-  can't be imported from the link.
+  can't be imported from the link: you upload the video you saved or screen-recorded, and the
+  browser sends only its sound and 4 frames (up to 3 minutes). Vague spoken amounts ("a glug
+  of oil") are flagged in the draft for you to set.
 - Estimated foods are a best guess. Check the label of anything you buy.
 - Recipe photos are AI-generated and marked as such. The prompt keeps them to the recipe's
   ingredients, but the plating is the model's guess (a steak kebab can come out as kofta).

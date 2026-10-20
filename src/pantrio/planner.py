@@ -221,6 +221,7 @@ class Usage:
     input_tokens: int = 0
     output_tokens: int = 0
     embed_tokens: int = 0
+    audio_seconds: float = 0.0  # transcribed audio, priced per minute
 
     def add(self, resp) -> None:
         self.llm_calls += 1
@@ -232,7 +233,15 @@ class Usage:
         prices = config.prices()
         chat = prices.chat_cost(self.input_tokens, self.output_tokens)
         embed = prices.embed_cost(self.embed_tokens)
-        return None if chat is None else chat + (embed or 0.0)
+        audio = self.transcription_cost()
+        if chat is None or (self.audio_seconds and audio is None):
+            return None
+        return chat + (embed or 0.0) + (audio or 0.0)
+
+    def transcription_cost(self) -> float | None:
+        if not self.audio_seconds:
+            return 0.0
+        return config.prices().transcribe_cost(self.audio_seconds)
 
 
 @dataclass

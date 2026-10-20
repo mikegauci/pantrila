@@ -199,11 +199,59 @@ Branch `feat/video-recipe-import`. Start after PR 1 merges.
 
 ### Checklist
 
-- [ ] Browser audio + frame extraction
-- [ ] `/me/recipes/import/video` + prompt change + tests
-- [ ] Audio eval cases, before/after reports, transcription model chosen
-- [ ] Web upload step
-- [ ] README, CLAUDE.md Status/Layout; PR merged
+- [x] Browser audio + frame extraction (`web/src/lib/video.ts`; Playwright
+      `video-import.spec.ts` uploads a 4 s WebM and checks the 16 kHz mono WAV and 4 frames)
+- [x] `/me/recipes/import/video` + prompt change + tests
+- [x] Audio eval cases (`evals/video_cases.py`) and runner (`evals/run_video.py`, `--plain` for
+      the before, `--transcribe-model` to compare)
+- [x] Audio made (`uv run python -m evals.video_audio`, ~$0.01) and committed
+- [x] Before/after reports, transcription model chosen (`gpt-4o-mini-transcribe`, below)
+- [x] Web upload step
+- [x] README, CLAUDE.md Status/Layout
+- [x] PR merged (#37)
+
+Results (owner's Mac, 2026-10-20, `gpt-5.4-mini` reasoning medium, 6 cases, ~31 s of audio
+each):
+
+| Report | Prompt | Transcription | Missed allergens | Foods | Vague flagged | Stated amounts | Cost | p50 / p95 |
+|---|---|---|---|---|---|---|---|---|
+| `video-2026-10-20T065810Z` | plain (before) | mini | 0 | 100% | 0/3 | 100% | $0.0121 | 10.1 / 29.4 s |
+| `video-2026-10-20T065841Z` | video (after) | mini | 0 | 100% | **3/3** | 100% | $0.0102 | 9.1 / 17.3 s |
+| `video-2026-10-20T065914Z` | video | `gpt-4o-transcribe` | 0 | 97% | 2/3 | 100% | $0.0131 | 9.1 / 27.5 s |
+
+All three refused the video that is not a recipe, kept the sponsor read out of the draft, got
+servings and time, and read the pancake amounts that were only on screen. The plain prompt
+wrote a number for "a glug of olive oil" with nothing telling the person it was a guess; the
+video lines flag every vague amount and none of the stated ones. `gpt-4o-mini-transcribe` is at
+least as good here at half the price, so it stays the default. Transcription is $0.0016 of the
+$0.0102. With the video lines, two drafts had extra lines beyond the labels (aglio e olio
+7 for 5, peanut noodles 8 for 7); the report does not keep line names, but the scripts mention
+salted water, pasta water and noodle water, which fits. Extra lines are not counted as errors. Six cases from one run each is a small sample: the before/after difference is in
+vague-amount flagging, not the other metrics.
+
+Notes from building PR 2:
+
+- Built in a cloud session with no OpenAI access, so the TTS audio and the eval runs were done on
+  the owner's machine (pushing the 4.5 MB of WAV over HTTPS needed `git config
+  http.postBuffer 157286400`).
+- The video lines live in `VIDEO_INSTRUCTIONS` and the `VideoRecipe` output (lines carry
+  `vague_amount`), used only by `from_video`; other imports keep the current prompt, so the
+  22-case import eval is unaffected. `--plain` reads videos with that unchanged prompt.
+- A vague amount still needs a number for nutrition: the model puts a typical one and the draft
+  notes "the video only says “a glug”, so the amount is a guess. Set it."
+- Prices (checked 2026-10-20): `gpt-4o-mini-transcribe` ~$0.003/min, `gpt-4o-transcribe`
+  ~$0.006/min. One report says OpenAI plans to retire both on 2027-02-26 in favour of
+  `gpt-transcribe` ($0.0045/min); not confirmed with OpenAI, so worth checking before choosing.
+- Code review fixes: iOS Safari loads no picture until a video plays, so the browser starts and
+  stops the muted video before grabbing frames, and frames are optional (a stuck seek keeps
+  what it has); a video with no sound sends frames only (`audio` null, no transcription); a
+  video of unknown length (MediaRecorder WebM) is measured from its decoded sound; only the
+  first decode try copies the file's buffer; a link that is not a post is kept as the source;
+  "From a link" points to "From a post" for the video; the post form can't start a second
+  import while a video is being read; `run_video --transcribe-model` needs
+  `--transcribe-price` and reports the rate. No prompt change, so no eval rerun.
+- WAV, not a compressed format, so the server can check the length in code with the standard
+  library (`wave`): 90 s is 2.9 MB, 3 min 5.8 MB, under the 24 MB request cap.
 
 ## Main risk
 

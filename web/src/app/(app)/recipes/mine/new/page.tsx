@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, Camera, ClipboardPaste, Link2, MessageCircle, PenLine, Share2, Sparkles, X } from "lucide-react"
+import { ArrowLeft, Camera, ClipboardPaste, Clapperboard, Link2, MessageCircle, PenLine, Share2, Sparkles, X } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
@@ -18,6 +18,7 @@ import { seconds, usd } from "@/lib/format"
 import { useMe } from "@/lib/hooks"
 import { toJpegDataUrl } from "@/lib/images"
 import { cn } from "@/lib/utils"
+import { readVideo } from "@/lib/video"
 import type { CookbookRecipeIn, ImportView } from "@/lib/types"
 
 const MAX_PHOTOS = 4
@@ -26,7 +27,7 @@ type Method = "photo" | "link" | "post" | "manual"
 const METHODS: { key: Method; icon: typeof Camera; title: string; text: string }[] = [
   { key: "photo", icon: Camera, title: "From photos", text: "A cookbook page, a card or a screenshot. Up to 4 photos." },
   { key: "link", icon: Link2, title: "From a link", text: "Paste a recipe page from any site." },
-  { key: "post", icon: Share2, title: "From a post", text: "A TikTok, Instagram or Facebook post, or its caption." },
+  { key: "post", icon: Share2, title: "From a post", text: "A TikTok, Instagram or Facebook post: its caption or the video." },
   { key: "manual", icon: PenLine, title: "Type it in", text: "Fill in the form yourself." },
 ]
 
@@ -140,10 +141,69 @@ const POST_LINK = new RegExp(
   "i",
 )
 
+/** Where people get a video file of a post, per platform (Pantrio never downloads it). */
+function videoHelp(link: string): string {
+  if (/tiktok\.com/i.test(link)) return "In TikTok: Share, then Save video."
+  if (/instagram\.com/i.test(link)) return "Instagram has no save button for others' reels: screen-record it (iPhone: Control Centre, then Screen Recording), then pick the recording."
+  if (/(facebook|fb)\.(com|watch)/i.test(link)) return "Facebook: screen-record the video (iPhone: Control Centre, then Screen Recording), then pick the recording."
+  return "Save the video (TikTok: Share, then Save video) or screen-record it (Instagram, Facebook), then pick it here."
+}
+
+function VideoUpload({ link, caption, disabled, onBusy, onDone }: {
+  link: string; caption: string; disabled: boolean; onBusy: (busy: boolean) => void; onDone: (v: ImportView) => void
+}) {
+  const [file, setFile] = useState<File | null>(null)
+  const [step, setStep] = useState<"idle" | "reading" | "sending">("idle")
+  const [error, setError] = useState<string | null>(null)
+
+  async function read() {
+    if (!file) return
+    setError(null)
+    onBusy(true)
+    try {
+      setStep("reading")
+      const { audio, frames } = await readVideo(file)
+      setStep("sending")
+      onDone(await send<ImportView>("/me/recipes/import/video", "POST", {
+        audio, frames, url: link || null, caption: caption || null,
+      }))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not read that video.")
+    } finally {
+      setStep("idle")
+      onBusy(false)
+    }
+  }
+
+  return (
+    <div className="grid gap-3 rounded-2xl border border-dashed p-4">
+      <p className="flex items-center gap-2 text-[14px] font-semibold">
+        <Clapperboard className="size-4 text-primary-text" aria-hidden /> Upload the video
+      </p>
+      <p className="text-[12px] text-muted-foreground">{videoHelp(link)} Up to 3 minutes.</p>
+      <label className="flex min-h-12 cursor-pointer items-center gap-2 rounded-xl border bg-surface px-3 text-[14px]">
+        <span className="truncate">{file ? file.name : "Choose a video…"}</span>
+        <input type="file" accept="video/*" aria-label="Video file" className="sr-only"
+               onChange={(e) => { setFile(e.target.files?.[0] ?? null); setError(null); e.target.value = "" }} />
+      </label>
+      <Button type="button" size="lg" className="h-12 w-full sm:w-fit" disabled={!file || step !== "idle" || disabled} onClick={read}>
+        <Sparkles /> {step === "reading" ? "Getting the sound…" : step === "sending" ? "Listening to the recipe…" : "Read the video"}
+      </Button>
+      <p className="text-[12px] text-muted-foreground">
+        Your phone keeps the video. Only its sound and 4 still frames are sent, read by AI, and not stored.
+      </p>
+      {error && <p role="alert" className="text-[13px] text-danger">{error}</p>}
+    </div>
+  )
+}
+
 function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void; onScreenshots: () => void }) {
   const [url, setUrl] = useState("")
   const [caption, setCaption] = useState("")
   const [showCaption, setShowCaption] = useState(false)
+  const [showVideo, setShowVideo] = useState(false)
+  const [videoBusy, setVideoBusy] = useState(false)
+  const videoRef = useRef<HTMLDivElement>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const captionRef = useRef<HTMLTextAreaElement>(null)
@@ -152,6 +212,11 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
   // TikTok doesn't share captions with apps like Pantrio, so its caption box starts open.
   const tiktok = /^(https?:\/\/)?([a-z]+\.)?tiktok\.com\//i.test(link)
   const captionOpen = showCaption || tiktok
+
+  function openVideo() {
+    setShowVideo(true)
+    requestAnimationFrame(() => videoRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }))
+  }
 
   async function read() {
     setBusy(true)
@@ -174,7 +239,7 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
   }
 
   return (
-    <form className="grid gap-3" onSubmit={(e) => { e.preventDefault(); read() }}>
+    <form className="grid gap-3" onSubmit={(e) => { e.preventDefault(); if (!busy && !videoBusy) read() }}>
       <div className="grid gap-1.5">
         <Label htmlFor="post-link">Post link</Label>
         <Input id="post-link" type="text" inputMode="url" autoCapitalize="none" spellCheck={false} placeholder="https://www.tiktok.com/@…" value={url}
@@ -204,20 +269,36 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
           <ClipboardPaste /> Paste the caption
         </Button>
       )}
-      <Button type="submit" size="lg" className="h-12 w-full sm:w-fit" disabled={busy || (!link && !text)}>
+      <Button type="submit" size="lg" className="h-12 w-full sm:w-fit" disabled={busy || videoBusy || (!link && !text)}>
         <Sparkles /> {busy ? "Reading the post…" : "Read recipe"}
       </Button>
       <p className="text-[12px] text-muted-foreground">
-        Pantrio reads the caption (and a recipe site it links to), never the video. The post link and
-        creator are kept as the credit.
+        Pantrio reads the caption (and a recipe site it links to). If the recipe is only in the video,
+        upload the video. The post link and creator are kept as the credit.
       </p>
       {error && (
         <div role="alert" className="grid gap-2 text-[13px]">
           <p className="text-danger">{error}</p>
-          <Button type="button" variant="outline" size="sm" className="w-fit" onClick={onScreenshots}>
-            <Camera /> Add screenshots instead
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            {!showVideo && (
+              <Button type="button" variant="outline" size="sm" className="w-fit" onClick={openVideo}>
+                <Clapperboard /> Upload the video
+              </Button>
+            )}
+            <Button type="button" variant="outline" size="sm" className="w-fit" onClick={onScreenshots}>
+              <Camera /> Add screenshots instead
+            </Button>
+          </div>
         </div>
+      )}
+      {showVideo ? (
+        <div ref={videoRef} className="scroll-mt-24">
+          <VideoUpload link={link} caption={text} disabled={busy} onBusy={setVideoBusy} onDone={onDone} />
+        </div>
+      ) : !error && (
+        <Button type="button" variant="ghost" size="sm" className="w-fit" onClick={openVideo}>
+          <Clapperboard /> Upload the video
+        </Button>
       )}
     </form>
   )
