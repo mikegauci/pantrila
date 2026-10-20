@@ -38,15 +38,15 @@ back to `/auth/callback`), guest stays second, owner magic link unchanged. Guest
 the account menu ("Keep my data with Google") or Profile ("Keep your data") via `linkIdentity`,
 keeping the same user id and data; a Google account that already has a user shows a message on
 the callback and the guest stays signed in. Helpers in `web/src/lib/supabase.ts`; Home greets by
-Google first name. Needs the owner's one-off setup in Google Cloud and Supabase (Google provider,
-"Allow manual linking"): `docs/google-sign-in.md`. No API, schema, prompt or model change, so no
+Google first name. Setup done in Google Cloud and Supabase (Google provider, "Allow manual linking", Site URL and
+redirects for `pantrila.vercel.app`; steps in `docs/google-sign-in.md`); owner live-checked Google
+sign-in and a guest linking Google on 2026-10-20 (PR #45 merged). No API, schema, prompt or model change, so no
 eval rerun; 2 new Playwright tests (`web/tests/google-sign-in.spec.ts`).
 
 Rename Pantrio -> Pantrila: package `pantrila`, CLI `pantrila`, env vars `PANTRILA_*`, web brand and
 localStorage keys (`pantrila-tour-done`, `pantrila-cook`; saved tour/cooking state resets once). Kept on
-purpose: table `pantrio_migrations`, applied migration files, and the hosted names (Vercel project and URL
-`pantrio-azure.vercel.app`, Render service `pantrio-api`, Supabase project `pantrio`) until renamed in
-their dashboards; Render env vars must be renamed to `PANTRILA_*` before this deploys. No prompt/model
+purpose: table `pantrio_migrations`, applied migration files, and the hosted names (Render service `pantrio-api`, Supabase project `pantrio`) until renamed in
+their dashboards (the web app has since moved to `pantrila.vercel.app`); Render env vars must be renamed to `PANTRILA_*` before this deploys. No prompt/model
 change, so no eval rerun. Historical eval reports keep the old name. 363 Python tests, Ruff, web
 typecheck and lint pass.
 
@@ -232,7 +232,7 @@ Step 4 (PR #7): FastAPI `api.py` (Supabase Auth ES256 tokens verified via JWKS; 
 `user_id`), migration 0004 (`meal_plans`, `usage_events`, RLS; applied on Supabase), plan
 progress as SSE, daily caps per user and a total daily budget; Next.js 16 app in `web/` (10
 screens per `DESIGN_SYSTEM.md`). Local end-to-end run on `gpt-5.4-mini`: plan 17 s / $0.012,
-chat turn 4.5 s / $0.0023. Deployed: web https://pantrio-azure.vercel.app (Vercel project `pantrila`,
+chat turn 4.5 s / $0.0023. Deployed: web https://pantrila.vercel.app (formerly `pantrio-azure.vercel.app`; Vercel project `pantrila`,
 root `web/`, auto-deploys `main`), API https://pantrio-api.onrender.com (Render Blueprint from
 `render.yaml`, free plan, sleeps when idle). Supabase Auth: anonymous sign-ins on, Site URL and
 `/auth/callback` redirects set for the Vercel URL and localhost:3000. Live check: guest sign-in,

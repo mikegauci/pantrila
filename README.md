@@ -8,7 +8,7 @@ or by typing them in, and cook any
 recipe in cooking mode. **The model proposes; deterministic code decides.** Every recipe and plan is
 re-checked against your allergens and diet before you see it.
 
-**Live demo: https://pantrio-azure.vercel.app** ("Continue with Google" keeps your data; "Try it as a guest" needs no account, and a guest
+**Live demo: https://pantrila.vercel.app** ("Continue with Google" keeps your data; "Try it as a guest" needs no account, and a guest
 can add Google later without losing anything. The API
 runs on Render's free plan and sleeps when idle, so the first request can take about 50
 seconds.) Demo video walkthrough: [`docs/demo-script.md`](docs/demo-script.md).
