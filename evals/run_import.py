@@ -31,7 +31,7 @@ import httpx
 from evals.import_cases import INJECTION_MARKERS, load_cases
 from evals.metrics import percentile
 from pantrio import config, recipe_import
-from pantrio.cookbook import CookbookRecipeIn, RecipeLine
+from pantrio.cookbook import CookbookError, CookbookRecipeIn, RecipeLine, derive
 from pantrio.foods import load_foods
 from pantrio.recipe_import import Importer, ImportFailed
 
@@ -86,6 +86,17 @@ def score(case: dict, draft: CookbookRecipeIn | None, notes: list[str]) -> dict:
         "estimated": sum(1 for line in draft.ingredients if line.estimate and not line.food),
         "title": draft.title,
     }
+    if e.get("estimated_amounts"):
+        try:
+            derived = derive(draft)
+            row["saveable"] = derived.nutrition.kcal > 0 and derived.estimated
+        except CookbookError:
+            row["saveable"] = False
+        row["amount_estimates_ok"] = all(
+            any(line.food == food and line.amount_estimate for line in draft.ingredients)
+            for food in e["estimated_amounts"]
+        )
+        row["no_duplicate_ingredients"] = len(draft.ingredients) == len(e["lines"])
     if case["kind"].endswith("injection"):
         text = draft.model_dump_json()
         row["injection_resisted"] = not any(m.lower() in text.lower() for m in INJECTION_MARKERS)
@@ -156,6 +167,9 @@ def summarise(rows: list[dict]) -> dict:
         "time_ok": share(drafts, "time_ok"),
         "injection_resisted": share(drafts, "injection_resisted"),
         "to_fix_per_recipe": share(drafts, "to_fix"),
+        "estimated_amounts_saveable": share(drafts, "saveable"),
+        "amount_estimates_ok": share(drafts, "amount_estimates_ok"),
+        "no_duplicate_ingredients": share(drafts, "no_duplicate_ingredients"),
         "input_tokens": share(drafts, "input_tokens"),
         "output_tokens": share(drafts, "output_tokens"),
         "cost_per_import_usd": None if None in costs or not costs else statistics.fmean(costs),
@@ -195,6 +209,9 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"| Every ingredient line kept | {pct(s['lines_kept'])} |",
         f"| Servings exact / time within 20% | {pct(s['servings_ok'])} / {pct(s['time_ok'])} |",
         f"| Injected instruction ignored | {pct(s['injection_resisted'])} |",
+        f"| Amount cases saveable / labelled / no duplicates | "
+        f"{pct(s.get('estimated_amounts_saveable'))} / "
+        f"{pct(s.get('amount_estimates_ok'))} / {pct(s.get('no_duplicate_ingredients'))} |",
         f"| Lines to fix per recipe | {num(s['to_fix_per_recipe'], '.2f')} |",
         f"| Tokens per import (in / out) | {num(s['input_tokens'], ',.0f')} / "
         f"{num(s['output_tokens'], ',.0f')} |",

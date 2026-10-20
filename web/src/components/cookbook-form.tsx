@@ -157,17 +157,22 @@ function LineRow({
           <Input
             type="number" min={0} step="any" aria-label={`Amount for ingredient ${n}`}
             value={Number.isFinite(line.quantity) ? line.quantity : ""}
-            onChange={(e) => onChange({ ...line, quantity: e.target.valueAsNumber })}
+            onChange={(e) => onChange({ ...line, quantity: e.target.valueAsNumber, amount_estimate: null })}
             className="tabular h-10 bg-surface"
           />
           <NativeSelect aria-label={`Unit for ingredient ${n}`} value={line.unit}
-                        onChange={(e) => onChange({ ...line, unit: e.target.value as Unit })}>
+                        onChange={(e) => onChange({ ...line, unit: e.target.value as Unit, amount_estimate: null })}>
             {UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
           </NativeSelect>
           <FoodField line={line} keys={keys}
                      onChange={(food) => onChange({ ...line, food, estimate: food ? null : line.estimate })} />
         </div>
       </div>
+      {line.amount_estimate && (
+        <p className="text-[12px] text-muted-foreground">
+          <AiBadge>Estimated amount</AiBadge> {line.amount_estimate}
+        </p>
+      )}
       {!line.food && line.estimate && (
         <EstimateNote estimate={line.estimate} n={n}
                       onChange={(estimate) => onChange({ ...line, estimate })} />
@@ -217,6 +222,7 @@ function Preview({ recipe }: { recipe: CookbookRecipeIn }) {
       {preview && (
         <>
           <ProblemAlert title="This recipe does not suit you" items={preview.problems} />
+          {preview.estimated && <AiBadge>Estimated nutrition</AiBadge>}
           <MacroRing nutrition={preview.nutrition} size={140} />
           <div className="flex flex-wrap gap-1.5">{preview.diet_tags.map((d) => <DietBadge key={d} diet={d} />)}</div>
           <div className="flex flex-wrap items-center gap-1.5">
@@ -227,7 +233,7 @@ function Preview({ recipe }: { recipe: CookbookRecipeIn }) {
           </div>
           <p className="text-[12px] text-muted-foreground">
             {preview.estimated
-              ? "Some foods are estimated by AI, so these numbers and allergens are a best guess. Check the label of anything you buy."
+              ? "Some amounts or foods are estimated, so nutrition is approximate. Estimated amounts are noted beside the ingredients. Check product labels for allergens."
               : <NutritionSource />}
           </p>
         </>

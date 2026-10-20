@@ -301,6 +301,7 @@ export interface RecipeLine {
   unit: Unit
   food: string | null
   estimate: FoodEstimate | null
+  amount_estimate?: string | null
 }
 
 export interface CookbookRecipeIn {

@@ -50,7 +50,7 @@ def imported(**overrides) -> ImportedRecipe:
                           "allergens": ["soy"], "kcal": 220, "protein_g": 5, "carbs_g": 45,
                           "fat_g": 2, "fibre_g": 3, "grams_per_ml": 1.2,
                           "grams_per_piece": None}},
-            {"name": "milk", "quantity": 0, "unit": "piece", "food": "milk", "estimate": None},
+            {"name": "milk", "quantity": 250, "unit": "ml", "food": "milk", "estimate": None},
             {"name": "dragon fruit", "quantity": 1, "unit": "piece", "food": None,
              "estimate": None},
         ],
@@ -132,7 +132,10 @@ def test_page_text_keeps_visible_text_only():
 
 
 def test_to_draft_checks_every_line_in_code():
-    draft, notes = to_draft(imported(), "link", "https://a.example/r")
+    raw = imported()
+    raw.ingredients[3].quantity = 0
+    raw.ingredients[3].unit = "piece"
+    draft, notes = to_draft(raw, "link", "https://a.example/r")
     lines = draft.ingredients
     assert [i.food for i in lines] == ["plain_flour", "egg", None, "milk", None]
     assert lines[2].estimate.allergens == ["soy"] and lines[3].quantity == 1.0
@@ -421,3 +424,173 @@ def test_photos_without_a_method_are_still_refused():
     client = FakeClient(imported(steps=[]))
     with pytest.raises(ImportFailed, match="Could not find a recipe"):
         Importer(client=client, model="m").from_photos([png])
+
+
+def amount_client(recipe, repairs):
+    from pantrio.recipe_import import AmountRepairs
+
+    client = FakeClient(recipe)
+    original_parse = client.parse
+
+    def parse(**kwargs):
+        if kwargs["text_format"] is AmountRepairs:
+            client.calls.append(kwargs)
+            return SimpleNamespace(output_parsed=AmountRepairs(ingredients=repairs), usage=USAGE)
+        return original_parse(**kwargs)
+
+    client.parse = parse
+    return client
+
+
+def test_import_repairs_sprigs_and_missing_pasta_without_manual_edits():
+    from pantrio.cookbook import derive
+
+    raw = imported(
+        servings=4,
+        ingredients=[
+            {
+                "name": "1 sprig basil leaves",
+                "quantity": 1,
+                "unit": "piece",
+                "food": "basil",
+                "estimate": None,
+            },
+            {
+                "name": "cooked pasta",
+                "quantity": 1,
+                "unit": "piece",
+                "food": "pasta",
+                "estimate": None,
+            },
+        ],
+    )
+    client = amount_client(
+        raw,
+        [
+            {"index": 0, "grams": 2, "reason": "A typical basil sprig weighs about 2 g."},
+            {"index": 1, "grams": 300, "reason": "Estimated 75 g dry pasta per serving."},
+        ],
+    )
+    result = Importer(client=client).from_text("Basil pasta for four. Toss and serve.")
+    derived = derive(result.draft)
+    assert [i.grams for i in derived.ingredients] == [2, 300]
+    assert [i.name for i in result.draft.ingredients] == ["1 sprig basil leaves", "cooked pasta"]
+    assert derived.estimated and derived.nutrition.kcal > 0
+    assert derived.allergens == ["gluten"]
+    assert all(line.amount_estimate for line in result.draft.ingredients)
+    assert not any("pick a unit" in note for note in result.notes)
+    assert result.usage.llm_calls == 2
+    assert all(call["store"] is False for call in client.calls)
+
+
+def test_cooked_reference_is_counted_once_but_explicit_extra_amount_is_kept():
+    from pantrio.cookbook import derive
+
+    raw = imported(
+        ingredients=[
+            {
+                "name": "400 g pasta",
+                "quantity": 400,
+                "unit": "g",
+                "food": "pasta",
+                "estimate": None,
+            },
+            {
+                "name": "cooked pasta",
+                "quantity": 1,
+                "unit": "piece",
+                "food": "pasta",
+                "estimate": None,
+            },
+            {
+                "name": "100 g pasta for topping",
+                "quantity": 100,
+                "unit": "g",
+                "food": "pasta",
+                "estimate": None,
+            },
+        ]
+    )
+    client = FakeClient(raw)
+    result = Importer(client=client).from_text("Cook 400 g pasta; add cooked pasta to sauce.")
+    assert [i.quantity for i in result.draft.ingredients] == [400, 100]
+    assert sum(i.grams for i in derive(result.draft).ingredients) == 500
+    assert len(client.calls) == 1
+    assert any("counted once" in n for n in result.notes)
+    assert not any("pick a unit" in n for n in result.notes)
+
+
+@pytest.mark.parametrize(
+    "repairs",
+    [
+        [],
+        [{"index": 2, "grams": 2, "reason": "Sprig"}],
+        [{"index": 0, "grams": -1, "reason": "Sprig"}],
+        [{"index": 0, "grams": float("nan"), "reason": "Sprig"}],
+        [{"index": 0, "grams": 100001, "reason": "Sprig"}],
+        [{"index": 0, "grams": 2, "reason": " "}],
+        [{"index": 0, "grams": 2, "reason": "Sprig"}] * 2,
+    ],
+)
+def test_invalid_amount_repairs_cannot_silently_change_a_recipe(repairs):
+    raw = imported(
+        ingredients=[
+            {
+                "name": "1 sprig basil",
+                "quantity": 1,
+                "unit": "piece",
+                "food": "basil",
+                "estimate": None,
+            },
+        ]
+    )
+    with pytest.raises(ImportFailed, match="Could not estimate ingredient amounts"):
+        Importer(client=amount_client(raw, repairs)).from_text("Basil. Add to sauce.")
+
+
+def test_missing_amount_is_estimated_instead_of_silently_becoming_one_gram():
+    raw = imported(
+        ingredients=[
+            {"name": "milk", "quantity": 0, "unit": "g", "food": "milk", "estimate": None},
+        ]
+    )
+    client = amount_client(raw, [{"index": 0, "grams": 250, "reason": "Typical pancake batter."}])
+    result = Importer(client=client).from_text("Add milk and whisk.")
+    assert result.draft.ingredients[0].quantity == 250
+    assert result.draft.ingredients[0].amount_estimate
+    assert not any("check the amount" in n for n in result.notes)
+
+
+def test_vague_video_amount_remains_estimated_after_saving():
+    from pantrio.cookbook import CookbookRecipeIn, derive
+
+    raw = video_recipe(vague_amount="a glug")
+    result = Importer(client=FakeClient(raw)).from_video(wav(2), [])
+    restored = CookbookRecipeIn.model_validate_json(result.draft.model_dump_json())
+    assert "a glug" in restored.ingredients[1].amount_estimate
+    assert derive(restored).estimated
+
+
+def test_estimated_food_unit_repair_keeps_its_allergens_and_facts():
+    from pantrio.cookbook import derive
+
+    raw_line = imported().ingredients[2].model_dump()
+    raw_line["unit"] = "piece"
+    raw_line["estimate"]["grams_per_piece"] = None
+    raw = imported(ingredients=[raw_line])
+    client = amount_client(raw, [{"index": 0, "grams": 30, "reason": "Typical sauce amount."}])
+    result = Importer(client=client).from_text("A little gochujang. Stir in.")
+    assert result.draft.ingredients[0].estimate.allergens == ["soy"]
+    assert result.draft.ingredients[0].estimate.kcal == 220
+    assert derive(result.draft).estimated
+    assert derive(result.draft).nutrition.kcal == pytest.approx(33)
+
+
+def test_video_repair_failure_is_not_reported_as_no_recipe():
+    from pantrio.recipe_import import AmountEstimateFailed
+
+    raw = video_recipe(vague_amount="some eggs")
+    raw.ingredients[0].unit = "piece"
+    client = amount_client(raw, [])
+    with pytest.raises(AmountEstimateFailed, match="Could not estimate ingredient amounts"):
+        Importer(client=client).from_video(wav(2), [])

@@ -1291,5 +1291,104 @@
         "milk"
       ]
     }
+  },
+  {
+    "id": "caption-sprig-missing-pasta",
+    "kind": "caption-amounts",
+    "url": "https://www.tiktok.com/@pantrio.eval/video/7300000000000000023",
+    "caption": "Basil tomato pasta for 4, 25 minutes. Ingredients: pasta, 1 sprig basil leaves, 400 g canned tomatoes, 100 g mozzarella. Cook the pasta. Simmer the tomatoes, stir in the basil, toss with the pasta and top with mozzarella.",
+    "expect": {
+      "is_recipe": true,
+      "title": "Basil Tomato Pasta",
+      "servings": 4,
+      "minutes": 25,
+      "lines": [
+        {
+          "text": "pasta",
+          "foods": [
+            "pasta"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 sprig basil leaves",
+          "foods": [
+            "basil"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "400 g canned tomatoes",
+          "foods": [
+            "canned_tomatoes"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "100 g mozzarella",
+          "foods": [
+            "mozzarella"
+          ],
+          "estimate_allergens": null
+        }
+      ],
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "estimated_amounts": [
+        "pasta",
+        "basil"
+      ]
+    }
+  },
+  {
+    "id": "caption-repeat-cooked-pasta",
+    "kind": "caption-amounts",
+    "url": "https://www.tiktok.com/@pantrio.eval/video/7300000000000000024",
+    "caption": "Basil pasta bake. Serves 4, 40 minutes. 300 g pasta, 1 sprig basil leaves, 400 g canned tomatoes, 100 g mozzarella. Boil the pasta. Simmer the tomatoes with the basil. Layer the sauce, cheese and your cooked pasta in a dish. Bake at 180 C for 20 minutes.",
+    "expect": {
+      "is_recipe": true,
+      "title": "Basil Pasta Bake",
+      "servings": 4,
+      "minutes": 40,
+      "lines": [
+        {
+          "text": "300 g pasta",
+          "foods": [
+            "pasta"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 sprig basil leaves",
+          "foods": [
+            "basil"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "400 g canned tomatoes",
+          "foods": [
+            "canned_tomatoes"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "100 g mozzarella",
+          "foods": [
+            "mozzarella"
+          ],
+          "estimate_allergens": null
+        }
+      ],
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "estimated_amounts": [
+        "basil"
+      ]
+    }
   }
 ]

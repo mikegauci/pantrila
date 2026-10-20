@@ -33,6 +33,23 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Import amount estimates: missing/vague quantities and unsupported measures (sprigs, handfuls)
+are estimated rather than requiring manual unit edits. `RecipeLine.amount_estimate` persists
+assumptions in the existing recipe JSON; `derive.estimated` covers amounts as well as foods.
+The import prompt requests estimates and deduplicates method references; a single bounded
+follow-up call repairs remaining incompatible units without changing food identity/allergens.
+The form and saved recipe show "Estimated nutrition" and per-ingredient assumptions; entering
+a quantity/unit clears that line's estimate. Older saved recipes remain compatible; no migration.
+Before/after import reports: `import-2026-10-20T094538Z` / `import-2026-10-20T094933Z`, 23 cases:
+0 missed allergens, foods 98% -> 99%, manual fixes 0.11 -> 0/recipe, $0.0057 -> $0.0068,
+p50/p95 6.4/12.1 -> 7.0/19.8 s. Video reports `video-2026-10-20T094527Z` /
+`video-2026-10-20T094934Z`, 6 cases: 0 missed allergens, vague flagged 67% -> 100%, foods 97%
+both, stated amounts 100% -> 96% (one food mismatch), $0.0110 -> $0.0135, p50/p95
+11.7/18.0 -> 13.2/31.4 s. New 2-case amount report `import-2026-10-20T095015Z`:
+100% saveable, labelled and no duplicates; 0 missed allergens. These are small single-run
+samples. Regression tests cover repair validation, deduplication, saved provenance and API edits.
+Branch prefixes apply only to branches; commit messages are plain descriptive text.
+
 Next planned work: **European nutrition data + 100 sourced recipes**, four sequential PRs.
 Read [`docs/plans/european-ingredients-and-recipe-expansion.md`](docs/plans/european-ingredients-and-recipe-expansion.md)
 before starting; it contains the full scope, safeguards, sources, checklists and handoff log.
@@ -487,6 +504,8 @@ Update this block when commands change.
   No `Co-Authored-By` or `Claude-Session` trailers.
 - Branches: `feat/<short-feature-name>` in kebab-case, `fix/<name>` for bug fixes. No random
   suffixes.
+- Commit messages use plain descriptive text. `feat/` and `fix/` are branch prefixes only;
+  do not prefix commit messages with them.
 - PR titles say specifically what the PR does (for example "Add hybrid recipe search with
   pgvector and a 60-query retrieval eval"). No "Step N" prefix and no branch names.
 - CI (GitHub Actions) runs ruff, pytest against Postgres 16 + pgvector, and the web

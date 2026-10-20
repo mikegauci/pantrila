@@ -5,8 +5,8 @@ planner never uses them. What is stored is what the person reviewed: ingredient 
 and, for each line, either a food from the ingredient table or a model estimate for a food the
 table lacks (`FoodEstimate`). Grams, nutrition, allergens and diet tags are derived in code on
 every read, the same way as for the corpus, with estimated foods joining the table for that
-recipe only. A recipe with any estimated food is marked `estimated`: its numbers are only as
-good as the estimate, and the app says so.
+recipe only. A recipe with any estimated food or amount is marked `estimated`. Amount
+assumptions are stored on each line and shown beside the ingredients.
 """
 
 from __future__ import annotations
@@ -103,6 +103,7 @@ class RecipeLine(BaseModel):
     name: str = Field(min_length=1, max_length=200)
     quantity: float = Field(gt=0, le=100_000)
     unit: Unit
+    amount_estimate: str | None = Field(default=None, max_length=600)
     food: str | None = Field(default=None, description="Key in the ingredient table.")
     estimate: FoodEstimate | None = None
 
@@ -156,7 +157,7 @@ class Derived(BaseModel):
     nutrition: NutritionFacts = Field(description="Per serving.")
     allergens: list[Allergen]
     diet_tags: list[DietTag]
-    estimated: bool = Field(description="True when any line uses a model estimate.")
+    estimated: bool = Field(description="True when any food or amount is estimated.")
     foods: list[str] = Field(description="Ingredient-table foods it uses.")
 
 
@@ -207,7 +208,9 @@ def derive(recipe: CookbookRecipeIn) -> Derived:
         nutrition=nutrition,
         allergens=sorted(allergens, key=list(Allergen).index),
         diet_tags=sorted(diets, key=list(DietTag).index),
-        estimated=any(k not in known for k in keys),
+        estimated=any(k not in known for k in keys) or any(
+            line.amount_estimate for line in recipe.ingredients
+        ),
         foods=sorted(k for k in keys if k in known),
     )  # fmt: skip
 

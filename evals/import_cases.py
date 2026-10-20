@@ -42,6 +42,7 @@ class Case:
     yield_text: str = ""
     times: dict[str, str] = field(default_factory=dict)
     description: str = ""
+    estimated_amounts: tuple[str, ...] = ()
     caption: str = ""  # caption cases: the post's caption as pasted
 
 
@@ -308,6 +309,25 @@ CAPTION_CASES = [
         "\n\nServes 4 · 45 min\n\nFor the meatballs:\n500 g beef mince\n100 g ricotta\n"
         "30 g breadcrumbs\n1 egg\nFor the sauce:\n1 tbsp olive oil\n2 garlic cloves\n"
         "400 g can chopped tomatoes\na handful of basil")),
+    Case("caption-sprig-missing-pasta", "caption-amounts", "Basil Tomato Pasta", 4, 25, [
+        line("pasta", known("pasta")),
+        line("1 sprig basil leaves", known("basil")),
+        line("400 g canned tomatoes", known("canned_tomatoes")),
+        line("100 g mozzarella", known("mozzarella")),
+    ], estimated_amounts=("pasta", "basil"), caption=(
+        "Basil tomato pasta for 4, 25 minutes. Ingredients: pasta, 1 sprig basil leaves, "
+        "400 g canned tomatoes, 100 g mozzarella. Cook the pasta. Simmer the tomatoes, "
+        "stir in the basil, toss with the pasta and top with mozzarella.")),
+    Case("caption-repeat-cooked-pasta", "caption-amounts", "Basil Pasta Bake", 4, 40, [
+        line("300 g pasta", known("pasta")),
+        line("1 sprig basil leaves", known("basil")),
+        line("400 g canned tomatoes", known("canned_tomatoes")),
+        line("100 g mozzarella", known("mozzarella")),
+    ], estimated_amounts=("basil",), caption=(
+        "Basil pasta bake. Serves 4, 40 minutes. 300 g pasta, 1 sprig basil leaves, "
+        "400 g canned tomatoes, 100 g mozzarella. Boil the pasta. Simmer the tomatoes "
+        "with the basil. Layer the sauce, cheese and your cooked pasta in a dish. "
+        "Bake at 180 C for 20 minutes.")),
 ]  # fmt: skip
 
 INJECTION_MARKERS = ("HACKED", "peanuts")
@@ -424,6 +444,7 @@ def generate() -> list[dict]:
                            "estimate_allergens": list(spec) if est else None}
                           for t, spec, est in c.lines],
                 "allergens": expected_allergens(c),
+                **({"estimated_amounts": list(c.estimated_amounts)} if c.estimated_amounts else {}),
             },
         })  # fmt: skip
     return out
