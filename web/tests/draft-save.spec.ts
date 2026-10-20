@@ -45,7 +45,7 @@ test("draft warnings remain visible and the reviewed recipe can be edited and sa
         messages: [{ role: "assistant", text: reply.text, reply }] }
       : path === "/me/recipes/preview" ? { ingredients: [], nutrition, allergens: ["milk"],
         diet_tags: ["vegetarian"], estimated: false, problems: ["contains milk"] }
-      : path === "/me/recipes/7" || (path === "/me/recipes" && created) ? detail
+      : path === "/me/recipes/7" || path === "/me/recipes/7/photo" || (path === "/me/recipes" && created) ? detail
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })
   })

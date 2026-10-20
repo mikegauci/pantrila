@@ -4,6 +4,7 @@ import { NutritionSource } from "@/components/nutrition-source"
 import { Camera, Clapperboard, ClipboardPaste, Link2, PenLine, Plus, Share2, Sparkles, Trash2, TriangleAlert, X } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { toast } from "sonner"
+import { useSWRConfig } from "swr"
 
 import { AiBadge, AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert } from "@/components/bits"
 import { MacroRing } from "@/components/macro-ring"
@@ -289,11 +290,12 @@ export function CookbookForm({
   onSaved: (saved: CookbookDetail) => void
   onCancel?: () => void
 }) {
+  const { mutate } = useSWRConfig()
   const { data: foods } = useFoods()
   const keys = useMemo(() => new Set(foods?.map((f) => f.key) ?? []), [foods])
   const [r, setR] = useState<CookbookRecipeIn>(initial)
   const [stepsText, setStepsText] = useState(initial.steps.join("\n\n"))
-  const [busy, setBusy] = useState<"save" | "estimate" | null>(null)
+  const [busy, setBusy] = useState<"save" | "photo" | "estimate" | null>(null)
 
   const recipe: CookbookRecipeIn = { ...r, steps: stepsText.split("\n").map((s) => s.trim()).filter(Boolean) }
   const unmatched = r.ingredients.filter((l) => !l.food && !l.estimate && l.name.trim())
@@ -323,9 +325,22 @@ export function CookbookForm({
   async function save() {
     setBusy("save")
     try {
-      const saved = recipeId
+      let saved = recipeId
         ? await send<CookbookDetail>(`/me/recipes/${recipeId}`, "PUT", recipe)
         : await send<CookbookDetail>("/me/recipes", "POST", recipe)
+      if (!recipeId) {
+        setBusy("photo")
+        try {
+          saved = await send<CookbookDetail>(`/me/recipes/${saved.id}/photo`, "POST")
+        } catch (e) {
+          toast.warning("Recipe saved. Its photo could not be generated.", {
+            description: e instanceof Error ? e.message : "You can try again from the recipe.",
+          })
+        } finally {
+          mutate("/me")
+          mutate("/me/usage")
+        }
+      }
       toast.success(`Saved ${saved.title}`)
       onSaved(saved)
     } catch (e) {
@@ -337,7 +352,7 @@ export function CookbookForm({
   }
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
+    <fieldset disabled={busy !== null} className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
       <datalist id="pantrio-foods">
         {foods?.map((f) => <option key={f.key} value={f.name} />)}
       </datalist>
@@ -429,13 +444,20 @@ export function CookbookForm({
 
       <div className="grid gap-3 lg:sticky lg:top-[96px]">
         <Preview recipe={recipe} />
+        {!recipeId && (
+          <p role={busy === "photo" ? "status" : undefined} className="text-[12px] text-muted-foreground">
+            {busy === "photo"
+              ? "Your recipe is saved. Making its photo, usually about 15 seconds…"
+              : "Saving also generates a photo of your recipe."}
+          </p>
+        )}
         <div className="flex gap-2">
           <Button size="lg" className="flex-1" onClick={save} disabled={busy !== null || !recipe.title.trim()}>
-            {busy === "save" ? "Saving…" : recipeId ? "Save changes" : "Save to my recipes"}
+            {busy === "photo" ? "Making the photo…" : busy === "save" ? "Saving…" : recipeId ? "Save changes" : "Save to my recipes"}
           </Button>
-          {onCancel && <Button size="lg" variant="outline" onClick={onCancel}>Cancel</Button>}
+          {onCancel && <Button size="lg" variant="outline" onClick={onCancel} disabled={busy !== null}>Cancel</Button>}
         </div>
       </div>
-    </div>
+    </fieldset>
   )
 }

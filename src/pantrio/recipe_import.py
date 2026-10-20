@@ -18,12 +18,9 @@ Posts (TikTok, Instagram, Facebook; see `social.py`): the caption is read first;
 no recipe but links a recipe website, that page is imported like a link (a second paid call,
 on the same import). The draft keeps the post link and the creator's handle as its credit.
 
-Videos: the person uploads a cooking video they saved or screen-recorded; the browser sends
-only its audio (16 kHz mono WAV, up to 3 minutes) and 4 frames, never the video. The audio is
-transcribed (`PANTRIO_TRANSCRIBE_MODEL`), then one extraction call reads the transcript, the
-frames (for amounts shown only on screen) and the caption. Audio and frames are not stored.
-Spoken amounts are often vague ("a glug of oil"): those lines carry the words used and a note
-explains the estimate, which the person can edit later.
+Videos are read automatically from a social post's link. Its audio is transcribed, then an
+extraction call reads the transcript, frames and caption. Media is discarded after reading.
+Vague spoken amounts carry assumptions that remain visible in the saved recipe.
 """
 
 from __future__ import annotations
@@ -77,7 +74,7 @@ BLOCKED = (
 NO_METHOD_STEP = "Add the method here."
 NO_METHOD = (
     "The source lists the ingredients but not the method: add the steps before saving. For a "
-    "post, uploading the video can read them."
+    "post, try its link in From a post or add screenshots of the method."
 )
 HEARD = "Pantrio listened to the post's video for this recipe. Check the amounts and steps."
 NO_SPEECH = (
@@ -738,7 +735,7 @@ class Importer:
                    caption: str | None, post=None, guided: bool = True
                    ) -> ImportResult:  # fmt: skip
         """One extraction from checked WAV audio (bytes, seconds), image data URLs and the
-        caption: the browser's upload and a post's video heard from its link both end here."""
+        caption: a post's video heard from its link ends here."""
         from pantrio import social
 
         start = time.perf_counter()
@@ -784,12 +781,7 @@ class Importer:
         from pantrio import social
 
         if social.detect(url) is not None:  # a post: read its caption, not the app's page
-            try:
-                return self.from_post(url, None, http, resolve)
-            except ImportFailed as exc:  # this screen has no video upload: say where it is
-                if str(exc) == social.NO_RECIPE:
-                    raise ImportFailed(social.NO_RECIPE_LINK) from exc
-                raise
+            return self.from_post(url, None, http, resolve)
         if social.platform_page(url):  # its page is the app's login wall: no paid call
             raise ImportFailed(social.NOT_A_POST)
         start = time.perf_counter()

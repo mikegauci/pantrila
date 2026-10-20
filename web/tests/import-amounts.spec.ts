@@ -19,16 +19,25 @@ const initial: CookbookRecipeIn = {
   ],
 }
 
-test("estimated import saves without manual fixes and retains its nutrition notes", async ({ page }) => {
+for (const photoFails of [false, true]) {
+test(`estimated import saves and retains its nutrition notes when photo ${photoFails ? "fails" : "succeeds"}`, async ({ page }) => {
   let saved = structuredClone(initial)
   let writes = 0
+  let photos = 0
+  let finishPhoto: () => void = () => {}
+  const photoReady = new Promise<void>((resolve) => { finishPhoto = resolve })
   await page.setViewportSize({ width: 390, height: 844 })
   await page.addInitScript((id) => localStorage.setItem(`pantrio-tour-done:${id}`, "1"), user)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(user) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname
+    if (path === "/me/recipes/9/photo") {
+      photos += 1
+      await photoReady
+      if (photoFails) return route.fulfill({ status: 429, json: { detail: "Daily photo allowance used." } })
+    }
     const body = route.request().method() === "POST" || route.request().method() === "PUT"
-      ? route.request().postDataJSON() : null
+      ? route.request().postData() ? route.request().postDataJSON() : null : null
     if ((path === "/me/recipes" && body) || (path === "/me/recipes/9" && body)) {
       saved = body
       writes += 1
@@ -48,7 +57,7 @@ test("estimated import saves without manual fixes and retains its nutrition note
       : path === "/me/recipes/import/post" ? { draft: initial, notes: [], cost_usd: 0.005, latency_ms: 1000 }
       : path === "/me/recipes/preview" ? { ingredients: [], nutrition, allergens: ["gluten"],
         diet_tags: ["vegetarian"], estimated: body.ingredients.some((line: { amount_estimate?: string }) => line.amount_estimate), problems: [] }
-      : path === "/me/recipes/9" || (path === "/me/recipes" && body) ? detail
+      : path === "/me/recipes/9" || path === "/me/recipes/9/photo" || (path === "/me/recipes" && body) ? detail
       : path === "/me/recipes" ? writes ? [detail] : []
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })
@@ -64,15 +73,26 @@ test("estimated import saves without manual fixes and retains its nutrition note
   await expect(page.getByText("Estimated nutrition", { exact: true }).filter({ visible: true })).toBeVisible()
   await expect(page.getByText("To fix before saving")).toHaveCount(0)
   await page.getByRole("button", { name: "Save to my recipes", exact: true }).click()
+  await expect(page.getByRole("button", { name: "Making the photo…" })).toBeDisabled()
+  await expect(page.getByText(/Your recipe is saved. Making its photo/)).toBeVisible()
+  expect(writes).toBe(1)
+  expect(photos).toBe(1)
+  finishPhoto()
   await expect(page).toHaveURL(/\/recipes\/mine\/9$/)
   expect(writes).toBe(1)
+  if (photoFails) await expect(page.getByText("Recipe saved. Its photo could not be generated.")).toBeVisible()
   expect(saved.ingredients[0].amount_estimate).toBe(initial.ingredients[0].amount_estimate)
   await expect(page.getByText("Estimated nutrition", { exact: true }).filter({ visible: true })).toBeVisible()
   await expect(page.getByText("Estimated amount: A typical basil sprig weighs about 2 g.")).toBeVisible()
-  await page.screenshot({ path: "test-results/estimated-recipe-mobile.png", fullPage: true })
+  await page.screenshot({ path: `test-results/estimated-recipe-photo-${photoFails ? "failure" : "success"}.png`, fullPage: true })
 
   await page.getByRole("button", { name: "Edit", exact: true }).click()
   await page.getByRole("spinbutton", { name: "Amount for ingredient 1", exact: true }).fill("3")
   await expect(page.getByText("A typical basil sprig weighs about 2 g.").filter({ visible: true })).toHaveCount(0)
   await expect(page.getByText("Estimated 75 g dry pasta per serving.").filter({ visible: true })).toBeVisible()
+  await page.getByRole("button", { name: "Save changes", exact: true }).click()
+  await expect(page.getByRole("button", { name: "Edit", exact: true })).toBeVisible()
+  expect(writes).toBe(2)
+  expect(photos).toBe(1) // Edits do not generate a second photo.
 })
+}

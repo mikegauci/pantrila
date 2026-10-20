@@ -165,6 +165,11 @@ Notes from building PR 1:
 
 ## PR 2: Import cookbook recipes from an uploaded cooking video
 
+Historical: retired on 2026-10-20 at the owner's request. The upload UI, browser extraction
+and public upload endpoint were removed. Posts are read directly from their links, with
+pasted captions/text and screenshots as fallbacks. Audio/frame extraction on the server
+and the video evals remain in use for automatic social imports.
+
 Branch `feat/video-recipe-import`. Start after PR 1 merges.
 
 ### 1. Browser (no video reaches the server)

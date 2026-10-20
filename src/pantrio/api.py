@@ -12,8 +12,7 @@ Chat threads (/me/chats) are saved per user; each POST /chat continues one threa
 one) and the server, not the client, supplies that thread's history to the assistant.
 
 The cookbook (/me/recipes) holds recipes people add from a photo, a link, a TikTok, Instagram or
-Facebook post (its caption, or a recipe site the caption links), a cooking video's sound and
-frames (extracted in the browser; the video never reaches the server), pasted text or by hand.
+Facebook post (caption, linked recipe site or the post's video), pasted text or by hand.
 Imports return a draft for the person to review; nothing is saved until they post it back. Grams,
 nutrition, allergens and diets are derived in code on every read, like the corpus. A cookbook
 recipe can get a generated photo (POST /me/recipes/{id}/photo), capped per user per day.
@@ -62,6 +61,7 @@ from pantrio.api_models import (
     EstimateRequest,
     EstimateView,
     FoodView,
+    ImportTiming,
     ImportView,
     LimitsView,
     LinkImport,
@@ -82,7 +82,6 @@ from pantrio.api_models import (
     ToolCallView,
     UsageEventView,
     UsageView,
-    VideoImport,
 )
 from pantrio.api_views import (
     cookbook_card,
@@ -115,7 +114,13 @@ from pantrio.cooking import grams_used, use_from_pantry
 from pantrio.foods import UnitError, load_foods
 from pantrio.grocery import grocery_list
 from pantrio.meal_swap import SwapError, meal_options, replace_meal, swapped_report
-from pantrio.operations import EmbeddingUsage, PaidOperation, ReelMeter, daily_cap
+from pantrio.operations import (
+    EmbeddingUsage,
+    PaidOperation,
+    ReelMeter,
+    daily_cap,
+    reel_import_timing,
+)
 from pantrio.pantry import UnknownFood, make_item, resolve_food
 from pantrio.photos import (
     Dish,
@@ -492,10 +497,10 @@ def create_app(
     def import_text(body: TextImport, request: Request, s: SessionDep) -> ImportView:
         return import_view(s, request, lambda i: i.from_text(body.text))
 
-    @app.post("/me/recipes/import/video")
-    def import_video(body: VideoImport, request: Request, s: SessionDep) -> ImportView:
-        return import_view(s, request, lambda i: i.from_video(body.audio, body.frames, body.url,
-                                                              body.caption))  # fmt: skip
+    @app.get("/me/recipes/import/timing")
+    def import_timing(s: SessionDep) -> ImportTiming:
+        seconds, count = reel_import_timing(s.records.events(100))
+        return ImportTiming(estimated_seconds=seconds, sample_count=count)
 
     @app.post("/me/recipes/import/photos")
     def import_photos(body: PhotoImport, request: Request, s: SessionDep) -> ImportView:

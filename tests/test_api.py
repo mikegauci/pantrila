@@ -564,56 +564,8 @@ def test_post_imports_share_the_daily_import_cap(api, backend, monkeypatch):
     assert api.post("/me/recipes/import/text", json={"text": "Toast: 2 slices"}).status_code == 429
 
 
-def wav_url(seconds: float, rate: int = 16_000) -> str:
-    import base64
-    import io
-    import wave
-
-    out = io.BytesIO()
-    with wave.open(out, "wb") as w:
-        w.setnchannels(1)
-        w.setsampwidth(2)
-        w.setframerate(rate)
-        w.writeframes(b"\0\0" * int(seconds * rate))
-    return "data:audio/wav;base64," + base64.b64encode(out.getvalue()).decode()
-
-
-def test_video_import_transcribes_then_reads_and_keeps_the_credit(api, backend, monkeypatch):
-    monkeypatch.setenv("PANTRIO_PRICE_TRANSCRIBE_PER_MIN", "0.003")
-    backend.client.transcripts = ["Toast two slices of bread."]
-    backend.client.replies = [imported_reply()]
-    post = "https://www.tiktok.com/@toastqueen/video/7300000000000000001"
-    frame = "data:image/jpeg;base64," + png_b64((64, 48))
-    r = api.post(
-        "/me/recipes/import/video",
-        json={"audio": wav_url(60), "frames": [frame, frame], "url": post, "caption": "Toast"},
-    )
-    assert r.status_code == 200, r.text
-    body = r.json()
-    d = body["draft"]
-    assert (d["source"], d["source_url"], d["source_author"]) == ("post", post, "toastqueen")
-    assert body["transcription_cost_usd"] == pytest.approx(0.003)
-    assert body["cost_usd"] == pytest.approx(0.002 + 0.003)
-    transcribe, read = backend.client.calls
-    assert transcribe["file"][2] == "audio/wav"
-    parts = read["input"][0]["content"]
-    assert "Toast two slices of bread." in parts[0]["text"] and "Toast" in parts[0]["text"]
-    assert [p["type"] for p in parts].count("input_image") == 2
-    (event,) = api.get("/me/usage").json()["events"]
-    assert event["kind"] == "import" and event["cost_usd"] == pytest.approx(0.005)
-
-
-def test_video_import_without_a_link_and_bad_audio(api, backend):
-    backend.client.transcripts = ["Toast."]
-    backend.client.replies = [imported_reply()]
-    r = api.post("/me/recipes/import/video", json={"audio": wav_url(5)})
-    assert r.json()["draft"]["source"] == "video" and r.json()["draft"]["source_url"] is None
-    long = api.post("/me/recipes/import/video", json={"audio": wav_url(200, rate=8000)})
-    assert long.status_code == 422 and "under 3 minutes" in long.json()["detail"]
-    mp3 = api.post("/me/recipes/import/video", json={"audio": "data:audio/mpeg;base64,AAAA"})
-    assert mp3.status_code == 422 and "WAV" in mp3.json()["detail"]
-    assert api.post("/me/recipes/import/video", json={}).status_code == 422
-    assert len(api.get("/me/usage").json()["events"]) == 1  # refusals cost nothing
+def test_video_upload_endpoint_is_removed(api):
+    assert api.post("/me/recipes/import/video", json={}).status_code == 404
 
 
 def test_imports_are_capped_per_day(api, backend, monkeypatch):
@@ -971,3 +923,29 @@ def test_import_repairs_amounts_under_one_quota_and_accounts_for_both_calls(api,
     assert api.post("/me/recipes", json=result["draft"]).status_code == 201
     events = api.get("/me/usage").json()["events"]
     assert len(events) == 1 and events[0]["kind"] == "import"
+
+
+def test_import_timing_is_scoped_to_the_user_and_costs_no_allowance(api, backend):
+    from datetime import UTC, datetime, timedelta
+
+    from pantrio.records import UsageEvent
+
+    now = datetime.now(UTC)
+    with backend.session("alice") as session:
+        session.records.log(
+            UsageEvent(kind="import", model="test", latency_ms=60000, created_at=now)
+        )
+        session.records.log(
+            UsageEvent(
+                kind="reel", model="test", latency_ms=5000, created_at=now - timedelta(seconds=30)
+            )
+        )
+    assert api.get("/me/recipes/import/timing").json() == {
+        "estimated_seconds": 70,
+        "sample_count": 1,
+    }
+    assert api.get("/me/recipes/import/timing", headers={"Authorization": "Bearer bob"}).json() == {
+        "estimated_seconds": 105,
+        "sample_count": 0,
+    }
+    assert len(api.get("/me/usage").json()["events"]) == 2

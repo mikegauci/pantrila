@@ -230,7 +230,7 @@ def test_unreadable_links_are_skipped_and_no_recipe_anywhere_says_what_to_do_nex
     assert str(exc.value) == NO_RECIPE and len(client.calls) == 2
 
     client = FakeClient(recipe(is_recipe=False))
-    with pytest.raises(ImportFailed, match="paste the recipe text or add screenshots"):
+    with pytest.raises(ImportFailed, match="Paste the recipe text or add screenshots"):
         Importer(client=client, model="m").from_post(TIKTOK, "Comment RECIPE 👇", http, resolve)
     assert len(client.calls) == 1  # no link, no second call
 
@@ -356,7 +356,7 @@ def test_tiktok_oembed_with_only_the_player_asks_for_the_caption():
         fetch_post(TIKTOK, http, resolve)
 
 
-def test_from_a_link_points_to_the_video_upload_in_from_a_post(monkeypatch):
+def test_from_a_link_offers_text_and_screenshots_without_video_upload(monkeypatch):
     from pantrio.social import NO_RECIPE_LINK
 
     def no_recipe(self, *args):
@@ -365,7 +365,7 @@ def test_from_a_link_points_to_the_video_upload_in_from_a_post(monkeypatch):
     monkeypatch.setattr(Importer, "from_post", no_recipe)
     with pytest.raises(ImportFailed) as exc:
         Importer(client=FakeClient(recipe()), model="m").from_link(TIKTOK)
-    assert str(exc.value) == NO_RECIPE_LINK and "From a post" in NO_RECIPE_LINK
+    assert str(exc.value) == NO_RECIPE_LINK and "screenshots" in NO_RECIPE_LINK
 
 
 def ingredients_only(*names: str) -> ImportedRecipe:
