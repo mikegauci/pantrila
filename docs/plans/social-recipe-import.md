@@ -208,7 +208,7 @@ Branch `feat/video-recipe-import`. Start after PR 1 merges.
 - [x] Before/after reports, transcription model chosen (`gpt-4o-mini-transcribe`, below)
 - [x] Web upload step
 - [x] README, CLAUDE.md Status/Layout
-- [ ] PR merged
+- [x] PR merged (#37)
 
 Results (owner's Mac, 2026-10-20, `gpt-5.4-mini` reasoning medium, 6 cases, ~31 s of audio
 each):

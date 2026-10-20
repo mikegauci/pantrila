@@ -46,7 +46,7 @@ no-recipe captions refused; the lines cost +7%, $0.0054 -> $0.0058). Platform ch
 import from the link (Open Graph captions); TikTok oEmbed sends only the player and its page
 has no preview tags, so TikTok links open the caption box straight away. Short links in
 captions (bzfd.it) are followed.
-PR 2 (uploaded video, PR #37): the browser reads a saved or
+PR 2 (uploaded video, PR #37, merged): the browser reads a saved or
 screen-recorded video (`web/src/lib/video.ts`: 16 kHz mono WAV via `decodeAudioData`, 4 JPEG
 frames at 15/40/65/90%, up to 3 min); `POST /me/recipes/import/video` checks the WAV in code,
 transcribes it (`PANTRIO_TRANSCRIBE_MODEL`, default `gpt-4o-mini-transcribe`, priced per minute
