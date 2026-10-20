@@ -266,6 +266,11 @@ Header avatar (PR #13): food emoji on a soft tint, picked from a hash of the Sup
 Server wake-up notice (PR #14): any API request pending over 3 s shows one shared Sonner toast
 ("Waking up the Pantrila server…") until every slow request answers (`request()` in
 `web/src/lib/api.ts`); `AppShell` pings `/health` on mount to start the Render wake-up early.
+The toast now appears only when no reply has come back in the last 10 minutes, so slow imports
+and chat replies on an awake server no longer say the server is waking up. `/health` accepts
+HEAD as well as GET for UptimeRobot's default check (free plan, no method setting); the
+UptimeRobot monitor pings `https://pantrio-api.onrender.com/health` every 5 minutes to keep the
+free instance awake. Web only.
 Recipe photos (this PR): migration 0007 (`recipe_photos`, `user_recipes.photo_path`, usage kind
 `photo`; applied on Supabase), public Storage bucket `recipe-photos` (created by `pantrila photos
 generate`; needs `SUPABASE_SERVICE_ROLE_KEY`, also set on Render). All 300 corpus recipes
