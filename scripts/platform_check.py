@@ -16,7 +16,7 @@ from urllib.parse import quote
 import httpx
 
 from pantrio.recipe_import import USER_AGENT, ImportFailed
-from pantrio.social import clean_url, detect, fetch_post
+from pantrio.social import clean_url, detect, fetch_post, meta_tags
 
 DEFAULT_POSTS = [
     "https://www.tiktok.com/@jose.elcook/video/7448169436764212510",
@@ -44,6 +44,16 @@ def raw_oembed(url: str) -> None:
         print(f"   html (start): {' '.join(str(data['html']).split())[:400]}")
 
 
+def raw_page(url: str) -> None:
+    """What the TikTok post page answers Pantrio's user agent, and its preview tags."""
+    r = httpx.get(clean_url(url, "tiktok"), headers={"User-Agent": USER_AGENT}, timeout=10,
+                  follow_redirects=True)  # fmt: skip
+    print(f"   page: {r.status_code} {r.headers.get('content-type', '-')} -> {r.url}")
+    for key, value in meta_tags(r.text).items():
+        if key.startswith("og:") or key == "description":
+            print(f"   {key}: {' '.join(value.split())[:200]!r}")
+
+
 def check(url: str) -> None:
     print(f"== {detect(url) or 'not a post link'}: {url}")
     try:
@@ -56,6 +66,7 @@ def check(url: str) -> None:
             cause = cause.__cause__
         if detect(url) == "tiktok":
             raw_oembed(url)
+            raw_page(url)
         return
     caption = " ".join(post.caption.split())
     print(f"   OK: @{post.handle or '?'} | saved as {post.url}")
