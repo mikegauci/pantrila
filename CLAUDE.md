@@ -34,7 +34,7 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 ## Status (update as work lands)
 
 Social recipe import, two PRs; plan and checklists in `docs/plans/social-recipe-import.md`
-(read it before either PR). PR 1 (this PR, not merged yet): `social.py` (post detection, TikTok
+(read it before either PR). PR 1 (PR #36, merged): `social.py` (post detection, TikTok
 oEmbed / Open Graph captions, caption links), `Importer.from_post` (caption, then the linked
 recipe site) and `from_text`, `/me/recipes/import/post|text`, cookbook credit fields
 (`source_platform`, `source_author`, `recipe_url`; no migration), web "From a post" and

@@ -142,7 +142,7 @@ oEmbed call stays: it is fast and would pick captions up again if TikTok restore
       injection ignored. Caption lines: $0.0054 -> $0.0058 per import, p50 5.6 -> 6.1 s, no
       quality gain, so they were dropped and the prompt matches `main`.
 - [x] README, CLAUDE.md Status/Layout
-- [ ] PR merged
+- [x] PR merged (#36)
 
 Notes from building PR 1:
 
