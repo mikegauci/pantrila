@@ -1,14 +1,46 @@
 """One lifecycle for paid work: atomic allowance, partial usage, and exactly-once settlement."""
 
+import math
 import os
+import statistics
 import time
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 from fastapi import HTTPException
 
 from pantrio import config
 from pantrio.planner import Usage
 from pantrio.records import Kind, QuotaExceeded, Records, UsageEvent
+
+# Seeded from production reel imports on 2026-10-20: 75.1 s and 103.1 s.
+DEFAULT_REEL_IMPORT_SECONDS = 105
+
+
+def reel_import_timing(events: list[UsageEvent]) -> tuple[int, int]:
+    """Estimate the whole request from this user's recent successful reel imports.
+
+    Reel-service events finish inside their parent import's time interval. Caption-only
+    imports, failures, implausible timings and older samples do not set the video estimate.
+    The median of the latest five samples plus 15% gives a rough countdown, not a deadline.
+    """
+    recent = datetime.now(UTC) - timedelta(days=30)
+    reels = [e for e in events if e.kind == "reel" and e.ok and e.created_at >= recent]
+    samples = [
+        e.latency_ms
+        for e in sorted(events, key=lambda e: e.created_at, reverse=True)
+        if e.kind == "import"
+        and e.ok
+        and e.created_at >= recent
+        and 5_000 <= e.latency_ms <= 600_000
+        and any(
+            e.created_at - timedelta(milliseconds=e.latency_ms) <= r.created_at <= e.created_at
+            for r in reels
+        )
+    ][:5]
+    if not samples:
+        return DEFAULT_REEL_IMPORT_SECONDS, 0
+    seconds = math.ceil(statistics.median(samples) / 1000 * 1.15 / 5) * 5
+    return min(300, max(30, seconds)), len(samples)
 
 
 def daily_cap(kind: Kind) -> int:

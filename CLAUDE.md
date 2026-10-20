@@ -33,6 +33,22 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Recipe save/import UX: saving a new recipe automatically calls its existing photo endpoint
+with a visible "Making the photo…" step; photo failures/allowance limits keep the saved recipe
+and offer a retry on its page. Edits do not regenerate photos. Social imports show an estimated
+countdown and an overrun message. `GET /me/recipes/import/timing` uses this user's last five
+successful imports containing a reel event (last 30 days, latest 100 events), median + 15%,
+rounded to 5 seconds and bounded 30–300 seconds. Fallback 105 seconds comes from production
+logs on 2026-10-20: successful requests 75.140 / 103.070 s; photo generation 15.111 s. Timing
+is a rough request estimate, not server stage telemetry; concurrent request intervals can
+occasionally overlap. Upload-video UI, browser extraction, fixtures and the `/import/video`
+endpoint are removed. Automatic video/audio reading from social links and its evals remain;
+fallbacks are pasted text/captions and screenshots. No prompt/model or database schema change.
+Local checks: 360 Python tests passed (26 skipped, 8 live deselected); production browser
+checks passed for photo success/failure, edit behavior, fallback and countdown overrun. Web
+typecheck/lint/build and Ruff passed. No paid eval rerun: prompts/models are unchanged.
+The historical uploaded-video entries below describe the retired feature.
+
 Import amount estimates: missing/vague quantities and unsupported measures (sprigs, handfuls)
 are estimated rather than requiring manual unit edits. `RecipeLine.amount_estimate` persists
 assumptions in the existing recipe JSON; `derive.estimated` covers amounts as well as foods.
@@ -425,7 +441,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `src/lib/api.ts`, types in `src/lib/types.ts` mirror `api_models.py`); Supabase is used only for
   sign-in (magic link or anonymous guest). The cookbook lives under `recipes/mine` (list,
   `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`; "From a post" can
-  upload the video (`src/lib/video.ts` extracts sound and frames in the browser). The first-run tour
+  import the post directly, with an estimated countdown. The first-run tour
   is `src/components/tour.tsx` (`TourProvider` in `AppShell`, `useTour().start`). Cooking mode is
   `src/components/cooking-mode.tsx` with helpers in `src/lib/cooking.ts`. The assistant's
   thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrio.tsx`. `RecipeArt` (`src/components/bits.tsx`)

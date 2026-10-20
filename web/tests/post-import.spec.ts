@@ -44,7 +44,7 @@ test("a post that can't be read asks for its caption and keeps the credit", asyn
       : path === "/foods" ? [{ key: "gnocchi", name: "gnocchi", aisle: "pasta" }]
       : path === "/me/recipes/preview" ? { ingredients: [], nutrition, allergens: ["gluten"],
         diet_tags: ["vegetarian"], estimated: false, problems: [] }
-      : path === "/me/recipes/9" || path === "/me/recipes" && route.request().method() === "POST" ? detail
+      : path === "/me/recipes/9" || path === "/me/recipes/9/photo" || path === "/me/recipes" && route.request().method() === "POST" ? detail
       : path === "/plans/latest" ? null
       : path === "/health" ? { ok: true } : []
     if (data === null) return route.fulfill({ status: 404, json: {} })
@@ -61,6 +61,8 @@ test("a post that can't be read asks for its caption and keeps the credit", asyn
 
   await expect(page.getByRole("alert").filter({ hasText: "Instagram didn't let Pantrio read this post" })).toBeVisible()
   await expect(page.getByRole("button", { name: "Add screenshots instead" })).toBeVisible()
+  await expect(page.getByRole("button", { name: "Upload the video" })).toHaveCount(0)
+  await expect(page.locator('input[accept="video/*"]')).toHaveCount(0)
   const caption = page.getByLabel("Caption", { exact: true })
   await expect(caption).toBeFocused()
   await page.screenshot({ path: "test-results/post-import-caption.png", fullPage: true })
@@ -98,6 +100,7 @@ test("where the service covers the platform, Pantrio says it is listening to the
     }
     const data = path === "/me" ? { id, email: null, avatar_url: null, anonymous: true,
       limits: { imports_left: 9, imports_per_day: 10, photos_left: 5, photos_per_day: 5 } }
+      : path === "/me/recipes/import/timing" ? { estimated_seconds: 90, sample_count: 2 }
       : path === "/meta" ? { allergens: [], diets: [], meal_types: ["dinner"], units: ["g"], cuisines: [],
         reel_platforms: ["instagram"] }
       : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [],
@@ -115,13 +118,22 @@ test("where the service covers the platform, Pantrio says it is listening to the
   await page.getByRole("button", { name: "Try it as a guest" }).click()
   await expect(page).not.toHaveURL(/login/)
   await page.goto("/recipes/mine/new")
+  const timingLoaded = page.waitForResponse("**/me/recipes/import/timing")
   await page.getByRole("button", { name: /From a post/ }).click()
+  await timingLoaded
   await page.getByLabel("Post link").fill(post)
   await expect(page.getByText(/it listens to the video too/)).toBeVisible()
+  await page.clock.pauseAt(new Date(Date.now() + 5000))
   await page.getByRole("button", { name: "Read recipe" }).click()
-  await expect(page.getByRole("button", { name: "Reading the caption…" })).toBeVisible()
+  await expect(page.getByRole("button", { name: "Reading the post…" })).toBeVisible()
+  await expect(page.getByRole("timer")).toHaveText("Estimated time remaining: 1:30")
   await page.clock.fastForward(9000)
-  await expect(page.getByRole("button", { name: "Listening to the video…" })).toBeVisible()
+  await expect(page.getByText("Reading the post and its video…", { exact: true })).toBeVisible()
+  await expect(page.getByRole("timer")).toHaveText("Estimated time remaining: 1:21")
+  await page.clock.fastForward(100000)
+  await expect(page.getByText("Taking longer than usual. Still working…")).toBeVisible()
+  await expect(page.getByRole("timer")).toHaveCount(0)
+  await expect(page.getByRole("button", { name: "Upload the video" })).toHaveCount(0)
   answer()
   await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Crispy gnocchi")
   await expect(page.getByText(heard)).toBeVisible()

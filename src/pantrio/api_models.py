@@ -14,7 +14,6 @@ from pantrio.cookbook import (
     Source,
 )
 from pantrio.recipe_import import (
-    MAX_FRAMES,
     MAX_IMAGES,
     MAX_PAGE_CHARS,
     NamedEstimate,
@@ -358,17 +357,9 @@ class PhotoImport(BaseModel):
     )
 
 
-class VideoImport(BaseModel):
-    audio: str | None = Field(
-        default=None,
-        max_length=17_000_000,
-        description="Data URL: the video's sound as WAV, up to 3 minutes; null when it has none.",
-    )
-    frames: list[str] = Field(
-        default_factory=list, max_length=MAX_FRAMES, description="Data URLs of video frames."
-    )
-    url: str | None = Field(default=None, max_length=2000, description="The post's link.")
-    caption: str | None = Field(default=None, max_length=MAX_CAPTION_CHARS)
+class ImportTiming(BaseModel):
+    estimated_seconds: int
+    sample_count: int
 
 
 class AvatarIn(BaseModel):

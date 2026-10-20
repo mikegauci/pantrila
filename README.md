@@ -146,18 +146,19 @@ with the next message; the browser only says which thread it is in.
   for in-flight work, then reconciles actual cost. Reservation sizes are estimates rather than
   provider billing ceilings. Every paid call is logged with tokens, cost and latency (the Insights page).
 - **Your recipes, checked like ours.** Imports (a photo, a web page's schema.org data or its
-  text, a social post's caption, or a cooking video's sound and frames, read in your browser so
-  the video never leaves your phone) come back as a draft you review; nothing is saved first. Each ingredient maps to the
+  text, or a social post's caption and video read from its link) come back as a draft you
+  review; nothing is saved first. Each ingredient maps to the
   food table, so nutrition and allergens are computed in code. A food the table lacks gets a
   model estimate, marked "Estimated" in the UI, with allergens you can correct. Links are
   fetched with SSRF guards (public addresses only, every redirect re-checked). Your recipes
   stay in your cookbook and never go into meal plans.
-- **Recipes from posts, credited, without the video.** For a TikTok, Instagram or Facebook
-  post Pantrio reads only the caption (TikTok's public oEmbed, else the page's Open Graph tags,
-  with Pantrio's own user agent), then a recipe site the caption links to if the caption has
-  no recipe. When a platform won't share the caption, you paste it. The video is never
-  downloaded, stored or embedded. The recipe keeps the post link and the creator's @handle.
-- **Photos that show the recipe, not a stock dish.** Every recipe has a 4:3 photo from
+- **Recipes from posts, credited.** For a TikTok, Instagram or Facebook post, Pantrio reads
+  its caption, a recipe site it links to, or the post's video when the method is only there.
+  Media is discarded after reading. If a post cannot be read, paste its caption/text or add
+  screenshots. The recipe keeps the post link and the creator's @handle.
+- **Photos that show the recipe, not a stock dish.** Saving a new cookbook recipe automatically
+  generates its photo; a photo failure or exhausted allowance still keeps the saved recipe.
+  Photos are made at 4:3 from
   `gpt-image-2.5-flare`, prompted with the recipe's own ingredients and final step: garnish
   and background props may only come from that list (no parsley on a recipe without parsley,
   no bread beside a gluten-free dish), in one fixed scene so the grid looks consistent. All
@@ -265,9 +266,10 @@ The paid evals are a manual GitHub Actions workflow.
   Pantrio reads its sound and 4 frames in memory and drops it. This goes further against the
   platforms' terms than reading the caption, works only for public posts, can stop working
   whenever a platform changes, costs $0.003-0.006 per post, and is off unless configured
-  (capped per person per day). Otherwise you upload the
-  video you saved or screen-recorded, and the browser sends only its sound and 4 frames (up to
-  3 minutes). Vague spoken amounts ("a glug of oil") are flagged in the draft for you to set.
+  (capped per person per day). If it cannot read the recipe, paste its text or add screenshots.
+  Video uploading is no longer offered. Social imports show an estimated countdown, seeded
+  at 105 seconds from recorded 75/103-second imports and adjusted from recent successful
+  imports. Vague spoken amounts ("a glug of oil") are estimated and labelled in the draft.
 - Estimated foods are a best guess. Check the label of anything you buy.
 - Recipe photos are AI-generated and marked as such. The prompt keeps them to the recipe's
   ingredients, but the plating is the model's guess (a steak kebab can come out as kofta).
