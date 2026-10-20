@@ -199,11 +199,33 @@ Branch `feat/video-recipe-import`. Start after PR 1 merges.
 
 ### Checklist
 
-- [ ] Browser audio + frame extraction
-- [ ] `/me/recipes/import/video` + prompt change + tests
-- [ ] Audio eval cases, before/after reports, transcription model chosen
-- [ ] Web upload step
-- [ ] README, CLAUDE.md Status/Layout; PR merged
+- [x] Browser audio + frame extraction (`web/src/lib/video.ts`; Playwright
+      `video-import.spec.ts` uploads a 4 s WebM and checks the 16 kHz mono WAV and 4 frames)
+- [x] `/me/recipes/import/video` + prompt change + tests
+- [x] Audio eval cases (`evals/video_cases.py`) and runner (`evals/run_video.py`, `--plain` for
+      the before, `--transcribe-model` to compare)
+- [ ] Audio made (`uv run python -m evals.video_audio`, ~$0.01) and committed
+- [ ] Before/after reports, transcription model chosen
+- [x] Web upload step
+- [x] README, CLAUDE.md Status/Layout
+- [ ] PR merged
+
+Notes from building PR 2:
+
+- Built in a cloud session with no OpenAI access, so the TTS audio and both eval runs are left
+  for the owner's machine. Run, in order: `evals.video_audio`, `evals.run_video --plain`,
+  `evals.run_video`, `evals.run_video --transcribe-model gpt-4o-transcribe`; commit the WAV
+  files and reports and put the numbers here and in the PR.
+- The video lines live in `VIDEO_INSTRUCTIONS` and the `VideoRecipe` output (lines carry
+  `vague_amount`), used only by `from_video`; other imports keep the current prompt, so the
+  22-case import eval is unaffected. `--plain` reads videos with that unchanged prompt.
+- A vague amount still needs a number for nutrition: the model puts a typical one and the draft
+  notes "the video only says “a glug”, so the amount is a guess. Set it."
+- Prices (checked 2026-10-20): `gpt-4o-mini-transcribe` ~$0.003/min, `gpt-4o-transcribe`
+  ~$0.006/min. One report says OpenAI plans to retire both on 2027-02-26 in favour of
+  `gpt-transcribe` ($0.0045/min); not confirmed with OpenAI, so worth checking before choosing.
+- WAV, not a compressed format, so the server can check the length in code with the standard
+  library (`wave`): 90 s is 2.9 MB, 3 min 5.8 MB, under the 24 MB request cap.
 
 ## Main risk
 

@@ -46,7 +46,17 @@ no-recipe captions refused; the lines cost +7%, $0.0054 -> $0.0058). Platform ch
 import from the link (Open Graph captions); TikTok oEmbed sends only the player and its page
 has no preview tags, so TikTok links open the caption box straight away. Short links in
 captions (bzfd.it) are followed.
-PR 2 (uploaded video audio) starts after PR 1 merges.
+PR 2 (uploaded video, branch `claude/wizardly-gauss-eaua3w`): the browser reads a saved or
+screen-recorded video (`web/src/lib/video.ts`: 16 kHz mono WAV via `decodeAudioData`, 4 JPEG
+frames at 15/40/65/90%, up to 3 min); `POST /me/recipes/import/video` checks the WAV in code,
+transcribes it (`PANTRIO_TRANSCRIBE_MODEL`, default `gpt-4o-mini-transcribe`, priced per minute
+with `PANTRIO_PRICE_TRANSCRIBE_PER_MIN`; the cost is in the import's usage event and shown
+apart as `transcription_cost_usd`), then one extraction call with transcript + frames +
+caption. Video-only prompt lines (`VIDEO_INSTRUCTIONS`, `VideoRecipe.vague_amount`); page,
+photo, text and caption imports keep the old prompt. Source `"video"` without a post link.
+Eval: 6 spoken cases (`evals/video_cases.py`), audio from `evals.video_audio` (paid TTS, not
+yet made: no OpenAI key in the cloud session), `evals.run_video` (`--plain` is the before).
+Before/after reports and the transcription model choice are still to do before merging.
 
 Review maintenance: API models/views/backend construction now live in `api_models.py`,
 `api_views.py`, and `backend.py`; `api.py` owns routes and app lifecycle. Insights is generated
@@ -291,6 +301,9 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   all through `fetch_page`, Pantrio's own user agent; refusal or empty caption -> "Paste the
   caption"), `pasted_post` (no fetch), `caption_links` (skips platforms, link-in-bio pages,
   and shops; short links are kept and followed), `platform_page` (profiles refused before a paid call). Never downloads or stores videos.
+- Video import (`recipe_import.py`): `check_audio` (WAV only, 1 s to 3 min, 12 MB),
+  `Importer.transcribe` and `from_video(audio, frames, url, caption, guided)`; vague spoken
+  amounts become notes ("the video only says ..."). Audio and frames are never stored.
 - `src/pantrio/photos.py`: recipe photos. `photo_prompt` (the dish as the recipe makes it:
   ingredient names and final step, garnish and background props only from those ingredients,
   bread only if used or suggested and never for gluten-free; fixed stoneware/stone/linen
@@ -310,7 +323,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   GET, PUT to swap), `POST /chat` (continues `thread_id` or starts a
   thread; the server supplies the thread's history), `/me/chats` (list, get, delete),
   `/me/cooked` (GET log, POST "I cooked this"; `/preview`), `/me/recipes` (cookbook CRUD,
-  `/preview`, `/import/link`, `/import/photos`, `/import/post`, `/import/text`, `/estimate`, `/{id}/photo` POST/DELETE). Every
+  `/preview`, `/import/link`, `/import/photos`, `/import/post`, `/import/text`, `/import/video`, `/estimate`, `/{id}/photo` POST/DELETE). Every
   recipe returned carries the hard rules it breaks for the person's current profile and its
   `photo_url` (or null). Paid calls are capped per user per day (`PANTRIO_DAILY_PLANS`,
   `PANTRIO_DAILY_CHATS`, `PANTRIO_DAILY_IMPORTS`, `PANTRIO_DAILY_PHOTOS`) and in total
@@ -327,8 +340,10 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - `evals/`: `retrieval_queries.py` (deterministic query generator) -> `data/retrieval_queries.json`,
   `plan_profiles.py` (16 eval profiles) -> `data/plan_profiles.json`, `chat_cases.py` (24
   assistant cases) -> `data/chat_cases.json`, `import_cases.py` (12 synthetic recipe pages,
-  10 post captions) -> `data/import_cases.json`, `metrics.py`, `run_retrieval.py`, `run_planner.py`,
-  `run_assistant.py`, `run_import.py`, `reports/`.
+  10 post captions) -> `data/import_cases.json`, `video_cases.py` (6 spoken cooking videos) ->
+  `data/video_cases.json`, `video_audio.py` (TTS audio -> `data/video_audio/*.wav`, committed;
+  frames drawn at run time), `metrics.py`, `run_retrieval.py`, `run_planner.py`,
+  `run_assistant.py`, `run_import.py`, `run_video.py`, `reports/`.
 - `.github/workflows/evals.yml`: manual paid evals (needs `OPENAI_API_KEY`, `DATABASE_URL`
   repository secrets).
 - `tests/`: offline tests; OpenAI is mocked. DB tests run when `PANTRIO_TEST_DATABASE_URL` is
@@ -338,7 +353,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   client components under `src/app/(app)/` fetching the API with SWR (`src/lib/hooks.ts`,
   `src/lib/api.ts`, types in `src/lib/types.ts` mirror `api_models.py`); Supabase is used only for
   sign-in (magic link or anonymous guest). The cookbook lives under `recipes/mine` (list,
-  `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`. The first-run tour
+  `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`; "From a post" can
+  upload the video (`src/lib/video.ts` extracts sound and frames in the browser). The first-run tour
   is `src/components/tour.tsx` (`TourProvider` in `AppShell`, `useTour().start`). Cooking mode is
   `src/components/cooking-mode.tsx` with helpers in `src/lib/cooking.ts`. The assistant's
   thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrio.tsx`. `RecipeArt` (`src/components/bits.tsx`)
@@ -374,6 +390,9 @@ uv run python -m evals.chat_cases        # regenerate the assistant eval cases
 uv run python -m evals.run_assistant [--only ids] # assistant eval (paid; ~$0.002/turn)
 uv run python -m evals.import_cases      # regenerate the recipe-import eval pages
 uv run python -m evals.run_import [--only ids] [--instructions-from <git ref>]  # recipe-import eval (paid; ~$0.006/import)
+uv run python -m evals.video_cases       # regenerate the video-import eval cases
+uv run python -m evals.video_audio [--only ids] [--force]   # their audio, once (paid TTS)
+uv run python -m evals.run_video [--plain] [--transcribe-model m] [--only ids]  # video-import eval (paid)
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 uv run pantrio photos generate [--only ids] [--limit n] [--force] [--dry-run]  # corpus photos (paid; ~$0.014 each)
 uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # LangSmith dashboard
