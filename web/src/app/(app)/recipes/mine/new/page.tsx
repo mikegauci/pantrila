@@ -218,11 +218,11 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
   const text = caption.trim()
   // TikTok doesn't share captions with apps like Pantrio, so its caption box starts open.
   const tiktok = /^(https?:\/\/)?([a-z]+\.)?tiktok\.com\//i.test(link)
-  const captionOpen = showCaption || tiktok
   // Where the video service covers the platform, Pantrio also listens to the video when the
-  // caption has no full recipe: the wait can run to a minute or more.
+  // caption has no full recipe (and reads a TikTok caption itself): the wait can run to a minute.
   const { data: meta } = useMeta()
   const hears = (meta?.reel_platforms ?? []).includes(postPlatform(link) ?? "")
+  const captionOpen = showCaption || (tiktok && !hears)
   const [slowSince, setSlowSince] = useState<number | null>(null)
   useEffect(() => {
     if (!busy || !hears) return
