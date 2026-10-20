@@ -36,11 +36,14 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 Social recipe import, two PRs; plan and checklists in `docs/plans/social-recipe-import.md`
 (read it before either PR). PR 1 (this PR, not merged yet): `social.py` (post detection, TikTok
 oEmbed / Open Graph captions, caption links), `Importer.from_post` (caption, then the linked
-recipe site) and `from_text`, prompt lines for captions, `/me/recipes/import/post|text`,
-cookbook credit fields (`source_platform`, `source_author`, `recipe_url`; no migration), web
-"From a post" and credit, 10 caption eval cases. Still owed before merging: the platform check
-from Render or the owner's machine (the cloud container can't reach the platforms) and the
-before/after import eval (`--instructions-from origin/main` vs HEAD; no OpenAI key here).
+recipe site) and `from_text`, `/me/recipes/import/post|text`, cookbook credit fields
+(`source_platform`, `source_author`, `recipe_url`; no migration), web "From a post" and
+credit, 10 caption eval cases. Prompt unchanged: caption lines were tried and dropped, since
+the old prompt already scored the same on all 22 cases (`import-2026-10-20T061450Z` old prompt
+vs `import-2026-10-20T061631Z` with the lines: 0 missed allergens, food matching 100%, 4/4
+no-recipe captions refused; the lines cost +7%, $0.0054 -> $0.0058). Still owed before
+merging: the platform check from the owner's machine (the cloud container can't reach the
+platforms).
 PR 2 (uploaded video audio) starts after PR 1 merges.
 
 Review maintenance: API models/views/backend construction now live in `api_models.py`,

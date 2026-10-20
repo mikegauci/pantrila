@@ -131,12 +131,15 @@ curl -sLA "PantrioBot/1.0 (+https://pantrio-azure.vercel.app; recipe import for 
 
 - [ ] Platform check results recorded above
 - [x] `social.py` + tests
-- [x] `from_post` / `from_text` + prompt change
+- [x] `from_post` / `from_text` (prompt change tried and dropped: no gain, see below)
 - [x] Data fields, API routes, types
 - [x] Web: "From a post", credit on recipe page and form (Playwright: `post-import.spec.ts`)
 - [x] Eval cases (10 captions, `--instructions-from` for the before run)
-- [ ] Before/after reports (needs `OPENAI_API_KEY`: `python -m evals.run_import
-      --instructions-from origin/main`, then without the flag)
+- [x] Before/after reports: `evals/reports/import-2026-10-20T061450Z.md` (old prompt) and
+      `import-2026-10-20T061631Z.md` (with caption lines), `gpt-5.4-mini`, 22 cases. Both: 0
+      missed allergens, food matching 100% (pages and captions), 4/4 no-recipe cases refused,
+      injection ignored. Caption lines: $0.0054 -> $0.0058 per import, p50 5.6 -> 6.1 s, no
+      quality gain, so they were dropped and the prompt matches `main`.
 - [x] README, CLAUDE.md Status/Layout
 - [ ] PR merged
 
