@@ -5,8 +5,8 @@ TikTok's public oEmbed endpoint (no key) gives the caption and handle on some po
 the player on others; then the post page's Open Graph tags are tried. Instagram and Facebook
 pages carry the caption in their Open Graph tags when they let a client read them at all.
 Every request goes through `recipe_import.fetch_page` (SSRF guards, size and time caps,
-Pantrio's own user agent: never a spoofed browser or crawler). Videos are never downloaded, stored or embedded. When a
-platform refuses, the person pastes the caption instead.
+Pantrio's own user agent: never a spoofed browser or crawler). Videos are never downloaded,
+stored or embedded. When a platform refuses, the person pastes the caption instead.
 """
 
 from __future__ import annotations
