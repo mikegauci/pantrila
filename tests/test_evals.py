@@ -203,3 +203,39 @@ def test_insights_snapshot_matches_the_selected_eval_reports():
     from scripts.update_eval_snapshot import OUT, render_snapshot
 
     assert OUT.read_text() == render_snapshot()
+
+
+def test_committed_reel_cases_match_generator_and_pair_real_videos():
+    from evals.reel_cases import OUT as REELS
+    from evals.reel_cases import generate
+    from evals.reel_cases import render as render_reels
+    from evals.video_cases import AUDIO
+    from pantrio.foods import load_foods
+    from pantrio.social import detect
+
+    assert REELS.read_text() == render_reels(generate())
+    foods = load_foods()
+    for case in generate():
+        assert detect(case["url"]) == "instagram", case["id"]
+        assert (AUDIO / f"{case['video']}.wav").exists(), case["id"]
+        for line in case["expect"]["lines"]:
+            assert set(line["foods"]) <= set(foods), case["id"]
+
+
+def test_reel_scoring_counts_service_calls_and_the_method():
+    from evals.reel_cases import load_cases
+    from evals.run_reel import fake_fetch, fake_read, score
+    from pantrio.cookbook import CookbookRecipeIn
+    from pantrio.recipe_import import NO_METHOD_STEP
+
+    case = next(c for c in load_cases() if c["kind"] == "ingredients-only")
+    lines = [{"name": li["text"], "quantity": li["amount"][0], "unit": li["amount"][1],
+              "food": li["foods"][0]} for li in case["expect"]["lines"]]  # fmt: skip
+    draft = CookbookRecipeIn(title="T", meal_types=["dinner"], total_minutes=15, servings=2,
+                             ingredients=lines, steps=[NO_METHOD_STEP])  # fmt: skip
+    row = score(case, draft, 0, media_on=True)
+    assert row["lines_matched"] == row["stated_right"] == 5 and row["missed_allergens"] == []
+    assert not row["method"] and not row["calls_ok"]
+    assert score(case, draft, 0, media_on=False)["calls_ok"]
+    media = fake_read(fake_fetch(f"https://media.pantrio-eval.example/{case['video']}.mp4"))
+    assert media.seconds > 1 and len(media.frames) == 4

@@ -116,6 +116,7 @@ def backend(corpus):
 def api(backend, monkeypatch):
     monkeypatch.setenv("PANTRIO_PRICE_INPUT_PER_MTOK", "1")
     monkeypatch.setenv("PANTRIO_PRICE_OUTPUT_PER_MTOK", "10")
+    monkeypatch.setenv("PANTRIO_MEDIA_SOURCE", "off")  # never the real video service
     with TestClient(create_app(backend, verify)) as client:
         client.headers["Authorization"] = "Bearer alice"
         yield client
@@ -888,3 +889,34 @@ def test_dessert_swap_api_rejects_suggestions_and_direct_calls(api, backend, rep
     response = api.get(f"/recipes/{OMELETTE}/swaps", params=params)
     assert response.status_code == 422
     assert "Automatic dessert swaps are unavailable" in response.json()["detail"]
+
+
+def test_post_import_hears_the_reel_under_its_own_daily_cap(backend, monkeypatch):
+    from pantrio import post_media
+    from tests.test_post_media import CAPTION, MP4, FakeMedia, caption_only, heard
+
+    monkeypatch.setenv("PANTRIO_PRICE_INPUT_PER_MTOK", "1")
+    monkeypatch.setenv("PANTRIO_PRICE_OUTPUT_PER_MTOK", "10")
+    monkeypatch.setenv("PANTRIO_PRICE_TRANSCRIBE_PER_MIN", "0.003")
+    monkeypatch.setenv("PANTRIO_DAILY_REEL_FETCHES", "1")
+    monkeypatch.setattr(post_media, "fetch_video", lambda url, http=None, resolve=None: MP4)
+    media = FakeMedia()
+    reply = lambda parsed: SimpleNamespace(output=[], output_parsed=parsed, usage=USAGE)  # noqa: E731
+    backend.client.replies = [reply(caption_only()), reply(heard()), reply(caption_only())]
+    backend.client.transcripts = ["Brown the sausage, then layer and bake."]
+    reel = "https://www.instagram.com/reel/Dclv5Rgizvm/"
+    with TestClient(create_app(backend, verify, media)) as api:
+        api.headers["Authorization"] = "Bearer alice"
+        body = api.post("/me/recipes/import/post", json={"url": reel, "caption": CAPTION}).json()
+        assert body["draft"]["steps"] == ["Brown the sausage.", "Layer and bake."]
+        assert body["media_cost_usd"] == pytest.approx(0.003)
+        assert body["cost_usd"] == pytest.approx(
+            0.004 + body["transcription_cost_usd"] + 0.003
+        )  # two reads, sound and the service
+        events = api.get("/me/usage").json()["events"]
+        assert sorted(e["kind"] for e in events) == ["import", "reel"]
+        assert next(e for e in events if e["kind"] == "reel")["cost_usd"] == pytest.approx(0.003)
+
+        again = api.post("/me/recipes/import/post", json={"url": reel, "caption": CAPTION}).json()
+        assert media.asked == [reel]  # today's one video read is used: caption only
+        assert again["media_cost_usd"] == 0 and "add the steps" in " ".join(again["notes"])

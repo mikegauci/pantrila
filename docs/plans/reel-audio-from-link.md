@@ -129,14 +129,56 @@ transcription. Revisit if the eval shows otherwise.
 
 ## Checklist
 
-- [ ] Step 0: Apify account, `scripts/reel_media_check.py`, 2-3 actors compared, results
-      recorded here, actor chosen with the owner
-- [ ] `post_media.py` + video fetch + PyAV extraction + tests
-- [ ] `from_post` step 3 + settings + usage/cost + tests
-- [ ] Web progress text and notes; Playwright case with the service mocked
-- [ ] Eval cases and before/after reports (numbers in the PR)
+- [ ] Step 0: Apify account, 2-3 actors compared, results recorded here, actor chosen with the
+      owner. `scripts/reel_media_check.py` is written (any actor: `--actor` and `--input`);
+      waiting for the owner's `APIFY_TOKEN`.
+- [x] `post_media.py` + video fetch + PyAV extraction + tests
+- [x] `from_post` step 3 + settings + usage/cost + tests
+- [x] Web progress text and notes; Playwright case with the service mocked
+- [x] Eval cases and before/after reports (numbers in the PR)
 - [ ] `APIFY_TOKEN` and settings on Render (owner); live check on the test reel
-- [ ] README (Limitations, privacy line), CLAUDE.md Status/Layout/Commands; PR merged
+- [x] README (Limitations, privacy line), CLAUDE.md Status/Layout/Commands
+
+## Progress (20 October 2026, first PR)
+
+Built behind `PANTRIO_MEDIA_SOURCE` (default `off`, so production is unchanged until the owner
+sets it), before step 0, so the actor choice only changes settings:
+
+- `post_media.py`: `ApifyMedia` (any actor: `PANTRIO_APIFY_ACTOR`, input template
+  `PANTRIO_APIFY_INPUT` with `{url}`, video link found by known keys such as `videoUrl` or any
+  `.mp4`; token in the `Authorization` header), `NoMedia`, `fetch_video` (the page fetcher's
+  SSRF guards via the new `recipe_import.fetch_bytes`, 60 MB / 30 s, refused when larger),
+  `read_video` (PyAV in memory: 16 kHz mono WAV and frames at 15/40/65/90%, over 3 min
+  refused). Nothing touches disk, so no temp file.
+- `from_post`: caption -> linked site -> video (only with no full recipe and a covered
+  platform) -> fallback. A video draft that still has no method does not replace the caption's.
+- Cap and cost (a deviation from "one import event"): each service run is its own usage kind
+  `reel` (migration `20261020100000_reel_usage`, applied on Supabase) so the per-user cap
+  (`PANTRIO_DAILY_REEL_FETCHES`, default 10) uses the same reservations as everything else; the
+  import event keeps model + transcription, the `reel` event the fee. `ImportView.cost_usd`
+  adds both; `media_cost_usd` is the fee. Over the cap, the import quietly uses the caption.
+- Prompt: one line added to the steps rule ("only steps the source gives; no method -> empty")
+  because the model wrote a method for the ingredients-only caption in about half the runs,
+  which hid exactly the case this feature is for.
+- Web: `/meta` has `reel_platforms`; "Read recipe" shows "Reading the caption…", then after 8 s
+  "Listening to the video…" where covered, and the small print names the third-party service.
+  The screen-recording help stays: it is the fallback when the service fails.
+
+Evals (`gpt-5.4-mini`, fake service at an assumed $0.003 per run):
+
+- Reel eval, 5 cases (`evals/reel_cases.py`, `evals/run_reel.py`), before (`--media off`)
+  `reel-2026-10-20T082713Z` vs after `reel-2026-10-20T082734Z`: recipe found/refused 80% ->
+  100%, drafts with a method 67% -> 100%, 0 missed allergens both, food matching and caption
+  amounts 100% both, service calls as expected 100% (0 for a full caption or a linked site),
+  $0.0046 -> $0.0125 per import across the cases (fee $0.0018 + transcription $0.0010 on
+  average), p50 4.3/6.2 s, p95 5.9/15.7 s.
+- Import eval after the prompt line, `import-2026-10-20T082701Z` vs `import-2026-10-20T081143Z`:
+  23/23, 100% found/refused, 0 missed allergens, food matching 99% both, $0.0056 -> $0.0059,
+  p95 12.6 -> 8.9 s.
+
+Next (owner): Apify account + `APIFY_TOKEN` in `.env`, run `scripts/reel_media_check.py` on
+2-3 actors, choose one, then on Render set `PANTRIO_MEDIA_SOURCE=apify`, `APIFY_TOKEN`, the
+actor, its input, platforms and fee; live check on the test reel and record it here.
 
 ## Risks
 

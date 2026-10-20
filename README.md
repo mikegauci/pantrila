@@ -256,10 +256,14 @@ The paid evals are a manual GitHub Actions workflow.
   photos were checked by hand.
 - TikTok doesn't share captions with other apps, so for TikTok you paste the caption (the link
   keeps the credit). Instagram and Facebook links work alone today, and if a platform stops
-  sharing, the app asks for the caption instead. A recipe that is only spoken in the video
-  can't be imported from the link: you upload the video you saved or screen-recorded, and the
-  browser sends only its sound and 4 frames (up to 3 minutes). Vague spoken amounts ("a glug
-  of oil") are flagged in the draft for you to set.
+  sharing, the app asks for the caption instead. When the caption (and any recipe site it
+  links) has no method, Pantrio can hear the video from the link: a third-party scraping
+  service (Apify) finds the reel's video, Pantrio reads its sound and 4 frames in memory and
+  drops it. This goes further against Instagram's terms than reading the caption, works only
+  for public posts, can stop working whenever the platform changes, and is off unless
+  configured (Instagram only for now; capped per person per day). Otherwise you upload the
+  video you saved or screen-recorded, and the browser sends only its sound and 4 frames (up to
+  3 minutes). Vague spoken amounts ("a glug of oil") are flagged in the draft for you to set.
 - Estimated foods are a best guess. Check the label of anything you buy.
 - Recipe photos are AI-generated and marked as such. The prompt keeps them to the recipe's
   ingredients, but the plating is the model's guess (a steak kebab can come out as kofta).

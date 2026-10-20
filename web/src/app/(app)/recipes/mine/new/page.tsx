@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { send } from "@/lib/api"
 import { seconds, usd } from "@/lib/format"
-import { useMe } from "@/lib/hooks"
+import { useMe, useMeta } from "@/lib/hooks"
 import { toJpegDataUrl } from "@/lib/images"
 import { cn } from "@/lib/utils"
 import { readVideo } from "@/lib/video"
@@ -141,6 +141,13 @@ const POST_LINK = new RegExp(
   "i",
 )
 
+function postPlatform(link: string): string | null {
+  if (/tiktok\.com/i.test(link)) return "tiktok"
+  if (/instagram\.com/i.test(link)) return "instagram"
+  if (/(facebook|fb)\.(com|watch)/i.test(link)) return "facebook"
+  return null
+}
+
 /** Where people get a video file of a post, per platform (Pantrio never downloads it). */
 function videoHelp(link: string): string {
   if (/tiktok\.com/i.test(link)) return "In TikTok: Share, then Save video."
@@ -212,6 +219,18 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
   // TikTok doesn't share captions with apps like Pantrio, so its caption box starts open.
   const tiktok = /^(https?:\/\/)?([a-z]+\.)?tiktok\.com\//i.test(link)
   const captionOpen = showCaption || tiktok
+  // Where the video service covers the platform, Pantrio also listens to the video when the
+  // caption has no full recipe: the wait can run to a minute or more.
+  const { data: meta } = useMeta()
+  const hears = (meta?.reel_platforms ?? []).includes(postPlatform(link) ?? "")
+  const [slowSince, setSlowSince] = useState<number | null>(null)
+  useEffect(() => {
+    if (!busy || !hears) return
+    const started = Date.now()
+    const timer = setTimeout(() => setSlowSince(started), 8000)
+    return () => { clearTimeout(timer); setSlowSince(null) }
+  }, [busy, hears])
+  const slow = busy && slowSince !== null
 
   function openVideo() {
     setShowVideo(true)
@@ -270,11 +289,13 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
         </Button>
       )}
       <Button type="submit" size="lg" className="h-12 w-full sm:w-fit" disabled={busy || videoBusy || (!link && !text)}>
-        <Sparkles /> {busy ? "Reading the post…" : "Read recipe"}
+        <Sparkles /> {!busy ? "Read recipe" : slow ? "Listening to the video…" : "Reading the caption…"}
       </Button>
       <p className="text-[12px] text-muted-foreground">
-        Pantrio reads the caption (and a recipe site it links to). If the recipe is only in the video,
-        upload the video. The post link and creator are kept as the credit.
+        {hears
+          ? "Pantrio reads the caption (and a recipe site it links to). If the method is only in the video, it listens to the video too, found through a third-party service; the video isn't stored, and this can stop working when the app changes. "
+          : "Pantrio reads the caption (and a recipe site it links to). If the recipe is only in the video, upload the video. "}
+        The post link and creator are kept as the credit.
       </p>
       {error && (
         <div role="alert" className="grid gap-2 text-[13px]">

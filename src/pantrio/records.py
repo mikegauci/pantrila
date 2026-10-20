@@ -20,7 +20,7 @@ import psycopg
 from pantrio.planner import Usage
 from pantrio.schema import MealPlan
 
-Kind = Literal["plan", "chat", "import", "photo", "search"]
+Kind = Literal["plan", "chat", "import", "photo", "search", "reel"]
 MAX_COOKED_PER_USER = 500  # older cooking log entries are dropped
 
 

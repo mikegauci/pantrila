@@ -118,6 +118,8 @@ export interface Meta {
   meal_types: MealType[]
   units: Unit[]
   cuisines: string[]
+  /** Platforms whose post videos Pantrio can hear from the link; empty when off. */
+  reel_platforms?: string[]
 }
 
 export interface Limits {
@@ -370,6 +372,7 @@ export interface ImportView {
   cost_usd: number | null
   /** The part of cost_usd spent transcribing a video's sound. */
   transcription_cost_usd?: number | null
+  media_cost_usd?: number | null
   latency_ms: number
 }
 

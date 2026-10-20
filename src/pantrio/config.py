@@ -185,7 +185,14 @@ def reservation_usd(kind: str) -> float:
     Reservations limit concurrent exposure, not the provider's eventual bill. A server crash
     keeps its reservation charged to the day's budget rather than assuming the call was free.
     """
-    defaults = {"plan": 0.50, "chat": 0.15, "import": 0.15, "photo": 0.10, "search": 0.002}
+    defaults = {
+        "plan": 0.50,
+        "chat": 0.15,
+        "import": 0.15,
+        "photo": 0.10,
+        "search": 0.002,
+        "reel": 0.02,
+    }
     return max(
         0.000001, float(os.environ.get(f"PANTRIO_RESERVE_{kind.upper()}_USD") or defaults[kind])
     )

@@ -115,7 +115,7 @@ from pantrio.cooking import grams_used, use_from_pantry
 from pantrio.foods import UnitError, load_foods
 from pantrio.grocery import grocery_list
 from pantrio.meal_swap import SwapError, meal_options, replace_meal, swapped_report
-from pantrio.operations import EmbeddingUsage, PaidOperation, daily_cap
+from pantrio.operations import EmbeddingUsage, PaidOperation, ReelMeter, daily_cap
 from pantrio.pantry import UnknownFood, make_item, resolve_food
 from pantrio.photos import (
     Dish,
@@ -128,6 +128,7 @@ from pantrio.photos import (
     to_avatar_webp,
 )
 from pantrio.planner import Planner, PlanningError, Usage
+from pantrio.post_media import MediaSource, media_source
 from pantrio.recipe_import import (
     Importer,
     ImportFailed,
@@ -213,15 +214,19 @@ def describe_failure(exc: Exception, what: str = "Reading the recipe") -> str:
 
 
 def create_app(
-    backend: Backend | None = None, verify: Callable[[str], User] | None = None
+    backend: Backend | None = None,
+    verify: Callable[[str], User] | None = None,
+    media: MediaSource | None = None,
 ) -> FastAPI:
-    """The API. Tests pass an in-memory backend and a token verifier; production builds a
-    Postgres backend and verifies Supabase tokens at startup."""
+    """The API. Tests pass an in-memory backend, a token verifier and maybe a fake video
+    service; production builds a Postgres backend, verifies Supabase tokens at startup and
+    reads the video service from the environment (off unless configured)."""
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         app.state.backend = backend or DbBackend(config.database_url())
         app.state.verify = verify or verifier(config.supabase_url()).verify
+        app.state.media = media or media_source()
         yield
         app.state.backend.close()
 
@@ -245,12 +250,12 @@ def create_app(
         return {"ok": True}
 
     @app.get("/meta")
-    def meta(_: UserDep) -> Meta:
+    def meta(request: Request, _: UserDep) -> Meta:
         from pantrio.corpus import load_briefs
 
         return Meta(allergens=list(Allergen), diets=list(DietTag), meal_types=list(MealType),
-                    units=list(Unit),
-                    cuisines=sorted({b.cuisine for b in load_briefs()}))  # fmt: skip
+                    units=list(Unit), cuisines=sorted({b.cuisine for b in load_briefs()}),
+                    reel_platforms=sorted(request.app.state.media.platforms))  # fmt: skip
 
     @app.get("/foods")
     def foods(_: UserDep) -> list[FoodView]:
@@ -425,7 +430,10 @@ def create_app(
         """Run one paid import or estimate under the daily cap and log its usage.
         Returns (work's result, the importer, latency in ms)."""
         model = config.model()
-        importer = Importer(client=request.app.state.backend.client, model=model)
+        source = request.app.state.media
+        meter = ReelMeter(s.records, getattr(source, "actor", "media"))
+        importer = Importer(client=request.app.state.backend.client, model=model, media=source,
+                            meter=meter)  # fmt: skip
         operation = PaidOperation(s.records, "import", model)
 
         def logged(ok: bool) -> float:
@@ -444,10 +452,12 @@ def create_app(
 
     def import_view(s: Session, request: Request, work: Callable[[Importer], Any]) -> ImportView:
         result, importer, ms = paid_import(s, request, work)
+        model_cost, media_cost = importer.usage.cost(), importer.media_cost
         return ImportView(draft=result.draft, notes=result.notes,
-                          cost_usd=importer.usage.cost(),
+                          cost_usd=None if model_cost is None or media_cost is None
+                          else model_cost + media_cost,
                           transcription_cost_usd=importer.usage.transcription_cost(),
-                          latency_ms=round(ms))  # fmt: skip
+                          media_cost_usd=media_cost, latency_ms=round(ms))  # fmt: skip
 
     @app.get("/me/recipes")
     def my_recipes(s: SessionDep) -> list[CookbookCard]:

@@ -47,6 +47,16 @@ Ciqual supplies nutrition, not recipe testing. Preserve the original 300 recipes
 chat per PR and update the plan's progress/handoff after each. Do not implement this feature
 merely because this status entry exists; follow the user's selected task/PR.
 
+Reel audio from a link (plan `docs/plans/reel-audio-from-link.md`, first PR): `from_post`
+tries caption -> linked site -> the post's video, found by a third-party service
+(`post_media.py`, Apify, `PANTRIO_MEDIA_SOURCE`, default off) and read in memory with PyAV.
+Service runs are usage kind `reel` (migration `20261020100000_reel_usage`, applied on Supabase;
+cap `PANTRIO_DAILY_REEL_FETCHES`). Prompt: steps only as the source gives them. Reel eval
+before/after `reel-2026-10-20T082713Z` / `reel-2026-10-20T082734Z`: found 80% -> 100%, method
+67% -> 100%, 0 missed allergens; import eval `import-2026-10-20T082701Z` unchanged in quality.
+Still to do (owner): step 0 (Apify token, actor chosen with `scripts/reel_media_check.py`),
+Render settings, live check on the test reel.
+
 Social recipe import, two PRs; plan and checklists in `docs/plans/social-recipe-import.md`
 (read it before either PR). PR 1 (PR #36, merged): `social.py` (post detection, TikTok
 oEmbed / Open Graph captions, caption links), `Importer.from_post` (caption, then the linked
@@ -337,6 +347,11 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - Video import (`recipe_import.py`): `check_audio` (WAV only, 1 s to 3 min, 12 MB),
   `Importer.transcribe` and `from_video(audio, frames, url, caption, guided)`; vague spoken
   amounts become notes ("the video only says ..."). Audio and frames are never stored.
+- `src/pantrio/post_media.py`: reel audio from a link. `MediaSource` (`ApifyMedia`: one actor
+  run, token in a header; `NoMedia`), `media_source()` from the environment (off by default),
+  `fetch_video` (SSRF-guarded via `recipe_import.fetch_bytes`, 60 MB), `read_video` (PyAV in
+  memory: 16 kHz mono WAV, 4 JPEG frames). `Importer(media=, meter=)` uses it in `from_post`
+  only when the caption and links give no full recipe; `operations.ReelMeter` caps runs.
 - `src/pantrio/photos.py`: recipe photos. `photo_prompt` (the dish as the recipe makes it:
   ingredient names and final step, garnish and background props only from those ingredients,
   bread only if used or suggested and never for gluten-free; fixed stoneware/stone/linen
@@ -427,6 +442,9 @@ uv run python -m evals.run_import [--only ids] [--instructions-from <git ref>]  
 uv run python -m evals.video_cases       # regenerate the video-import eval cases
 uv run python -m evals.video_audio [--only ids] [--force]   # their audio, once (paid TTS)
 uv run python -m evals.run_video [--plain] [--transcribe-model m --transcribe-price usd] [--only ids]  # video eval (paid)
+uv run python -m evals.reel_cases        # regenerate the reel eval cases
+uv run python -m evals.run_reel [--media off] [--fee usd] [--only ids]   # reel eval, fake service (paid)
+uv run python scripts/reel_media_check.py --actor <id> --input '<json with {url}>' <post links>  # Apify actor check
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 uv run pantrio photos generate [--only ids] [--limit n] [--force] [--dry-run]  # corpus photos (paid; ~$0.014 each)
 uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # LangSmith dashboard

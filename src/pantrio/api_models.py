@@ -159,6 +159,10 @@ class Meta(BaseModel):
     meal_types: list[MealType]
     units: list[Unit]
     cuisines: list[str]
+    reel_platforms: list[str] = Field(
+        default_factory=list,
+        description="Platforms whose post videos Pantrio can hear from the link; empty when off.",
+    )
 
 
 class LimitsView(BaseModel):
@@ -383,6 +387,11 @@ class ImportView(BaseModel):
     cost_usd: float | None
     transcription_cost_usd: float | None = Field(
         default=0.0, description="The part of cost_usd spent transcribing a video's sound."
+    )
+    media_cost_usd: float | None = Field(
+        default=0.0,
+        description="The part of cost_usd paid to the service that found a post's "
+        "video (reel audio from a link).",
     )
     latency_ms: float
 

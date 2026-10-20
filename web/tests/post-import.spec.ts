@@ -81,3 +81,53 @@ test("a post that can't be read asks for its caption and keeps the credit", asyn
   await expect(page.getByRole("link", { name: "sambakes.com" })).toHaveAttribute("href", "https://sambakes.com/gnocchi")
   await page.screenshot({ path: "test-results/post-import-recipe.png", fullPage: true })
 })
+
+test("where the service covers the platform, Pantrio says it is listening to the video", async ({ page }) => {
+  const heard = "Pantrio listened to the post's video for this recipe. Check the amounts and steps."
+  let answer: () => void = () => {}
+  const answered = new Promise<void>((resolve) => { answer = resolve })
+  await page.clock.install()
+  await page.addInitScript((user) => localStorage.setItem(`pantrio-tour-done:${user}`, "1"), id)
+  await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
+  await page.route("http://127.0.0.1:8000/**", async (route) => {
+    const path = new URL(route.request().url()).pathname
+    if (path === "/me/recipes/import/post") {
+      await answered
+      return route.fulfill({ json: { draft: { ...draft, recipe_url: null }, notes: [heard],
+        cost_usd: 0.012, media_cost_usd: 0.003, transcription_cost_usd: 0.001, latency_ms: 30000 } })
+    }
+    const data = path === "/me" ? { id, email: null, avatar_url: null, anonymous: true,
+      limits: { imports_left: 9, imports_per_day: 10, photos_left: 5, photos_per_day: 5 } }
+      : path === "/meta" ? { allergens: [], diets: [], meal_types: ["dinner"], units: ["g"], cuisines: [],
+        reel_platforms: ["instagram"] }
+      : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [],
+        days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }
+      : path === "/foods" ? [{ key: "gnocchi", name: "gnocchi", aisle: "pasta" }]
+      : path === "/me/recipes/preview" ? { ingredients: [], nutrition, allergens: ["gluten"],
+        diet_tags: ["vegetarian"], estimated: false, problems: [] }
+      : path === "/plans/latest" ? null
+      : path === "/health" ? { ok: true } : []
+    if (data === null) return route.fulfill({ status: 404, json: {} })
+    await route.fulfill({ json: data })
+  })
+
+  await page.goto("/login")
+  await page.getByRole("button", { name: "Try it as a guest" }).click()
+  await expect(page).not.toHaveURL(/login/)
+  await page.goto("/recipes/mine/new")
+  await page.getByRole("button", { name: /From a post/ }).click()
+  await page.getByLabel("Post link").fill(post)
+  await expect(page.getByText(/it listens to the video too/)).toBeVisible()
+  await page.getByRole("button", { name: "Read recipe" }).click()
+  await expect(page.getByRole("button", { name: "Reading the caption…" })).toBeVisible()
+  await page.clock.fastForward(9000)
+  await expect(page.getByRole("button", { name: "Listening to the video…" })).toBeVisible()
+  answer()
+  await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Crispy gnocchi")
+  await expect(page.getByText(heard)).toBeVisible()
+
+  await page.goto("/recipes/mine/new")
+  await page.getByRole("button", { name: /From a post/ }).click()
+  await page.getByLabel("Post link").fill("https://www.tiktok.com/@sam/video/7300000000000000001")
+  await expect(page.getByText(/it listens to the video too/)).toHaveCount(0)
+})
