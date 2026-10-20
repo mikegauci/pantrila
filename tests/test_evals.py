@@ -216,7 +216,7 @@ def test_committed_reel_cases_match_generator_and_pair_real_videos():
     assert REELS.read_text() == render_reels(generate())
     foods = load_foods()
     for case in generate():
-        assert detect(case["url"]) == "instagram", case["id"]
+        assert detect(case["url"]) == case["platform"], case["id"]
         assert (AUDIO / f"{case['video']}.wav").exists(), case["id"]
         for line in case["expect"]["lines"]:
             assert set(line["foods"]) <= set(foods), case["id"]

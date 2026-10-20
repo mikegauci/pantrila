@@ -285,12 +285,14 @@ def fetch_page(url: str, http=None, resolve: Resolver = resolve_host,
 def fetch_bytes(url: str, http=None, resolve: Resolver = resolve_host,
                 kinds: tuple[str, ...] = PAGE_TYPES, stop: Callable[[str], bool] | None = None,
                 max_bytes: int | None = None, timeout_s: float | None = None,
-                too_big: str | None = None) -> tuple[str, bytes, str | None]:  # fmt: skip
+                too_big: str | None = None, headers: dict[str, str] | None = None,
+                header_host: str | None = None) -> tuple[str, bytes, str | None]:  # fmt: skip
     """`fetch_page` as bytes: (final url, body, encoding). A body over `max_bytes` is cut there,
-    or refused with the message `too_big` when one is given."""
+    or refused with the message `too_big` when one is given. `headers` are sent only on https
+    hops to `header_host`: never after a redirect to another host."""
     import httpx
 
-    headers = {"User-Agent": USER_AGENT, "Accept": ",".join(kinds)}
+    base = {"User-Agent": USER_AGENT, "Accept": ",".join(kinds)}
     from pantrio.safe_http import pinned_page
 
     max_bytes = max_bytes or MAX_PAGE_BYTES
@@ -300,10 +302,13 @@ def fetch_bytes(url: str, http=None, resolve: Resolver = resolve_host,
             addresses = check_url(url, lambda h, p: _resolve_before(resolve, h, p, deadline))
             if time.monotonic() >= deadline:
                 raise ImportFailed("The page took too long to load.")
+            hop = urlsplit(url)
+            extra = (headers or {}) if header_host and hop.scheme == "https" and (
+                hop.hostname == header_host) else {}  # fmt: skip
             stream = (
-                http.stream("GET", url)
+                http.stream("GET", url, headers=extra)
                 if http is not None
-                else pinned_page(url, addresses, headers, deadline)
+                else pinned_page(url, addresses, {**base, **extra}, deadline)
             )
             with stream as r:
                 if r.is_redirect and "location" in r.headers:
@@ -529,6 +534,7 @@ class Importer:
         self.effort = effort
         self.media, self.meter = media, meter
         self.media_runs = 0
+        self._runs: dict = {}  # post url -> the service's result, so one import pays once
         self.media_cost: float | None = 0.0  # the video service's fees; None if unpriced
         self.usage = Usage()
 
@@ -674,7 +680,12 @@ class Importer:
         elif caption:
             post, links = social.pasted_post(url, caption), []
         else:
-            post, links = social.fetch_post(url or "", http, resolve), []
+            try:
+                post = social.fetch_post(url or "", http, resolve)
+            except ImportFailed:  # the platform shares no caption: the service may have it
+                if (post := self._serviced_post(url or "")) is None:
+                    raise
+            links = []
         caption = post.caption if post else caption or ""
         where = f"{social.NAMES[post.platform]} post" if post else "social media post"
         by = f" by @{post.handle}" if post and post.handle else ""
@@ -709,37 +720,73 @@ class Importer:
         result.latency_ms = (time.perf_counter() - start) * 1000
         return result
 
-    def _heard(self, post, caption: str, http, resolve: Resolver) -> ImportResult | None:
-        """The post's video heard from its link (with the caption), or None when the service is
-        off, does not cover the platform, or anything on the way fails."""
-        from pantrio import post_media
-
-        if self.media is None or post.platform not in self.media.platforms:
+    def _found(self, post_url: str, platform: str):
+        """The service's result for a post (one metered run per import, kept for reuse), or
+        None when the service is off, does not cover the platform, is over today's cap or
+        finds nothing."""
+        if post_url in self._runs:
+            return self._runs[post_url]
+        if self.media is None or platform not in self.media.platforms:
             return None
         try:
             if self.meter is not None:
                 self.meter.start()
         except ImportFailed:
             return None
-        ok = False
+        found = None
         try:
-            found = self.media.video_for(post.url)
-            if found is None:
-                raise post_media.MediaFailed("The video service found no video for this post.")
-            media = post_media.read_video(post_media.fetch_video(found.video_url, http, resolve))
-            ok = True
+            found = self.media.video_for(post_url, platform)
         except ImportFailed as exc:
-            log.info("post video not heard: %s", exc)
-            return None
+            log.info("video service failed: %s", exc)
         finally:
             self.media_runs += 1
-            fee = self.media.fee_usd
+            fee = self.media.fee_for(platform)
             self.media_cost = None if fee is None or self.media_cost is None else (
                 self.media_cost + fee)  # fmt: skip
             if self.meter is not None:
-                self.meter.finish(fee, ok)
-        if found.handle and not post.handle:  # credit the creator the service names
-            post.handle = found.handle[:100]
+                self.meter.finish(fee, found is not None)
+        self._runs[post_url] = found
+        return found
+
+    def _serviced_post(self, url: str):
+        """A post whose platform shared no caption, with the caption the service read."""
+        from pantrio import social
+
+        platform = social.detect(url)
+        if platform is None:
+            return None
+        post_url = social.clean_url(social.with_scheme(url), platform)
+        found = self._found(post_url, platform)
+        if found is None or not found.caption:
+            return None
+        handle = social.clean_handle(found.handle or "") or social.handle_from_url(
+            post_url, platform)  # fmt: skip
+        return social.Post(platform, post_url, handle,
+                           found.caption[: social.MAX_CAPTION_CHARS])  # fmt: skip
+
+    def _heard(self, post, caption: str, http, resolve: Resolver) -> ImportResult | None:
+        """The post's video heard from its link (with the caption), or None when the service is
+        off, does not cover the platform, or anything on the way fails."""
+        from pantrio import post_media, social
+
+        found = self._found(post.url, post.platform)
+        if found is None:
+            return None
+        if found.seconds and found.seconds > MAX_VIDEO_S + 5:
+            log.info("post video not heard: %s", post_media.TOO_LONG)
+            return None
+        media = None
+        for link in found.video_urls:  # best first; the next one if a link fails
+            try:
+                data = post_media.fetch_video(link, http, resolve, self.media.headers_for(link))
+                media = post_media.read_video(data)
+                break
+            except ImportFailed as exc:
+                log.info("post video not heard: %s", exc)
+        if media is None:
+            return None
+        if not post.handle and (handle := social.clean_handle(found.handle or "")):
+            post.handle = handle  # credit the creator the service names
         sound = (media.audio, media.seconds) if media.audio else None
         try:
             result = self.read_video(sound, media.frames, caption or found.caption, post)

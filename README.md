@@ -258,10 +258,11 @@ The paid evals are a manual GitHub Actions workflow.
   keeps the credit). Instagram and Facebook links work alone today, and if a platform stops
   sharing, the app asks for the caption instead. When the caption (and any recipe site it
   links) has no method, Pantrio can hear the video from the link: a third-party scraping
-  service (Apify) finds the reel's video, Pantrio reads its sound and 4 frames in memory and
-  drops it. This goes further against Instagram's terms than reading the caption, works only
-  for public posts, can stop working whenever the platform changes, and is off unless
-  configured (Instagram only for now; capped per person per day). Otherwise you upload the
+  service (Apify, one actor per platform) finds the post's video (and a TikTok caption), and
+  Pantrio reads its sound and 4 frames in memory and drops it. This goes further against the
+  platforms' terms than reading the caption, works only for public posts, can stop working
+  whenever a platform changes, costs $0.003-0.006 per post, and is off unless configured
+  (capped per person per day). Otherwise you upload the
   video you saved or screen-recorded, and the browser sends only its sound and 4 frames (up to
   3 minutes). Vague spoken amounts ("a glug of oil") are flagged in the draft for you to set.
 - Estimated foods are a best guess. Check the label of anything you buy.

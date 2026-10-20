@@ -899,7 +899,7 @@ def test_post_import_hears_the_reel_under_its_own_daily_cap(backend, monkeypatch
     monkeypatch.setenv("PANTRIO_PRICE_OUTPUT_PER_MTOK", "10")
     monkeypatch.setenv("PANTRIO_PRICE_TRANSCRIBE_PER_MIN", "0.003")
     monkeypatch.setenv("PANTRIO_DAILY_REEL_FETCHES", "1")
-    monkeypatch.setattr(post_media, "fetch_video", lambda url, http=None, resolve=None: MP4)
+    monkeypatch.setattr(post_media, "fetch_video", lambda url, *args: MP4)
     media = FakeMedia()
     reply = lambda parsed: SimpleNamespace(output=[], output_parsed=parsed, usage=USAGE)  # noqa: E731
     backend.client.replies = [reply(caption_only()), reply(heard()), reply(caption_only())]

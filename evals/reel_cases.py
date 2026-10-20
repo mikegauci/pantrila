@@ -1,7 +1,8 @@
 """Deterministic generator for the reel eval: post links whose caption alone may not hold the
 recipe, paired with the spoken video the service would find (reel audio from a link).
 
-Each case is an Instagram reel link with its caption (written here, not copied). Where the
+Each case is a post link (Instagram, TikTok or Facebook) with its caption (written here, not
+copied; a TikTok link alone gets its caption from the service). Where the
 video matters, its sound is one of the committed video-eval WAVs (`evals/data/video_audio/`) and
 its frames are drawn from that case's on-screen text; a fake service hands them over, so no real
 service runs in the eval. The cases: a caption that lists the ingredients with amounts but leaves
@@ -29,13 +30,16 @@ SITE = "https://pantrio-eval.example/peanut-noodles"
 @dataclass
 class Case:
     id: str
-    kind: str  # ingredients-only | comment-recipe | full-caption | linked-site | not-recipe
+    kind: str  # ingredients-only | comment-recipe | full-caption | linked-site | not-recipe |
+    # no-caption (a TikTok link alone: the caption comes from the service)
     caption: str
     video: str | None  # the video-eval case whose sound and frames the service finds
     service_calls: int  # with the service on
     lines: list[tuple[str, tuple[str, ...], tuple[float, str] | None]] | None = None
     title: str = ""
     page: str | None = None  # the linked site's HTML
+    platform: str = "instagram"
+    service_caption: str | None = None  # the caption the service reads (TikTok shares none)
 
 
 def video(case_id: str):
@@ -93,7 +97,19 @@ CASES = [
     ), "video-fast-peanut-noodles", 0, PEANUT.lines, "Peanut Noodles", PEANUT_PAGE),
     Case("reel-not-recipe", "not-recipe", "New toy in the kitchen 😍 #kitchen #mixer",
          "video-not-recipe", 1),
+    Case("reel-tiktok-no-caption", "no-caption", "", "video-fast-peanut-noodles", 1,
+         PEANUT.lines, "Peanut Noodles", platform="tiktok",
+         service_caption="Peanut noodles 🥜 15 min, the method's in the video #noodles #fyp"),
+    Case("reel-facebook-comment-recipe", "comment-recipe",
+         "Shakshuka for two 🍳🌶️ Comment EGGS and I'll message you the recipe!",
+         "video-music-shakshuka", 1, SHAKSHUKA.lines, "Shakshuka", platform="facebook"),
 ]  # fmt: skip
+
+URLS = {
+    "instagram": "https://www.instagram.com/reel/PantrioEval{n}/",
+    "tiktok": "https://www.tiktok.com/@pantrio.eval/video/74100000000000000{n:02d}",
+    "facebook": "https://www.facebook.com/pantrio.eval/videos/{n}/",
+}
 
 
 def generate() -> list[dict]:
@@ -105,8 +121,10 @@ def generate() -> list[dict]:
         out.append({
             "id": c.id,
             "kind": c.kind,
-            "url": f"https://www.instagram.com/reel/PantrioEval{n}/",
+            "platform": c.platform,
+            "url": URLS[c.platform].format(n=n),
             "caption": c.caption,
+            "service_caption": c.service_caption,
             "video": c.video,
             "page": {"url": SITE, "html": c.page} if c.page else None,
             "expect": {
