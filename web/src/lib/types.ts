@@ -276,7 +276,7 @@ export interface Usage {
 // --- Cookbook: the person's own recipes ---
 
 export type DietClass = "plant" | "dairy" | "egg" | "honey" | "fish" | "shellfish" | "meat"
-export type RecipeSource = "manual" | "photo" | "link" | "post" | "text"
+export type RecipeSource = "manual" | "photo" | "link" | "post" | "text" | "video"
 export type SourcePlatform = "tiktok" | "instagram" | "facebook"
 
 /** Model estimate for a food missing from the ingredient table, per 100 g. */
@@ -368,6 +368,8 @@ export interface ImportView {
   draft: CookbookRecipeIn
   notes: string[]
   cost_usd: number | null
+  /** The part of cost_usd spent transcribing a video's sound. */
+  transcription_cost_usd?: number | null
   latency_ms: number
 }
 
