@@ -210,6 +210,11 @@ export default function MyRecipePage() {
                 <span className="flex-1">
                   <span className="tabular font-semibold">{amount(ing.quantity)} {ing.unit}</span> {ing.name}
                   {ing.in_pantry && <span className="sr-only"> (in your pantry)</span>}
+                  {ing.amount_estimate && (
+                    <span className="mt-1 block text-[12px] text-muted-foreground">
+                      Estimated amount: {ing.amount_estimate}
+                    </span>
+                  )}
                 </span>
                 {!ing.food && ing.estimate && <AiBadge>Estimated</AiBadge>}
               </li>
@@ -219,10 +224,11 @@ export default function MyRecipePage() {
 
         <Panel>
           <PanelTitle>Per serving</PanelTitle>
+          {r.estimated && <AiBadge>Estimated nutrition</AiBadge>}
           {r.nutrition ? <MacroRing nutrition={r.nutrition} size={150} /> : <p className="text-muted-foreground">Fix the recipe to see nutrition.</p>}
           <p className="mt-4 text-[12px] text-muted-foreground">
             {r.estimated
-              ? "Some foods are estimated by AI, so these numbers and allergens are a best guess."
+              ? "Some amounts or foods are estimated, so nutrition is approximate. Estimated amounts are noted beside the ingredients. Check product labels for allergens."
               : <NutritionSource />}{" "}
             Macros means protein, carbs and fat.
           </p>

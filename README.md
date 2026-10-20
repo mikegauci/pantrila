@@ -209,7 +209,7 @@ uv run pytest                            # offline: OpenAI mocked, no network
 uv run python -m evals.run_retrieval     # retrieval eval (embeddings only)
 uv run python -m evals.run_planner       # planner eval, about $0.40 for 16 profiles
 uv run python -m evals.run_assistant     # assistant eval, about $0.05 for 24 cases
-uv run python -m evals.run_import        # recipe-import eval, about $0.15 for 12 pages + 11 captions
+uv run python -m evals.run_import        # recipe-import eval, 12 pages + 13 captions
 uv run python -m evals.video_audio       # once: text-to-speech audio for the video eval (committed)
 uv run python -m evals.run_video [--plain]   # video-import eval, 6 spoken cooking videos
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
@@ -251,6 +251,9 @@ The paid evals are a manual GitHub Actions workflow.
   (`--parse`) exists but is off in the evals.
 - Nutrition is computed from ingredient weights and USDA/Ciqual averages (see [data conventions](docs/nutrition-data.md)). It is an estimate, not
   medical advice.
+- Imported recipes estimate missing amounts and unsupported measures such as herb sprigs.
+  Estimated nutrition and ingredient assumptions remain visible after saving. A repeated
+  reference such as "cooked pasta" is counted once; explicit extra amounts are preserved.
 - Some recipe sites block bots (Allrecipes answers 402/403), so link import fails there; the
   app suggests a screenshot instead. The import eval covers web pages and synthetic captions;
   photos were checked by hand.

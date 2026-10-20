@@ -920,3 +920,54 @@ def test_post_import_hears_the_reel_under_its_own_daily_cap(backend, monkeypatch
         again = api.post("/me/recipes/import/post", json={"url": reel, "caption": CAPTION}).json()
         assert media.asked == [reel]  # today's one video read is used: caption only
         assert again["media_cost_usd"] == 0 and "add the steps" in " ".join(again["notes"])
+
+
+def test_estimated_amounts_survive_preview_save_read_and_edit(api):
+    recipe = {
+        **TOAST,
+        "ingredients": [
+            {**TOAST["ingredients"][0], "amount_estimate": "Typical two-slice serving."},
+            TOAST["ingredients"][1],
+        ],
+    }
+    preview = api.post("/me/recipes/preview", json=recipe)
+    assert preview.status_code == 200 and preview.json()["estimated"]
+    created = api.post("/me/recipes", json=recipe)
+    assert created.status_code == 201
+    saved = api.get(f"/me/recipes/{created.json()['id']}").json()
+    assert saved["estimated"] and saved["nutrition"]["kcal"] > 0
+    assert saved["ingredients"][0]["amount_estimate"] == "Typical two-slice serving."
+    assert saved["recipe"]["ingredients"][0]["amount_estimate"]
+    assert saved["allergens"] == ["gluten", "milk"]
+    recipe["ingredients"][0]["amount_estimate"] = None
+    updated = api.put(f"/me/recipes/{saved['id']}", json=recipe).json()
+    assert not updated["estimated"]
+
+
+def test_import_repairs_amounts_under_one_quota_and_accounts_for_both_calls(api, backend):
+    from pantrio.recipe_import import AmountRepairs, ImportedRecipe
+
+    recipe = imported_reply().output_parsed.model_dump()
+    recipe["ingredients"] = [
+        {"name": "1 sprig basil", "food": "basil", "quantity": 1, "unit": "piece", "estimate": None}
+    ]
+    backend.client.replies = [
+        SimpleNamespace(output=[], output_parsed=ImportedRecipe(**recipe), usage=USAGE),
+        SimpleNamespace(
+            output=[],
+            output_parsed=AmountRepairs(
+                ingredients=[
+                    {"index": 0, "grams": 2, "reason": "Typical basil sprig."},
+                ]
+            ),
+            usage=USAGE,
+        ),
+    ]
+    response = api.post("/me/recipes/import/text", json={"text": "1 sprig basil. Add to sauce."})
+    assert response.status_code == 200
+    result = response.json()
+    assert result["cost_usd"] == pytest.approx(0.004)
+    assert result["draft"]["ingredients"][0]["amount_estimate"] == "Typical basil sprig."
+    assert api.post("/me/recipes", json=result["draft"]).status_code == 201
+    events = api.get("/me/usage").json()["events"]
+    assert len(events) == 1 and events[0]["kind"] == "import"
