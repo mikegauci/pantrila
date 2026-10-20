@@ -54,9 +54,15 @@ with `PANTRIO_PRICE_TRANSCRIBE_PER_MIN`; the cost is in the import's usage event
 apart as `transcription_cost_usd`), then one extraction call with transcript + frames +
 caption. Video-only prompt lines (`VIDEO_INSTRUCTIONS`, `VideoRecipe.vague_amount`); page,
 photo, text and caption imports keep the old prompt. Source `"video"` without a post link.
-Eval: 6 spoken cases (`evals/video_cases.py`), audio from `evals.video_audio` (paid TTS, not
-yet made: no OpenAI key in the cloud session), `evals.run_video` (`--plain` is the before).
-Before/after reports and the transcription model choice are still to do before merging.
+Eval: 6 spoken cases (`evals/video_cases.py`), audio from `evals.video_audio` (`gpt-4o-mini-tts`,
+committed in `evals/data/video_audio/`), `evals.run_video` (`--plain` is the before). Reports
+on `gpt-5.4-mini`: before `video-2026-10-20T065810Z` (plain prompt) vs after
+`video-2026-10-20T065841Z`: 0 missed allergens both, food matching 100% both, stated amounts
+right 100% both, vague amounts flagged 0/3 -> 3/3, 0 stated amounts wrongly flagged, sponsor
+kept out, not-a-recipe refused, $0.0121 -> $0.0102 per import (transcription $0.0016 of it,
+31 s of audio), p50 10.1/9.1 s, p95 29.4/17.3 s. `gpt-4o-transcribe`
+(`video-2026-10-20T065914Z`): food matching 97%, vague flagged 2/3, $0.0131, so the default
+stays `gpt-4o-mini-transcribe` ($0.003/min; both env vars set on Render).
 
 Review maintenance: API models/views/backend construction now live in `api_models.py`,
 `api_views.py`, and `backend.py`; `api.py` owns routes and app lifecycle. Insights is generated

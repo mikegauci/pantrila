@@ -204,18 +204,36 @@ Branch `feat/video-recipe-import`. Start after PR 1 merges.
 - [x] `/me/recipes/import/video` + prompt change + tests
 - [x] Audio eval cases (`evals/video_cases.py`) and runner (`evals/run_video.py`, `--plain` for
       the before, `--transcribe-model` to compare)
-- [ ] Audio made (`uv run python -m evals.video_audio`, ~$0.01) and committed
-- [ ] Before/after reports, transcription model chosen
+- [x] Audio made (`uv run python -m evals.video_audio`, ~$0.01) and committed
+- [x] Before/after reports, transcription model chosen (`gpt-4o-mini-transcribe`, below)
 - [x] Web upload step
 - [x] README, CLAUDE.md Status/Layout
 - [ ] PR merged
 
+Results (owner's Mac, 2026-10-20, `gpt-5.4-mini` reasoning medium, 6 cases, ~31 s of audio
+each):
+
+| Report | Prompt | Transcription | Missed allergens | Foods | Vague flagged | Stated amounts | Cost | p50 / p95 |
+|---|---|---|---|---|---|---|---|---|
+| `video-2026-10-20T065810Z` | plain (before) | mini | 0 | 100% | 0/3 | 100% | $0.0121 | 10.1 / 29.4 s |
+| `video-2026-10-20T065841Z` | video (after) | mini | 0 | 100% | **3/3** | 100% | $0.0102 | 9.1 / 17.3 s |
+| `video-2026-10-20T065914Z` | video | `gpt-4o-transcribe` | 0 | 97% | 2/3 | 100% | $0.0131 | 9.1 / 27.5 s |
+
+All three refused the video that is not a recipe, kept the sponsor read out of the draft, got
+servings and time, and read the pancake amounts that were only on screen. The plain prompt
+wrote a number for "a glug of olive oil" with nothing telling the person it was a guess; the
+video lines flag every vague amount and none of the stated ones. `gpt-4o-mini-transcribe` is at
+least as good here at half the price, so it stays the default. Transcription is $0.0016 of the
+$0.0102. With the video lines, two drafts had extra lines beyond the labels (aglio e olio
+7 for 5, peanut noodles 8 for 7); the report does not keep line names, but the scripts mention
+salted water, pasta water and noodle water, which fits. Extra lines are not counted as errors. Six cases from one run each is a small sample: the before/after difference is in
+vague-amount flagging, not the other metrics.
+
 Notes from building PR 2:
 
-- Built in a cloud session with no OpenAI access, so the TTS audio and both eval runs are left
-  for the owner's machine. Run, in order: `evals.video_audio`, `evals.run_video --plain`,
-  `evals.run_video`, `evals.run_video --transcribe-model gpt-4o-transcribe`; commit the WAV
-  files and reports and put the numbers here and in the PR.
+- Built in a cloud session with no OpenAI access, so the TTS audio and the eval runs were done on
+  the owner's machine (pushing the 4.5 MB of WAV over HTTPS needed `git config
+  http.postBuffer 157286400`).
 - The video lines live in `VIDEO_INSTRUCTIONS` and the `VideoRecipe` output (lines carry
   `vague_amount`), used only by `from_video`; other imports keep the current prompt, so the
   22-case import eval is unaffected. `--plain` reads videos with that unchanged prompt.
