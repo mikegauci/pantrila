@@ -8,7 +8,8 @@ or by typing them in, and cook any
 recipe in cooking mode. **The model proposes; deterministic code decides.** Every recipe and plan is
 re-checked against your allergens and diet before you see it.
 
-**Live demo: https://pantrio-azure.vercel.app** ("Try it as a guest" needs no account. The API
+**Live demo: https://pantrio-azure.vercel.app** ("Continue with Google" keeps your data; "Try it as a guest" needs no account, and a guest
+can add Google later without losing anything. The API
 runs on Render's free plan and sleeps when idle, so the first request can take about 50
 seconds.) Demo video walkthrough: [`docs/demo-script.md`](docs/demo-script.md).
 
@@ -141,7 +142,8 @@ with the next message; the browser only says which thread it is in.
   eval is 0%.
 - **Cheapest model that passes.** `gpt-5.4-mini` with reasoning effort low. Any change to a
   prompt, schema, tool, retrieval setting or model needs a before/after eval run.
-- **Cost guards for a public demo.** Guests sign in anonymously. Each user gets 5 plans and
+- **Cost guards for a public demo.** Guests sign in anonymously and can link Google
+  to keep the same account ([`docs/google-sign-in.md`](docs/google-sign-in.md)). Each user gets 5 plans and
   50 chat turns a day; searches are also metered. A shared daily budget includes reservations
   for in-flight work, then reconciles actual cost. Reservation sizes are estimates rather than
   provider billing ceilings. Every paid call is logged with tokens, cost and latency (the Insights page).

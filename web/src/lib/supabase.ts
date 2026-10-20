@@ -1,4 +1,4 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js"
+import { createClient, type SupabaseClient, type User } from "@supabase/supabase-js"
 
 let client: SupabaseClient | null = null
 
@@ -15,4 +15,34 @@ export function supabase(): SupabaseClient {
     })
   }
   return client
+}
+
+const callback = () => `${window.location.origin}/auth/callback`
+
+/** Leaves the page for Google; the browser comes back to /auth/callback signed in. */
+export async function signInWithGoogle(): Promise<string | null> {
+  const { error } = await supabase().auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: callback() },
+  })
+  return error?.message ?? null
+}
+
+/**
+ * Adds Google to the signed-in guest, so the same user id (and its pantry, plans, cookbook
+ * and chats) carries on as a lasting account. Needs manual linking on in Supabase Auth.
+ */
+export async function linkGoogle(): Promise<string | null> {
+  const { error } = await supabase().auth.linkIdentity({
+    provider: "google",
+    options: { redirectTo: callback() },
+  })
+  return error?.message ?? null
+}
+
+/** Supabase names the user from Google's profile; email sign-ins have no name. */
+export function firstName(user: User | undefined): string | null {
+  const meta = user?.user_metadata ?? {}
+  const full = typeof meta.full_name === "string" ? meta.full_name : typeof meta.name === "string" ? meta.name : ""
+  return full.trim().split(/\s+/)[0] || null
 }

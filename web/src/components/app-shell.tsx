@@ -7,8 +7,10 @@ import {
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useSyncExternalStore } from "react"
+import { toast } from "sonner"
 
 import { useAuth } from "@/components/auth-provider"
+import { GoogleMark } from "@/components/google-mark"
 import { Logo } from "@/components/logo"
 import { TourProvider, useTour } from "@/components/tour"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -20,7 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { pingServer } from "@/lib/api"
 import { avatarFor } from "@/lib/avatar"
 import { useMe } from "@/lib/hooks"
-import { supabase } from "@/lib/supabase"
+import { linkGoogle, supabase } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
 
 const NAV = [
@@ -122,7 +124,7 @@ export function UserAvatar({ userId, email, size, url }: {
   )
 }
 
-function UserMenu({ userId, email }: { userId: string | null; email: string | null }) {
+function UserMenu({ userId, email, guest }: { userId: string | null; email: string | null; guest: boolean }) {
   const router = useRouter()
   const tour = useTour()
   const { data: me } = useMe()
@@ -139,6 +141,16 @@ function UserMenu({ userId, email }: { userId: string | null; email: string | nu
             <span className="truncate">{email ?? "Guest"}</span>
           </DropdownMenuLabel>
         </DropdownMenuGroup>
+        {guest && (
+          <DropdownMenuItem
+            onClick={async () => {
+              const error = await linkGoogle()
+              if (error) toast.error(`Could not add Google: ${error}`)
+            }}
+          >
+            <GoogleMark className="size-4" /> Keep my data with Google
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => router.push("/profile")}>
           <UserRound /> Profile
@@ -202,7 +214,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Today />
           </span>
           <span className="ml-auto sm:hidden" />
-          <UserMenu userId={session?.user.id ?? null} email={session?.user.email ?? null} />
+          <UserMenu userId={session?.user.id ?? null} email={session?.user.email || null} guest={!!session?.user.is_anonymous} />
         </header>
         <main className="mx-auto max-w-[1200px] px-3 py-5 pb-24 sm:px-4 md:px-8 md:py-8 md:pb-10">
           {ready && session ? children : <PageSkeleton />}

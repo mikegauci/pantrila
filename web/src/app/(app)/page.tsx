@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useAuth } from "@/components/auth-provider"
 import { label, planDayIndex } from "@/lib/format"
 import { useGrocery, usePantry, usePlan } from "@/lib/hooks"
+import { firstName } from "@/lib/supabase"
 
 function greeting() {
   const h = new Date().getHours()
@@ -22,7 +23,7 @@ export default function HomePage() {
   const { data: plan, isLoading } = usePlan()
   const { data: pantry } = usePantry()
   const { data: grocery } = useGrocery(1, !!plan)
-  const name = session?.user.email?.split("@")[0]
+  const name = firstName(session?.user) ?? session?.user.email?.split("@")[0]
 
   const dayIndex = plan ? planDayIndex(plan.created_at, plan.days.length) : 0
   const today = plan?.days[dayIndex]
