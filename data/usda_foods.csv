@@ -142,6 +142,8 @@ fdc_id,description,kcal,protein_g,carbs_g,fat_g,fibre_g
 171711,"Blueberries, raw",57.0,0.74,14.49,0.33,2.4
 171796,"Beef, ground, 85% lean meat / 15% fat, raw (Includes foods for USDA's Food Distribution Program)",215.0,18.59,0.0,15.0,0.0
 171955,"Fish, cod, Atlantic, raw",82.0,17.81,0.0,0.67,0.0
+172183,"Egg, white, raw, fresh",52.0,10.9,0.73,0.17,0.0
+172184,"Egg, yolk, raw, fresh",322.0,15.86,3.59,26.54,0.0
 172231,"Spices, turmeric, ground",312.0,9.68,67.14,3.25,22.7
 172232,"Basil, fresh",23.0,3.15,2.65,0.64,1.6
 172233,"Dill weed, fresh",43.0,3.46,7.02,1.12,2.1

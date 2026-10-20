@@ -43,7 +43,7 @@ def main() -> None:
         urllib.request.urlretrieve(URL, CACHE)
 
     with INGREDIENTS.open() as fh:
-        wanted = {row["fdc_id"] for row in csv.DictReader(fh)}
+        wanted = {row["fdc_id"] for row in csv.DictReader(fh) if row["fdc_id"]}
 
     with zipfile.ZipFile(CACHE) as zf:
         descriptions = {
