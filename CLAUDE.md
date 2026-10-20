@@ -33,6 +33,15 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Google sign-in: login page leads with "Continue with Google" (Supabase `signInWithOAuth`, PKCE,
+back to `/auth/callback`), guest stays second, owner magic link unchanged. Guests add Google from
+the account menu ("Keep my data with Google") or Profile ("Keep your data") via `linkIdentity`,
+keeping the same user id and data; a Google account that already has a user shows a message on
+the callback and the guest stays signed in. Helpers in `web/src/lib/supabase.ts`; Home greets by
+Google first name. Needs the owner's one-off setup in Google Cloud and Supabase (Google provider,
+"Allow manual linking"): `docs/google-sign-in.md`. No API, schema, prompt or model change, so no
+eval rerun; 2 new Playwright tests (`web/tests/google-sign-in.spec.ts`).
+
 Rename Pantrio -> Pantrila: package `pantrila`, CLI `pantrila`, env vars `PANTRILA_*`, web brand and
 localStorage keys (`pantrila-tour-done`, `pantrila-cook`; saved tour/cooking state resets once). Kept on
 purpose: table `pantrio_migrations`, applied migration files, and the hosted names (Vercel project and URL
@@ -447,7 +456,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   (generated corpus, one file per recipe), `corpus_manifest.json` (generation runs and cost).
 - `scripts/`: `generate_corpus.py`, `build_usda_table.py`, `langsmith_dashboard.py` (rebuilds the
   "Pantrila live" LangSmith dashboard via the charts API).
-- `docs/`: `demo-script.md` (video walkthrough), `screenshots/` (README images, taken from the
+- `docs/`: `demo-script.md` (video walkthrough), `google-sign-in.md` (Google Cloud + Supabase setup), `screenshots/` (README images, taken from the
   web app at 1280 px wide).
 - `supabase/migrations/`: SQL migrations.
 - `evals/`: `retrieval_queries.py` (deterministic query generator) -> `data/retrieval_queries.json`,
@@ -465,7 +474,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   see `web/DESIGN_SYSTEM.md` (tokens live in `src/app/globals.css`). Signed-in screens are
   client components under `src/app/(app)/` fetching the API with SWR (`src/lib/hooks.ts`,
   `src/lib/api.ts`, types in `src/lib/types.ts` mirror `api_models.py`); Supabase is used only for
-  sign-in (magic link or anonymous guest). The cookbook lives under `recipes/mine` (list,
+  sign-in (Google, magic link or anonymous guest; a guest links Google with `linkGoogle`). The cookbook lives under `recipes/mine` (list,
   `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`; "From a post" can
   import the post directly, with an estimated countdown. The first-run tour
   is `src/components/tour.tsx` (`TourProvider` in `AppShell`, `useTour().start`). Cooking mode is
