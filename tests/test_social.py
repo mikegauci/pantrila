@@ -113,7 +113,7 @@ def test_tiktok_short_link_to_somewhere_else_is_refused():
     "response",
     [httpx.Response(403), httpx.Response(200, json={"title": ""}), httpx.Response(200, json=[])],
 )
-def test_tiktok_refusal_or_empty_caption_asks_for_the_caption(response):
+def test_tiktok_refusal_or_empty_caption_suggests_another_link(response):
     http = mock_http({oembed(TIKTOK): response})
     with pytest.raises(ImportFailed, match="TikTok didn't let Pantrio read this post"):
         fetch_post(TIKTOK, http, resolve)
@@ -136,13 +136,13 @@ def test_instagram_caption_and_handle_come_from_open_graph_tags():
     assert instagram_caption(meta_tags(title)) == (None, "Soup")
 
 
-def test_instagram_login_redirect_asks_for_the_caption():
+def test_instagram_login_redirect_suggests_another_link():
     url = "https://www.instagram.com/p/C1abc/"
     http = mock_http({
         url: httpx.Response(302, headers={"location": "https://www.instagram.com/accounts/login/"}),
         "https://www.instagram.com/accounts/login/": httpx.Response(200, html="<p>Log in</p>"),
     })  # fmt: skip
-    with pytest.raises(ImportFailed, match="Instagram didn't let Pantrio read this post. Paste"):
+    with pytest.raises(ImportFailed, match="Instagram didn't let Pantrio read this post. Try another public recipe link"):
         fetch_post(url, http, resolve)
 
 
@@ -230,7 +230,7 @@ def test_unreadable_links_are_skipped_and_no_recipe_anywhere_says_what_to_do_nex
     assert str(exc.value) == NO_RECIPE and len(client.calls) == 2
 
     client = FakeClient(recipe(is_recipe=False))
-    with pytest.raises(ImportFailed, match="Paste the recipe text or add screenshots"):
+    with pytest.raises(ImportFailed, match="Try another public recipe link"):
         Importer(client=client, model="m").from_post(TIKTOK, "Comment RECIPE 👇", http, resolve)
     assert len(client.calls) == 1  # no link, no second call
 
@@ -281,7 +281,7 @@ def test_facebook_query_keeps_only_the_post_id():
     assert clean_url(url, "facebook") == "https://www.facebook.com/watch/?v=123"
 
 
-def test_facebook_sign_in_wall_asks_for_the_caption():
+def test_facebook_sign_in_wall_suggests_another_link():
     assert facebook_caption({"og:title": "Sam Cooks", "og:description": ""}) == ""
     wall = {"og:description": "Log into Facebook to start sharing and connecting."}
     assert facebook_caption(wall) == ""
@@ -349,14 +349,14 @@ def test_short_links_are_kept_so_print_recipe_links_work():
     assert caption_links(caption) == ["http://bzfd.it/1VThGfV"]
 
 
-def test_tiktok_oembed_with_only_the_player_asks_for_the_caption():
+def test_tiktok_oembed_with_only_the_player_suggests_another_link():
     player_only = {"version": "1.0", "type": "video", "html": "<iframe></iframe>"}
     http = mock_http({oembed(TIKTOK): httpx.Response(200, json=player_only)})
     with pytest.raises(ImportFailed, match="TikTok didn't let Pantrio read this post"):
         fetch_post(TIKTOK, http, resolve)
 
 
-def test_from_a_link_offers_text_and_screenshots_without_video_upload(monkeypatch):
+def test_from_a_link_suggests_another_public_recipe_link(monkeypatch):
     from pantrio.social import NO_RECIPE_LINK
 
     def no_recipe(self, *args):
@@ -365,7 +365,7 @@ def test_from_a_link_offers_text_and_screenshots_without_video_upload(monkeypatc
     monkeypatch.setattr(Importer, "from_post", no_recipe)
     with pytest.raises(ImportFailed) as exc:
         Importer(client=FakeClient(recipe()), model="m").from_link(TIKTOK)
-    assert str(exc.value) == NO_RECIPE_LINK and "screenshots" in NO_RECIPE_LINK
+    assert str(exc.value) == NO_RECIPE_LINK and "another public recipe link" in NO_RECIPE_LINK
 
 
 def ingredients_only(*names: str) -> ImportedRecipe:

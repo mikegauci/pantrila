@@ -13,7 +13,7 @@ const draft = {
   source_author: null, recipe_url: "https://sambakes.com/gnocchi",
 }
 
-test("a post that can't be read asks for its caption and keeps the credit", async ({ page }) => {
+test("a post imports from its link and keeps the credit", async ({ page }) => {
   const imports: { url?: string; caption?: string | null }[] = []
   let saved = draft
   await page.setViewportSize({ width: 390, height: 844 })
@@ -25,9 +25,9 @@ test("a post that can't be read asks for its caption and keeps the credit", asyn
     if (path === "/me/recipes/import/post") {
       const body = route.request().postDataJSON()
       imports.push(body)
-      if (!body.caption) {
+      if (imports.length === 1) {
         return route.fulfill({ status: 422,
-          json: { detail: "Instagram didn't let Pantrio read this post. Paste the caption below." } })
+          json: { detail: "Instagram didn't let Pantrio read this post. Try another public recipe link." } })
       }
       return route.fulfill({ json: { draft, notes: [], cost_usd: 0.004, latency_ms: 5000 } })
     }
@@ -60,17 +60,14 @@ test("a post that can't be read asks for its caption and keeps the credit", asyn
   await page.getByRole("button", { name: "Read recipe" }).click()
 
   await expect(page.getByRole("alert").filter({ hasText: "Instagram didn't let Pantrio read this post" })).toBeVisible()
-  await expect(page.getByRole("button", { name: "Add screenshots instead" })).toBeVisible()
-  await expect(page.getByRole("button", { name: "Upload the video" })).toHaveCount(0)
-  await expect(page.locator('input[accept="video/*"]')).toHaveCount(0)
-  const caption = page.getByLabel("Caption", { exact: true })
-  await expect(caption).toBeFocused()
-  await page.screenshot({ path: "test-results/post-import-caption.png", fullPage: true })
-  await caption.fill("Crispy gnocchi 🥔 full recipe sambakes.com/gnocchi")
+  await expect(page.getByRole("button", { name: "Paste the caption" })).toHaveCount(0)
+  await expect(page.getByLabel("Caption", { exact: true })).toHaveCount(0)
+  await expect(page.getByPlaceholder("Paste Instagram, Facebook or TikTok link")).toBeVisible()
+  await expect(page.getByText("Pantrio reads the recipe from your post and credits the creator.")).toBeVisible()
   await page.getByRole("button", { name: "Read recipe" }).click()
 
   await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Crispy gnocchi")
-  expect(imports.at(-1)).toEqual({ url: post, caption: "Crispy gnocchi 🥔 full recipe sambakes.com/gnocchi" })
+  expect(imports.at(-1)).toEqual({ url: post })
   await page.getByLabel("Creator").fill("@sam.cooks")
   await expect(page.getByLabel("Posted on")).toHaveValue("instagram")
   await page.getByLabel("Creator").scrollIntoViewIfNeeded()
@@ -122,7 +119,7 @@ test("where the service covers the platform, Pantrio says it is listening to the
   await page.getByRole("button", { name: /From a post/ }).click()
   await timingLoaded
   await page.getByLabel("Post link").fill(post)
-  await expect(page.getByText(/it listens to the video too/)).toBeVisible()
+  await expect(page.getByText("Pantrio reads the recipe from your post and credits the creator.")).toBeVisible()
   await page.clock.pauseAt(new Date(Date.now() + 5000))
   await page.getByRole("button", { name: "Read recipe" }).click()
   await expect(page.getByRole("button", { name: "Reading the post…" })).toBeVisible()
@@ -141,5 +138,6 @@ test("where the service covers the platform, Pantrio says it is listening to the
   await page.goto("/recipes/mine/new")
   await page.getByRole("button", { name: /From a post/ }).click()
   await page.getByLabel("Post link").fill("https://www.tiktok.com/@sam/video/7300000000000000001")
-  await expect(page.getByText(/it listens to the video too/)).toHaveCount(0)
+  await expect(page.getByLabel("Caption", { exact: true })).toHaveCount(0)
+  await expect(page.getByRole("button", { name: "Paste the caption" })).toHaveCount(0)
 })

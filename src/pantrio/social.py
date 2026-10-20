@@ -70,10 +70,8 @@ _BARE_OK = re.compile(
     + r"))$",
     re.S,
 )
-CAPTION_BLOCKED = "{platform} didn't let Pantrio read this post. Paste the caption below."
-NO_RECIPE = (
-    "Pantrio couldn't read a full recipe from this post. Paste the recipe text or add screenshots."
-)
+CAPTION_BLOCKED = "{platform} didn't let Pantrio read this post. Try another public recipe link."
+NO_RECIPE = "Pantrio couldn't read a full recipe from this post. Try another public recipe link."
 NO_RECIPE_LINK = NO_RECIPE
 
 

@@ -33,6 +33,12 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Social import form is link-only: no caption toggle, caption field or screenshot fallback
+button. Placeholder: "Paste Instagram, Facebook or TikTok link". Helper text: "Pantrio reads
+the recipe from your post and credits the creator." Read failures suggest another public
+recipe link. Backend caption/text import support remains for API/eval callers. This small
+follow-up is pushed directly to main at the owner's explicit request for this change.
+
 Recipe save/import UX: saving a new recipe automatically calls its existing photo endpoint
 with a visible "Making the photo…" step; photo failures/allowance limits keep the saved recipe
 and offer a retry on its page. Edits do not regenerate photos. Social imports show an estimated

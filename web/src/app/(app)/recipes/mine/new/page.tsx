@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, Camera, ClipboardPaste, Link2, MessageCircle, PenLine, Share2, Sparkles, X } from "lucide-react"
+import { ArrowLeft, Camera, Link2, MessageCircle, PenLine, Share2, Sparkles, X } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
@@ -13,7 +13,6 @@ import { BLANK_RECIPE, CHAT_DRAFT, CookbookForm } from "@/components/cookbook-fo
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { send } from "@/lib/api"
 import { seconds, usd } from "@/lib/format"
 import { useApi, useMe, useMeta } from "@/lib/hooks"
@@ -152,25 +151,13 @@ function postPlatform(link: string): string | null {
   return null
 }
 
-function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void; onScreenshots: () => void }) {
+function PostImport({ onDone }: { onDone: (v: ImportView) => void }) {
   const [url, setUrl] = useState("")
-  const [caption, setCaption] = useState("")
-  const [showCaption, setShowCaption] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const captionRef = useRef<HTMLTextAreaElement>(null)
   const link = url.trim()
-  const text = caption.trim()
-  // TikTok doesn't share captions with apps like Pantrio, so its caption box starts open.
-  const tiktok = /^(https?:\/\/)?([a-z]+\.)?tiktok\.com\//i.test(link)
-  // Where the video service covers the platform, Pantrio also listens to the video when the
-  // caption has no full recipe (and reads a TikTok caption itself): timings come from recent completed reel imports.
   const { data: meta } = useMeta()
   const hears = (meta?.reel_platforms ?? []).includes(postPlatform(link) ?? "")
-  const captionOpen = showCaption || (tiktok && !hears)
-  useEffect(() => {
-    if (error && captionOpen) captionRef.current?.focus()
-  }, [error, captionOpen])
   const { data: timing } = useApi<{ estimated_seconds: number }>("/me/recipes/import/timing")
   const [estimatedSeconds, setEstimatedSeconds] = useState<number | null>(null)
 
@@ -179,16 +166,9 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
     setEstimatedSeconds(hears ? timing?.estimated_seconds ?? 105 : null)
     setError(null)
     try {
-      // A caption with no post link is plain pasted text: there is no post to credit.
-      onDone(link
-        ? await send<ImportView>("/me/recipes/import/post", "POST", { url: link, caption: text || null })
-        : await send<ImportView>("/me/recipes/import/text", "POST", { text }))
+      onDone(await send<ImportView>("/me/recipes/import/post", "POST", { url: link }))
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not read that post.")
-      // The link could not be read (or held no recipe): the caption box is the next step.
-      if (!text) {
-        setShowCaption(true)
-      }
     } finally {
       setBusy(false)
     }
@@ -198,53 +178,22 @@ function PostImport({ onDone, onScreenshots }: { onDone: (v: ImportView) => void
     <form className="grid gap-3" onSubmit={(e) => { e.preventDefault(); if (!busy) read() }}>
       <div className="grid gap-1.5">
         <Label htmlFor="post-link">Post link</Label>
-        <Input id="post-link" type="text" inputMode="url" autoCapitalize="none" spellCheck={false} placeholder="https://www.tiktok.com/@…" value={url}
+        <Input id="post-link" type="text" inputMode="url" autoCapitalize="none" spellCheck={false} placeholder="Paste Instagram, Facebook or TikTok link" value={url}
                onChange={(e) => setUrl(e.target.value)} className="h-12 bg-surface text-[15px]" />
         {link && !POST_LINK.test(link) && (
           <p className="text-[12px] text-muted-foreground">
-            {text
-              ? "Not a TikTok, Instagram or Facebook post, so Pantrio reads the caption and, if it has no recipe, this page."
-              : "Not a TikTok, Instagram or Facebook post, so Pantrio reads it as a recipe page."}
+            Pantrio will read this link as a recipe page.
           </p>
         )}
       </div>
-      {captionOpen ? (
-        <div className="grid gap-1.5">
-          <Label htmlFor="post-caption">Caption</Label>
-          {tiktok && !text && (
-            <p className="text-[12px] text-muted-foreground">
-              TikTok doesn&apos;t share captions with other apps. Copy it in TikTok (tap the caption, then hold to copy) and paste it here; the link keeps the credit.
-            </p>
-          )}
-          <Textarea id="post-caption" ref={captionRef} value={caption} rows={6} maxLength={10000}
-                    placeholder="Copy the caption from the app (under the post: … then Copy, or hold the text) and paste it here."
-                    onChange={(e) => setCaption(e.target.value)} className="min-h-32 bg-surface text-[15px]" />
-        </div>
-      ) : (
-        <Button type="button" variant="ghost" size="sm" className="w-fit" onClick={() => setShowCaption(true)}>
-          <ClipboardPaste /> Paste the caption
-        </Button>
-      )}
-      <Button type="submit" size="lg" className="h-12 w-full sm:w-fit" disabled={busy || (!link && !text)}>
+      <Button type="submit" size="lg" className="h-12 w-full sm:w-fit" disabled={busy || !link}>
         <Sparkles /> {busy ? "Reading the post…" : "Read recipe"}
       </Button>
       {busy && estimatedSeconds !== null && <ImportCountdown estimatedSeconds={estimatedSeconds} />}
       <p className="text-[12px] text-muted-foreground">
-        {hears
-          ? "Pantrio reads the caption (and a recipe site it links to). If the method is only in the video, it listens to the video too, found through a third-party service; the video isn't stored, and this can stop working when the app changes. "
-          : "Pantrio reads the caption (and a recipe site it links to). If the recipe cannot be read, paste its text or add screenshots. "}
-        The post link and creator are kept as the credit.
+        Pantrio reads the recipe from your post and credits the creator.
       </p>
-      {error && (
-        <div role="alert" className="grid gap-2 text-[13px]">
-          <p className="text-danger">{error}</p>
-          <div className="flex flex-wrap gap-2">
-            <Button type="button" variant="outline" size="sm" className="w-fit" onClick={onScreenshots}>
-              <Camera /> Add screenshots instead
-            </Button>
-          </div>
-        </div>
-      )}
+      {error && <p role="alert" className="text-[13px] text-danger">{error}</p>}
     </form>
   )
 }
@@ -344,7 +293,7 @@ export default function NewRecipePage() {
               <PanelTitle>{IMPORT_TITLE[method as Exclude<Method, "manual">]}</PanelTitle>
               {method === "photo" && <PhotoImport onDone={imported} />}
               {method === "link" && <LinkImport onDone={imported} />}
-              {method === "post" && <PostImport onDone={imported} onScreenshots={() => pick("photo")} />}
+              {method === "post" && <PostImport onDone={imported} />}
               {me && (
                 <p className="mt-3 text-[12px] text-muted-foreground">
                   {me.limits.imports_left} of {me.limits.imports_per_day} AI imports left today.
