@@ -78,12 +78,15 @@ kept out, not-a-recipe refused, $0.0121 -> $0.0102 per import (transcription $0.
 31 s of audio), p50 10.1/9.1 s, p95 29.4/17.3 s. `gpt-4o-transcribe`
 (`video-2026-10-20T065914Z`): food matching 97%, vague flagged 2/3, $0.0131, so the default
 stays `gpt-4o-mini-transcribe` ($0.003/min; both env vars set on Render).
-Ingredients-only captions (fix/ingredients-only-captions): a reel whose caption lists the
+Ingredients-only captions: a reel whose caption lists the
 ingredients and says "full recipe in my bio" was refused, since `to_draft` required steps.
 Now a draft with no method is kept when every ingredient line names a word found in the
 source text (`grounded`; photos stay strict), with the step "Add the method here." and the
 `NO_METHOD` note; `from_post` still tries a linked site first and keeps the caption's draft if
-that fails. New eval case `caption-ingredients-only` (23 import cases).
+that fails. New eval case `caption-ingredients-only` (23 import cases). PR #39, merged.
+`import-2026-10-20T081143Z`: 23/23, found/refused 100% (4/4 no-recipe refused), 0 missed
+allergens, 1 extra (tofu bowl: milk, as before), food matching 99% (captions 100%), the new
+case a draft with 8/8 foods, $0.0056 per import, p50 4.5 s / p95 12.6 s.
 Next: hearing a reel from its link (no screen recording) through a scraping service; plan in
 `docs/plans/reel-audio-from-link.md` (Instagram gives no `og:video`, checked 2026-10-20).
 
