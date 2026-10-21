@@ -5,6 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* A band of light sweeping across a photo slot while the photo is made. */
+  --animate-shimmer: shimmer 1.6s ease-in-out infinite;
+  @keyframes shimmer {
+    to {
+      transform: translateX(300%);
+    }
+  }
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
   --color-primary-soft: var(--primary-soft);
