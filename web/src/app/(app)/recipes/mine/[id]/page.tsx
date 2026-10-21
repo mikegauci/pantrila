@@ -261,6 +261,9 @@ export default function MyRecipePage() {
           </div>
         ))}
       </Panel>
+
+      <StartCooking href={`/recipes/mine/${r.id}/cook`} recipeKey={`mine:${r.id}`}
+                    match={{ cookbook_id: r.id }} fullWidth />
     </div>
   )
 }
