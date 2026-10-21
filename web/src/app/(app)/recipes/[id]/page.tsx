@@ -198,6 +198,9 @@ export default function RecipePage() {
           ))}
         </ol>
       </Panel>
+
+      <StartCooking href={`/recipes/${r.id}/cook?servings=${n}`} recipeKey={`corpus:${r.id}`}
+                    match={{ recipe_id: r.id }} fullWidth />
     </div>
   )
 }

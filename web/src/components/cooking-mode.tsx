@@ -63,10 +63,11 @@ const MAX_SERVINGS = 24
 const noSubscribe = () => () => {}
 
 /** "Start cooking" (or "Resume cooking" with progress saved) and how often it was cooked. */
-export function StartCooking({ href, recipeKey, match }: {
+export function StartCooking({ href, recipeKey, match, fullWidth }: {
   href: string
   recipeKey: string
   match: { recipe_id: string } | { cookbook_id: number }
+  fullWidth?: boolean
 }) {
   const { session } = useAuth()
   const key = session ? progressKey(session.user.id, recipeKey) : null
@@ -80,7 +81,7 @@ export function StartCooking({ href, recipeKey, match }: {
     "recipe_id" in match ? c.recipe_id === match.recipe_id : c.cookbook_id === match.cookbook_id)
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <Link href={href} className={buttonVariants({ size: "lg" })}>
+      <Link href={href} className={cn(buttonVariants({ size: "lg" }), fullWidth && "w-full")}>
         <CookingPot /> {saved ? "Resume cooking" : "Start cooking"}
       </Link>
       {mine.length > 0 && (

@@ -33,6 +33,8 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Mobile viewport and cook button: the viewport is locked (`viewport` export in `web/src/app/layout.tsx`: device width, scale 1, no pinch zoom) and `html`/`body` clip horizontal overflow, so pages no longer wobble sideways on phones. Recipe pages (corpus and cookbook) end with a full-width "Start cooking" button after the method (`StartCooking fullWidth`). Web only, no model call, so no eval rerun.
+
 Import progress and units: an import job now records the steps the importer actually takes (`Importer(on_step=)`,
 keys of `recipe_import.STEPS`: page, post, caption, link, comments, video, listen, watch, recipe, photos, text,
 ingredients, amounts; a repeat of the current step is not new) and `GET /me/recipes/import/jobs/{id}` returns
