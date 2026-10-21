@@ -13,10 +13,12 @@ import { CookbookForm, PLATFORM, RECIPE_SOURCE, siteOf } from "@/components/cook
 import { StartCooking } from "@/components/cooking-mode"
 import { MacroRing } from "@/components/macro-ring"
 import { Button, buttonVariants } from "@/components/ui/button"
+import { TemperatureToggle } from "@/components/temperature-toggle"
 import { Skeleton } from "@/components/ui/skeleton"
 import { send } from "@/lib/api"
 import { label } from "@/lib/format"
 import { useCookbookRecipe, useMe, useProfile } from "@/lib/hooks"
+import { hasTemp, showTemps, useTempUnit } from "@/lib/temperature"
 import { cn } from "@/lib/utils"
 import type { CookbookDetail } from "@/lib/types"
 
@@ -41,6 +43,7 @@ export default function MyRecipePage() {
   const { data: me, mutate: refreshMe } = useMe()
   const [editing, setEditing] = useState(false)
   const [photoBusy, setPhotoBusy] = useState<"make" | "remove" | null>(null)
+  const [unit] = useTempUnit()
 
   if (error) {
     return <p role="alert" className="text-danger">{error.status === 404 ? "No such recipe in your cookbook." : error.message}</p>
@@ -236,14 +239,14 @@ export default function MyRecipePage() {
       </div>
 
       <Panel>
-        <PanelTitle>Method</PanelTitle>
+        <PanelTitle action={hasTemp(r.steps) && <TemperatureToggle />}>Method</PanelTitle>
         <ol className="grid gap-4">
           {r.steps.map((step, i) => (
             <li key={i} className="flex gap-4">
               <span className="tabular grid size-8 shrink-0 place-items-center rounded-full bg-primary-soft font-semibold text-primary-text">
                 {i + 1}
               </span>
-              <p className="pt-1">{step}</p>
+              <p className="pt-1">{showTemps(step, unit)}</p>
             </li>
           ))}
         </ol>

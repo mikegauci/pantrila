@@ -11,6 +11,7 @@ import { toast } from "sonner"
 import useSWR from "swr"
 
 import { useAuth } from "@/components/auth-provider"
+import { TemperatureToggle } from "@/components/temperature-toggle"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Switch } from "@/components/ui/switch"
@@ -21,6 +22,7 @@ import {
 } from "@/lib/cooking"
 import { ago } from "@/lib/format"
 import { useCooked, useRefreshKitchen } from "@/lib/hooks"
+import { hasTemp, showTemps, useTempUnit } from "@/lib/temperature"
 import type { CookRequest, CookResult, PantryChange, Unit } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
@@ -113,6 +115,7 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
   const scale = servings / recipe.servings
   const onStep = page >= 1 && page <= n
   const step = onStep ? recipe.steps[page - 1] : ""
+  const [unit] = useTempUnit()
   const found = useMemo(() => (onStep ? stepTimers(step) : []), [onStep, step])
   const uses = useMemo(() => (onStep ? mentioned(step, recipe.ingredients) : []), [onStep, step, recipe.ingredients])
 
@@ -209,6 +212,7 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
             {page === 0 ? "Get ready" : page > n ? "Done" : `Step ${page} of ${n}`} · {servings} serving{servings === 1 ? "" : "s"}
           </p>
         </div>
+        {hasTemp(recipe.steps) && <TemperatureToggle />}
         <WakeBadge state={wake} />
         {onStep && (
           <Button variant="outline" size="sm" className="lg:hidden" onClick={() => setListOpen(true)}>
@@ -254,7 +258,7 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
                   <span className="tabular grid size-9 place-items-center rounded-full bg-primary-soft text-[15px]">{page}</span>
                   Step {page} of {n}
                 </h2>
-                <p className="text-[22px] leading-[34px] font-medium md:text-[28px] md:leading-[42px]">{step}</p>
+                <p className="text-[22px] leading-[34px] font-medium md:text-[28px] md:leading-[42px]">{showTemps(step, unit)}</p>
                 {uses.length > 0 && (
                   <div role="group" aria-label="Ingredients for this step">
                     <p className="mb-2 text-[12px] font-medium text-muted-foreground">For this step (tap when it is out)</p>
