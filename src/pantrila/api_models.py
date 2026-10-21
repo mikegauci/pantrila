@@ -59,6 +59,8 @@ class IngredientView(BaseModel):
     unit: Unit
     grams: float
     in_pantry: bool
+    grams_per_ml: float | None = Field(default=None, description="For showing it by volume.")
+    grams_per_piece: float | None = Field(default=None, description="For showing it in pieces.")
 
 
 class RecipeDetail(RecipeCard):

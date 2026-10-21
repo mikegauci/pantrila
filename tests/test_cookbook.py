@@ -8,6 +8,7 @@ from pantrila.cookbook import (
     CookbookRecipeIn,
     FoodEstimate,
     MemoryCookbook,
+    bare_name,
     derive,
     problems_for,
 )
@@ -51,6 +52,35 @@ def test_groups_are_stored_and_older_recipes_without_them_still_load():
     for line in old["ingredients"]:
         del line["section"]
     assert CookbookRecipeIn.model_validate(old).step_sections == []
+
+
+@pytest.mark.parametrize(
+    ("name", "bare"),
+    [
+        ("1 cup basmati rice", "basmati rice"),
+        ("1 pound boneless chicken thighs (see note 1)", "boneless chicken thighs (see note 1)"),
+        ("1-1/4 teaspoons paprika", "paprika"),
+        ("½ tsp. oregano", "oregano"),
+        ("2 pinches of salt", "salt"),
+        ("400g chickpeas", "chickpeas"),
+        ("3-4 cloves garlic", "cloves garlic"),
+        ("1 lemon", "lemon"),
+        ("00 flour", "00 flour"),
+        ("2 x 400 g cans tomatoes", "2 x 400 g cans tomatoes"),
+        ("Salt", "Salt"),
+    ],
+)
+def test_bare_name_drops_a_leading_amount_only(name, bare):
+    assert bare_name(name) == bare
+
+
+def test_derived_lines_carry_what_they_convert_with():
+    d = derive(pancakes(ingredients=[
+        {"name": "milk", "quantity": 250, "unit": "ml", "food": "milk"},
+        {"name": "gochujang", "quantity": 1, "unit": "tbsp", "estimate": GOCHUJANG},
+    ]))  # fmt: skip
+    assert d.ingredients[0].grams_per_ml and d.ingredients[0].grams_per_piece is None
+    assert d.ingredients[1].grams_per_ml == 1.2
 
 
 @pytest.mark.parametrize("starts", [[2, 1], [1, 1], [3]])

@@ -127,6 +127,13 @@ def to_grams(
     raise UnitError(f"unknown unit {unit}")
 
 
+def measures(f: Food) -> dict[str, float | None]:
+    """Grams per ml and per piece the food converts with; none for a weight-only food."""
+    if f.grams_only:
+        return {"grams_per_ml": None, "grams_per_piece": None}
+    return {"grams_per_ml": f.grams_per_ml, "grams_per_piece": f.grams_per_piece}
+
+
 def derive_allergens(foods: set[str], table: Mapping[str, Food] | None = None) -> set[Allergen]:
     table = table or load_foods()
     return set().union(*(table[f].allergens for f in foods))
