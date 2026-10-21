@@ -63,6 +63,36 @@ export function amountIn(line: Measured, unit: ShowUnit, scale = 1): number {
   return line.quantity * scale
 }
 
+/** Grams of `q` in `unit`, or null when the food gives no way to weigh that unit. */
+function toGrams(q: number, unit: ShowUnit, perMl?: number | null, perPiece?: number | null): number | null {
+  if (GRAMS[unit]) return q * GRAMS[unit]
+  if (ML[unit]) return perMl ? q * ML[unit] * perMl : null
+  if (unit === "piece") return perPiece ? q * perPiece : null
+  return null
+}
+
+/** A number the form can show for `unit`: whole grams and ml from 10, else two decimals. */
+function tidy(q: number, unit: ShowUnit): number {
+  const metric = unit === "g" || unit === "ml"
+  return metric && q >= 10 ? Math.round(q) : Math.round(q * 100) / 100
+}
+
+/**
+ * The same amount in another unit, for the form when the person picks a new unit ("1 cup" of
+ * rice becomes "185 g"), or null when the food cannot be converted to it (no density or piece
+ * weight); the form then keeps the number.
+ */
+export function convertAmount(q: number, from: Unit, to: Unit, perMl?: number | null,
+                              perPiece?: number | null): number | null {
+  if (!Number.isFinite(q) || q <= 0 || from === to) return null
+  const grams = toGrams(q, from, perMl, perPiece)
+  if (grams === null) return null
+  if (GRAMS[to]) return tidy(grams / GRAMS[to], to)
+  if (ML[to] && perMl) return tidy(grams / perMl / ML[to], to)
+  if (to === "piece" && perPiece) return tidy(grams / perPiece, to)
+  return null
+}
+
 // A leading amount in a name ("1 cup", "1-1/4 teaspoons", "½ lb", "2 pinches of"), as in the
 // API's cookbook.bare_name: older imports kept the whole source line as the name.
 const FRACTION_CHAR = "[¼½¾⅓⅔⅛⅜⅝⅞]"

@@ -137,9 +137,10 @@ def test_full_caption_never_calls_the_service():
 
 
 def test_ingredients_only_caption_hears_the_video_and_keeps_the_caption():
-    media, meter = FakeMedia(), Meter()
+    media, meter, steps = FakeMedia(), Meter(), []
     client = FakeClient(caption_only(), heard())
     imp = importer(client, media, meter)
+    imp.on_step = steps.append
     result = imp.from_post(REEL, CAPTION, video_host(), resolve)
     assert media.asked == [REEL] and meter.runs == [(0.003, True)]
     assert result.notes[0] == HEARD and NO_METHOD not in result.notes
@@ -147,6 +148,7 @@ def test_ingredients_only_caption_hears_the_video_and_keeps_the_caption():
     # The caption reads at medium; the video, the slowest call, at low.
     efforts = [kw["reasoning"]["effort"] for kind, kw in client.calls if kind == "parse"]
     assert efforts == ["medium", "low"]
+    assert steps == ["caption", "ingredients", "video", "listen", "watch", "ingredients"]
     d = result.draft
     assert (d.source, d.source_url, d.source_platform, d.source_author) == (
         "post", REEL, "instagram", "zachs.foods")  # fmt: skip

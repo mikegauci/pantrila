@@ -1,6 +1,6 @@
 "use client"
 
-import { IngredientText } from "@/components/amount"
+import { MeasuredLine } from "@/components/amount"
 import { NutritionSource } from "@/components/nutrition-source"
 import { ArrowLeft, Camera, Check, Clock, ExternalLink, ImageOff, Loader2, Pencil, Trash2, Users } from "lucide-react"
 import Link from "next/link"
@@ -213,16 +213,23 @@ export default function MyRecipePage() {
                     >
                       {ing.in_pantry && <Check className="size-3" strokeWidth={3} />}
                     </span>
-                    <span className="flex-1">
-                      <IngredientText line={ing} />
-                      {ing.in_pantry && <span className="sr-only"> (in your pantry)</span>}
-                      {ing.amount_estimate && (
-                        <span className="mt-1 block text-[12px] text-muted-foreground">
-                          Estimated amount: {ing.amount_estimate}
-                        </span>
+                    <MeasuredLine line={ing}>
+                      {(text, picker) => (
+                        <>
+                          <span className="flex-1">
+                            {text}
+                            {ing.in_pantry && <span className="sr-only"> (in your pantry)</span>}
+                            {ing.amount_estimate && (
+                              <span className="mt-1 block text-[12px] text-muted-foreground">
+                                Estimated amount: {ing.amount_estimate}
+                              </span>
+                            )}
+                          </span>
+                          {!ing.food && ing.estimate && <AiBadge>Estimated</AiBadge>}
+                          {picker}
+                        </>
                       )}
-                    </span>
-                    {!ing.food && ing.estimate && <AiBadge>Estimated</AiBadge>}
+                    </MeasuredLine>
                   </li>
                 ))}
               </ul>

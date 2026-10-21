@@ -30,6 +30,7 @@ class ImportJob:
     status: Literal["running", "done", "failed"] = "running"
     result: ImportView | None = None
     error: tuple[int, str] | None = None  # HTTP status and message of the failure
+    steps: list[str] = field(default_factory=list)  # keys of recipe_import.STEPS, in order
 
 
 class ImportJobs:
@@ -55,6 +56,12 @@ class ImportJobs:
         with self._lock:
             job = self._jobs.get(job_id)
         return job if job is not None and job.user_id == user_id else None
+
+    def step(self, job: ImportJob, key: str) -> None:
+        """The import started `key`; a repeat of the current step is not a new one."""
+        with self._lock:
+            if not job.steps or job.steps[-1] != key:
+                job.steps.append(key)
 
     def succeed(self, job: ImportJob, result: ImportView) -> None:
         with self._lock:
