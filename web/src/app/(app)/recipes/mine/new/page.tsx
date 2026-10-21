@@ -13,9 +13,9 @@ import { BLANK_RECIPE, CHAT_DRAFT, CookbookForm } from "@/components/cookbook-fo
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { send } from "@/lib/api"
 import { seconds, usd } from "@/lib/format"
 import { useApi, useMe, useMeta } from "@/lib/hooks"
+import { forgetImport, importRecipe, pendingImport, wasStartedHere, watchImport } from "@/lib/import-jobs"
 import { toJpegDataUrl } from "@/lib/images"
 import { cn } from "@/lib/utils"
 import type { CookbookRecipeIn, ImportView } from "@/lib/types"
@@ -35,6 +35,7 @@ const IMPORT_TITLE: Record<Exclude<Method, "manual">, string> = {
 }
 
 function PhotoImport({ onDone }: { onDone: (v: ImportView) => void }) {
+  const userId = useAuth().session!.user.id
   const [photos, setPhotos] = useState<string[]>([])
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -54,7 +55,7 @@ function PhotoImport({ onDone }: { onDone: (v: ImportView) => void }) {
     setBusy(true)
     setError(null)
     try {
-      onDone(await send<ImportView>("/me/recipes/import/photos", "POST", { images: photos }))
+      onDone(await importRecipe(userId, { kind: "photos", images: photos }))
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not read the photos.")
     } finally {
@@ -102,6 +103,7 @@ function revealOnFocus(e: FocusEvent<HTMLInputElement>) {
 }
 
 function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
+  const userId = useAuth().session!.user.id
   const [url, setUrl] = useState("")
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -116,7 +118,7 @@ function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
         setEstimatedSeconds(POST_LINK.test(url.trim()) ? timing?.estimated_seconds ?? 105 : null)
         setError(null)
         try {
-          onDone(await send<ImportView>("/me/recipes/import/link", "POST", { url: url.trim() }))
+          onDone(await importRecipe(userId, { kind: "link", url: url.trim() }))
         } catch (err) {
           setError(err instanceof Error ? err.message : "Could not import that link.")
         } finally {
@@ -160,6 +162,7 @@ function postPlatform(link: string): string | null {
 }
 
 function PostImport({ onDone }: { onDone: (v: ImportView) => void }) {
+  const userId = useAuth().session!.user.id
   const [url, setUrl] = useState("")
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -174,7 +177,7 @@ function PostImport({ onDone }: { onDone: (v: ImportView) => void }) {
     setEstimatedSeconds(hears ? timing?.estimated_seconds ?? 105 : null)
     setError(null)
     try {
-      onDone(await send<ImportView>("/me/recipes/import/post", "POST", { url: link }))
+      onDone(await importRecipe(userId, { kind: "post", url: link }))
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not read that post.")
     } finally {
@@ -216,6 +219,9 @@ export default function NewRecipePage() {
   const [draft, setDraft] = useState<CookbookRecipeIn | null>(null)
   const [result, setResult] = useState<ImportView | null>(null)
   const [fromChat, setFromChat] = useState(false)
+  const [resuming, setResuming] = useState(false)
+  const [resumeError, setResumeError] = useState<string | null>(null)
+  const stopWaiting = useRef<(() => void) | null>(null)
   const sectionRef = useRef<HTMLDivElement>(null)
 
   // Activity re-runs effects when this page becomes visible. Defer consuming the one-shot
@@ -247,22 +253,45 @@ export default function NewRecipePage() {
     return () => { active = false }
   }, [draftKey])
 
+  const imported = (v: ImportView) => {
+    setResumeError(null)
+    setResult(v)
+    setDraft(v.draft)
+    refreshMe()
+  }
+
+  // An import keeps running on the server when the phone locks or the page reloads: pick it up
+  // again. A form that is still waiting on the same job delivers its result itself.
+  const userId = session!.user.id
+  useEffect(() => {
+    const id = pendingImport(userId)
+    if (!id || wasStartedHere(id)) return
+    let active = true
+    stopWaiting.current = () => {
+      active = false
+      forgetImport(userId, id)
+      setResuming(false)
+    }
+    queueMicrotask(() => { if (active) setResuming(true) })
+    watchImport(userId, id)
+      .then((v) => { if (active) imported(v) })
+      .catch((e) => { if (active) setResumeError(e instanceof Error ? e.message : "The import failed.") })
+      .finally(() => { if (active) setResuming(false) })
+    return () => { active = false; stopWaiting.current = null }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- resume once per user
+  }, [userId])
+
   // The section under the picker is often below the fold on a phone: bring it into view.
   useEffect(() => {
     if (method) sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
   }, [method])
 
   const pick = (key: Method) => {
+    setResumeError(null)
     setResult(null)
     setFromChat(false)
     setDraft(key === "manual" ? BLANK_RECIPE : null)
     setMethod(key)
-  }
-
-  const imported = (v: ImportView) => {
-    setResult(v)
-    setDraft(v.draft)
-    refreshMe()
   }
 
   const showUpload = method !== null && method !== "manual" && !draft
@@ -293,6 +322,24 @@ export default function NewRecipePage() {
           </button>
         ))}
       </div>
+
+      {resuming && !draft && (
+        <Panel>
+          <div role="status" className="grid gap-2 text-[13px]">
+            <p className="font-semibold">Finishing your import…</p>
+            <p className="text-muted-foreground">
+              It kept running while you were away. The recipe will appear here when it is read.
+            </p>
+            <Button variant="ghost" size="sm" className="w-fit"
+                    onClick={() => stopWaiting.current?.()}>
+              Stop waiting
+            </Button>
+          </div>
+        </Panel>
+      )}
+      {resumeError && !draft && (
+        <p role="alert" className="text-[13px] text-danger">{resumeError}</p>
+      )}
 
       {(showUpload || draft) && (
         <div ref={sectionRef} className="grid scroll-mt-24 gap-5">
