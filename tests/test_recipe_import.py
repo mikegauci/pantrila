@@ -683,3 +683,11 @@ def test_recipe_notes_read_from_the_page_html():
     )
     assert recipe_notes(html) == "FLOUR: use plain flour.\nDOUBLING: easily doubled."
     assert recipe_notes("<p>No notes here</p>") == ""
+
+
+def test_bare_name_drops_a_second_measure():
+    from pantrila.cookbook import bare_name
+
+    assert bare_name("(97g) white whole wheat flour") == "white whole wheat flour"
+    assert bare_name("+ 2 tsp (40mL) almond milk") == "almond milk"
+    assert bare_name("(see notes) salt") == "(see notes) salt"
