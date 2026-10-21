@@ -19,7 +19,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Switch } from "@/components/ui/switch"
 import { send } from "@/lib/api"
 import {
-  clock, loadProgress, mentioned, preheatNote, progressKey, ring, saveProgress, stepTimers, useWakeLock,
+  clock, loadProgress, preheatNote, progressKey, ring, saveProgress, stepTimers, stepUses, useWakeLock,
   type RunningTimer, type StepTimer,
 } from "@/lib/cooking"
 import { ago } from "@/lib/format"
@@ -125,7 +125,11 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
   const step = onStep ? recipe.steps[page - 1] : ""
   const [unit] = useTempUnit()
   const found = useMemo(() => (onStep ? stepTimers(step) : []), [onStep, step])
-  const uses = useMemo(() => (onStep ? mentioned(step, recipe.ingredients) : []), [onStep, step, recipe.ingredients])
+  const allUses = useMemo(
+    () => stepUses(recipe.steps, recipe.ingredients, (s) => stepHeading(recipe.stepSections, s)),
+    [recipe.steps, recipe.ingredients, recipe.stepSections],
+  )
+  const uses = onStep ? allUses[page - 1] : []
 
   // Keep progress in this browser; "I cooked this" clears it.
   useEffect(() => {

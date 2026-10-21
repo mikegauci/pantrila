@@ -77,3 +77,44 @@ test("an imported recipe keeps its ingredient groups and method headings through
   expect(saved!.ingredients.map((l) => l.section)).toEqual(["Rice & Chicken", "Rice & Chicken", "Coconut broth"])
   expect(saved!.step_sections).toEqual([{ title: "Chicken", first_step: 1 }, { title: "Broth", first_step: 3 }])
 })
+
+test("cooking mode lists the step's own group: one olive oil, and its seasonings", async ({ page }) => {
+  const spoon = (name: string, food: string, quantity: number, unit: "tsp" | "tbsp", section: string) =>
+    ({ name, food, quantity, unit, estimate: null, section })
+  const recipe: CookbookRecipeIn = { ...draft,
+    ingredients: [
+      line("1 pound chicken thighs", "chicken_thigh", "Rice & Chicken"),
+      spoon("olive oil", "olive_oil", 2, "tbsp", "Rice & Chicken"),
+      spoon("paprika", "paprika", 1, "tsp", "Rice & Chicken"),
+      spoon("oregano", "oregano", 0.5, "tsp", "Rice & Chicken"),
+      spoon("olive oil", "olive_oil", 1, "tbsp", "Broth"),
+      spoon("curry powder", "curry_powder", 1, "tsp", "Broth"),
+    ],
+    steps: ["Whisk together olive oil and seasonings, then rub it over each thigh.", "Heat the olive oil and add the curry powder."],
+    step_sections: [{ title: "Chicken", first_step: 1 }, { title: "Broth", first_step: 2 }],
+  }
+  await page.addInitScript((id) => localStorage.setItem(`pantrila-tour-done:${id}`, "1"), user)
+  await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(user) }))
+  await page.route("http://127.0.0.1:8000/**", async (route) => {
+    const path = new URL(route.request().url()).pathname
+    const data = path === "/me/recipes/7" ? { ...recipe, id: 7, recipe, nutrition, allergens: [], diet_tags: [],
+      estimated: false, invalid: [], pantry_foods: [], problems: [], photo_url: null,
+      created_at: new Date().toISOString(), updated_at: new Date().toISOString(), ingredient_count: 6,
+      ingredients: recipe.ingredients.map((l) => ({ ...l, grams: 10, in_pantry: false })) }
+      : path === "/me" ? { id: user, email: null, avatar_url: null, anonymous: true, limits: {} }
+      : path === "/me/profile" ? { allergies: [], diets: [] }
+      : path === "/health" ? { ok: true } : []
+    await route.fulfill({ json: data })
+  })
+  await page.goto("/login")
+  await page.getByRole("button", { name: "Try it as a guest" }).click()
+  await expect(page).not.toHaveURL(/login/)
+  await page.goto("/recipes/mine/7/cook")
+
+  const cooking = page.getByRole("region", { name: /Cooking/ })
+  await cooking.getByRole("button", { name: "Start cooking" }).click()
+  const forStep = cooking.getByRole("group", { name: "Ingredients for this step" })
+  await expect(forStep.getByRole("checkbox")).toHaveText([/chicken thighs/, /2 tbsp\s*olive oil/, /paprika/, /oregano/])
+  await cooking.getByRole("button", { name: "Next step" }).click()
+  await expect(forStep.getByRole("checkbox")).toHaveText([/1 tbsp\s*olive oil/, /curry powder/])
+})

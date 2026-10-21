@@ -33,6 +33,13 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Step ingredients by group: cooking mode's "For this step" chips come from `stepUses` in `web/src/lib/cooking.ts`.
+When the method has headings, a food on several lines keeps only the line from the group whose name shares a word with
+the step's heading ("Chicken" ~ "Rice & Chicken"), else the first line an earlier step has not used; "seasonings",
+"spices" or "spice mixture" bring in that group's seasoning lines (named spices, herbs, salt, or measured in tsp/pinch);
+"Salt and pepper" matches either word. Chelsea's chicken broth bowl step 2 now shows chicken, 2 tbsp olive oil and the
+five seasonings instead of both olive oils. Web only, no model call, so no eval rerun; 1 new Playwright test.
+
 Preheat heads-up: a step that says preheat (or heat the oven) without a time now shows "Coming up in step N: 9–12 min."
 (`preheatNote` in `web/src/lib/cooking.ts`: the duration of the next timed step within 3 steps), on both recipe pages and in
 cooking mode, so people know how long the bake is when they start the oven. Text only: no timer, no button. Web only, no
