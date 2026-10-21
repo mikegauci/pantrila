@@ -2,7 +2,7 @@
 
 import { NutritionSource } from "@/components/nutrition-source"
 import { Camera, Clapperboard, ClipboardPaste, Link2, PenLine, Plus, Share2, Sparkles, Trash2, TriangleAlert, X } from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
@@ -60,10 +60,27 @@ export const CHAT_DRAFT = "pantrila-chat-draft"
 
 const toKey = (text: string) => text.trim().toLowerCase().replaceAll("-", " ").split(/\s+/).join("_")
 
+/** Words that describe a food's state, not which food it is (mirrors `PREP_WORDS` in pantry.py). */
+const PREP_WORDS = new Set([
+  "melted", "softened", "chopped", "diced", "sliced", "minced", "grated", "shredded",
+  "sifted", "packed", "plain", "unsweetened", "large", "medium", "small",
+])
+const ALIASES: Record<string, string> = {
+  all_purpose_flour: "plain_flour", whole_wheat_flour: "wholemeal_flour",
+  wholewheat_flour: "wholemeal_flour", white_chocolate_chips: "white_chocolate",
+  chocolate_chips: "dark_chocolate",
+}
+
 /** The table food a typed name means, if it is one exactly (or its plural/singular). */
 function matchFood(text: string, keys: Set<string>): string | null {
   const k = toKey(text)
-  for (const c of [k, `${k}s`, k.replace(/es$/, ""), k.replace(/s$/, "")]) if (keys.has(c)) return c
+  const bare = k.split("_").filter((w) => !PREP_WORDS.has(w)).join("_")
+  for (const n of new Set([k, bare])) {
+    for (const c of [n, `${n}s`, n.replace(/es$/, ""), n.replace(/s$/, "")]) {
+      if (keys.has(c)) return c
+      if (ALIASES[c]) return ALIASES[c]
+    }
+  }
   return null
 }
 
@@ -183,7 +200,7 @@ function LineRow({
       {!line.food && !line.estimate && (
         <p className="inline-flex items-center gap-1.5 text-[12px] text-[#a65a00]">
           <TriangleAlert className="size-3.5" aria-hidden />
-          Not matched. Pick a food from the list, or estimate it.
+          Not matched. Pick a food from the list; it will be estimated if left.
         </p>
       )}
     </li>
@@ -297,7 +314,10 @@ export function CookbookForm({
   const keys = useMemo(() => new Set(foods?.map((f) => f.key) ?? []), [foods])
   const [r, setR] = useState<CookbookRecipeIn>(initial)
   const [stepsText, setStepsText] = useState(stepsToText(initial.steps, initial.step_sections))
-  const [busy, setBusy] = useState<"save" | "estimate" | null>(null)
+  const [busy, setBusy] = useState<"save" | null>(null)
+  const [estimating, setEstimating] = useState(false)
+  /** Names already sent for estimating, so a failed one is not retried in a loop. */
+  const tried = useRef(new Set<string>())
 
   const recipe: CookbookRecipeIn = { ...r, ...textToSteps(stepsText) }
   const unmatched = r.ingredients.filter((l) => !l.food && !l.estimate && l.name.trim())
@@ -313,25 +333,51 @@ export function CookbookForm({
   const addLine = (section: string) =>
     setR({ ...r, ingredients: [...r.ingredients, { ...BLANK_RECIPE.ingredients[0], section }] })
 
-  async function estimate() {
-    setBusy("estimate")
-    try {
-      const names = unmatched.map((l) => l.name.trim())
-      const out = await send<EstimateView>("/me/recipes/estimate", "POST", { names })
-      const byName = new Map(out.estimates.map((e) => [e.name, e.estimate]))
-      setR({
-        ...r,
-        ingredients: r.ingredients.map((l) =>
-          !l.food && !l.estimate && byName.get(l.name.trim()) ? { ...l, estimate: byName.get(l.name.trim())! } : l),
+  // Lines whose name matches a table food (after dropping words like "melted") get it at once.
+  useEffect(() => {
+    if (!keys.size) return
+    const t = setTimeout(() => setR((cur) => {
+      let changed = false
+      const ingredients = cur.ingredients.map((l) => {
+        if (l.food || l.estimate) return l
+        const food = matchFood(l.name.replace(/,.*$/, ""), keys)
+        if (!food) return l
+        changed = true
+        return { ...l, food }
       })
-      const failed = out.estimates.filter((e) => !e.estimate).map((e) => e.name)
-      if (failed.length) toast.error(`Could not estimate ${failed.join(", ")}. Pick a food instead.`)
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Could not estimate those foods.")
-    } finally {
-      setBusy(null)
-    }
-  }
+      return changed ? { ...cur, ingredients } : cur
+    }), 0)
+    return () => clearTimeout(t)
+  }, [keys, r.ingredients])
+
+  // Whatever is still unmatched is estimated by AI without a button press, once per name.
+  const pendingKey = [...new Set(unmatched.map((l) => l.name.trim()))].join("\n")
+  useEffect(() => {
+    if (!keys.size || !pendingKey) return
+    let live = true
+    const t = setTimeout(async () => {
+      const names = pendingKey.split("\n").filter((n) => !tried.current.has(n))
+      if (!names.length) return
+      names.forEach((n) => tried.current.add(n))
+      setEstimating(true)
+      try {
+        const out = await send<EstimateView>("/me/recipes/estimate", "POST", { names })
+        const byName = new Map(out.estimates.map((e) => [e.name, e.estimate]))
+        setR((cur) => ({
+          ...cur,
+          ingredients: cur.ingredients.map((l) =>
+            !l.food && !l.estimate && byName.get(l.name.trim()) ? { ...l, estimate: byName.get(l.name.trim())! } : l),
+        }))
+        const failed = out.estimates.filter((e) => !e.estimate).map((e) => e.name)
+        if (failed.length) toast.error(`Could not estimate ${failed.join(", ")}. Pick a food instead.`)
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Could not estimate those foods.")
+      } finally {
+        if (live) setEstimating(false)
+      }
+    }, 800)
+    return () => { live = false; clearTimeout(t) }
+  }, [keys, pendingKey])
 
   async function save() {
     setBusy("save")
@@ -419,17 +465,17 @@ export function CookbookForm({
 
         <Panel>
           <PanelTitle
-            action={unmatched.length > 0 && (
-              <Button variant="outline" size="sm" onClick={estimate} disabled={busy !== null}>
-                <Sparkles /> {busy === "estimate" ? "Estimating…" : `Estimate ${unmatched.length} with AI`}
-              </Button>
+            action={estimating && (
+              <span className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground">
+                <Sparkles className="size-3.5" aria-hidden /> Estimating new foods…
+              </span>
             )}
           >
             Ingredients
           </PanelTitle>
           <p className="text-[12px] text-muted-foreground">
             Each ingredient is matched to a food in Pantrila&apos;s table, which is how nutrition and
-            allergens are worked out. Foods not in the table can be estimated by AI.
+            allergens are worked out. Foods not in the table are estimated by AI.
           </p>
           {groupLines(r.ingredients).map((g, n) => (
             <div key={n}>
@@ -479,7 +525,7 @@ export function CookbookForm({
           </p>
         )}
         <div className="flex gap-2">
-          <Button size="lg" className="flex-1" onClick={save} disabled={busy !== null || !recipe.title.trim()}>
+          <Button size="lg" className="flex-1" onClick={save} disabled={busy !== null || estimating || !recipe.title.trim()}>
             {busy === "save" ? "Saving…" : recipeId ? "Save changes" : "Save to my recipes"}
           </Button>
           {onCancel && <Button size="lg" variant="outline" onClick={onCancel} disabled={busy !== null}>Cancel</Button>}

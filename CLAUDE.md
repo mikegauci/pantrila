@@ -33,6 +33,14 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Automatic food estimates: the recipe form no longer has an "Estimate N with AI" button. Lines still unmatched
+after matching are sent to `/me/recipes/estimate` in one batch about 0.8 s later (once per name; failures toast and
+are not retried), and Save waits while it runs. `resolve_food` (and the form's `matchFood`) now ignore prep words
+(`PREP_WORDS`: melted, plain, unsweetened, chopped...) and know US names (all-purpose, whole wheat flour, chocolate
+chips), which clears most "could not be checked" lines in chat drafts too; chat drafts still get no AI estimate, and
+baking soda is not in the table. No prompt/model change, so no eval rerun; Playwright specs could not run locally
+(no Chromium), CI runs them.
+
 Faster social imports: production showed social imports at 65-100 s, almost all of it the video read's reasoning
 (about 10k output tokens at effort medium; Apify runs about 6 s). `Importer(video_effort="low")` now reads videos at
 low effort (pages, photos, text and captions stay medium), and `recipe_import.may_hold_recipe` skips the caption call
