@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, PrivateAttr, ValidationError, model_validator
 
 from pantrila.cookbook import (
     CookbookRecipeIn,
@@ -359,6 +359,39 @@ class PhotoImport(BaseModel):
     )
 
 
+class ImportJobIn(BaseModel):
+    """One import to run in the background; `kind` says which of the other fields it reads.
+    The page picks the `id` before sending, so a request that was cut off can be repeated or
+    followed up without starting (and paying for) a second import."""
+
+    id: str | None = Field(default=None, pattern=r"^[0-9a-f]{32}$")
+    kind: Literal["link", "post", "text", "photos"]
+    url: str | None = Field(default=None, max_length=2000)
+    caption: str | None = Field(default=None, max_length=MAX_CAPTION_CHARS)
+    text: str | None = Field(default=None, max_length=MAX_PAGE_CHARS)
+    images: list[str] | None = Field(default=None, max_length=MAX_IMAGES)
+    _request: LinkImport | PostImport | TextImport | PhotoImport = PrivateAttr()
+
+    @model_validator(mode="after")
+    def _has_its_input(self) -> ImportJobIn:
+        """The same checks as the one-shot import routes, by building their request models."""
+        build = {
+            "link": lambda: LinkImport(url=self.url or ""),
+            "post": lambda: PostImport(url=self.url, caption=self.caption),
+            "text": lambda: TextImport(text=self.text or ""),
+            "photos": lambda: PhotoImport(images=self.images or []),
+        }[self.kind]
+        try:
+            self._request = build()
+        except ValidationError as exc:
+            raise ValueError(exc.errors()[0]["msg"]) from None
+        return self
+
+    @property
+    def request(self) -> LinkImport | PostImport | TextImport | PhotoImport:
+        return self._request
+
+
 class ImportTiming(BaseModel):
     estimated_seconds: int
     sample_count: int
@@ -387,6 +420,18 @@ class ImportView(BaseModel):
         "video (reel audio from a link).",
     )
     latency_ms: float
+
+
+class ImportJobError(BaseModel):
+    status: int
+    message: str
+
+
+class ImportJobView(BaseModel):
+    id: str
+    status: Literal["running", "done", "failed"]
+    result: ImportView | None = None
+    error: ImportJobError | None = None
 
 
 class EstimateView(BaseModel):

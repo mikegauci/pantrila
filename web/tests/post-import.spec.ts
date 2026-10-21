@@ -14,7 +14,7 @@ const draft = {
 }
 
 test("a post imports from its link and keeps the credit", async ({ page }) => {
-  const imports: { url?: string; caption?: string | null }[] = []
+  const imports: { id?: string; kind?: string; url?: string; caption?: string | null }[] = []
   let saved = draft
   await page.setViewportSize({ width: 390, height: 844 })
   await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
@@ -22,14 +22,19 @@ test("a post imports from its link and keeps the credit", async ({ page }) => {
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname
     const now = new Date().toISOString()
-    if (path === "/me/recipes/import/post") {
+    if (path === "/me/recipes/import/jobs") {
       const body = route.request().postDataJSON()
       imports.push(body)
-      if (imports.length === 1) {
-        return route.fulfill({ status: 422,
-          json: { detail: "Instagram didn't let Pantrila read this post. Try another public recipe link." } })
+      return route.fulfill({ status: 202, json: { id: body.id, status: "running", result: null, error: null } })
+    }
+    if (path.startsWith("/me/recipes/import/jobs/")) {
+      const jobId = path.split("/").pop()
+      if (jobId === imports[0]?.id) {
+        return route.fulfill({ json: { id: jobId, status: "failed", result: null, error: { status: 422,
+          message: "Instagram didn't let Pantrila read this post. Try another public recipe link." } } })
       }
-      return route.fulfill({ json: { draft, notes: [], cost_usd: 0.004, latency_ms: 5000 } })
+      return route.fulfill({ json: { id: jobId, status: "done", error: null,
+        result: { draft, notes: [], cost_usd: 0.004, latency_ms: 5000 } } })
     }
     if (path === "/me/recipes" && route.request().method() === "POST") saved = route.request().postDataJSON()
     const detail = { ...saved, id: 9, recipe: saved, created_at: now, updated_at: now,
@@ -67,7 +72,7 @@ test("a post imports from its link and keeps the credit", async ({ page }) => {
   await page.getByRole("button", { name: "Read recipe" }).click()
 
   await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Crispy gnocchi")
-  expect(imports.at(-1)).toEqual({ url: post })
+  expect(imports.at(-1)).toMatchObject({ kind: "post", url: post })
   await page.getByLabel("Creator").fill("@sam.cooks")
   await expect(page.getByLabel("Posted on")).toHaveValue("instagram")
   await page.getByLabel("Creator").scrollIntoViewIfNeeded()
@@ -83,17 +88,20 @@ test("a post imports from its link and keeps the credit", async ({ page }) => {
 
 test("where the service covers the platform, Pantrila says it is listening to the video", async ({ page }) => {
   const heard = "Pantrila listened to the post's video for this recipe. Check the amounts and steps."
-  let answer: () => void = () => {}
-  const answered = new Promise<void>((resolve) => { answer = resolve })
+  let released = false
   await page.clock.install()
   await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname
-    if (path === "/me/recipes/import/post") {
-      await answered
-      return route.fulfill({ json: { draft: { ...draft, recipe_url: null }, notes: [heard],
-        cost_usd: 0.012, media_cost_usd: 0.003, transcription_cost_usd: 0.001, latency_ms: 30000 } })
+    if (path === "/me/recipes/import/jobs") {
+      return route.fulfill({ status: 202, json: { id: "job-1", status: "running", result: null, error: null } })
+    }
+    if (path.startsWith("/me/recipes/import/jobs/")) {
+      if (!released) return route.fulfill({ json: { id: "job-1", status: "running", result: null, error: null } })
+      return route.fulfill({ json: { id: "job-1", status: "done", error: null, result: {
+        draft: { ...draft, recipe_url: null }, notes: [heard],
+        cost_usd: 0.012, media_cost_usd: 0.003, transcription_cost_usd: 0.001, latency_ms: 30000 } } })
     }
     const data = path === "/me" ? { id, email: null, avatar_url: null, anonymous: true,
       limits: { imports_left: 9, imports_per_day: 10, photos_left: 5, photos_per_day: 5 } }
@@ -131,7 +139,8 @@ test("where the service covers the platform, Pantrila says it is listening to th
   await expect(page.getByText("Taking longer than usual. Still working…")).toBeVisible()
   await expect(page.getByRole("timer")).toHaveCount(0)
   await expect(page.getByRole("button", { name: "Upload the video" })).toHaveCount(0)
-  answer()
+  released = true
+  await page.clock.fastForward(2500)
   await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Crispy gnocchi")
   await expect(page.getByText(heard)).toBeHidden()
   await page.getByText("1 note to check").click()
