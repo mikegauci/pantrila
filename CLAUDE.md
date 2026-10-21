@@ -33,6 +33,16 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Assistant draft notes: a recipe the assistant writes no longer gets its warnings pasted into the message as "Note from
+Pantrila: ..."; they show only in the red card under the reply (cited-recipe notes are unchanged). The card no longer
+lists "could not be checked" lines (the review form still lets the person fix unmatched foods), and the prompt tells the
+model not to repeat the card's warnings or mention an ingredient (egg, dairy...) the person's rules do not forbid.
+`baking soda` / `bicarbonate of soda` alias to baking powder (no allergens, near-zero nutrition per teaspoon); beet powder
+stays unknown. The eval's draft-warning check no longer requires an unchecked line. Before (old prompt, code at `main`)
+`assistant-2026-10-21T111136Z` vs after `assistant-2026-10-21T111309Z`, 28 cases: 0 unsafe or made-up citations both,
+right tools 100% both, 0 drafts missing rule warnings both, recommended a recipe 91% -> 82% (single run; the prompt change
+only touches write_recipe wording), $0.0035 -> $0.0038/turn, p50/p95 4.7/10.5 -> 4.8/8.4 s.
+
 Automatic food estimates: the recipe form no longer has an "Estimate N with AI" button. Lines still unmatched
 after matching are sent to `/me/recipes/estimate` in one batch about 0.8 s later (once per name; failures toast and
 are not retried), and Save waits while it runs. `resolve_food` (and the form's `matchFood`) now ignore prep words
