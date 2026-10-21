@@ -696,6 +696,21 @@ def test_corpus_recipes_carry_their_photo_url(api, backend, photo_env):
     assert cards[CURRY]["photo_url"] == url and cards[OMELETTE]["photo_url"] is None
 
 
+def test_saved_copy_of_a_corpus_recipe_gets_its_photo(api, backend, photo_env):
+    src = f"recipes/{CURRY}-abc.webp"
+    backend.store.photo_paths[CURRY] = src
+    backend.photos.files[src] = b"RIFFcurry"
+    rid = api.post("/me/recipes", json=TOAST).json()["id"]
+    done = api.post(f"/me/recipes/{rid}/photo/from/{CURRY}")
+    assert done.status_code == 200 and "/user-recipes/alice/" in done.json()["photo_url"]
+    assert sorted(backend.photos.files.values()) == [b"RIFFcurry", b"RIFFcurry"]
+    assert api.delete(f"/me/recipes/{rid}").status_code == 204
+    assert list(backend.photos.files) == [src]  # the corpus photo stays
+    # a recipe without a photo is fine: nothing to copy
+    rid = api.post("/me/recipes", json=TOAST).json()["id"]
+    assert api.post(f"/me/recipes/{rid}/photo/from/{OMELETTE}").json()["photo_url"] is None
+
+
 def test_cookbook_photo_is_generated_stored_replaced_and_deleted(api, backend, photo_env):
     rid = api.post("/me/recipes", json=TOAST).json()["id"]
     first = api.post(f"/me/recipes/{rid}/photo")

@@ -14,7 +14,7 @@ const myRecipes = (
   <Link href="/recipes/mine" className="font-bold underline underline-offset-2">My Recipes</Link>
 )
 
-/** Copies a corpus recipe into the person's cookbook (no photo is generated); tap again to remove it. */
+/** Copies a corpus recipe into the person's cookbook (its photo is copied, none is generated); tap again to remove it. */
 function SaveButton({ recipe }: { recipe: Recipe }) {
   const { mutate } = useSWRConfig()
   const { data: cookbook } = useCookbook()
@@ -53,6 +53,10 @@ function SaveButton({ recipe }: { recipe: Recipe }) {
       recipe_url: null,
     }
     const created = await send<{ id: number }>("/me/recipes", "POST", body)
+    if (recipe.photo_url) {
+      // Best effort: the recipe is saved either way, and its page can still make a photo.
+      await send(`/me/recipes/${created.id}/photo/from/${recipe.id}`, "POST").catch(() => {})
+    }
     setSavedId(created.id)
     setRemoved(false)
     await mutate("/me/recipes")
