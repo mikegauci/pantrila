@@ -1,0 +1,75 @@
+{
+  "_note": "Trimmed from real Apify comment runs on 21 October 2026 (scripts/reel_media_check.py --save). Field names, authors and the Facebook creator's comment are as recorded. Edited to hold links: the Facebook strangers' texts, all Instagram texts (item 0's author is set to the post's creator) and both TikTok texts; no real Instagram or TikTok creator link comment was found. Strangers' names and ids are replaced.",
+  "facebook": [
+    {
+      "facebookUrl": "https://www.facebook.com/share/r/1FmTKqfSLP/?mibextid=wwXIfr",
+      "text": "https://www.chelseasmessyapron.com/chicken-broth-bowl/",
+      "profileUrl": "https://www.facebook.com/chelseasmessyapron",
+      "profileId": "100044331764589",
+      "profileName": "Chelsea's Messy Apron",
+      "pageAdLibrary": {
+        "uri_token": "chelseasmessyapron"
+      }
+    },
+    {
+      "facebookUrl": "https://www.facebook.com/share/r/1FmTKqfSLP/?mibextid=wwXIfr",
+      "text": "Try this one https://www.stranger-recipes.example/curry-bowl",
+      "profileUrl": null,
+      "profileId": "pfbid0StrangerOne",
+      "profileName": "Stranger One",
+      "pageAdLibrary": {
+        "uri_token": "chelseasmessyapron"
+      }
+    },
+    {
+      "facebookUrl": "https://www.facebook.com/share/r/1FmTKqfSLP/?mibextid=wwXIfr",
+      "text": "Better version here: https://www.stranger-recipes.example/chicken-bowl",
+      "profileUrl": "https://www.facebook.com/stranger.two",
+      "profileId": "100000000000002",
+      "profileName": "Stranger Two",
+      "pageAdLibrary": {
+        "uri_token": "chelseasmessyapron"
+      }
+    }
+  ],
+  "instagram": [
+    {
+      "postUrl": "https://www.instagram.com/p/DeuJrhVoNYk/",
+      "text": "Recipe is on the blog: chelseasmessyapron.com/creamy-chicken-pasta/",
+      "ownerUsername": "chelseasmessyapron",
+      "owner": {
+        "username": "chelseasmessyapron"
+      }
+    },
+    {
+      "postUrl": "https://www.instagram.com/p/DeuJrhVoNYk/",
+      "text": "Eat",
+      "ownerUsername": "stranger_one",
+      "owner": {
+        "username": "stranger_one"
+      }
+    },
+    {
+      "postUrl": "https://www.instagram.com/p/DeuJrhVoNYk/",
+      "text": "Full recipe: https://www.stranger-recipes.example/creamy-pasta",
+      "ownerUsername": "stranger_two",
+      "owner": {
+        "username": "stranger_two"
+      }
+    }
+  ],
+  "tiktok": [
+    {
+      "videoWebUrl": "https://www.tiktok.com/@chelseasmessyapron/video/7698384810506489119",
+      "text": "Full recipe: https://www.chelseasmessyapron.com/beef-vegetable-soup/",
+      "uniqueId": "chelseasmessyapron",
+      "pinnedByAuthor": false
+    },
+    {
+      "videoWebUrl": "https://www.tiktok.com/@chelseasmessyapron/video/7698384810506489119",
+      "text": "Mine: https://www.stranger-recipes.example/soup",
+      "uniqueId": "stranger_one",
+      "pinnedByAuthor": false
+    }
+  ]
+}

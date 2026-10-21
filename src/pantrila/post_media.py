@@ -6,6 +6,10 @@ video link comes from a scraping service (Apify, one actor per platform;
 same SSRF guards as any page (size and time capped), turns it into 16 kHz mono WAV and 4 JPEG
 frames in memory with PyAV, and drops it. Nothing is written to disk or stored. Only public
 posts; never a login or cookies. The Apify token is sent only to api.apify.com.
+
+The same service reads a post's top comments (`COMMENT_ACTORS`) when the caption only says
+"comment for the recipe": comments by the post's own creator are kept (a link one of them gives
+is tried before the video, which costs more); everyone else's are dropped unread.
 """
 
 from __future__ import annotations
@@ -61,8 +65,16 @@ class VideoMedia:
     frames: list[str]  # JPEG data URLs
 
 
+@dataclass
+class CreatorComments:
+    texts: list[str]  # the creator's own comments, in the order the service gives them
+    fetched: int  # comments the service returned (and charged for), anyone's
+    handle: str | None = None  # the creator's, as their comments name them
+
+
 class MediaSource(Protocol):
     platforms: frozenset[str]  # social.Platform values this source covers
+    comment_platforms: frozenset[str]  # platforms whose comments it can read
 
     def fee_for(self, platform: str) -> float | None:
         """What one service run costs on this platform; None if unknown."""
@@ -77,9 +89,20 @@ class MediaSource(Protocol):
         """Headers one of its video links needs (the service's own storage wants its token)."""
         ...
 
+    def comment_fee_for(self, platform: str, fetched: int) -> float | None:
+        """What one comments run costs for that many comments; None if unknown."""
+        ...
+
+    def creator_comments(self, post_url: str, platform: str, handle: str | None
+                         ) -> CreatorComments:  # fmt: skip
+        """The post creator's comments among its top ones. `handle` is the creator's when known
+        (Instagram's comments do not say whose post it is). Raises MediaFailed."""
+        ...
+
 
 class NoMedia:
     platforms: frozenset[str] = frozenset()
+    comment_platforms: frozenset[str] = frozenset()
 
     def fee_for(self, platform: str) -> float | None:
         return 0.0
@@ -89,6 +112,13 @@ class NoMedia:
 
     def headers_for(self, url: str) -> dict[str, str]:
         return {}
+
+    def comment_fee_for(self, platform: str, fetched: int) -> float | None:
+        return 0.0
+
+    def creator_comments(self, post_url: str, platform: str, handle: str | None
+                         ) -> CreatorComments:  # fmt: skip
+        return CreatorComments([], 0)
 
 
 @dataclass(frozen=True)
@@ -139,6 +169,70 @@ ACTORS = {
 }  # fmt: skip
 
 
+COMMENT_LIMIT = 10  # comment actors charge per comment; a creator's link is usually near the top
+
+
+@dataclass(frozen=True)
+class CommentActor:
+    """One Apify comments actor: where a comment's text and author are, and where (if anywhere)
+    each comment names the post's owner. Handles are compared lower-case; a profile link counts
+    as its first path segment. Checked on 21 October 2026 with scripts/reel_media_check.py
+    (`--save`): Facebook comments carry the post page's `pageAdLibrary.uri_token`, TikTok's the
+    post link (`/@handle/video/...`); Instagram's say nothing about the post, so the creator's
+    handle must come from the caption fetch."""
+
+    id: str
+    input: str  # JSON with {url} and {limit}
+    fee_usd: float  # per comment, as charged then (Apify's FREE tier)
+    start_fee_usd: float  # per run
+    text: str
+    author: tuple[str, ...]
+    owner: tuple[str, ...] = ()
+
+
+COMMENT_ACTORS = {
+    # Ranked comments (Facebook's "most relevant"): the creator's link was first of 50 on the
+    # test reel. No author flag; the commenter's profile link vs the post page's name.
+    "facebook": CommentActor(
+        "apify~facebook-comments-scraper",
+        '{"startUrls": [{"url": "{url}"}], "resultsLimit": {limit}, '
+        '"includeNestedComments": false, "viewOption": "RANKED_UNFILTERED"}',
+        0.0025, 0.001, "text", ("profileUrl",), ("pageAdLibrary.uri_token",),
+    ),
+    # Newest comments first, with no sort option: a creator's comment from upload day on a busy
+    # post is past the first page and is missed (the video is read instead).
+    "instagram": CommentActor(
+        "apify~instagram-comment-scraper",
+        '{"directUrls": ["{url}"], "resultsLimit": {limit}}',
+        0.0026, 0.0, "text", ("ownerUsername", "owner.username"),
+    ),
+    # Ranked; the creator's own comment came in the top ten on the posts checked.
+    "tiktok": CommentActor(
+        "clockworks~tiktok-comments-scraper",
+        '{"postURLs": ["{url}"], "commentsPerPost": {limit}, "maxRepliesPerComment": 0}',
+        0.00125, 0.0, "text", ("uniqueId",), ("videoWebUrl",),
+    ),
+}  # fmt: skip
+
+
+def comments_name_owner(platform: str) -> bool:
+    """Whether a platform's comments say whose post it is (else the creator's handle is needed
+    before a comments run is worth paying for)."""
+    return platform in COMMENT_ACTORS and bool(COMMENT_ACTORS[platform].owner)
+
+
+def handle_of(value) -> str | None:
+    """A handle, lower-case, from a plain name or a profile or post link (its first path
+    segment, without "@"); None for numeric-id profile links."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    value = value.strip()
+    if "://" in value:
+        first = next((s for s in urlsplit(value).path.split("/") if s), "")
+        value = "" if first.lower() == "profile.php" else first
+    return value.removeprefix("@").lower() or None
+
+
 def value_at(item, path: str):
     """The value at a dotted path ("a.b.0"), or None."""
     for part in path.split("."):
@@ -163,9 +257,12 @@ class ApifyMedia:
     platform. The token goes only in a header, only to api.apify.com, and is never logged."""
 
     def __init__(self, token: str, platforms: frozenset[str] = frozenset(ACTORS),
-                 actors: dict[str, Actor] | None = None, http=None):  # fmt: skip
+                 actors: dict[str, Actor] | None = None, http=None,
+                 comment_actors: dict[str, CommentActor] | None = None):  # fmt: skip
         self.token, self.actors, self.http = token, actors or ACTORS, http
+        self.comment_actors = COMMENT_ACTORS if comment_actors is None else comment_actors
         self.platforms = frozenset(p for p in platforms if p in self.actors)
+        self.comment_platforms = frozenset(p for p in platforms if p in self.comment_actors)
 
     def fee_for(self, platform: str) -> float | None:
         override = os.environ.get(f"PANTRILA_PRICE_MEDIA_{platform.upper()}")
@@ -177,24 +274,52 @@ class ApifyMedia:
             return {"Authorization": f"Bearer {self.token}"}
         return {}
 
-    def video_for(self, post_url: str, platform: str) -> PostVideo | None:
+    def comment_fee_for(self, platform: str, fetched: int) -> float | None:
+        actor = self.comment_actors[platform]
+        override = os.environ.get(f"PANTRILA_PRICE_COMMENT_{platform.upper()}")
+        per = float(override) if override else actor.fee_usd
+        return actor.start_fee_usd + per * fetched
+
+    def _run(self, actor_id: str, template: str, fields: dict[str, str]) -> object:
+        """One synchronous actor run; its dataset items."""
         import httpx
 
-        actor = self.actors[platform]
-        body = json.loads(actor.input.replace("{url}", json.dumps(post_url)[1:-1]))
+        for key, value in fields.items():
+            template = template.replace("{" + key + "}", value)
         try:
             r = (self.http or httpx).post(
-                APIFY_RUN.format(actor=actor.id), json=body, timeout=SERVICE_TIMEOUT_S,
-                headers={"Authorization": f"Bearer {self.token}"},
+                APIFY_RUN.format(actor=actor_id), json=json.loads(template),
+                timeout=SERVICE_TIMEOUT_S, headers={"Authorization": f"Bearer {self.token}"},
             )  # fmt: skip
         except httpx.HTTPError as exc:
             raise MediaFailed("The video service did not answer.") from exc
         if r.status_code >= 400:
             raise MediaFailed(f"The video service answered with an error ({r.status_code}).")
         try:
-            items = r.json()
+            return r.json()
         except ValueError as exc:
             raise MediaFailed("The video service sent something unreadable.") from exc
+
+    def creator_comments(self, post_url: str, platform: str, handle: str | None
+                         ) -> CreatorComments:  # fmt: skip
+        actor = self.comment_actors[platform]
+        items = self._run(actor.id, actor.input, {"url": json.dumps(post_url)[1:-1],
+                                                  "limit": str(COMMENT_LIMIT)})  # fmt: skip
+        items = [i for i in items if isinstance(i, dict)] if isinstance(items, list) else []
+        creator = handle_of(handle)
+        texts, mine = [], None
+        for item in items:
+            owners = {handle_of(value_at(item, p)) for p in actor.owner} | {creator}
+            author = next((a for p in actor.author if (a := handle_of(value_at(item, p)))), None)
+            text = value_at(item, actor.text)
+            if author and author in owners and isinstance(text, str) and text.strip():
+                texts.append(text.strip())
+                mine = author
+        return CreatorComments(texts, len(items), mine)
+
+    def video_for(self, post_url: str, platform: str) -> PostVideo | None:
+        actor = self.actors[platform]
+        items = self._run(actor.id, actor.input, {"url": json.dumps(post_url)[1:-1]})
         item = items[0] if isinstance(items, list) and items else None
         if not isinstance(item, dict):
             return None
