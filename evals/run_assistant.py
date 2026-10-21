@@ -55,11 +55,7 @@ def unwarned(draft: CookbookRecipeIn, profile: UserProfile, warnings: list[str])
     required = problems_for(draft, derived, profile)
     if not isinstance(warnings, list):
         return bool(required)
-    if any(problem not in warnings for problem in required):
-        return True
-    return len(known) != len(draft.ingredients) and not any(
-        "could not be checked" in warning for warning in warnings
-    )
+    return any(problem not in warnings for problem in required)
 
 
 def score(case: dict, r: ChatResult, kitchen: MemoryKitchen, store) -> dict:
