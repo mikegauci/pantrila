@@ -33,6 +33,12 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Import notes accordion: the "Read by AI. Check it before saving." box on `/recipes/mine/new` collapses
+the import notes (post, photo and link imports) into one "N notes to check" row, closed by default, so a long
+list no longer pushes Save off the screen on phones. Per-ingredient messages stay beside their fields, and the
+"to fix before saving" and "does not suit you" alerts are unchanged. Web only (native `<details>`), no model
+call, so no eval rerun; `post-import.spec.ts` opens the row before checking a note.
+
 Temperature toggle: recipe Method (corpus and cookbook pages) and cooking mode show a °C/°F switch
 when a step names a temperature. Display only: `web/src/lib/temperature.ts` converts in code
 (oven temperatures round like cookbooks: 350°F -> 180°C, 200°C -> 400°F; meat and candy stay exact),
