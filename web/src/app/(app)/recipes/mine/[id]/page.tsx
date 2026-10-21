@@ -20,6 +20,7 @@ import { send } from "@/lib/api"
 import { label } from "@/lib/format"
 import { groupLines, groupSteps } from "@/lib/sections"
 import { useCookbookRecipe, useMe, useProfile } from "@/lib/hooks"
+import { makePhoto, usePhotoPending } from "@/lib/photo-jobs"
 import { hasTemp, showTemps, useTempUnit } from "@/lib/temperature"
 import { cn } from "@/lib/utils"
 import type { CookbookDetail } from "@/lib/types"
@@ -40,8 +41,9 @@ export default function MyRecipePage() {
   const { data: profile } = useProfile()
   const { data: me, mutate: refreshMe } = useMe()
   const [editing, setEditing] = useState(false)
-  const [photoBusy, setPhotoBusy] = useState<"make" | "remove" | null>(null)
+  const [removing, setRemoving] = useState(false)
   const [unit] = useTempUnit()
+  const making = usePhotoPending(Number(id), Boolean(r?.photo_url), refresh)
 
   if (error) {
     return <p role="alert" className="text-danger">{error.status === 404 ? "No such recipe in your cookbook." : error.message}</p>
@@ -81,16 +83,16 @@ export default function MyRecipePage() {
   async function photo(action: "make" | "remove") {
     if (!r) return
     if (action === "remove" && !window.confirm("Remove this photo?")) return
-    setPhotoBusy(action)
+    if (action === "remove") setRemoving(true)
     try {
-      const saved = await send<typeof r>(`/me/recipes/${r.id}/photo`, action === "make" ? "POST" : "DELETE")
+      const saved = action === "make" ? await makePhoto(r.id) : await send<typeof r>(`/me/recipes/${r.id}/photo`, "DELETE")
       refresh(saved, { revalidate: false })
       mutate("/me/recipes")
       refreshMe()
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Could not update the photo.")
     } finally {
-      setPhotoBusy(null)
+      setRemoving(false)
     }
   }
 
@@ -117,19 +119,19 @@ export default function MyRecipePage() {
       <Panel className="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <div className="flex flex-col gap-2">
           <RecipeArt
-            meal={r.meal_types[0]} cuisine={r.cuisine || undefined} size="lg" photo={r.photo_url}
+            meal={r.meal_types[0]} cuisine={r.cuisine || undefined} size="lg" photo={r.photo_url} making={making}
             sizes="(min-width: 768px) 440px, 100vw" className="aspect-[4/3] w-full"
           />
           <div className="flex flex-wrap items-center gap-2">
             <Button
               variant="outline" size="sm" onClick={() => photo("make")}
-              disabled={photoBusy !== null || photosLeft === 0}
+              disabled={making || removing || photosLeft === 0}
             >
-              {photoBusy === "make" ? <Loader2 className="animate-spin" /> : <Camera />}
-              {photoBusy === "make" ? "Making a photo…" : r.photo_url ? "New photo" : "Generate photo"}
+              {making ? <Loader2 className="animate-spin" /> : <Camera />}
+              {making ? "Making a photo…" : r.photo_url ? "New photo" : "Generate photo"}
             </Button>
             {r.photo_url && (
-              <Button variant="ghost" size="sm" onClick={() => photo("remove")} disabled={photoBusy !== null}>
+              <Button variant="ghost" size="sm" onClick={() => photo("remove")} disabled={making || removing}>
                 <ImageOff /> Remove
               </Button>
             )}

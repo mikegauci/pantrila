@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send } from "@/lib/api"
 import { label, MEAL_ORDER } from "@/lib/format"
 import { useFoods, useProfile } from "@/lib/hooks"
+import { makePhoto } from "@/lib/photo-jobs"
 import { groupLines, stepsToText, textToSteps } from "@/lib/sections"
 import { cn } from "@/lib/utils"
 import type {
@@ -296,7 +297,7 @@ export function CookbookForm({
   const keys = useMemo(() => new Set(foods?.map((f) => f.key) ?? []), [foods])
   const [r, setR] = useState<CookbookRecipeIn>(initial)
   const [stepsText, setStepsText] = useState(stepsToText(initial.steps, initial.step_sections))
-  const [busy, setBusy] = useState<"save" | "photo" | "estimate" | null>(null)
+  const [busy, setBusy] = useState<"save" | "estimate" | null>(null)
 
   const recipe: CookbookRecipeIn = { ...r, ...textToSteps(stepsText) }
   const unmatched = r.ingredients.filter((l) => !l.food && !l.estimate && l.name.trim())
@@ -335,21 +336,21 @@ export function CookbookForm({
   async function save() {
     setBusy("save")
     try {
-      let saved = recipeId
+      const saved = recipeId
         ? await send<CookbookDetail>(`/me/recipes/${recipeId}`, "PUT", recipe)
         : await send<CookbookDetail>("/me/recipes", "POST", recipe)
       if (!recipeId) {
-        setBusy("photo")
-        try {
-          saved = await send<CookbookDetail>(`/me/recipes/${saved.id}/photo`, "POST")
-        } catch (e) {
-          toast.warning("Recipe saved. Its photo could not be generated.", {
+        // The photo is made while the person reads the recipe; its page shows it arriving.
+        makePhoto(saved.id)
+          .then((photo) => mutate(`/me/recipes/${saved.id}`, photo, { revalidate: false }))
+          .catch((e) => toast.warning("Recipe saved. Its photo could not be generated.", {
             description: e instanceof Error ? e.message : "You can try again from the recipe.",
+          }))
+          .finally(() => {
+            mutate("/me/recipes")
+            mutate("/me")
+            mutate("/me/usage")
           })
-        } finally {
-          mutate("/me")
-          mutate("/me/usage")
-        }
       }
       toast.success(`Saved ${saved.title}`)
       onSaved(saved)
@@ -473,15 +474,13 @@ export function CookbookForm({
       <div className="grid gap-3 lg:sticky lg:top-[96px]">
         <Preview recipe={recipe} />
         {!recipeId && (
-          <p role={busy === "photo" ? "status" : undefined} className="text-[12px] text-muted-foreground">
-            {busy === "photo"
-              ? "Your recipe is saved. Making its photo, usually about 15 seconds…"
-              : "Saving also generates a photo of your recipe."}
+          <p className="text-[12px] text-muted-foreground">
+            Saving also makes a photo of your recipe while you look it over.
           </p>
         )}
         <div className="flex gap-2">
           <Button size="lg" className="flex-1" onClick={save} disabled={busy !== null || !recipe.title.trim()}>
-            {busy === "photo" ? "Making the photo…" : busy === "save" ? "Saving…" : recipeId ? "Save changes" : "Save to my recipes"}
+            {busy === "save" ? "Saving…" : recipeId ? "Save changes" : "Save to my recipes"}
           </Button>
           {onCancel && <Button size="lg" variant="outline" onClick={onCancel} disabled={busy !== null}>Cancel</Button>}
         </div>

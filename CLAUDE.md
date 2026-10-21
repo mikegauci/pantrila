@@ -49,6 +49,15 @@ groups 100% both, $0.0069 -> $0.0074/import, p50/p95 4.3/7.6 -> 5.6/14.8 s (sing
 of 4 runs (lines kept 96%); the prompt now says one entry per source line, never split, keeping such notes in
 the name (4/4 runs kept 5 lines). 1 new Playwright test (`web/tests/ingredient-amounts.spec.ts`).
 
+Background recipe photo: "Save to my recipes" now opens the saved recipe at once; its photo is made while the
+person reads it. `web/src/lib/photo-jobs.ts` (`makePhoto`, `usePhotoPending`) runs the existing
+`POST /me/recipes/{id}/photo` outside the form and marks the id in `sessionStorage["pantrila-photo-jobs"]`; the
+recipe page's photo slot (`RecipeArt making`) shows a sweeping light and "Making the photo…" until it lands. After a
+reload the server still finishes the photo, so the page polls the recipe every 3 s for up to 90 s. Failures still toast
+"Recipe saved. Its photo could not be generated." "New photo" uses the same store. No API, prompt or model change, so
+no eval rerun; `import-amounts.spec.ts` updated, new `background-photo.spec.ts`; `post-import.spec.ts` resumes its fake
+clock before a fresh page load (a paused clock can stall Supabase's auth start).
+
 Recipe groups: an import keeps the source's headings. Ingredient lines carry `section` ("Broth"; consecutive
 lines share one) and the method keeps `step_sections` (`{title, first_step}`, 1-based) beside the flat `steps`
 list, both inside the existing recipe JSON, so no migration and older recipes load unchanged. `ImportedLine.section`
@@ -492,7 +501,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   guards; `jsonld_recipe` (adds `ingredientSections` via `ingredient_groups`), `page_text`; `to_draft` checks every line in code and returns notes;
   `with_named_allergens` adds the allergens of table foods an estimated line names.
 - `src/pantrila/import_jobs.py`: `ImportJobs`, the in-memory registry behind background imports
-  (`app.state.import_jobs`); web side is `web/src/lib/import-jobs.ts`.
+  (`app.state.import_jobs`); web side is `web/src/lib/import-jobs.ts`. The new recipe's photo is made in the
+  background by `web/src/lib/photo-jobs.ts`.
 - `src/pantrila/social.py`: TikTok/Instagram/Facebook posts. `detect`, short links, `clean_url`
   (tracking query dropped), `fetch_post` (TikTok oEmbed; Instagram/Facebook Open Graph tags;
   all through `fetch_page`, Pantrila's own user agent; refusal or empty caption -> "Paste the

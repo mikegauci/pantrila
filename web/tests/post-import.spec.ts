@@ -146,6 +146,8 @@ test("where the service covers the platform, Pantrila says it is listening to th
   await page.getByText("1 note to check").click()
   await expect(page.getByText(heard)).toBeVisible()
 
+  // A paused fake clock can stall Supabase's timer-driven auth start on a fresh page load.
+  await page.clock.resume()
   await page.goto("/recipes/mine/new")
   await page.getByRole("button", { name: /From a post/ }).click()
   await page.getByLabel("Post link").fill("https://www.tiktok.com/@sam/video/7300000000000000001")
