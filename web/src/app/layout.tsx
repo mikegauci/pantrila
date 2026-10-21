@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Plus_Jakarta_Sans } from "next/font/google"
 
 import { AuthProvider } from "@/components/auth-provider"
@@ -12,6 +12,12 @@ export const metadata: Metadata = {
   description:
     "AI cooking and meal-planning assistant: recipes from your pantry, a week of meals that " +
     "respects your allergies and targets, and a grocery list.",
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 }
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
