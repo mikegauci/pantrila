@@ -91,9 +91,68 @@ export function mentioned(step: string, ingredients: { name: string; food: strin
   }
   return ingredients.flatMap((ing, i) => {
     const name = ing.name.split(/[,(]/)[0]
+    // "Salt and pepper" is two foods on one line: either word counts.
+    const parts = name.split(/\s+(?:and|&)\s+/)
     const food = ing.food?.replaceAll("_", " ") ?? ""
     const lastWord = food.split(" ").slice(-1)[0] ?? ""
-    return has(name) || has(food) || (lastWord.length >= 3 && has(lastWord)) ? [i] : []
+    return has(name) || (parts.length > 1 && parts.some(has)) || has(food) || (lastWord.length >= 3 && has(lastWord))
+      ? [i] : []
+  })
+}
+
+/** Step words that stand for every seasoning of the step's group ("whisk the oil and seasonings"). */
+const SEASONINGS_WORDS = /\b(seasonings?|spices|spice (?:mix|mixture|blend|rub)|dry rub)\b/i
+/** Dried spices, herbs and salt; a line measured in teaspoons or pinches counts too. */
+const SEASONING_FOODS = new RegExp(String.raw`\b(${[
+  "salt", "pepper", "peppercorns?", "paprika", "oregano", "thyme", "basil", "rosemary", "sage", "dill",
+  "cumin", "coriander", "turmeric", "curry powder", "chil[il]i (?:powder|flakes)", "cayenne", "mustard",
+  "cinnamon", "nutmeg", "allspice", "cloves", "cardamom", "garlic powder", "onion powder", "seasoning",
+  "spice", "herbes de provence", "za.?atar", "sumac", "five spice", "garam masala",
+].join("|")})\b`, "i")
+const SEASONING_UNITS = new Set(["tsp", "pinch"])
+
+/** Words of a heading or group name, for matching one to the other ("Chicken" ~ "Rice & Chicken"). */
+function headingWords(title: string): Set<string> {
+  const skip = new Set(["and", "the", "for", "with", "optional"])
+  return new Set(title.toLowerCase().split(/[^a-z]+/)
+    .filter((w) => w.length >= 3 && !skip.has(w)).map((w) => w.replace(/s$/, "")))
+}
+
+/** The ingredients each step uses, as indexes. On top of `mentioned`: when the method has
+ *  headings, a food that appears on several lines ("2 tbsp olive oil" for the chicken, "1 tbsp
+ *  olive oil" for the broth) keeps only the line from the group that matches the step's heading,
+ *  else the first one an earlier step has not used; and "seasonings" or "spices" bring in the
+ *  seasoning lines of that group. */
+export function stepUses(
+  steps: string[],
+  ingredients: { name: string; food: string | null; unit: string; section?: string }[],
+  headingAt: (step: number) => string,
+): number[][] {
+  const same = (i: number) => ingredients[i].food ?? ingredients[i].name.split(/[,(]/)[0].trim().toLowerCase()
+  const used = new Set<number>()
+  return steps.map((step, s) => {
+    const heading = headingWords(headingAt(s + 1))
+    const inGroup = ingredients.map((ing) =>
+      heading.size > 0 && [...headingWords(ing.section ?? "")].some((w) => heading.has(w)))
+    const group = inGroup.some(Boolean) ? (i: number) => inGroup[i] : () => true
+    const found = new Set(mentioned(step, ingredients))
+    if (SEASONINGS_WORDS.test(step)) {
+      ingredients.forEach((ing, i) => {
+        if (group(i) && (SEASONING_FOODS.test(ing.name) || SEASONING_FOODS.test(ing.food?.replaceAll("_", " ") ?? "")
+          || SEASONING_UNITS.has(ing.unit))) found.add(i)
+      })
+    }
+    // One line per food: the step's own group first, then a line not yet used, then the first.
+    const pick = new Map<string, number>()
+    for (const i of [...found].sort((a, b) => a - b)) {
+      const key = same(i)
+      const had = pick.get(key)
+      const rank = (j: number) => (inGroup.some(Boolean) && inGroup[j] ? 0 : used.has(j) ? 2 : 1)
+      if (had === undefined || rank(i) < rank(had)) pick.set(key, i)
+    }
+    const uses = [...pick.values()].sort((a, b) => a - b)
+    uses.forEach((i) => used.add(i))
+    return uses
   })
 }
 
