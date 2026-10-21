@@ -646,6 +646,26 @@ def create_app(
         drop_photo(request, old_path)
         return cookbook_detail(get_saved(s, recipe_id), s.kitchen.profile())
 
+    @app.post("/me/recipes/{recipe_id}/photo/from/{corpus_id}")
+    def copy_corpus_photo(recipe_id: int, corpus_id: str, request: Request, user: UserDep,
+                          s: SessionDep) -> CookbookDetail:  # fmt: skip
+        """Give a saved copy of a corpus recipe its photo (a private copy, no model call)."""
+        saved = get_saved(s, recipe_id)
+        old_path = saved.photo_path
+        backend: Backend = request.app.state.backend
+        source = s.store.photos([corpus_id]).get(corpus_id)
+        if backend.photos is None or source is None:
+            return cookbook_detail(saved, s.kitchen.profile())
+        path = cookbook_path(user.id)
+        try:
+            backend.photos.put(path, backend.photos.get(source))
+        except Exception as exc:
+            log.exception("photo copy failed")
+            raise HTTPException(502, "The photo could not be copied.") from exc
+        s.cookbook.set_photo(recipe_id, path)
+        drop_photo(request, old_path)
+        return cookbook_detail(get_saved(s, recipe_id), s.kitchen.profile())
+
     @app.delete("/me/recipes/{recipe_id}/photo")
     def delete_photo(recipe_id: int, request: Request, s: SessionDep) -> CookbookDetail:
         old_path = get_saved(s, recipe_id).photo_path

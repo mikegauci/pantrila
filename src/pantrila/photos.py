@@ -179,6 +179,8 @@ def generate(
 class PhotoStore(Protocol):
     def put(self, path: str, data: bytes) -> None: ...
 
+    def get(self, path: str) -> bytes: ...
+
     def delete(self, paths: Iterable[str]) -> None: ...
 
 
@@ -188,6 +190,9 @@ class MemoryPhotos:
 
     def put(self, path: str, data: bytes) -> None:
         self.files[path] = data
+
+    def get(self, path: str) -> bytes:
+        return self.files[path]
 
     def delete(self, paths: Iterable[str]) -> None:
         for p in paths:
@@ -223,6 +228,11 @@ class SupabasePhotos:
             "Cache-Control": "max-age=31536000",  # paths never change content
         })  # fmt: skip
         r.raise_for_status()
+
+    def get(self, path: str) -> bytes:
+        r = self.http.get(f"/object/{BUCKET}/{path}")
+        r.raise_for_status()
+        return r.content
 
     def delete(self, paths: Iterable[str]) -> None:
         paths = [p for p in paths if p]
