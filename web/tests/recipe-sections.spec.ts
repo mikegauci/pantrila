@@ -45,7 +45,8 @@ test("an imported recipe keeps its ingredient groups and method headings through
       : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [],
         days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }
       : path === "/foods" ? ["basmati_rice", "chicken_thigh", "coconut_milk"].map((key) => ({ key, name: key, aisle: "other" }))
-      : path === "/me/recipes/import/link" ? { draft, notes: [], cost_usd: 0.005, latency_ms: 1000 }
+      : path.startsWith("/me/recipes/import/jobs") ? { id: "job-1", status: "done", error: null,
+        result: { draft, notes: [], cost_usd: 0.005, latency_ms: 1000 } }
       : path === "/me/recipes/preview" ? { ingredients: [], nutrition, allergens: [], diet_tags: [], estimated: false, problems: [] }
       : path === "/me/recipes/7" || path === "/me/recipes/7/photo" || (path === "/me/recipes" && body) ? detail
       : path === "/health" ? { ok: true } : []
