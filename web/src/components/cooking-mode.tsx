@@ -10,6 +10,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import { toast } from "sonner"
 import useSWR from "swr"
 
+import { IngredientText } from "@/components/amount"
 import { useAuth } from "@/components/auth-provider"
 import { TemperatureToggle } from "@/components/temperature-toggle"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -281,7 +282,7 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
                                   className={cn("inline-flex min-h-10 items-center gap-2 rounded-full border px-3.5 text-[14px] transition-colors",
                                                 on ? "border-primary bg-primary-soft text-primary-text" : "bg-surface hover:bg-surface-muted")}>
                             {on && <Check className="size-4" strokeWidth={3} aria-hidden />}
-                            <span className="tabular font-semibold">{amount(ing.quantity * scale)} {ing.unit}</span> {ing.name}
+                            <span><IngredientText line={ing} scale={scale} fixed /></span>
                           </button>
                         )
                       })}
@@ -384,7 +385,7 @@ function IngredientChecklist({ ingredients, scale, ticked, onToggle }: {
                       {on && <Check className="size-3.5" strokeWidth={3} aria-hidden />}
                     </span>
                     <span className={cn("flex-1", on && "text-muted-foreground line-through")}>
-                      <span className="tabular font-semibold">{amount(ing.quantity * scale)} {ing.unit}</span> {ing.name}
+                      <IngredientText line={ing} scale={scale} fixed />
                     </span>
                     {ing.in_pantry && !on && (
                       <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-medium text-primary-text">In pantry</span>

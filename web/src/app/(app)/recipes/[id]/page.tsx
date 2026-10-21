@@ -1,5 +1,6 @@
 "use client"
 
+import { IngredientText } from "@/components/amount"
 import { NutritionSource } from "@/components/nutrition-source"
 import { ArrowLeft, Check, Clock, Minus, Plus, Repeat, ShoppingBasket, Users } from "lucide-react"
 import Link from "next/link"
@@ -17,10 +18,6 @@ import { useApi, useProfile, useRecipe } from "@/lib/hooks"
 import { hasTemp, showTemps, useTempUnit } from "@/lib/temperature"
 import { cn } from "@/lib/utils"
 import type { Ingredient, SwapList } from "@/lib/types"
-
-function amount(q: number) {
-  return q < 10 ? String(Math.round(q * 100) / 100) : String(Math.round(q))
-}
 
 function Swaps({ recipeId, food, onClose }: { recipeId: string; food: string; onClose: () => void }) {
   const { data, error, isLoading } = useApi<SwapList>(
@@ -77,8 +74,7 @@ function IngredientRow({
           {ing.in_pantry && <Check className="size-3" strokeWidth={3} />}
         </span>
         <span className="flex-1">
-          <span className="tabular font-semibold">{amount(ing.quantity * scale)} {ing.unit}</span>{" "}
-          {ing.name}
+          <IngredientText line={ing} scale={scale} />
           {ing.in_pantry && <span className="sr-only"> (in your pantry)</span>}
         </span>
         <Button variant="ghost" size="xs" onClick={onToggle} aria-expanded={open}>
