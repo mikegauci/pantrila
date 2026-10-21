@@ -5,7 +5,7 @@ import httpx
 import pytest
 
 from pantrila.cookbook import bare_name
-from pantrila.recipe_import import ImportedRecipe, Importer, ImportFailed
+from pantrila.recipe_import import ImportedRecipe, Importer, ImportFailed, may_hold_recipe
 from pantrila.social import (
     NO_RECIPE,
     caption_links,
@@ -207,12 +207,12 @@ def test_pasted_caption_is_used_without_fetching():
     assert result.draft.source_author == "cookwithsam"
     assert result.draft.source_platform == "instagram"
 
-    alone = Importer(client=FakeClient(recipe()), model="m").from_post(caption="Egg pasta: eggs")
+    alone = Importer(client=FakeClient(recipe()), model="m").from_post(caption="Egg pasta: 2 eggs")
     assert alone.draft.source == "post" and alone.draft.source_url is None
 
 
 def test_caption_without_recipe_falls_back_to_the_linked_site():
-    client = FakeClient(recipe(is_recipe=False), recipe())
+    client = FakeClient(recipe())  # the caption is a hook: no call for it
     caption = "Egg pasta 🍝 full recipe on sambakes.com/egg-pasta #pasta"
     http = mock_http({
         "https://sambakes.com/egg-pasta": httpx.Response(301, headers={"location": "/r/egg"}),
@@ -222,21 +222,35 @@ def test_caption_without_recipe_falls_back_to_the_linked_site():
     assert result.draft.recipe_url == "https://sambakes.com/r/egg"
     assert result.draft.source_url == TIKTOK and result.draft.source == "post"
     assert "Text of the web page https://sambakes.com/r/egg" in sent(client)
-    assert result.usage.llm_calls == 2  # both calls count on the one import
+    assert result.usage.llm_calls == 1 and len(client.calls) == 1
 
 
 def test_unreadable_links_are_skipped_and_no_recipe_anywhere_says_what_to_do_next():
-    client = FakeClient(recipe(is_recipe=False), recipe(is_recipe=False))
+    client = FakeClient(recipe(is_recipe=False))
     caption = "Recipe on dead.example.com and sambakes.com/knives"
     http = mock_http({"https://sambakes.com/knives": httpx.Response(200, html="<p>Knives</p>")})
     with pytest.raises(ImportFailed) as exc:
         Importer(client=client, model="m").from_post(TIKTOK, caption, http, resolve)
-    assert str(exc.value) == NO_RECIPE and len(client.calls) == 2
+    assert str(exc.value) == NO_RECIPE and len(client.calls) == 1  # the knife page only
 
-    client = FakeClient(recipe(is_recipe=False))
+    client = FakeClient()
     with pytest.raises(ImportFailed, match="Try another public recipe link"):
         Importer(client=client, model="m").from_post(TIKTOK, "Comment RECIPE 👇", http, resolve)
-    assert len(client.calls) == 1  # no link, no second call
+    assert len(client.calls) == 0  # a hook with no link: no paid call at all
+
+
+@pytest.mark.parametrize(("caption", "worth_a_call"), [
+    ("Egg pasta 🍝 2 eggs, cook", True),  # a count of a table food
+    ("Cookies: 115 g butter, 1 cup sugar", True),  # amounts with units
+    ("3-ingredient fluffy pancakes", True),
+    ("Summer chickpea salad with tomato, cucumber and feta #salad", True),  # three table foods
+    ("Shakshuka\n- tomatoes\n- peppers\n- eggs", True),  # a list
+    ("Best chicken bowl ever 🔥 recipe on my blog", False),
+    ("Peanut noodles in 15 min 🥜 Write EAT for this recipe!", False),  # minutes are no amount
+    ("Comment RECIPE 👇", False),
+])  # fmt: skip
+def test_only_captions_that_could_hold_a_recipe_get_a_model_call(caption, worth_a_call):
+    assert may_hold_recipe(caption) is worth_a_call
 
 
 def test_plain_recipe_links_still_go_through_the_link_import(monkeypatch):
@@ -311,7 +325,7 @@ def test_tiktok_short_link_stops_at_the_post_url_without_loading_it():
 
 
 def test_linked_page_with_recipe_data_wins_over_earlier_links():
-    client = FakeClient(recipe(is_recipe=False), recipe())
+    client = FakeClient(recipe())
     caption = "My knives: shop.example.com/k. Recipe: sambakes.com/pasta"
     recipe_page = '<script type="application/ld+json">{"@type": "Recipe", "name": "P"}</script>'
     http = mock_http({
@@ -321,11 +335,11 @@ def test_linked_page_with_recipe_data_wins_over_earlier_links():
     })  # fmt: skip
     result = Importer(client=client, model="m").from_post(TIKTOK, caption, http, resolve)
     assert result.draft.recipe_url == "https://sambakes.com/pasta"
-    assert len(client.calls) == 2  # the knife page was fetched but never sent to the model
+    assert len(client.calls) == 1  # the knife page was fetched but never sent to the model
 
 
 def test_pasted_caption_with_a_recipe_link_tries_that_link():
-    client = FakeClient(recipe(is_recipe=False), recipe())
+    client = FakeClient(recipe())
     http = mock_http({"https://myblog.com/pasta": httpx.Response(200, html="<p>2 eggs</p>")})
     result = Importer(client=client, model="m").from_post(
         "myblog.com/pasta", "Best pasta ever 🍝", http, resolve)  # fmt: skip

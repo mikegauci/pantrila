@@ -652,7 +652,8 @@ def test_text_import_and_bad_handles(api, backend):
 def test_post_imports_share_the_daily_import_cap(api, backend, monkeypatch):
     monkeypatch.setenv("PANTRILA_DAILY_IMPORTS", "1")
     backend.client.replies = [imported_reply()]
-    assert api.post("/me/recipes/import/post", json={"caption": "Toast: bread"}).status_code == 200
+    toast = {"caption": "Toast: 2 slices bread"}
+    assert api.post("/me/recipes/import/post", json=toast).status_code == 200
     assert api.post("/me/recipes/import/post", json={"caption": "Toast"}).status_code == 429
     assert api.post("/me/recipes/import/text", json={"text": "Toast: 2 slices"}).status_code == 429
 
