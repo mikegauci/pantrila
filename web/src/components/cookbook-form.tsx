@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send } from "@/lib/api"
 import { label, MEAL_ORDER } from "@/lib/format"
 import { useFoods, useProfile } from "@/lib/hooks"
+import { groupLines, stepsToText, textToSteps } from "@/lib/sections"
 import { cn } from "@/lib/utils"
 import type {
   Allergen, CookbookDetail, CookbookPreview, CookbookRecipeIn, EstimateView, FoodEstimate, RecipeLine,
@@ -294,13 +295,22 @@ export function CookbookForm({
   const { data: foods } = useFoods()
   const keys = useMemo(() => new Set(foods?.map((f) => f.key) ?? []), [foods])
   const [r, setR] = useState<CookbookRecipeIn>(initial)
-  const [stepsText, setStepsText] = useState(initial.steps.join("\n\n"))
+  const [stepsText, setStepsText] = useState(stepsToText(initial.steps, initial.step_sections))
   const [busy, setBusy] = useState<"save" | "photo" | "estimate" | null>(null)
 
-  const recipe: CookbookRecipeIn = { ...r, steps: stepsText.split("\n").map((s) => s.trim()).filter(Boolean) }
+  const recipe: CookbookRecipeIn = { ...r, ...textToSteps(stepsText) }
   const unmatched = r.ingredients.filter((l) => !l.food && !l.estimate && l.name.trim())
   const setLine = (i: number, l: RecipeLine) =>
     setR({ ...r, ingredients: r.ingredients.map((x, j) => (j === i ? l : x)) })
+  /** Rename (or, with an empty name, remove) the group whose first line is `first`. */
+  const renameGroup = (first: number, name: string) => {
+    const old = r.ingredients[first].section ?? ""
+    let end = first
+    while (end < r.ingredients.length && (r.ingredients[end].section ?? "") === old) end += 1
+    setR({ ...r, ingredients: r.ingredients.map((x, j) => (j >= first && j < end ? { ...x, section: name } : x)) })
+  }
+  const addLine = (section: string) =>
+    setR({ ...r, ingredients: [...r.ingredients, { ...BLANK_RECIPE.ingredients[0], section }] })
 
   async function estimate() {
     setBusy("estimate")
@@ -420,23 +430,41 @@ export function CookbookForm({
             Each ingredient is matched to a food in Pantrila&apos;s table, which is how nutrition and
             allergens are worked out. Foods not in the table can be estimated by AI.
           </p>
-          <ul>
-            {r.ingredients.map((l, i) => (
-              <LineRow key={i} line={l} n={i + 1} keys={keys} onChange={(x) => setLine(i, x)}
-                       onRemove={() => setR({ ...r, ingredients: r.ingredients.filter((_, j) => j !== i) })} />
-            ))}
-          </ul>
-          <Button variant="ghost" size="sm" className="mt-2"
-                  onClick={() => setR({ ...r, ingredients: [...r.ingredients, { ...BLANK_RECIPE.ingredients[0] }] })}>
-            <Plus /> Add ingredient
-          </Button>
+          {groupLines(r.ingredients).map((g, n) => (
+            <div key={n}>
+              {g.title && (
+                <Input
+                  aria-label={`Group name, ${g.title}`} value={g.title} maxLength={80}
+                  placeholder="Group name (clear it to remove the group)"
+                  onChange={(e) => renameGroup(g.items[0].index, e.target.value)}
+                  className="mt-4 h-9 border-0 bg-surface-muted font-semibold"
+                />
+              )}
+              <ul>
+                {g.items.map(({ item: l, index: i }) => (
+                  <LineRow key={i} line={l} n={i + 1} keys={keys} onChange={(x) => setLine(i, x)}
+                           onRemove={() => setR({ ...r, ingredients: r.ingredients.filter((_, j) => j !== i) })} />
+                ))}
+              </ul>
+            </div>
+          ))}
+          <div className="mt-2 flex flex-wrap gap-2">
+            <Button variant="ghost" size="sm" onClick={() => addLine(r.ingredients.at(-1)?.section ?? "")}>
+              <Plus /> Add ingredient
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => addLine("New group")}>
+              <Plus /> Add group
+            </Button>
+          </div>
         </Panel>
 
         {r.source === "post" && <CreditFields r={r} onChange={setR} />}
 
         <Panel className="grid gap-2">
           <PanelTitle className="mb-0">Method</PanelTitle>
-          <Label htmlFor="steps" className="text-muted-foreground">One step per paragraph</Label>
+          <Label htmlFor="steps" className="text-muted-foreground">
+            One step per paragraph. Start a line with ## to add a heading, like ## For the sauce.
+          </Label>
           <Textarea id="steps" value={stepsText} rows={8} className="min-h-40 bg-surface"
                     onChange={(e) => setStepsText(e.target.value)} />
         </Panel>

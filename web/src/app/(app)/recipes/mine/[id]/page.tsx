@@ -17,6 +17,7 @@ import { TemperatureToggle } from "@/components/temperature-toggle"
 import { Skeleton } from "@/components/ui/skeleton"
 import { send } from "@/lib/api"
 import { label } from "@/lib/format"
+import { groupLines, groupSteps } from "@/lib/sections"
 import { useCookbookRecipe, useMe, useProfile } from "@/lib/hooks"
 import { hasTemp, showTemps, useTempUnit } from "@/lib/temperature"
 import { cn } from "@/lib/utils"
@@ -200,29 +201,34 @@ export default function MyRecipePage() {
         <Panel>
           <PanelTitle>Ingredients</PanelTitle>
           <p className="mb-2 text-[12px] text-muted-foreground">You have {have} of {r.ingredients.length} in your pantry.</p>
-          <ul>
-            {r.ingredients.map((ing, i) => (
-              <li key={i} className="flex items-center gap-3 border-b py-2.5 last:border-0">
-                <span
-                  className={cn("grid size-5 shrink-0 place-items-center rounded-full border",
-                                ing.in_pantry ? "border-primary bg-primary text-primary-foreground" : "border-border")}
-                  title={ing.in_pantry ? "In your pantry" : "Not in your pantry"}
-                >
-                  {ing.in_pantry && <Check className="size-3" strokeWidth={3} />}
-                </span>
-                <span className="flex-1">
-                  <span className="tabular font-semibold">{amount(ing.quantity)} {ing.unit}</span> {ing.name}
-                  {ing.in_pantry && <span className="sr-only"> (in your pantry)</span>}
-                  {ing.amount_estimate && (
-                    <span className="mt-1 block text-[12px] text-muted-foreground">
-                      Estimated amount: {ing.amount_estimate}
+          {groupLines(r.ingredients).map((g, n) => (
+            <div key={n}>
+              {g.title && <h3 className="mt-4 mb-1 text-[13px] font-semibold uppercase tracking-wide text-muted-foreground">{g.title}</h3>}
+              <ul>
+                {g.items.map(({ item: ing, index: i }) => (
+                  <li key={i} className="flex items-center gap-3 border-b py-2.5 last:border-0">
+                    <span
+                      className={cn("grid size-5 shrink-0 place-items-center rounded-full border",
+                                    ing.in_pantry ? "border-primary bg-primary text-primary-foreground" : "border-border")}
+                      title={ing.in_pantry ? "In your pantry" : "Not in your pantry"}
+                    >
+                      {ing.in_pantry && <Check className="size-3" strokeWidth={3} />}
                     </span>
-                  )}
-                </span>
-                {!ing.food && ing.estimate && <AiBadge>Estimated</AiBadge>}
-              </li>
-            ))}
-          </ul>
+                    <span className="flex-1">
+                      <span className="tabular font-semibold">{amount(ing.quantity)} {ing.unit}</span> {ing.name}
+                      {ing.in_pantry && <span className="sr-only"> (in your pantry)</span>}
+                      {ing.amount_estimate && (
+                        <span className="mt-1 block text-[12px] text-muted-foreground">
+                          Estimated amount: {ing.amount_estimate}
+                        </span>
+                      )}
+                    </span>
+                    {!ing.food && ing.estimate && <AiBadge>Estimated</AiBadge>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </Panel>
 
         <Panel>
@@ -240,16 +246,21 @@ export default function MyRecipePage() {
 
       <Panel>
         <PanelTitle action={hasTemp(r.steps) && <TemperatureToggle />}>Method</PanelTitle>
-        <ol className="grid gap-4">
-          {r.steps.map((step, i) => (
-            <li key={i} className="flex gap-4">
-              <span className="tabular grid size-8 shrink-0 place-items-center rounded-full bg-primary-soft font-semibold text-primary-text">
-                {i + 1}
-              </span>
-              <p className="pt-1">{showTemps(step, unit)}</p>
-            </li>
-          ))}
-        </ol>
+        {groupSteps(r.steps, r.step_sections).map((g, n) => (
+          <div key={n} className={n > 0 ? "mt-6" : undefined}>
+            {g.title && <h3 className="mb-3 text-[16px] font-semibold">{g.title}</h3>}
+            <ol className="grid gap-4">
+              {g.items.map(({ item: step, index: i }) => (
+                <li key={i} className="flex gap-4">
+                  <span className="tabular grid size-8 shrink-0 place-items-center rounded-full bg-primary-soft font-semibold text-primary-text">
+                    {i + 1}
+                  </span>
+                  <p className="pt-1">{showTemps(step, unit)}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))}
       </Panel>
     </div>
   )

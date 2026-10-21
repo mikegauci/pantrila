@@ -17,7 +17,7 @@ export default function CookMyRecipePage() {
   return (
     <CookingMode recipe={{
       key: `mine:${r.id}`, title: r.title, servings: r.servings, ingredients: r.ingredients,
-      steps: r.steps, source: { cookbook_id: r.id }, backHref: `/recipes/mine/${r.id}`,
+      steps: r.steps, stepSections: r.step_sections, source: { cookbook_id: r.id }, backHref: `/recipes/mine/${r.id}`,
     }} />
   )
 }
