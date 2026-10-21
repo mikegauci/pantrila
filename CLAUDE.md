@@ -623,9 +623,9 @@ uv run python -m evals.import_cases      # regenerate the recipe-import eval pag
 uv run python -m evals.run_import [--only ids] [--instructions-from <git ref>]  # recipe-import eval (paid; ~$0.006/import)
 uv run python -m evals.video_cases       # regenerate the video-import eval cases
 uv run python -m evals.video_audio [--only ids] [--force]   # their audio, once (paid TTS)
-uv run python -m evals.run_video [--plain] [--transcribe-model m --transcribe-price usd] [--only ids]  # video eval (paid)
+uv run python -m evals.run_video [--plain] [--video-effort low|medium] [--transcribe-model m --transcribe-price usd] [--only ids]  # video eval (paid)
 uv run python -m evals.reel_cases        # regenerate the reel eval cases
-uv run python -m evals.run_reel [--media off] [--comments off] [--fee usd] [--only ids]   # reel eval, fake service (paid)
+uv run python -m evals.run_reel [--media off] [--comments off] [--video-effort low|medium] [--fee usd] [--only ids]   # reel eval, fake service (paid)
 uv run python scripts/reel_media_check.py --actor <id> --input '<json with {url}>' [--save dir] <post links>  # Apify actor check
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 uv run pantrila photos generate [--only ids] [--limit n] [--force] [--dry-run]  # corpus photos (paid; ~$0.014 each)
