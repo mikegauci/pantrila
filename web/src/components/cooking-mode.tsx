@@ -10,7 +10,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import { toast } from "sonner"
 import useSWR from "swr"
 
-import { IngredientText } from "@/components/amount"
+import { Amount, IngredientText } from "@/components/amount"
+import { bareName } from "@/lib/amounts"
 import { useAuth } from "@/components/auth-provider"
 import { TemperatureToggle } from "@/components/temperature-toggle"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -220,11 +221,6 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
         </div>
         {hasTemp(recipe.steps) && <TemperatureToggle />}
         <WakeBadge state={wake} />
-        {onStep && (
-          <Button variant="outline" size="sm" className="lg:hidden" onClick={() => setListOpen(true)}>
-            <ListChecks /> {ticked.size}/{recipe.ingredients.length}
-          </Button>
-        )}
       </header>
       <div className="h-1 shrink-0 bg-surface-muted" aria-hidden>
         <div className="h-full bg-primary transition-[width] duration-300" style={{ width: `${(Math.min(page, n) / Math.max(n, 1)) * 100}%` }} />
@@ -272,17 +268,20 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
                 <p className="text-[22px] leading-[34px] font-medium md:text-[28px] md:leading-[42px]">{showTemps(step, unit)}</p>
                 {uses.length > 0 && (
                   <div role="group" aria-label="Ingredients for this step">
-                    <p className="mb-2 text-[12px] font-medium text-muted-foreground">For this step (tap when it is out)</p>
+                    <p className="mb-2 text-[12px] font-medium text-muted-foreground">For this step (tap when completed)</p>
                     <div className="flex flex-wrap gap-2">
                       {uses.map((i) => {
                         const ing = recipe.ingredients[i]
                         const on = ticked.has(i)
                         return (
                           <button key={i} type="button" role="checkbox" aria-checked={on} onClick={() => toggle(i)}
-                                  className={cn("inline-flex min-h-10 items-center gap-2 rounded-full border px-3.5 text-[14px] transition-colors",
+                                  className={cn("inline-flex min-h-10 items-center gap-2.5 rounded-2xl border px-3.5 py-2 text-left text-[14px] transition-colors",
                                                 on ? "border-primary bg-primary-soft text-primary-text" : "bg-surface hover:bg-surface-muted")}>
-                            {on && <Check className="size-4" strokeWidth={3} aria-hidden />}
-                            <span><IngredientText line={ing} scale={scale} fixed /></span>
+                            {on && <Check className="size-4 shrink-0" strokeWidth={3} aria-hidden />}
+                            <span className="shrink-0 whitespace-nowrap rounded-lg bg-surface-muted px-2 py-0.5">
+                              <Amount line={ing} scale={scale} name={bareName(ing.name)} fixed />
+                            </span>{" "}
+                            <span className="min-w-0">{bareName(ing.name)}</span>
                           </button>
                         )
                       })}
@@ -325,13 +324,21 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
       )}
 
       {page <= n && (
-        <footer className="flex shrink-0 gap-3 border-t bg-surface px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6">
-          <Button variant="outline" size="lg" className="h-14 px-5" onClick={() => go(page - 1)} disabled={page === 0}>
-            <ArrowLeft /> Back
-          </Button>
-          <Button size="lg" className="h-14 flex-1 text-[16px]" onClick={() => go(page + 1)}>
-            {page === 0 ? <>Start cooking <ArrowRight /></> : page === n ? <>Finish <Check /></> : <>Next step <ArrowRight /></>}
-          </Button>
+        <footer className="flex shrink-0 flex-col gap-3 border-t bg-surface px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6">
+          {onStep && (
+            <Button variant="outline" size="lg" className="h-12 w-full justify-between lg:hidden" onClick={() => setListOpen(true)}>
+              <span className="inline-flex items-center gap-2"><ListChecks /> Check ingredient list</span>
+              <span className="tabular text-muted-foreground">{ticked.size}/{recipe.ingredients.length}</span>
+            </Button>
+          )}
+          <div className="flex gap-3">
+            <Button variant="outline" size="lg" className="h-14 px-5" onClick={() => go(page - 1)} disabled={page === 0}>
+              <ArrowLeft /> Back
+            </Button>
+            <Button size="lg" className="h-14 flex-1 text-[16px]" onClick={() => go(page + 1)}>
+              {page === 0 ? <>Start cooking <ArrowRight /></> : page === n ? <>Finish <Check /></> : <>Next step <ArrowRight /></>}
+            </Button>
+          </div>
         </footer>
       )}
 
@@ -350,14 +357,33 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
 function WakeBadge({ state }: { state: "on" | "off" | "unsupported" }) {
   const on = state === "on"
   const Icon = on ? Sun : SunDim
+  const [tip, setTip] = useState(false)
+  useEffect(() => {
+    if (!tip) return
+    const id = setTimeout(() => setTip(false), 2500)
+    const close = () => setTip(false)
+    document.addEventListener("pointerdown", close)
+    return () => { clearTimeout(id); document.removeEventListener("pointerdown", close) }
+  }, [tip])
+  const message = on ? "Screen always on while you cook" : "This browser may let the screen dim"
   return (
-    <span
-      className={cn("inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full px-2 text-[12px] font-medium sm:px-2.5",
-                    on ? "bg-yellow-soft text-foreground" : "bg-surface-muted text-muted-foreground")}
-      title={on ? "Pantrila is keeping your screen on while you cook." : "This browser may let the screen dim; tap it to wake it."}
-    >
-      <Icon className="size-3.5" aria-hidden />
-      <span className="sr-only sm:not-sr-only">{on ? "Screen stays on" : "Screen may dim"}</span>
+    <span className="relative shrink-0">
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); setTip((v) => !v) }}
+        aria-label={message}
+        title={message}
+        className={cn("inline-flex h-7 items-center gap-1.5 rounded-full px-2 text-[12px] font-medium sm:px-2.5",
+                      on ? "bg-yellow-soft text-foreground" : "bg-surface-muted text-muted-foreground")}
+      >
+        <Icon className="size-3.5" aria-hidden />
+        <span className="sr-only sm:not-sr-only">{on ? "Screen stays on" : "Screen may dim"}</span>
+      </button>
+      {tip && (
+        <span role="status" className="absolute top-full right-0 z-50 mt-2 w-max max-w-[220px] rounded-lg bg-foreground px-3 py-2 text-[13px] text-background shadow-lg">
+          {message}
+        </span>
+      )}
     </span>
   )
 }
