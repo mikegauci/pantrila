@@ -99,7 +99,7 @@ def cookbook_detail(saved: SavedRecipe, profile: UserProfile) -> CookbookDetail:
         photo_url=public_url(saved.photo_path),
         ingredients=[CookbookLine(**line.model_dump(), in_pantry=line.food in pantry)
                      for line in lines],
-        steps=r.steps, recipe=r,
+        steps=r.steps, step_sections=r.step_sections, recipe=r,
     )  # fmt: skip
 
 

@@ -34,6 +34,7 @@ from pantrila.schema import (
 )
 
 MAX_RECIPES_PER_USER = 200
+MAX_SECTION = 80  # longest group heading for ingredients or method steps
 HANDLE = re.compile(r"[A-Za-z0-9._]{1,30}")
 DietClass = Literal["plant", "dairy", "egg", "honey", "fish", "shellfish", "meat"]
 Source = Literal["manual", "photo", "link", "post", "text", "video"]
@@ -106,6 +107,26 @@ class RecipeLine(BaseModel):
     amount_estimate: str | None = Field(default=None, max_length=600)
     food: str | None = Field(default=None, description="Key in the ingredient table.")
     estimate: FoodEstimate | None = None
+    # The source's group heading for this line ("For the sauce"); lines of one group are
+    # consecutive. Empty when the recipe does not group its ingredients.
+    section: str = Field(default="", max_length=MAX_SECTION)
+
+    @field_validator("section")
+    @classmethod
+    def trimmed_section(cls, value: str) -> str:
+        return " ".join(value.split())
+
+
+class StepSection(BaseModel):
+    """A heading in the method: it applies from step `first_step` (1-based) to the next heading."""
+
+    title: str = Field(min_length=1, max_length=MAX_SECTION)
+    first_step: int = Field(ge=1, le=100)
+
+    @field_validator("title")
+    @classmethod
+    def trimmed_title(cls, value: str) -> str:
+        return " ".join(value.split())
 
 
 class CookbookRecipeIn(BaseModel):
@@ -121,6 +142,10 @@ class CookbookRecipeIn(BaseModel):
     steps: list[Annotated[str, Field(min_length=1, max_length=2000)]] = Field(
         min_length=1, max_length=40
     )
+    step_sections: list[StepSection] = Field(
+        default_factory=list, max_length=20,
+        description="Method headings, in step order; empty when the method is not grouped.",
+    )  # fmt: skip
     source: Source = "manual"
     source_url: str | None = Field(default=None, max_length=2000)
     # Credit for a recipe from a social post: source_url is the post, recipe_url the recipe
@@ -130,6 +155,13 @@ class CookbookRecipeIn(BaseModel):
         default=None, max_length=31, description="The creator's handle, without the @."
     )
     recipe_url: str | None = Field(default=None, max_length=2000)
+
+    @model_validator(mode="after")
+    def _sections_in_order(self) -> CookbookRecipeIn:
+        starts = [s.first_step for s in self.step_sections]
+        if starts != sorted(set(starts)) or any(n > len(self.steps) for n in starts):
+            raise ValueError("method headings must start at different steps, in order")
+        return self
 
     @field_validator("source_url", "recipe_url")
     @classmethod

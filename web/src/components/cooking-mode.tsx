@@ -23,7 +23,8 @@ import {
 import { ago } from "@/lib/format"
 import { useCooked, useRefreshKitchen } from "@/lib/hooks"
 import { hasTemp, showTemps, useTempUnit } from "@/lib/temperature"
-import type { CookRequest, CookResult, PantryChange, Unit } from "@/lib/types"
+import { groupLines, stepHeading } from "@/lib/sections"
+import type { CookRequest, CookResult, PantryChange, StepSection, Unit } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
 export interface CookIngredient {
@@ -32,6 +33,8 @@ export interface CookIngredient {
   quantity: number
   unit: Unit
   in_pantry: boolean
+  /** The recipe's group heading for this ingredient ("Broth"); cookbook recipes only. */
+  section?: string
 }
 
 export interface CookRecipe {
@@ -41,6 +44,8 @@ export interface CookRecipe {
   servings: number
   ingredients: CookIngredient[]
   steps: string[]
+  /** Headings of the method, for cookbook recipes. */
+  stepSections?: StepSection[]
   source: { recipe_id: string } | { cookbook_id: number }
   backHref: string
 }
@@ -258,6 +263,11 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
                   <span className="tabular grid size-9 place-items-center rounded-full bg-primary-soft text-[15px]">{page}</span>
                   Step {page} of {n}
                 </h2>
+                {stepHeading(recipe.stepSections, page) && (
+                  <p className="-mt-3 text-[15px] font-semibold text-muted-foreground">
+                    {stepHeading(recipe.stepSections, page)}
+                  </p>
+                )}
                 <p className="text-[22px] leading-[34px] font-medium md:text-[28px] md:leading-[42px]">{showTemps(step, unit)}</p>
                 {uses.length > 0 && (
                   <div role="group" aria-label="Ingredients for this step">
@@ -358,28 +368,35 @@ function IngredientChecklist({ ingredients, scale, ticked, onToggle }: {
   onToggle: (i: number) => void
 }) {
   return (
-    <ul>
-      {ingredients.map((ing, i) => {
-        const on = ticked.has(i)
-        return (
-          <li key={i} className="border-b last:border-0">
-            <button type="button" role="checkbox" aria-checked={on} onClick={() => onToggle(i)}
-                    className="flex min-h-12 w-full items-center gap-3 py-2 text-left">
-              <span className={cn("grid size-6 shrink-0 place-items-center rounded-full border-2 transition-colors",
-                                  on ? "border-primary bg-primary text-primary-foreground" : "border-border")}>
-                {on && <Check className="size-3.5" strokeWidth={3} aria-hidden />}
-              </span>
-              <span className={cn("flex-1", on && "text-muted-foreground line-through")}>
-                <span className="tabular font-semibold">{amount(ing.quantity * scale)} {ing.unit}</span> {ing.name}
-              </span>
-              {ing.in_pantry && !on && (
-                <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-medium text-primary-text">In pantry</span>
-              )}
-            </button>
-          </li>
-        )
-      })}
-    </ul>
+    <div>
+      {groupLines(ingredients).map((g, n) => (
+        <div key={n}>
+          {g.title && <h3 className="mt-4 mb-1 text-[13px] font-semibold uppercase tracking-wide text-muted-foreground">{g.title}</h3>}
+          <ul>
+            {g.items.map(({ item: ing, index: i }) => {
+              const on = ticked.has(i)
+              return (
+                <li key={i} className="border-b last:border-0">
+                  <button type="button" role="checkbox" aria-checked={on} onClick={() => onToggle(i)}
+                          className="flex min-h-12 w-full items-center gap-3 py-2 text-left">
+                    <span className={cn("grid size-6 shrink-0 place-items-center rounded-full border-2 transition-colors",
+                                        on ? "border-primary bg-primary text-primary-foreground" : "border-border")}>
+                      {on && <Check className="size-3.5" strokeWidth={3} aria-hidden />}
+                    </span>
+                    <span className={cn("flex-1", on && "text-muted-foreground line-through")}>
+                      <span className="tabular font-semibold">{amount(ing.quantity * scale)} {ing.unit}</span> {ing.name}
+                    </span>
+                    {ing.in_pantry && !on && (
+                      <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-medium text-primary-text">In pantry</span>
+                    )}
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
   )
 }
 

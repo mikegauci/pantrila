@@ -34,6 +34,31 @@ def pancakes(**overrides) -> CookbookRecipeIn:
     return CookbookRecipeIn.model_validate({**base, **overrides})
 
 
+def test_groups_are_stored_and_older_recipes_without_them_still_load():
+    r = pancakes(
+        ingredients=[
+            {"name": "plain flour", "quantity": 100, "unit": "g", "food": "plain_flour",
+             "section": " For the  batter "},
+            {"name": "milk", "quantity": 250, "unit": "ml", "food": "milk"},
+        ],
+        step_sections=[{"title": "Batter", "first_step": 1}, {"title": "Cook", "first_step": 2}],
+    )  # fmt: skip
+    again = CookbookRecipeIn.model_validate_json(r.model_dump_json())
+    assert again.ingredients[0].section == "For the batter" and again.ingredients[1].section == ""
+    assert [s.first_step for s in again.step_sections] == [1, 2]
+    assert derive(again).ingredients[0].section == "For the batter"
+    old = r.model_dump(exclude={"step_sections"})
+    for line in old["ingredients"]:
+        del line["section"]
+    assert CookbookRecipeIn.model_validate(old).step_sections == []
+
+
+@pytest.mark.parametrize("starts", [[2, 1], [1, 1], [3]])
+def test_method_headings_must_be_in_order_and_inside_the_method(starts):
+    with pytest.raises(ValueError, match="method headings"):
+        pancakes(step_sections=[{"title": "x", "first_step": n} for n in starts])
+
+
 def test_known_foods_derive_like_the_corpus():
     d = derive(pancakes())
     assert [i.grams for i in d.ingredients] == [100.0, 100.0, 257.5]

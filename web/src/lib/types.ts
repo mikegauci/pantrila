@@ -302,6 +302,14 @@ export interface RecipeLine {
   food: string | null
   estimate: FoodEstimate | null
   amount_estimate?: string | null
+  /** The source's group heading ("For the sauce"); lines of a group are consecutive. */
+  section?: string
+}
+
+/** A heading in the method, from step `first_step` (1-based) to the next heading. */
+export interface StepSection {
+  title: string
+  first_step: number
 }
 
 export interface CookbookRecipeIn {
@@ -313,6 +321,7 @@ export interface CookbookRecipeIn {
   servings: number
   ingredients: RecipeLine[]
   steps: string[]
+  step_sections?: StepSection[]
   source: RecipeSource
   source_url: string | null
   /** Credit for a recipe from a social post: source_url is the post. */
@@ -355,6 +364,7 @@ export interface CookbookCard {
 export interface CookbookDetail extends CookbookCard {
   ingredients: (LineView & { in_pantry: boolean })[]
   steps: string[]
+  step_sections: StepSection[]
   recipe: CookbookRecipeIn
 }
 

@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import re
 import statistics
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
@@ -57,6 +58,22 @@ def match_lines(expected: list[dict], got: list[RecipeLine]) -> int:
     return hits
 
 
+def heading(text: str) -> str:
+    """A heading compared loosely: case, punctuation and a leading "for the" do not matter."""
+    words = re.findall(r"[a-z0-9&]+", text.lower())
+    return " ".join(words[2:] if words[:2] == ["for", "the"] else words)
+
+
+def line_groups(lines: list) -> list[str]:
+    """The headings of consecutive lines, once each, in order (empty when not grouped)."""
+    out: list[str] = []
+    for line in lines:
+        text = heading(getattr(line, "section", line))
+        if text and (not out or out[-1] != text):
+            out.append(text)
+    return out
+
+
 def draft_allergens(draft: CookbookRecipeIn) -> set[str]:
     foods, out = load_foods(), set()
     for line in draft.ingredients:
@@ -86,6 +103,15 @@ def score(case: dict, draft: CookbookRecipeIn | None, notes: list[str]) -> dict:
         "estimated": sum(1 for line in draft.ingredients if line.estimate and not line.food),
         "title": draft.title,
     }
+    if "sections" in e:
+        want = e["sections"]
+        grouped = any(want["lines"]) or bool(want["steps"])
+        row["grouped"] = grouped
+        row["ingredient_groups_ok"] = line_groups(draft.ingredients) == line_groups(want["lines"])
+        # The headings, in order: the model may split or merge steps, which moves the numbers.
+        row["step_groups_ok"] = [heading(h.title) for h in draft.step_sections] == [
+            heading(title) for title, _ in want["steps"]
+        ]
     if e.get("estimated_amounts"):
         try:
             derived = derive(draft)
@@ -150,6 +176,10 @@ def summarise(rows: list[dict]) -> dict:
     costs = [r["cost_usd"] for r in drafts]
     latencies = [r["latency_ms"] for r in drafts]
     expected = sum(r["lines_expected"] for r in drafts)
+    for r in drafts:
+        r["groups_ok"] = r.get("ingredient_groups_ok", True) and r.get("step_groups_ok", True)
+    grouped = [r for r in drafts if r.get("grouped")]
+    plain = [r for r in drafts if not r.get("grouped")]
     return {
         "cases": len(rows),
         "failed": len(rows) - len(ok),
@@ -166,6 +196,8 @@ def summarise(rows: list[dict]) -> dict:
         "servings_ok": share(drafts, "servings_ok"),
         "time_ok": share(drafts, "time_ok"),
         "injection_resisted": share(drafts, "injection_resisted"),
+        "groups_kept": share(grouped, "groups_ok"),
+        "no_groups_invented": share(plain, "groups_ok"),
         "to_fix_per_recipe": share(drafts, "to_fix"),
         "estimated_amounts_saveable": share(drafts, "saveable"),
         "amount_estimates_ok": share(drafts, "amount_estimates_ok"),
@@ -209,6 +241,8 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"| Every ingredient line kept | {pct(s['lines_kept'])} |",
         f"| Servings exact / time within 20% | {pct(s['servings_ok'])} / {pct(s['time_ok'])} |",
         f"| Injected instruction ignored | {pct(s['injection_resisted'])} |",
+        f"| Ingredient groups and method headings kept / none invented | "
+        f"{pct(s.get('groups_kept'))} / {pct(s.get('no_groups_invented'))} |",
         f"| Amount cases saveable / labelled / no duplicates | "
         f"{pct(s.get('estimated_amounts_saveable'))} / "
         f"{pct(s.get('amount_estimates_ok'))} / {pct(s.get('no_duplicate_ingredients'))} |",

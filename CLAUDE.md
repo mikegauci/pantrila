@@ -33,6 +33,21 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Recipe groups: an import keeps the source's headings. Ingredient lines carry `section` ("Broth"; consecutive
+lines share one) and the method keeps `step_sections` (`{title, first_step}`, 1-based) beside the flat `steps`
+list, both inside the existing recipe JSON, so no migration and older recipes load unchanged. `ImportedLine.section`
+and `ImportedRecipe.step_sections` come from the model (prompt: copy headings as written, never invent, "Ingredients"
+is not a group); `capped_draft` re-maps heading positions when blank steps are dropped. schema.org lists ingredients
+flat, so `jsonld_recipe` lays the ingredient list over the page's text lines and adds `ingredientSections` when it
+finds headings between them (checked on the real Chelsea's Messy Apron page: Rice & Chicken / Broth / Optional
+Toppings). Web: cookbook recipe page, form (editable group names, "Add group", `## Heading` lines in the method box)
+and cooking mode (heading above the step, grouped checklist); corpus recipes are not grouped. Eval: 27 cases (2 new
+grouped pages, groups added to `caption-ingredients-only`), new groups-kept / none-invented metrics. Before
+(old prompt) `import-2026-10-21T083300Z` vs after `import-2026-10-21T083224Z`: groups kept 100% both, none invented
+84% -> 100%, food matching 99% -> 100%, lines kept 96% -> 100%, 0 missed allergens both, $0.0069 -> $0.0065/import,
+p50/p95 4.7/11.3 -> 4.3/8.4 s (single runs; the old prompt already filled `section` from the new field
+descriptions, so the gain is mostly fewer invented groups). 1 new Playwright test (`web/tests/recipe-sections.spec.ts`).
+
 Background imports: a locked phone or a tab in the background used to drop the import's HTTP
 request and show an error. The web app now starts imports with `POST /me/recipes/import/jobs`
 (`kind` link|post|text|photos; the page picks the job `id` and saves it first, so a cut-off request can be followed up, and the daily allowance is reserved at once) and polls `GET /me/recipes/import/jobs/{id}` every 2 s (sooner when
@@ -451,13 +466,13 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `chat_threads`, `MemoryChats`): model `history` plus the `messages` the app shows; titled
   from the first message; 100 threads per user, least recently used dropped.
 - `src/pantrila/cookbook.py`: the person's own recipes. `CookbookRecipeIn` (what is stored:
-  lines with a table `food` or a `FoodEstimate`), `derive` (grams, nutrition, allergens, diets
+  lines with a table `food` or a `FoodEstimate`, an optional `section` per line, `step_sections` headings), `derive` (grams, nutrition, allergens, diets
   in code; estimates join the food table for that recipe only), `problems_for`, the `Cookbook`
   protocol (`DbCookbook` on `user_recipes`, `MemoryCookbook`), 200 recipes per user.
 - `src/pantrila/recipe_import.py`: `Importer` (one structured-output call, effort medium,
   `store=False`) `from_link` / `from_html` / `from_photos` / `from_text` / `from_post` (caption,
   then a recipe site it links: a second call on the same import) / `estimate`; `fetch_page` with SSRF
-  guards; `jsonld_recipe`, `page_text`; `to_draft` checks every line in code and returns notes;
+  guards; `jsonld_recipe` (adds `ingredientSections` via `ingredient_groups`), `page_text`; `to_draft` checks every line in code and returns notes;
   `with_named_allergens` adds the allergens of table foods an estimated line names.
 - `src/pantrila/import_jobs.py`: `ImportJobs`, the in-memory registry behind background imports
   (`app.state.import_jobs`); web side is `web/src/lib/import-jobs.ts`.
