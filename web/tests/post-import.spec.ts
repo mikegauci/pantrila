@@ -133,6 +133,8 @@ test("where the service covers the platform, Pantrila says it is listening to th
   await expect(page.getByRole("button", { name: "Upload the video" })).toHaveCount(0)
   answer()
   await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Crispy gnocchi")
+  await expect(page.getByText(heard)).toBeHidden()
+  await page.getByText("1 note to check").click()
   await expect(page.getByText(heard)).toBeVisible()
 
   await page.goto("/recipes/mine/new")

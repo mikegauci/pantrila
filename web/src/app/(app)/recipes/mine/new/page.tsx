@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, Camera, Link2, MessageCircle, PenLine, Share2, Sparkles, X } from "lucide-react"
+import { ArrowLeft, Camera, ChevronDown, Link2, MessageCircle, PenLine, Share2, Sparkles, X } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { type FocusEvent, useEffect, useRef, useState } from "react"
@@ -329,7 +329,13 @@ export default function NewRecipePage() {
                     </span>
                   </p>
                   {result.notes.length > 0 && (
-                    <ul className="mt-2 list-disc pl-5">{result.notes.map((n) => <li key={n}>{n}</li>)}</ul>
+                    <details className="group mt-1">
+                      <summary className="flex min-h-9 cursor-pointer list-none items-center gap-1.5 font-medium [&::-webkit-details-marker]:hidden">
+                        <ChevronDown className="size-4 transition-transform group-open:rotate-180" aria-hidden />
+                        {result.notes.length} {result.notes.length === 1 ? "note" : "notes"} to check
+                      </summary>
+                      <ul className="mt-1 list-disc pl-5">{result.notes.map((n) => <li key={n}>{n}</li>)}</ul>
+                    </details>
                   )}
                 </div>
               )}
