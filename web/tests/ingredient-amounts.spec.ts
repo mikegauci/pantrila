@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test"
+import { expect, type Page, test } from "@playwright/test"
 
 import { session } from "./helpers"
 
@@ -20,7 +20,7 @@ const recipe: CookbookRecipeIn = {
   steps: ["Cook."], step_sections: [],
 }
 
-test("amounts show once, US measures as fractions, and a line can be shown in another unit", async ({ page }) => {
+async function openRecipe(page: Page) {
   await page.addInitScript((id) => localStorage.setItem(`pantrila-tour-done:${id}`, "1"), user)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(user) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
@@ -33,6 +33,10 @@ test("amounts show once, US measures as fractions, and a line can be shown in an
         updated_at: new Date().toISOString(), ingredient_count: 4, nutrition, allergens: [], diet_tags: [],
         estimated: false, invalid: [], pantry_foods: [], problems: [], photo_url: null,
         ingredients: lines.map((l) => ({ ...l, estimate: null, in_pantry: false })) }
+      : path === "/foods" ? lines.map(({ food, grams_per_ml, grams_per_piece }) =>
+        ({ key: food, name: food, aisle: "other", grams_per_ml, grams_per_piece }))
+      : path === "/me/recipes/preview" ? { ingredients: [], nutrition, allergens: [], diet_tags: [],
+        estimated: false, problems: [] }
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })
   })
@@ -40,6 +44,10 @@ test("amounts show once, US measures as fractions, and a line can be shown in an
   await page.getByRole("button", { name: "Try it as a guest" }).click()
   await expect(page).not.toHaveURL(/login/)
   await page.goto("/recipes/mine/7")
+}
+
+test("amounts show once, US measures as fractions, and a line can be shown in another unit", async ({ page }) => {
+  await openRecipe(page)
 
   const list = page.getByRole("list").filter({ hasText: "basmati rice" })
   await expect(list).toContainText("1 cup basmati rice")
@@ -48,12 +56,29 @@ test("amounts show once, US measures as fractions, and a line can be shown in an
   await expect(list).toContainText("1 1/4 tsp paprika")
   await expect(list).toContainText("1/2 tsp oregano")
 
-  await page.getByRole("button", { name: "454 g chicken thighs: show in another unit" }).click()
+  // The ruler at the end of the line opens the units; so does tapping the amount.
+  await page.getByRole("button", { name: "Change measurement for chicken thighs" }).click()
   await page.getByRole("menuitemradio", { name: "1 lb" }).click()
-  await expect(page.getByRole("button", { name: "1 lb chicken thighs: show in another unit" })).toBeVisible()
+  await expect(page.getByRole("button", { name: "1 lb chicken thighs: change measurement" })).toBeVisible()
 
-  await page.getByRole("button", { name: "1 cup basmati rice: show in another unit" }).click()
+  await page.getByRole("button", { name: "1 cup basmati rice: change measurement" }).click()
   await expect(page.getByRole("menuitemradio", { name: "1 cup (recipe)" })).toBeChecked()
   await page.getByRole("menuitemradio", { name: "185 g" }).click()
   await expect(list).toContainText("185 g basmati rice")
+})
+
+test("picking another unit in the form converts the amount", async ({ page }) => {
+  await openRecipe(page)
+  await page.getByRole("button", { name: "Edit" }).click()
+  const amount = (n: number) => page.getByLabel(`Amount for ingredient ${n}`)
+  const unit = (n: number) => page.getByLabel(`Unit for ingredient ${n}`)
+
+  await unit(1).selectOption("g")  // 1 cup of rice at 0.77 g/ml
+  await expect(amount(1)).toHaveValue("185")
+  await unit(1).selectOption("cup")
+  await expect(amount(1)).toHaveValue("1")
+  await unit(2).selectOption("piece")  // 454 g of thighs at 113 g each
+  await expect(amount(2)).toHaveValue("4.02")
+  await unit(2).selectOption("ml")  // thighs have no density: the number stays to fix by hand
+  await expect(amount(2)).toHaveValue("4.02")
 })

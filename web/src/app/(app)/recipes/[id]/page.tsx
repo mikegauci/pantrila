@@ -1,6 +1,6 @@
 "use client"
 
-import { IngredientText } from "@/components/amount"
+import { MeasuredLine } from "@/components/amount"
 import { NutritionSource } from "@/components/nutrition-source"
 import { ArrowLeft, Check, Clock, Minus, Plus, Repeat, ShoppingBasket, Users } from "lucide-react"
 import Link from "next/link"
@@ -73,10 +73,17 @@ function IngredientRow({
         >
           {ing.in_pantry && <Check className="size-3" strokeWidth={3} />}
         </span>
-        <span className="flex-1">
-          <IngredientText line={ing} scale={scale} />
-          {ing.in_pantry && <span className="sr-only"> (in your pantry)</span>}
-        </span>
+        <MeasuredLine line={ing} scale={scale}>
+          {(text, picker) => (
+            <>
+              <span className="flex-1">
+                {text}
+                {ing.in_pantry && <span className="sr-only"> (in your pantry)</span>}
+              </span>
+              {picker}
+            </>
+          )}
+        </MeasuredLine>
         <Button variant="ghost" size="xs" onClick={onToggle} aria-expanded={open}>
           <Repeat /> Swap
         </Button>
