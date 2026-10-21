@@ -33,6 +33,11 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Preheat heads-up: a step that says preheat (or heat the oven) without a time now shows "Coming up in step N: 9–12 min."
+(`preheatNote` in `web/src/lib/cooking.ts`: the duration of the next timed step within 3 steps), on both recipe pages and in
+cooking mode, so people know how long the bake is when they start the oven. Text only: no timer, no button. Web only, no
+model call, so no eval rerun.
+
 Recipe notes: an imported recipe keeps the author's notes (substitutions, storage, tips) in a new `notes` field of
 `CookbookRecipeIn` (text, one note per line, 3000 chars, inside the recipe JSON, so no migration). `recipe_notes(html)`
 reads them from the page's notes block (WP Recipe Maker and similar keep them in HTML, not schema.org) into

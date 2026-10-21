@@ -19,7 +19,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Switch } from "@/components/ui/switch"
 import { send } from "@/lib/api"
 import {
-  clock, loadProgress, mentioned, progressKey, ring, saveProgress, stepTimers, useWakeLock,
+  clock, loadProgress, mentioned, preheatNote, progressKey, ring, saveProgress, stepTimers, useWakeLock,
   type RunningTimer, type StepTimer,
 } from "@/lib/cooking"
 import { ago } from "@/lib/format"
@@ -267,6 +267,11 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
                   </p>
                 )}
                 <p className="text-[22px] leading-[34px] font-medium md:text-[28px] md:leading-[42px]">{showTemps(niceFractions(step), unit)}</p>
+                {onStep && preheatNote(recipe.steps, page - 1) && (
+                  <p className="rounded-2xl border border-orange/60 bg-orange-soft px-4 py-3 text-[15px]">
+                    ⏱ {preheatNote(recipe.steps, page - 1)}
+                  </p>
+                )}
                 {uses.length > 0 && (
                   <div role="group" aria-label="Ingredients for this step">
                     <p className="mb-2 text-[12px] font-medium text-muted-foreground">For this step (tap when completed)</p>

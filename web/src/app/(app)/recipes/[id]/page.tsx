@@ -9,6 +9,7 @@ import { useState } from "react"
 
 import { AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
 import { StartCooking } from "@/components/cooking-mode"
+import { preheatNote } from "@/lib/cooking"
 import { MacroRing } from "@/components/macro-ring"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { TemperatureToggle } from "@/components/temperature-toggle"
@@ -194,7 +195,11 @@ export default function RecipePage() {
               <span className="tabular grid size-8 shrink-0 place-items-center rounded-full bg-primary-soft font-semibold text-primary-text">
                 {i + 1}
               </span>
-              <p className="pt-1">{showTemps(niceFractions(step), unit)}</p>
+              <div className="pt-1"><p>{showTemps(niceFractions(step), unit)}</p>{preheatNote(r.steps, i) && (
+                    <p className="mt-2 rounded-xl bg-orange-soft px-3 py-2 text-[14px] text-foreground">
+                      ⏱ {preheatNote(r.steps, i)}
+                    </p>
+                  )}</div>
             </li>
           ))}
         </ol>

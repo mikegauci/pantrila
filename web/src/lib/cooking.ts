@@ -67,6 +67,17 @@ export function stepTimers(step: string): StepTimer[] {
   return out
 }
 
+/** A heads-up for a preheat step that names no time: the duration of the next timed step (usually the bake), if any. */
+export function preheatNote(steps: string[], index: number): string | null {
+  const step = steps[index]
+  if (!/\bpre-?heat|\bheat (?:the|your) oven/i.test(step) || stepTimers(step).length) return null
+  for (let i = index + 1; i < Math.min(steps.length, index + 4); i++) {
+    const [timer] = stepTimers(steps[i])
+    if (timer) return `Coming up in step ${i + 1}: ${timer.label}.`
+  }
+  return null
+}
+
 // --- Ingredients a step mentions ------------------------------------------------------------
 
 /** Indexes of the ingredients whose food or line name the step text mentions. */
