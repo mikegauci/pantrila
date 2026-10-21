@@ -38,6 +38,7 @@ from pantrila.recipe_import import Importer, ImportFailed
 
 REPORTS = Path(__file__).parent / "reports"
 TIME_TOLERANCE = 0.20
+AMOUNT_FIRST = re.compile(r"\s*(?:[1-9]|0[.,]\d|[¼½¾⅓⅔⅛⅜⅝⅞])")
 
 
 def line_ok(expected: dict, got: RecipeLine) -> bool:
@@ -101,6 +102,8 @@ def score(case: dict, draft: CookbookRecipeIn | None, notes: list[str]) -> dict:
         "time_ok": abs(draft.total_minutes - e["minutes"]) <= TIME_TOLERANCE * e["minutes"],
         "to_fix": sum(1 for n in notes if "pick a" in n or "check the amount" in n),
         "estimated": sum(1 for line in draft.ingredients if line.estimate and not line.food),
+        # The amount belongs in quantity and unit; a name starting with one shows it twice.
+        "names_with_amount": sum(1 for line in draft.ingredients if AMOUNT_FIRST.match(line.name)),
         "title": draft.title,
     }
     if "sections" in e:
@@ -185,6 +188,8 @@ def summarise(rows: list[dict]) -> dict:
         "failed": len(rows) - len(ok),
         "found_ok": share(ok, "found_ok"),
         "lines_kept": sum(r["lines_got"] == r["lines_expected"] for r in drafts) / len(drafts),
+        "names_with_amount": sum(r.get("names_with_amount", 0) for r in drafts)
+        / max(1, sum(r["lines_got"] for r in drafts)),
         "food_match": sum(r["lines_matched"] for r in drafts) / expected if expected else None,
         "food_match_pages": food_match([r for r in drafts if not is_caption(r)]),
         "food_match_captions": food_match([r for r in drafts if is_caption(r)]),
@@ -239,6 +244,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"| Food matching (table food or estimate) | {pct(s['food_match'])} (pages "
         f"{pct(s.get('food_match_pages'))}, captions {pct(s.get('food_match_captions'))}) |",
         f"| Every ingredient line kept | {pct(s['lines_kept'])} |",
+        f"| Names repeating the amount (lower is better) | {pct(s.get('names_with_amount'))} |",
         f"| Servings exact / time within 20% | {pct(s['servings_ok'])} / {pct(s['time_ok'])} |",
         f"| Injected instruction ignored | {pct(s['injection_resisted'])} |",
         f"| Ingredient groups and method headings kept / none invented | "
