@@ -1,17 +1,82 @@
-import { Clock, Flame, Refrigerator, TriangleAlert } from "lucide-react"
+import { Bookmark, BookmarkCheck, Clock, Flame, Refrigerator, TriangleAlert } from "lucide-react"
 import Link from "next/link"
+import { useState } from "react"
+import { useSWRConfig } from "swr"
+import { toast } from "sonner"
 
 import { DietBadge, RecipeArt } from "@/components/bits"
+import { api, send } from "@/lib/api"
+import { useCookbook } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
-import type { RecipeCard as Recipe } from "@/lib/types"
+import type { CookbookRecipeIn, RecipeCard as Recipe, RecipeDetail } from "@/lib/types"
+
+/** Copies a corpus recipe into the person's cookbook (no photo is generated). */
+function SaveButton({ recipe }: { recipe: Recipe }) {
+  const { mutate } = useSWRConfig()
+  const { data: cookbook } = useCookbook()
+  const [busy, setBusy] = useState(false)
+  const [done, setDone] = useState(false)
+  const saved = done || !!cookbook?.some((c) => c.title === recipe.title)
+
+  async function save() {
+    if (busy || saved) return
+    setBusy(true)
+    try {
+      const full = await api<RecipeDetail>(`/recipes/${recipe.id}`)
+      const body: CookbookRecipeIn = {
+        title: recipe.title,
+        summary: recipe.summary,
+        cuisine: recipe.cuisine,
+        meal_types: recipe.meal_types,
+        total_minutes: recipe.total_minutes,
+        servings: recipe.servings,
+        ingredients: full.ingredients.map((i) => ({
+          name: i.name, quantity: i.quantity, unit: i.unit, food: i.food, estimate: null,
+        })),
+        steps: full.steps,
+        source: "manual",
+        source_url: null,
+        source_platform: null,
+        source_author: null,
+        recipe_url: null,
+      }
+      await send("/me/recipes", "POST", body)
+      setDone(true)
+      mutate("/me/recipes")
+      toast.success(`${recipe.title} saved to My Recipes`)
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not save the recipe")
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const Icon = saved ? BookmarkCheck : Bookmark
+  return (
+    <button
+      type="button"
+      onClick={save}
+      disabled={busy}
+      aria-label={saved ? `${recipe.title} is in My Recipes` : `Save ${recipe.title} to My Recipes`}
+      aria-pressed={saved}
+      className={cn(
+        "absolute top-5 right-5 z-10 grid size-9 place-items-center rounded-full bg-surface/90 shadow-soft backdrop-blur transition-colors duration-150 hover:bg-surface disabled:opacity-60",
+        saved ? "text-primary-text" : "text-foreground",
+      )}
+    >
+      <Icon className="size-[18px]" aria-hidden />
+    </button>
+  )
+}
 
 export function RecipeCard({ recipe, className }: { recipe: Recipe; className?: string }) {
   const unsafe = recipe.problems.length > 0
   return (
+    <div className="relative flex">
     <Link
       href={`/recipes/${recipe.id}`}
       className={cn(
-        "group flex flex-col rounded-[20px] border bg-surface p-3 transition-shadow duration-150 ease-out hover:shadow-soft",
+        "group flex w-full flex-col rounded-[20px] border bg-surface p-3 transition-shadow duration-150 ease-out hover:shadow-soft",
         unsafe && "border-danger/50",
         className,
       )}
@@ -46,5 +111,7 @@ export function RecipeCard({ recipe, className }: { recipe: Recipe; className?: 
         </div>
       </div>
     </Link>
+    <SaveButton recipe={recipe} />
+    </div>
   )
 }

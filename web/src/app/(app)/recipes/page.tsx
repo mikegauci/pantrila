@@ -84,9 +84,9 @@ export default function RecipesPage() {
           e.preventDefault()
           setQ(text.trim())
         }}
-        className="flex gap-2"
+        className="flex flex-wrap gap-2"
       >
-        <div className="relative flex-1">
+        <div className="relative min-w-0 flex-1 basis-full sm:basis-0">
           <Search className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
           <Input
             aria-label="Search recipes"
@@ -96,10 +96,9 @@ export default function RecipesPage() {
             className="h-12 rounded-xl bg-surface pl-10 text-[15px]"
           />
         </div>
-        <Button type="submit" size="lg" className="h-12">Search</Button>
-        <Link href="/recipes/mine" data-tour="my-recipes" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-12 bg-surface")}>
-          <BookOpen /> <span className="hidden sm:inline">My recipes</span>
-          <span className="sr-only sm:hidden">My recipes</span>
+        <Button type="submit" size="lg" className="h-12 flex-1 sm:flex-none">Search</Button>
+        <Link href="/recipes/mine" data-tour="my-recipes" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-12 flex-1 bg-surface sm:flex-none")}>
+          <BookOpen /> My recipes
         </Link>
       </form>
 
