@@ -4,15 +4,17 @@ import { ArrowLeft, Camera, ChevronDown, Link2, MessageCircle, PenLine, Share2, 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { type FocusEvent, useEffect, useRef, useState } from "react"
+import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
 import { useAuth } from "@/components/auth-provider"
 import { Panel, PanelTitle } from "@/components/bits"
 import { ImportProgress } from "@/components/import-progress"
-import { BLANK_RECIPE, CHAT_DRAFT, CookbookForm } from "@/components/cookbook-form"
+import { BLANK_RECIPE, CHAT_DRAFT, CookbookForm, needsReview, saveNewRecipe } from "@/components/cookbook-form"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { ApiError } from "@/lib/api"
 import { seconds, usd } from "@/lib/format"
 import { useApi, useMe, useMeta } from "@/lib/hooks"
 import {
@@ -263,11 +265,30 @@ export default function NewRecipePage() {
     return () => { active = false }
   }, [draftKey])
 
-  const imported = (v: ImportView) => {
-    setResumeError(null)
+  const [saving, setSaving] = useState(false)
+  const review = (v: ImportView) => {
     setResult(v)
     setDraft(v.draft)
+  }
+
+  // An import goes straight to My recipes. Only a draft that cannot be saved as it is (a food
+  // left unknown, no method, or one the API refuses) opens the form to finish it.
+  const imported = async (v: ImportView) => {
+    setResumeError(null)
     refreshMe()
+    if (needsReview(v.draft)) return review(v)
+    setSaving(true)
+    try {
+      const saved = await saveNewRecipe(v.draft, mutate)
+      toast.success(`Saved ${saved.title}`)
+      router.push(`/recipes/mine/${saved.id}`)
+    } catch (e) {
+      toast.error(e instanceof ApiError && e.problems.length ? e.problems.join("; ")
+                  : e instanceof Error ? e.message : "Could not save.")
+      review(v)
+    } finally {
+      setSaving(false)
+    }
   }
 
   // An import keeps running on the server when the phone locks or the page reloads: pick it up
@@ -304,7 +325,7 @@ export default function NewRecipePage() {
     setMethod(key)
   }
 
-  const showUpload = method !== null && method !== "manual" && !draft
+  const showUpload = method !== null && method !== "manual" && !draft && !saving
 
   return (
     <div className="grid gap-5">
@@ -348,6 +369,11 @@ export default function NewRecipePage() {
           </div>
         </Panel>
       )}
+      {saving && (
+        <Panel>
+          <p role="status" className="text-[13px] font-semibold">Saving to your recipes…</p>
+        </Panel>
+      )}
       {resumeError && !draft && (
         <p role="alert" className="text-[13px] text-danger">{resumeError}</p>
       )}
@@ -381,7 +407,7 @@ export default function NewRecipePage() {
               {result && (
                 <div className="rounded-2xl bg-yellow-soft p-4 text-[13px]">
                   <p className="flex flex-wrap items-center gap-2 font-semibold">
-                    <Sparkles className="size-4 text-[#b7860b]" aria-hidden /> Read by AI. Check it before saving.
+                    <Sparkles className="size-4 text-[#b7860b]" aria-hidden /> Read by AI. Finish it before saving.
                     <span className="tabular font-normal text-muted-foreground">
                       {seconds(result.latency_ms)} · {usd(result.cost_usd)}
                     </span>

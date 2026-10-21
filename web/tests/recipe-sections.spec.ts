@@ -22,7 +22,7 @@ const draft: CookbookRecipeIn = {
   step_sections: [{ title: "Chicken", first_step: 1 }, { title: "Broth", first_step: 3 }],
 }
 
-test("an imported recipe keeps its ingredient groups and method headings through edit and save", async ({ page }) => {
+test("an imported recipe keeps its ingredient groups and method headings through save and edit", async ({ page }) => {
   let saved: CookbookRecipeIn | null = null
   await page.addInitScript((id) => localStorage.setItem(`pantrila-tour-done:${id}`, "1"), user)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(user) }))
@@ -31,7 +31,7 @@ test("an imported recipe keeps its ingredient groups and method headings through
     const method = route.request().method()
     const body = method === "POST" || method === "PUT"
       ? route.request().postData() ? route.request().postDataJSON() : null : null
-    if (path === "/me/recipes" && body) saved = body
+    if ((path === "/me/recipes" || path === "/me/recipes/7") && body) saved = body
     const recipe = saved ?? draft
     const detail = { ...recipe, id: 7, recipe, created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(), ingredient_count: 3, nutrition,
@@ -48,7 +48,7 @@ test("an imported recipe keeps its ingredient groups and method headings through
       : path.startsWith("/me/recipes/import/jobs") ? { id: "job-1", status: "done", error: null,
         result: { draft, notes: [], cost_usd: 0.005, latency_ms: 1000 } }
       : path === "/me/recipes/preview" ? { ingredients: [], nutrition, allergens: [], diet_tags: [], estimated: false, problems: [] }
-      : path === "/me/recipes/7" || path === "/me/recipes/7/photo" || (path === "/me/recipes" && body) ? detail
+      : path === "/me/recipes/7" || path === "/me/recipes/7/photo" || ((path === "/me/recipes" || path === "/me/recipes/7") && body) ? detail
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })
   })
@@ -60,6 +60,11 @@ test("an imported recipe keeps its ingredient groups and method headings through
   await page.getByLabel("Recipe link").fill(draft.source_url!)
   await page.getByRole("button", { name: "Read recipe" }).click()
 
+  // The import is saved as read, then the form keeps the groups when editing.
+  await expect(page).toHaveURL(/\/recipes\/mine\/7$/)
+  expect(saved!.ingredients.map((l) => l.section)).toEqual(["Rice & Chicken", "Rice & Chicken", "Broth"])
+  expect(saved!.step_sections).toEqual(draft.step_sections)
+  await page.getByRole("button", { name: "Edit", exact: true }).click()
   await expect(page.getByLabel("Group name, Rice & Chicken")).toBeVisible()
   await expect(page.getByLabel("Group name, Broth")).toBeVisible()
   await expect(page.getByLabel("Group name, Optional toppings")).toHaveCount(0)
@@ -67,8 +72,8 @@ test("an imported recipe keeps its ingredient groups and method headings through
     "## Chicken\n\nBake the chicken.\n\nBoil the rice.\n\n## Broth\n\nSimmer the broth.")
 
   await page.getByLabel("Group name, Broth").fill("Coconut broth")
-  await page.getByRole("button", { name: "Save to my recipes", exact: true }).click()
-  await expect.poll(() => saved).not.toBeNull()
+  await page.getByRole("button", { name: "Save changes", exact: true }).click()
+  await expect.poll(() => saved!.ingredients[2].section).toBe("Coconut broth")
   expect(saved!.ingredients.map((l) => l.section)).toEqual(["Rice & Chicken", "Rice & Chicken", "Coconut broth"])
   expect(saved!.step_sections).toEqual([{ title: "Chicken", first_step: 1 }, { title: "Broth", first_step: 3 }])
 })

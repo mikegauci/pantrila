@@ -10,10 +10,18 @@ const draft = {
   total_minutes: 15, servings: 2,
   ingredients: [{ name: "500 g gnocchi", food: "gnocchi", quantity: 500, unit: "g", estimate: null }],
   steps: ["Fry the gnocchi."], source: "post", source_url: post, source_platform: "instagram",
-  source_author: null, recipe_url: "https://sambakes.com/gnocchi",
+  source_author: "sam.cooks", recipe_url: "https://sambakes.com/gnocchi",
 }
 
-test("a post imports from its link and keeps the credit", async ({ page }) => {
+function recipeDetail(recipe: typeof draft) {
+  const now = new Date().toISOString()
+  return { ...recipe, id: 9, recipe, created_at: now, updated_at: now, ingredient_count: 1, nutrition,
+    allergens: ["gluten"], diet_tags: ["vegetarian"], estimated: false, invalid: [], pantry_foods: [],
+    problems: [], photo_url: null,
+    ingredients: recipe.ingredients.map((line) => ({ ...line, grams: 500, in_pantry: false })) }
+}
+
+test("a post imports from its link straight into my recipes and keeps the credit", async ({ page }) => {
   const imports: { id?: string; kind?: string; url?: string; caption?: string | null }[] = []
   let saved = draft
   await page.setViewportSize({ width: 390, height: 844 })
@@ -71,15 +79,10 @@ test("a post imports from its link and keeps the credit", async ({ page }) => {
   await expect(page.getByText("Pantrila reads the recipe from your post and credits the creator.")).toBeVisible()
   await page.getByRole("button", { name: "Read recipe" }).click()
 
-  await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Crispy gnocchi")
-  expect(imports.at(-1)).toMatchObject({ kind: "post", url: post })
-  await page.getByLabel("Creator").fill("@sam.cooks")
-  await expect(page.getByLabel("Posted on")).toHaveValue("instagram")
-  await page.getByLabel("Creator").scrollIntoViewIfNeeded()
-  await page.screenshot({ path: "test-results/post-import-credit.png" })
-  await page.getByRole("button", { name: "Save to my recipes", exact: true }).click()
-
+  // No review form: the recipe is saved and opens at once.
   await expect(page).toHaveURL(/\/recipes\/mine\/9$/)
+  expect(imports.at(-1)).toMatchObject({ kind: "post", url: post })
+  await expect(page.getByLabel("Title", { exact: true })).toHaveCount(0)
   expect(saved.source_author).toBe("sam.cooks")
   await expect(page.getByRole("link", { name: "From @sam.cooks on Instagram" })).toHaveAttribute("href", post)
   await expect(page.getByRole("link", { name: "sambakes.com" })).toHaveAttribute("href", "https://sambakes.com/gnocchi")
@@ -88,6 +91,7 @@ test("a post imports from its link and keeps the credit", async ({ page }) => {
 
 test("where the service covers the platform, Pantrila says it is listening to the video", async ({ page }) => {
   const heard = "Pantrila listened to the post's video for this recipe. Check the amounts and steps."
+  let saves = 0
   let released = false
   let steps: { key: string; label: string }[] = []
   await page.clock.install()
@@ -114,6 +118,8 @@ test("where the service covers the platform, Pantrila says it is listening to th
       : path === "/foods" ? [{ key: "gnocchi", name: "gnocchi", aisle: "pasta" }]
       : path === "/me/recipes/preview" ? { ingredients: [], nutrition, allergens: ["gluten"],
         diet_tags: ["vegetarian"], estimated: false, problems: [] }
+      : path === "/me/recipes" && route.request().method() === "POST" ? (saves += 1, recipeDetail(draft))
+      : path === "/me/recipes/9" || path === "/me/recipes/9/photo" ? recipeDetail(draft)
       : path === "/plans/latest" ? null
       : path === "/health" ? { ok: true } : []
     if (data === null) return route.fulfill({ status: 404, json: {} })
@@ -149,10 +155,9 @@ test("where the service covers the platform, Pantrila says it is listening to th
   await expect(page.getByRole("button", { name: "Upload the video" })).toHaveCount(0)
   released = true
   await page.clock.fastForward(2500)
-  await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Crispy gnocchi")
-  await expect(page.getByText(heard)).toBeHidden()
-  await page.getByText("1 note to check").click()
-  await expect(page.getByText(heard)).toBeVisible()
+  await expect(page).toHaveURL(/\/recipes\/mine\/9$/)
+  expect(saves).toBe(1)
+  await expect(page.getByText(heard)).toHaveCount(0)
 
   // A paused fake clock can stall Supabase's timer-driven auth start on a fresh page load.
   await page.clock.resume()

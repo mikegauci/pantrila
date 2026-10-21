@@ -12,6 +12,9 @@ const draft = {
   steps: ["Fry the gnocchi."], source: "post", source_url: post, source_platform: "instagram",
   source_author: null, recipe_url: null,
 }
+const detail = { ...draft, id: 9, recipe: draft, created_at: "2026-10-21T10:00:00Z", updated_at: "2026-10-21T10:00:00Z",
+  ingredient_count: 1, nutrition, allergens: ["gluten"], diet_tags: ["vegetarian"], estimated: false, invalid: [],
+  pantry_foods: [], problems: [], photo_url: null, ingredients: draft.ingredients.map((l) => ({ ...l, grams: 500, in_pantry: false })) }
 const running = { id: "job-1", status: "running", result: null, error: null }
 const done = { id: "job-1", status: "done", error: null, result: { draft, notes: [], cost_usd: 0.004, latency_ms: 5000 } }
 
@@ -19,6 +22,7 @@ test("an import survives a dropped connection and a page reload", async ({ page 
   let polls = 0
   let finished = false
   let starts = 0
+  let saves = 0
   await page.setViewportSize({ width: 390, height: 844 })
   await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
@@ -41,6 +45,8 @@ test("an import survives a dropped connection and a page reload", async ({ page 
       : path === "/foods" ? [{ key: "gnocchi", name: "gnocchi", aisle: "pasta" }]
       : path === "/me/recipes/preview" ? { ingredients: [], nutrition, allergens: ["gluten"],
         diet_tags: ["vegetarian"], estimated: false, problems: [] }
+      : path === "/me/recipes" && route.request().method() === "POST" ? (saves += 1, detail)
+      : path === "/me/recipes/9" || path === "/me/recipes/9/photo" ? detail
       : path === "/plans/latest" ? null
       : path === "/health" ? { ok: true } : []
     if (data === null) return route.fulfill({ status: 404, json: {} })
@@ -64,11 +70,12 @@ test("an import survives a dropped connection and a page reload", async ({ page 
   await page.reload()
   await expect(page.getByText("Finishing your import…")).toBeVisible()
   finished = true
-  await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Crispy gnocchi", { timeout: 10000 })
+  await expect(page).toHaveURL(/\/recipes\/mine\/9$/, { timeout: 10000 })
   expect(starts).toBe(1)
+  expect(saves).toBe(1)
 
   // Once delivered, the job is forgotten: another visit does not wait for it.
-  await page.reload()
+  await page.goto("/recipes/mine/new")
   await expect(page.getByText("Finishing your import…")).toHaveCount(0)
 })
 
@@ -108,4 +115,40 @@ test("a resumed import can be abandoned, and a newer import keeps its saved id",
   await page.waitForTimeout(3000)
   await expect(page.getByLabel("Title", { exact: true })).toHaveCount(0)
   expect(await page.evaluate((k) => localStorage.getItem(k), key)).toBeNull()
+})
+
+test("an import with no method opens the form instead of saving", async ({ page }) => {
+  let saves = 0
+  const noMethod = { ...done, result: { ...done.result, draft: { ...draft, steps: ["Add the method here."] } } }
+  await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
+  await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
+  await page.route("http://127.0.0.1:8000/**", async (route) => {
+    const path = new URL(route.request().url()).pathname
+    if (path === "/me/recipes/import/jobs") return route.fulfill({ status: 202, json: running })
+    if (path.startsWith("/me/recipes/import/jobs/")) return route.fulfill({ json: noMethod })
+    if (path === "/me/recipes" && route.request().method() === "POST") saves += 1
+    const data = path === "/me" ? { id, email: null, avatar_url: null, anonymous: true,
+      limits: { imports_left: 9, imports_per_day: 10, photos_left: 5, photos_per_day: 5 } }
+      : path === "/meta" ? { allergens: [], diets: [], meal_types: ["dinner"], units: ["g"], cuisines: [], reel_platforms: [] }
+      : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [],
+        days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }
+      : path === "/foods" ? [{ key: "gnocchi", name: "gnocchi", aisle: "pasta" }]
+      : path === "/me/recipes/preview" ? { ingredients: [], nutrition, allergens: ["gluten"],
+        diet_tags: ["vegetarian"], estimated: false, problems: [] }
+      : path === "/plans/latest" ? null
+      : path === "/health" ? { ok: true } : []
+    if (data === null) return route.fulfill({ status: 404, json: {} })
+    await route.fulfill({ json: data })
+  })
+
+  await page.goto("/login")
+  await page.getByRole("button", { name: "Try it as a guest" }).click()
+  await expect(page).not.toHaveURL(/login/)
+  await page.goto("/recipes/mine/new")
+  await page.getByRole("button", { name: /From a post/ }).click()
+  await page.getByLabel("Post link").fill(post)
+  await page.getByRole("button", { name: "Read recipe" }).click()
+  await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Crispy gnocchi")
+  await expect(page).toHaveURL(/\/recipes\/mine\/new$/)
+  expect(saves).toBe(0)
 })
