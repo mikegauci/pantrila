@@ -61,6 +61,9 @@ from pantrila.api_models import (
     EstimateRequest,
     EstimateView,
     FoodView,
+    ImportJobError,
+    ImportJobIn,
+    ImportJobView,
     ImportTiming,
     ImportView,
     LimitsView,
@@ -113,6 +116,7 @@ from pantrila.cookbook import (
 from pantrila.cooking import grams_used, use_from_pantry
 from pantrila.foods import UnitError, load_foods
 from pantrila.grocery import grocery_list
+from pantrila.import_jobs import ImportJob, ImportJobs
 from pantrila.meal_swap import SwapError, meal_options, replace_meal, swapped_report
 from pantrila.operations import (
     EmbeddingUsage,
@@ -232,6 +236,7 @@ def create_app(
         app.state.backend = backend or DbBackend(config.database_url())
         app.state.verify = verify or verifier(config.supabase_url()).verify
         app.state.media = media or media_source()
+        app.state.import_jobs = ImportJobs()
         yield
         app.state.backend.close()
 
@@ -431,15 +436,17 @@ def create_app(
                                 ) from exc  # fmt: skip
         return recipe
 
-    def paid_import(s: Session, request: Request, work: Callable[[Importer], Any]) -> tuple:
-        """Run one paid import or estimate under the daily cap and log its usage.
+    def paid_import(s: Session, work: Callable[[Importer], Any],
+                    operation: PaidOperation | None = None) -> tuple:  # fmt: skip
+        """Run one paid import or estimate under the daily cap and log its usage; a caller that
+        already reserved the allowance passes its `operation`.
         Returns (work's result, the importer, latency in ms)."""
         model = config.model()
-        source = request.app.state.media
+        source = app.state.media
         meter = ReelMeter(s.records, getattr(source, "actor", "media"))
-        importer = Importer(client=request.app.state.backend.client, model=model, media=source,
+        importer = Importer(client=app.state.backend.client, model=model, media=source,
                             meter=meter)  # fmt: skip
-        operation = PaidOperation(s.records, "import", model)
+        operation = operation or PaidOperation(s.records, "import", model)
 
         def logged(ok: bool) -> float:
             return operation.finish(importer.usage, ok, discard_empty=True)
@@ -455,8 +462,9 @@ def create_app(
             raise HTTPException(502, describe_failure(exc)) from exc
         return result, importer, logged(ok=True)
 
-    def import_view(s: Session, request: Request, work: Callable[[Importer], Any]) -> ImportView:
-        result, importer, ms = paid_import(s, request, work)
+    def import_view(s: Session, work: Callable[[Importer], Any],
+                    operation: PaidOperation | None = None) -> ImportView:  # fmt: skip
+        result, importer, ms = paid_import(s, work, operation)
         model_cost, media_cost = importer.usage.cost(), importer.media_cost
         return ImportView(draft=result.draft, notes=result.notes,
                           cost_usd=None if model_cost is None or media_cost is None
@@ -485,17 +493,28 @@ def create_app(
                                problems=problems_for(body, d, s.kitchen.profile()))  # fmt: skip
 
     @app.post("/me/recipes/import/link")
-    def import_link(body: LinkImport, request: Request, s: SessionDep) -> ImportView:
-        return import_view(s, request, lambda i: i.from_link(body.url))
+    def import_link(body: LinkImport, s: SessionDep) -> ImportView:
+        return import_view(s, work_for(body))
 
     @app.post("/me/recipes/import/post")
-    def import_post(body: PostImport, request: Request, s: SessionDep) -> ImportView:
+    def import_post(body: PostImport, s: SessionDep) -> ImportView:
         """A TikTok, Instagram or Facebook post: its caption, else a recipe site it links."""
-        return import_view(s, request, lambda i: i.from_post(body.url, body.caption))
+        return import_view(s, work_for(body))
 
     @app.post("/me/recipes/import/text")
-    def import_text(body: TextImport, request: Request, s: SessionDep) -> ImportView:
-        return import_view(s, request, lambda i: i.from_text(body.text))
+    def import_text(body: TextImport, s: SessionDep) -> ImportView:
+        return import_view(s, work_for(body))
+
+    def work_for(req: LinkImport | PostImport | TextImport | PhotoImport
+                 ) -> Callable[[Importer], Any]:  # fmt: skip
+        """What each kind of import asks the importer to do."""
+        if isinstance(req, LinkImport):
+            return lambda i: i.from_link(req.url)
+        if isinstance(req, PostImport):
+            return lambda i: i.from_post(req.url, req.caption)
+        if isinstance(req, TextImport):
+            return lambda i: i.from_text(req.text)
+        return lambda i: i.from_photos(req.images)
 
     @app.get("/me/recipes/import/timing")
     def import_timing(s: SessionDep) -> ImportTiming:
@@ -503,13 +522,57 @@ def create_app(
         return ImportTiming(estimated_seconds=seconds, sample_count=count)
 
     @app.post("/me/recipes/import/photos")
-    def import_photos(body: PhotoImport, request: Request, s: SessionDep) -> ImportView:
-        return import_view(s, request, lambda i: i.from_photos(body.images))
+    def import_photos(body: PhotoImport, s: SessionDep) -> ImportView:
+        return import_view(s, work_for(body))
+
+    def job_view(job: ImportJob) -> ImportJobView:
+        error = ImportJobError(status=job.error[0], message=job.error[1]) if job.error else None
+        return ImportJobView(id=job.id, status=job.status, result=job.result, error=error)
+
+    @app.post("/me/recipes/import/jobs", status_code=202)
+    def start_import(body: ImportJobIn, user: UserDep) -> ImportJobView:
+        """Start an import that keeps running if the browser goes away (a locked phone, another
+        tab); poll `GET /me/recipes/import/jobs/{id}` for the result. Sending the same `id`
+        again returns the job it started. The daily allowance is reserved here, so a person
+        over their cap is told at once."""
+        jobs, backend = app.state.import_jobs, app.state.backend
+        if body.id and (existing := jobs.get(user.id, body.id)):
+            return job_view(existing)
+        with backend.session(user.id) as s:
+            operation = PaidOperation(s.records, "import", config.model())
+        try:
+            job = jobs.start(user.id, body.id)
+        except HTTPException:
+            operation.finish(Usage(), ok=False, discard_empty=True)
+            raise
+        work = work_for(body.request)
+
+        def run() -> None:
+            try:
+                with backend.session(user.id) as s:
+                    jobs.succeed(job, import_view(s, work, operation))
+            except HTTPException as exc:
+                operation.finish(Usage(), ok=False, discard_empty=True)
+                jobs.fail(job, exc.status_code, str(exc.detail))
+            except Exception:
+                operation.finish(Usage(), ok=False, discard_empty=True)
+                log.exception("background import failed")
+                jobs.fail(job, 500, "Reading the recipe failed. Try again.")
+
+        threading.Thread(target=run, daemon=True).start()
+        return job_view(job)
+
+    @app.get("/me/recipes/import/jobs/{job_id}")
+    def import_job(job_id: str, user: UserDep) -> ImportJobView:
+        job = app.state.import_jobs.get(user.id, job_id)
+        if job is None:
+            raise HTTPException(404, "This import was interrupted. Start it again.")
+        return job_view(job)
 
     @app.post("/me/recipes/estimate")
-    def estimate_foods(body: EstimateRequest, request: Request, s: SessionDep) -> EstimateView:
+    def estimate_foods(body: EstimateRequest, s: SessionDep) -> EstimateView:
         """Nutrition and allergen estimates for foods the ingredient table lacks."""
-        estimates, importer, _ = paid_import(s, request, lambda i: i.estimate(body.names))
+        estimates, importer, _ = paid_import(s, lambda i: i.estimate(body.names))
         return EstimateView(estimates=estimates, cost_usd=importer.usage.cost())
 
     @app.get("/me/recipes/{recipe_id}")

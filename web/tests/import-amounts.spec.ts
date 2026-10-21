@@ -54,7 +54,9 @@ test(`estimated import saves and retains its nutrition notes when photo ${photoF
       : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [],
         days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }
       : path === "/foods" ? ["basil", "pasta"].map((key) => ({ key, name: key, aisle: "other" }))
-      : path === "/me/recipes/import/post" ? { draft: initial, notes: [], cost_usd: 0.005, latency_ms: 1000 }
+      : path === "/me/recipes/import/jobs" ? { id: "job-1", status: "running", result: null, error: null }
+      : path.startsWith("/me/recipes/import/jobs/") ? { id: "job-1", status: "done", error: null,
+        result: { draft: initial, notes: [], cost_usd: 0.005, latency_ms: 1000 } }
       : path === "/me/recipes/preview" ? { ingredients: [], nutrition, allergens: ["gluten"],
         diet_tags: ["vegetarian"], estimated: body.ingredients.some((line: { amount_estimate?: string }) => line.amount_estimate), problems: [] }
       : path === "/me/recipes/9" || path === "/me/recipes/9/photo" || (path === "/me/recipes" && body) ? detail
