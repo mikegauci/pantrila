@@ -12,6 +12,7 @@ from pantrila.cookbook import (
     LineView,
     Platform,
     Source,
+    StepSection,
 )
 from pantrila.recipe_import import (
     MAX_IMAGES,
@@ -318,6 +319,7 @@ class CookbookLine(LineView):
 class CookbookDetail(CookbookCard):
     ingredients: list[CookbookLine]
     steps: list[str]
+    step_sections: list[StepSection]
     recipe: CookbookRecipeIn = Field(description="As stored, for the edit form.")
 
 

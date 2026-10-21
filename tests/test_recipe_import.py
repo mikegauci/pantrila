@@ -1,4 +1,5 @@
 import base64
+import re
 from types import SimpleNamespace
 
 import httpx
@@ -122,6 +123,46 @@ def test_jsonld_recipe_is_found_in_a_graph_and_trimmed():
     assert "image" not in recipe and "review" not in recipe
     assert jsonld_recipe("<html><p>no data</p></html>") is None
     assert jsonld_recipe('<script type="application/ld+json">{bad json</script>') is None
+
+
+GROUPED = """<html><head><script type="application/ld+json">{"@type": "Recipe",
+  "recipeIngredient": ["1 cup basmati rice", "1 pound chicken thighs (see note 1)",
+                       "1 tablespoon olive oil", "2 tablespoons red curry paste",
+                       "Toasted sesame seeds"],
+  "recipeInstructions": [{"@type": "HowToSection", "name": "Chicken",
+                          "itemListElement": [{"@type": "HowToStep", "text": "Bake."}]}]}
+</script></head><body><h2>Ingredients</h2><h4>Rice &amp; Chicken</h4>
+<ul><li>&#9634; 1 cup <a>basmati rice</a></li>
+<li>1 pound chicken thighs <i>see note 1</i></li></ul><h4>Broth</h4>
+<ul><li>1 tablespoon olive oil</li><li>2 tablespoons red curry paste</li></ul>
+<h4>Optional Toppings</h4><ul><li>Toasted sesame seeds</li></ul></body></html>"""
+
+
+def test_jsonld_recipe_adds_the_headings_the_page_groups_ingredients_under():
+    groups = jsonld_recipe(GROUPED)["ingredientSections"]
+    assert [g["heading"] for g in groups] == ["Rice & Chicken", "Broth", "Optional Toppings"]
+    assert [len(g["ingredients"]) for g in groups] == [2, 2, 1]
+    assert groups[2]["ingredients"] == ["Toasted sesame seeds"]
+    # A page whose ingredients sit in one plain list adds nothing.
+    assert "ingredientSections" not in jsonld_recipe(PAGE)
+    assert "ingredientSections" not in jsonld_recipe(re.sub(r"<h4>.*?</h4>", "", GROUPED))
+
+
+def test_to_draft_keeps_the_sources_groups_for_ingredients_and_steps():
+    raw = imported(
+        steps=["Whisk.", " ", "Fry.", "Serve."],
+        step_sections=[{"title": " Batter ", "first_step": 1},
+                       {"title": "Cooking", "first_step": 2},  # step 2 is blank: starts at Fry
+                       {"title": "Beyond", "first_step": 9}],
+    )  # fmt: skip
+    for line, section in zip(
+        raw.ingredients, ["Batter", "Batter", " ", "", "Toppings"], strict=True
+    ):
+        line.section = section
+    draft, _ = to_draft(raw, "link", "https://a.example/r")
+    assert [i.section for i in draft.ingredients] == ["Batter", "Batter", "", "", "Toppings"]
+    assert draft.steps == ["Whisk.", "Fry.", "Serve."]
+    assert [(s.title, s.first_step) for s in draft.step_sections] == [("Batter", 1), ("Cooking", 2)]
 
 
 def test_page_text_keeps_visible_text_only():
