@@ -50,6 +50,8 @@ ALIASES = {
     "wholewheat_flour": "wholemeal_flour",
     "white_chocolate_chips": "white_chocolate",
     "chocolate_chips": "dark_chocolate",
+    "baking_soda": "baking_powder",
+    "bicarbonate_of_soda": "baking_powder",
 }
 
 # Words that describe the state or form of a food, not which food it is.
