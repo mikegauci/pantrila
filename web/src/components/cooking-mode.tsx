@@ -280,7 +280,7 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
                             {on && <Check className="size-4 shrink-0" strokeWidth={3} aria-hidden />}
                             <span className="shrink-0 whitespace-nowrap rounded-lg bg-surface-muted px-2 py-0.5">
                               <Amount line={ing} scale={scale} name={bareName(ing.name)} fixed />
-                            </span>
+                            </span>{" "}
                             <span className="min-w-0">{bareName(ing.name)}</span>
                           </button>
                         )
