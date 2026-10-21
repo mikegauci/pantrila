@@ -47,7 +47,7 @@ test("cooking mode walks the steps, rings a timer and logs the cook", async ({ p
   await page.waitForURL("http://127.0.0.1:3100/")
   await page.goto("/recipes/french-mushroom-omelette")
   await page.getByRole("button", { name: "More servings" }).click()
-  await page.getByRole("link", { name: "Start cooking" }).click()
+  await page.getByRole("link", { name: "Start cooking" }).first().click()
 
   const cooking = page.getByRole("region", { name: "Cooking Mushroom Omelette" })
   await expect(cooking.getByText("Screen stays on")).toBeVisible()
@@ -72,5 +72,5 @@ test("cooking mode walks the steps, rings a timer and logs the cook", async ({ p
   expect(posted).toEqual([{ recipe_id: recipe.id, servings: 2, update_pantry: true }])
 
   await cooking.getByRole("link", { name: "Back to the recipe" }).click()
-  await expect(page.getByRole("link", { name: "Start cooking" })).toBeVisible()
+  await expect(page.getByRole("link", { name: "Start cooking" }).first()).toBeVisible()
 })
