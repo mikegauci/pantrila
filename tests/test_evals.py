@@ -224,7 +224,7 @@ def test_committed_reel_cases_match_generator_and_pair_real_videos():
 
 def test_reel_scoring_counts_service_calls_and_the_method():
     from evals.reel_cases import load_cases
-    from evals.run_reel import fake_fetch, fake_read, score
+    from evals.run_reel import EvalMedia, fake_fetch, fake_read, score
     from pantrila.cookbook import CookbookRecipeIn
     from pantrila.recipe_import import NO_METHOD_STEP
 
@@ -233,9 +233,22 @@ def test_reel_scoring_counts_service_calls_and_the_method():
               "food": li["foods"][0]} for li in case["expect"]["lines"]]  # fmt: skip
     draft = CookbookRecipeIn(title="T", meal_types=["dinner"], total_minutes=15, servings=2,
                              ingredients=lines, steps=[NO_METHOD_STEP])  # fmt: skip
-    row = score(case, draft, 0, media_on=True)
+    row = score(case, draft, EvalMedia(case, None), media_on=True, fetched=[])
     assert row["lines_matched"] == row["stated_right"] == 5 and row["missed_allergens"] == []
-    assert not row["method"] and not row["calls_ok"]
-    assert score(case, draft, 0, media_on=False)["calls_ok"]
+    assert not row["method"] and not row["calls_ok"] and row["comment_calls_ok"]
+    assert score(case, draft, EvalMedia(case, None), media_on=False, fetched=[])["calls_ok"]
     media = fake_read(fake_fetch(f"https://media.pantrila-eval.example/{case['video']}.mp4"))
     assert media.seconds > 1 and len(media.frames) == 4
+
+
+def test_reel_eval_comments_go_through_the_real_creator_filter():
+    from evals.reel_cases import SITE, load_cases
+    from evals.run_reel import EvalMedia
+    from pantrila.post_media import COMMENT_LIMIT
+
+    cases = {c["kind"]: c for c in load_cases()}
+    creator, stranger = cases["creator-comment-link"], cases["stranger-comment-link"]
+    found = EvalMedia(creator, None).creator_comments(creator["url"], "facebook", None)
+    assert found.texts == [SITE] and found.fetched == COMMENT_LIMIT
+    found = EvalMedia(stranger, None).creator_comments(stranger["url"], "tiktok", None)
+    assert found.texts == [] and found.fetched == COMMENT_LIMIT

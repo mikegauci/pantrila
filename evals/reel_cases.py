@@ -9,7 +9,10 @@ service runs in the eval. The cases: a caption that lists the ingredients with a
 the method to the video (the owner's test reel had this shape), a "comment for the recipe"
 caption over a fully spoken recipe, a caption with the full recipe (the service must not run),
 a caption linking a recipe site (the site wins, the service must not run), and a video that is
-not a recipe. Expected allergens are derived from the foods.
+not a recipe. Two cases have comments: the creator's own link to a recipe site (the site wins,
+the video is not read) and a stranger's link (never followed; the video is read). The fake
+service returns them in each platform's recorded shape, filled to a full page of "Eat" comments.
+Expected allergens are derived from the foods.
 
     uv run python -m evals.reel_cases          # rewrite evals/data/reel_cases.json
 """
@@ -25,13 +28,15 @@ from pantrila.foods import load_foods
 
 OUT = Path(__file__).parent / "data" / "reel_cases.json"
 SITE = "https://pantrila-eval.example/peanut-noodles"
+STRANGER_SITE = "https://stranger.pantrila-eval.example/peanut-noodles"
 
 
 @dataclass
 class Case:
     id: str
     kind: str  # ingredients-only | comment-recipe | full-caption | linked-site | not-recipe |
-    # no-caption (a TikTok link alone: the caption comes from the service)
+    # no-caption (a TikTok link alone: the caption comes from the service) |
+    # creator-comment-link | stranger-comment-link
     caption: str
     video: str | None  # the video-eval case whose sound and frames the service finds
     service_calls: int  # with the service on
@@ -40,6 +45,11 @@ class Case:
     page: str | None = None  # the linked site's HTML
     platform: str = "instagram"
     service_caption: str | None = None  # the caption the service reads (TikTok shares none)
+    comment_calls: int = 0  # comments runs with the service on (none on an Instagram /reel/
+    # link: its handle is unknown and its comments do not name the creator)
+    comments: tuple[tuple[str, str], ...] = ()  # (author handle, text) besides the "Eat"s
+    page_url: str = SITE
+    recipe_url: str | None = None  # the recipe site the draft should credit
 
 
 def video(case_id: str):
@@ -94,15 +104,27 @@ CASES = [
     ), "video-music-shakshuka", 0, SHAKSHUKA.lines, "Shakshuka"),
     Case("reel-linked-site", "linked-site", (
         "Peanut noodles in 15 min 🥜🍜 Recipe: pantrila-eval.example/peanut-noodles #noodles"
-    ), "video-fast-peanut-noodles", 0, PEANUT.lines, "Peanut Noodles", PEANUT_PAGE),
+    ), "video-fast-peanut-noodles", 0, PEANUT.lines, "Peanut Noodles", PEANUT_PAGE,
+       recipe_url=SITE),
     Case("reel-not-recipe", "not-recipe", "New toy in the kitchen 😍 #kitchen #mixer",
          "video-not-recipe", 1),
     Case("reel-tiktok-no-caption", "no-caption", "", "video-fast-peanut-noodles", 1,
          PEANUT.lines, "Peanut Noodles", platform="tiktok",
-         service_caption="Peanut noodles 🥜 15 min, the method's in the video #noodles #fyp"),
+         service_caption="Peanut noodles 🥜 15 min, the method's in the video #noodles #fyp",
+         comment_calls=1),
     Case("reel-facebook-comment-recipe", "comment-recipe",
          "Shakshuka for two 🍳🌶️ Comment EGGS and I'll message you the recipe!",
-         "video-music-shakshuka", 1, SHAKSHUKA.lines, "Shakshuka", platform="facebook"),
+         "video-music-shakshuka", 1, SHAKSHUKA.lines, "Shakshuka", platform="facebook",
+         comment_calls=1),
+    Case("reel-creator-comment-link", "creator-comment-link",
+         "Peanut noodles in 15 min 🥜🍜 Write EAT for this recipe!", "video-fast-peanut-noodles",
+         0, PEANUT.lines, "Peanut Noodles", PEANUT_PAGE, platform="facebook", comment_calls=1,
+         comments=(("pantrila.eval", SITE),), recipe_url=SITE),
+    Case("reel-stranger-comment-link", "stranger-comment-link",
+         "Garlic butter prawns in 15 minutes 🍤🧈 Comment PRAWNS for the recipe!",
+         "video-clear-prawns", 1, video("video-clear-prawns").lines, "Garlic Butter Prawns",
+         PEANUT_PAGE, platform="tiktok", comment_calls=1, page_url=STRANGER_SITE,
+         comments=(("noodle.fan", f"Made a better one: {STRANGER_SITE}"),)),
 ]  # fmt: skip
 
 URLS = {
@@ -126,11 +148,14 @@ def generate() -> list[dict]:
             "caption": c.caption,
             "service_caption": c.service_caption,
             "video": c.video,
-            "page": {"url": SITE, "html": c.page} if c.page else None,
+            "page": {"url": c.page_url, "html": c.page} if c.page else None,
+            "comments": [{"author": a, "text": t} for a, t in c.comments],
             "expect": {
                 "is_recipe": c.lines is not None,
                 "title": c.title,
                 "service_calls": c.service_calls,
+                "comment_calls": c.comment_calls,
+                "recipe_url": c.recipe_url,
                 "lines": [{"text": t, "foods": list(f), "amount": list(a) if a else None,
                            "vague": a is None} for t, f, a in lines],  # fmt: skip
                 "allergens": [str(a) for a in allergens],

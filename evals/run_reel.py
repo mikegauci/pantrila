@@ -6,11 +6,15 @@ frames of the paired video-eval case; no real service runs.
 Per case: recipe found (or refused), food matching, allergens missed and extra, stated amounts
 right (the caption's amounts must survive the video's vaguer ones), method present (not the
 "add the method" placeholder), service calls against the expected number (0 when the caption or
-a linked site already has the recipe), cost including the service fee, latency. A missed
+a linked site already has the recipe), comments runs and the credited recipe site against the
+expected ones, pages fetched from a stranger's comment link (should be 0), cost including the
+service fees, latency. Comments are filtered by the real `ApifyMedia.creator_comments` over each
+case's comments in the platform's recorded shape (no real service runs). A missed
 allergen is the safety number and should be 0. Writes a report under evals/reports/.
 
     uv run python -m evals.run_reel                 # needs OPENAI_API_KEY
     uv run python -m evals.run_reel --media off     # the "before": today's caption-only import
+    uv run python -m evals.run_reel --comments off  # no comments run (before creator links)
     uv run python -m evals.run_reel --fee 0.003     # one fee per run (else each platform's
                                                     # actor fee in post_media.ACTORS)
 """
@@ -34,7 +38,16 @@ from evals.video_audio import AUDIO, frame_urls
 from evals.video_cases import load_cases as load_videos
 from pantrila import config, post_media
 from pantrila.cookbook import CookbookRecipeIn
-from pantrila.post_media import ACTORS, MediaFailed, PostVideo, VideoMedia
+from pantrila.post_media import (
+    ACTORS,
+    COMMENT_ACTORS,
+    COMMENT_LIMIT,
+    ApifyMedia,
+    CreatorComments,
+    MediaFailed,
+    PostVideo,
+    VideoMedia,
+)
 from pantrila.recipe_import import NO_METHOD_STEP, Importer, ImportFailed
 
 REPORTS = Path(__file__).parent / "reports"
@@ -42,13 +55,43 @@ VIDEOS = {v["id"]: v for v in load_videos()}
 MEDIA_HOST = "https://media.pantrila-eval.example/"
 
 
+def comment_items(case: dict) -> list[dict]:
+    """The case's comments, then "Eat"s to a full page, shaped as each actor returned them on
+    21 October 2026 (see tests/data/apify_comments.json)."""
+    platform, owner = case["platform"], "pantrila.eval"
+    rows = [(c["author"], c["text"]) for c in case["comments"]]
+    rows += [(f"eater{n}", "Eat") for n in range(COMMENT_LIMIT - len(rows))]
+    if platform == "facebook":
+        return [{"text": t, "profileUrl": f"https://www.facebook.com/{a}",
+                 "pageAdLibrary": {"uri_token": owner}} for a, t in rows]  # fmt: skip
+    if platform == "tiktok":
+        return [{"text": t, "uniqueId": a, "videoWebUrl": case["url"]} for a, t in rows]
+    return [{"text": t, "ownerUsername": a} for a, t in rows]
+
+
 class EvalMedia:
-    """The service, faked: a video link (and the caption it reads) per case, counted."""
+    """The service, faked: a video link (and the caption it reads) per case, and its comments
+    through the real creator filter; runs counted."""
 
     platforms = frozenset(ACTORS)
 
-    def __init__(self, case: dict, fee: float | None):
+    def __init__(self, case: dict, fee: float | None, comments: bool = True):
         self.case, self.fee, self.calls, self.cost = case, fee, 0, 0.0
+        self.comment_platforms = frozenset(COMMENT_ACTORS) if comments else frozenset()
+        self.comment_calls = 0
+        answer = httpx.Response(200, json=comment_items(case))
+        http = httpx.Client(transport=httpx.MockTransport(lambda req: answer))
+        self.apify = ApifyMedia("eval", http=http)
+
+    def comment_fee_for(self, platform: str, fetched: int) -> float | None:
+        return self.apify.comment_fee_for(platform, fetched)
+
+    def creator_comments(self, post_url: str, platform: str, handle: str | None
+                         ) -> CreatorComments:  # fmt: skip
+        self.comment_calls += 1
+        found = self.apify.creator_comments(post_url, platform, handle)
+        self.cost += self.comment_fee_for(platform, found.fetched)
+        return found
 
     def fee_for(self, platform: str) -> float:
         return self.fee if self.fee is not None else ACTORS[platform].fee_usd
@@ -81,10 +124,11 @@ def fake_read(data: bytes) -> VideoMedia:
     return VideoMedia(audio, seconds, frame_urls(video))
 
 
-def page_http(case: dict) -> httpx.Client:
+def page_http(case: dict, fetched: list[str]) -> httpx.Client:
     page = case["page"]
 
     def handle(req: httpx.Request) -> httpx.Response:
+        fetched.append(str(req.url))
         if page and str(req.url) == page["url"]:
             return httpx.Response(200, html=page["html"])
         return httpx.Response(404)
@@ -92,11 +136,21 @@ def page_http(case: dict) -> httpx.Client:
     return httpx.Client(transport=httpx.MockTransport(handle))
 
 
-def score(case: dict, draft: CookbookRecipeIn | None, calls: int, media_on: bool) -> dict:
+def score(case: dict, draft: CookbookRecipeIn | None, media: EvalMedia, media_on: bool,
+          fetched: list[str]) -> dict:  # fmt: skip
     e = case["expect"]
+    calls, comment_calls = media.calls, media.comment_calls
     want_calls = e["service_calls"] if media_on else 0
+    want_comments = e["comment_calls"] if media_on and media.comment_platforms else 0
+    runs = {
+        "calls": calls,
+        "calls_ok": calls == want_calls,
+        "comment_calls": comment_calls,
+        "comment_calls_ok": comment_calls == want_comments,
+        "stranger_fetches": sum("stranger." in url for url in fetched),
+    }
     if draft is None:
-        return {"found_ok": not e["is_recipe"], "calls": calls, "calls_ok": calls == want_calls}
+        return {"found_ok": not e["is_recipe"], **runs}
     pairs = pair_lines(e["lines"], draft)
     stated = [(x, i) for x, i in zip(e["lines"], pairs, strict=True) if not x["vague"]]
     expected, got = set(e["allergens"]), draft_allergens(draft)
@@ -112,20 +166,22 @@ def score(case: dict, draft: CookbookRecipeIn | None, calls: int, media_on: bool
             i is not None and amount_ok(x, draft.ingredients[i]) for x, i in stated
         ),  # fmt: skip
         "method": draft.steps != [NO_METHOD_STEP],
-        "calls": calls,
-        "calls_ok": calls == want_calls,
+        **runs,
+        "recipe_url": draft.recipe_url,
+        "recipe_url_ok": draft.recipe_url == e["recipe_url"],
         "title": draft.title,
     }
 
 
-def run_one(case: dict, model: str, media_on: bool, fee: float | None) -> dict:
-    media = EvalMedia(case, fee)
+def run_one(case: dict, model: str, media_on: bool, fee: float | None,
+            comments: bool = True) -> dict:  # fmt: skip
+    media, fetched = EvalMedia(case, fee, comments), []
     importer = Importer(model=model, media=media if media_on else None)
     base = {"case_id": case["id"], "kind": case["kind"], "ok": True}
     resolve = lambda host, port: ["93.184.216.34"]  # noqa: E731  (the mock serves the page)
     try:
-        result = importer.from_post(case["url"], case["caption"] or None, page_http(case),
-                                    resolve)  # fmt: skip
+        result = importer.from_post(case["url"], case["caption"] or None,
+                                    page_http(case, fetched), resolve)  # fmt: skip
         draft, latency = result.draft, result.latency_ms
     except ImportFailed:
         draft, latency = None, 0.0
@@ -133,7 +189,7 @@ def run_one(case: dict, model: str, media_on: bool, fee: float | None) -> dict:
         return {**base, "ok": False, "error": f"{type(exc).__name__}: {exc}"}
     u = importer.usage
     model_cost = u.cost()
-    row = {**base, **score(case, draft, media.calls, media_on),
+    row = {**base, **score(case, draft, media, media_on, fetched),
            "cost_usd": None if model_cost is None else model_cost + media.cost,
            "media_cost_usd": media.cost,
            "transcription_cost_usd": u.transcription_cost(), "llm_calls": u.llm_calls,
@@ -141,6 +197,7 @@ def run_one(case: dict, model: str, media_on: bool, fee: float | None) -> dict:
     print(f"{case['id']}: found {'ok' if row['found_ok'] else 'WRONG'}, "
           f"lines {row.get('lines_matched', '-')}/{row.get('lines_expected', '-')}, "
           f"method {row.get('method', '-')}, calls {media.calls}, "
+          f"comments {media.comment_calls}, site {row.get('recipe_url')}, "
           f"missed {row.get('missed_allergens', [])}", flush=True)  # fmt: skip
     return row
 
@@ -174,6 +231,10 @@ def summarise(rows: list[dict]) -> dict:
         "method": mean(drafts, "method"),
         "calls_ok": mean(ok, "calls_ok"),
         "calls_per_import": mean(ok, "calls"),
+        "comment_calls_ok": mean(ok, "comment_calls_ok"),
+        "comment_calls_per_import": mean(ok, "comment_calls"),
+        "recipe_url_ok": mean(drafts, "recipe_url_ok"),
+        "stranger_fetches": sum(r["stranger_fetches"] for r in ok),
         "media_cost_usd": mean(ok, "media_cost_usd"),
         "transcription_cost_usd": mean(ok, "transcription_cost_usd"),
         "cost_per_import_usd": None if None in costs or not costs else statistics.fmean(costs),
@@ -197,7 +258,8 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"# Reel eval {meta['finished_at']}",
         "",
         f"{meta['cases']} labelled reel links with pasted captions, video service "
-        f"{meta['media']} (fake; fee {meta['fee_usd']} per run), transcription "
+        f"{meta['media']} (fake; fee {meta['fee_usd']} per run), comments "
+        f"{meta['comments']} (fake; per-comment fees), transcription "
         f"`{meta['transcribe_model']}`, model `{meta['model']}` (reasoning medium).",
         "",
         "| Metric | Value |",
@@ -213,13 +275,19 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"| Drafts with a method | {pct(s['method'])} |",
         f"| Service calls as expected | {pct(s['calls_ok'])} |",
         f"| Service calls per import | {s['calls_per_import']:.1f} |",
-        f"| Service fee / transcription per import | {usd(s['media_cost_usd'])} / "
+        f"| Comments runs as expected | {pct(s['comment_calls_ok'])} |",
+        f"| Comments runs per import | {s['comment_calls_per_import']:.1f} |",
+        f"| Recipe site credited as expected | {pct(s['recipe_url_ok'])} |",
+        f"| Pages fetched from strangers' links | {s['stranger_fetches']} |",
+        f"| Service fees (video + comments) / transcription per import | "
+        f"{usd(s['media_cost_usd'])} / "
         f"{usd(s['transcription_cost_usd'])} |",
         f"| Total cost per import | {usd(s['cost_per_import_usd'])} |",
         f"| Latency p50 / p95 | {secs(s['latency_p50_ms'])} / {secs(s['latency_p95_ms'])} |",
         "",
-        "| Case | Kind | Found | Foods | Stated right | Method | Calls | Missed allergens | s |",
-        "|---|---|---|---|---|---|---|---|---|",
+        "| Case | Kind | Found | Foods | Stated right | Method | Calls | Comments | Site "
+        "| Missed allergens | s |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
 
     def mark(v):
@@ -227,16 +295,20 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
 
     for r in rows:
         if not r["ok"]:
-            lines.append(f"| {r['case_id']} | {r['kind']} | failed: {r['error']} |||||||")
+            lines.append(f"| {r['case_id']} | {r['kind']} | failed: {r['error']} |||||||||")
         elif "lines_got" not in r:
             lines.append(f"| {r['case_id']} | {r['kind']} | {mark(r['found_ok'])} | | | "
-                         f"| {r['calls']} {mark(r['calls_ok'])} | | |")  # fmt: skip
+                         f"| {r['calls']} {mark(r['calls_ok'])} "
+                         f"| {r['comment_calls']} {mark(r['comment_calls_ok'])} "
+                         "| | | |")  # fmt: skip
         else:
             lines.append(
                 f"| {r['case_id']} | {r['kind']} | {mark(r['found_ok'])} "
                 f"| {r['lines_matched']}/{r['lines_expected']} ({r['lines_got']} lines) "
                 f"| {r['stated_right']}/{r['stated_expected']} | {mark(r['method'])} "
                 f"| {r['calls']} {mark(r['calls_ok'])} "
+                f"| {r['comment_calls']} {mark(r['comment_calls_ok'])} "
+                f"| {'site' if r['recipe_url'] else '-'} {mark(r['recipe_url_ok'])} "
                 f"| {', '.join(r['missed_allergens']) or '-'} | {r['latency_ms'] / 1000:.0f} |"
             )
     return "\n".join(lines) + "\n"
@@ -247,6 +319,8 @@ def main() -> None:
     parser.add_argument("--only", help="comma-separated case ids")
     parser.add_argument("--media", choices=("on", "off"), default="on",
                         help="off is the before: caption and links only")  # fmt: skip
+    parser.add_argument("--comments", choices=("on", "off"), default="on",
+                        help="off: no comments run (before creator comment links)")  # fmt: skip
     parser.add_argument("--fee", type=float,
                         help="USD per service run (else each platform's actor fee)")  # fmt: skip
     parser.add_argument("--concurrency", type=int, default=5)
@@ -259,7 +333,9 @@ def main() -> None:
         cases = [c for c in cases if c["id"] in set(args.only.split(","))]
     model = config.model()
     with ThreadPoolExecutor(args.concurrency) as pool:
-        rows = list(pool.map(lambda c: run_one(c, model, args.media == "on", fee), cases))
+        comments = args.comments == "on"
+        rows = list(pool.map(lambda c: run_one(c, model, args.media == "on", fee, comments),
+                             cases))  # fmt: skip
 
     summary = summarise(rows)
     meta = {
@@ -268,6 +344,7 @@ def main() -> None:
         "model": model,
         "transcribe_model": config.transcribe_model(),
         "media": args.media,
+        "comments": args.comments,
         "fee_usd": fee if fee is not None else "per platform",
     }
     report = markdown(summary, rows, meta)
