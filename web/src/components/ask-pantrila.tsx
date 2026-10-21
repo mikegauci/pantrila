@@ -71,9 +71,9 @@ export function AskPantrila() {
           <ul className="grid gap-1">
             {recent.map((t) => (
               <li key={t.id}>
-                <Link href={`/assistant?thread=${t.id}`} className="flex items-center gap-2 rounded-lg py-1 hover:text-primary-text">
+                <Link href={`/assistant?thread=${t.id}`} className="flex min-w-0 items-center gap-2 rounded-lg py-1 hover:text-primary-text">
                   <MessageCircle className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-                  <span className="truncate">{t.title}</span>
+                  <span className="min-w-0 truncate">{t.title}</span>
                 </Link>
               </li>
             ))}
