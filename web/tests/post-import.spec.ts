@@ -89,6 +89,7 @@ test("a post imports from its link and keeps the credit", async ({ page }) => {
 test("where the service covers the platform, Pantrila says it is listening to the video", async ({ page }) => {
   const heard = "Pantrila listened to the post's video for this recipe. Check the amounts and steps."
   let released = false
+  let steps: { key: string; label: string }[] = []
   await page.clock.install()
   await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
@@ -98,7 +99,7 @@ test("where the service covers the platform, Pantrila says it is listening to th
       return route.fulfill({ status: 202, json: { id: "job-1", status: "running", result: null, error: null } })
     }
     if (path.startsWith("/me/recipes/import/jobs/")) {
-      if (!released) return route.fulfill({ json: { id: "job-1", status: "running", result: null, error: null } })
+      if (!released) return route.fulfill({ json: { id: "job-1", status: "running", steps, result: null, error: null } })
       return route.fulfill({ json: { id: "job-1", status: "done", error: null, result: {
         draft: { ...draft, recipe_url: null }, notes: [heard],
         cost_usd: 0.012, media_cost_usd: 0.003, transcription_cost_usd: 0.001, latency_ms: 30000 } } })
@@ -131,13 +132,20 @@ test("where the service covers the platform, Pantrila says it is listening to th
   await page.clock.pauseAt(new Date(Date.now() + 5000))
   await page.getByRole("button", { name: "Read recipe" }).click()
   await expect(page.getByRole("button", { name: "Reading the post…" })).toBeVisible()
-  await expect(page.getByRole("timer")).toHaveText("Estimated time remaining: 1:30")
+  const progress = page.getByRole("list", { name: "Import steps" })
+  await expect(progress).toContainText("Starting the import…")
+  await expect(page.getByText("About 1:30 left")).toBeVisible()
+  // The steps the server reports appear as they happen: earlier ones ticked, the last spinning.
+  steps = [{ key: "post", label: "Opening the post" }, { key: "video", label: "Finding the post's video" },
+    { key: "listen", label: "Listening to the video" }]
   await page.clock.fastForward(9000)
-  await expect(page.getByText("Reading the post and its video…", { exact: true })).toBeVisible()
-  await expect(page.getByRole("timer")).toHaveText("Estimated time remaining: 1:21")
+  await expect(progress.getByRole("listitem")).toHaveText(
+    ["Opening the post", "Finding the post's video", "Listening to the video…"])
+  await expect(progress.getByLabel("Done")).toHaveCount(2)
+  await expect(progress.getByLabel("In progress")).toHaveCount(1)
+  await expect(page.getByText("About 1:21 left")).toBeVisible()
   await page.clock.fastForward(100000)
   await expect(page.getByText("Taking longer than usual. Still working…")).toBeVisible()
-  await expect(page.getByRole("timer")).toHaveCount(0)
   await expect(page.getByRole("button", { name: "Upload the video" })).toHaveCount(0)
   released = true
   await page.clock.fastForward(2500)
