@@ -513,6 +513,99 @@ def test_link_import_returns_a_draft_logs_usage_and_saves_nothing(api, backend, 
     assert usage["limits"]["imports_left"] == usage["limits"]["imports_per_day"] - 1
 
 
+def wait_for_job(api, job_id: str) -> dict:
+    import time
+
+    for _ in range(200):
+        job = api.get(f"/me/recipes/import/jobs/{job_id}").json()
+        if job["status"] != "running":
+            return job
+        time.sleep(0.05)
+    raise AssertionError("the import never finished")
+
+
+def test_background_import_finishes_without_the_request_that_started_it(api, backend, monkeypatch):
+    import pantrila.recipe_import as ri
+
+    monkeypatch.setattr(ri, "fetch_page", lambda url, http=None, resolve=None:
+                        (url, "<p>Toast: 2 slices of bread</p>"))  # fmt: skip
+    backend.client.replies = [imported_reply()]
+    started = api.post("/me/recipes/import/jobs",
+                       json={"kind": "link", "url": "https://example.com/toast"})  # fmt: skip
+    assert started.status_code == 202 and started.json()["status"] in ("running", "done")
+    job = wait_for_job(api, started.json()["id"])
+    assert job["status"] == "done" and job["error"] is None
+    assert job["result"]["draft"]["ingredients"][0]["food"] == "white_bread"
+    assert [e["kind"] for e in api.get("/me/usage").json()["events"]] == ["import"]
+    assert api.get("/me/recipes").json() == []
+
+
+def test_background_import_reports_a_failure_and_keeps_the_http_status(api):
+    started = api.post("/me/recipes/import/jobs",
+                       json={"kind": "link", "url": "http://127.0.0.1/admin"})  # fmt: skip
+    job = wait_for_job(api, started.json()["id"])
+    assert job["status"] == "failed" and job["result"] is None
+    assert job["error"]["status"] == 422 and "private" in job["error"]["message"]
+
+
+def test_background_import_needs_input_and_unknown_jobs_are_404(api):
+    for body in ({"kind": "link"}, {"kind": "post"}, {"kind": "text", "text": "short"},
+                 {"kind": "photos", "images": []}, {"kind": "video"}):  # fmt: skip
+        assert api.post("/me/recipes/import/jobs", json=body).status_code == 422
+    assert api.get("/me/usage").json()["events"] == []
+    missing = api.get("/me/recipes/import/jobs/nope")
+    assert missing.status_code == 404 and "interrupted" in missing.json()["detail"]
+
+
+def test_background_import_checks_the_daily_cap_when_it_starts(api, backend, monkeypatch):
+    import pantrila.recipe_import as ri
+
+    monkeypatch.setenv("PANTRILA_DAILY_IMPORTS", "1")
+    monkeypatch.setattr(ri, "fetch_page", lambda url, http=None, resolve=None:
+                        (url, "<p>Toast: 2 slices of bread</p>"))  # fmt: skip
+    backend.client.replies = [imported_reply()]
+    body = {"kind": "link", "url": "https://example.com/toast"}
+    first = api.post("/me/recipes/import/jobs", json=body)
+    assert first.status_code == 202
+    assert wait_for_job(api, first.json()["id"])["status"] == "done"
+    assert api.post("/me/recipes/import/jobs", json=body).status_code == 429
+
+
+def test_sending_the_same_job_id_again_does_not_start_or_charge_twice(api, backend, monkeypatch):
+    import pantrila.recipe_import as ri
+
+    monkeypatch.setattr(ri, "fetch_page", lambda url, http=None, resolve=None:
+                        (url, "<p>Toast: 2 slices of bread</p>"))  # fmt: skip
+    backend.client.replies = [imported_reply()]
+    body = {"id": "a" * 32, "kind": "link", "url": "https://example.com/toast"}
+    assert api.post("/me/recipes/import/jobs", json=body).json()["id"] == "a" * 32
+    assert api.post("/me/recipes/import/jobs", json=body).json()["id"] == "a" * 32
+    assert wait_for_job(api, "a" * 32)["status"] == "done"
+    assert [e["kind"] for e in api.get("/me/usage").json()["events"]] == ["import"]
+    assert api.post("/me/recipes/import/jobs", json={**body, "id": "not-an-id"}).status_code == 422
+
+
+def test_two_background_imports_at_a_time(api, monkeypatch):
+    import threading
+
+    import pantrila.recipe_import as ri
+
+    gate = threading.Event()
+
+    def slow_fetch(url, http=None, resolve=None):
+        gate.wait(5)
+        return url, "<p>Toast: 2 slices of bread</p>"
+
+    monkeypatch.setattr(ri, "fetch_page", slow_fetch)
+    body = {"kind": "link", "url": "https://example.com/toast"}
+    try:
+        assert api.post("/me/recipes/import/jobs", json=body).status_code == 202
+        assert api.post("/me/recipes/import/jobs", json=body).status_code == 202
+        assert api.post("/me/recipes/import/jobs", json=body).status_code == 429
+    finally:
+        gate.set()
+
+
 def test_bad_links_fail_before_any_paid_call(api):
     r = api.post("/me/recipes/import/link", json={"url": "http://127.0.0.1/admin"})
     assert r.status_code == 422 and "private" in r.json()["detail"]
