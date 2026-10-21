@@ -4,7 +4,7 @@ import { NutritionSource } from "@/components/nutrition-source"
 import { Camera, Clapperboard, ClipboardPaste, Link2, PenLine, Plus, Share2, Sparkles, Trash2, TriangleAlert, X } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
-import { useSWRConfig } from "swr"
+import { type ScopedMutator, useSWRConfig } from "swr"
 
 import { AiBadge, AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert } from "@/components/bits"
 import { MacroRing } from "@/components/macro-ring"
@@ -33,6 +33,28 @@ export const RECIPE_SOURCE: Record<RecipeSource, { icon: typeof Camera; text: st
   video: { icon: Clapperboard, text: "From a video" },
   manual: { icon: PenLine, text: "Typed in" },
 }
+
+/** Saves a new recipe; its photo is then made while the person reads it (its page shows it arriving). */
+export async function saveNewRecipe(recipe: CookbookRecipeIn, mutate: ScopedMutator): Promise<CookbookDetail> {
+  const saved = await send<CookbookDetail>("/me/recipes", "POST", recipe)
+  makePhoto(saved.id)
+    .then((photo) => mutate(`/me/recipes/${saved.id}`, photo, { revalidate: false }))
+    .catch((e) => toast.warning("Recipe saved. Its photo could not be generated.", {
+      description: e instanceof Error ? e.message : "You can try again from the recipe.",
+    }))
+    .finally(() => {
+      mutate("/me/recipes")
+      mutate("/me")
+      mutate("/me/usage")
+    })
+  return saved
+}
+
+const NO_METHOD_STEP = "Add the method here."  // recipe_import.NO_METHOD_STEP
+
+/** An imported draft that cannot be saved as it is: a food left unknown, or no method. */
+export const needsReview = (d: CookbookRecipeIn) =>
+  d.ingredients.some((l) => !l.food && !l.estimate) || d.steps.includes(NO_METHOD_STEP)
 
 export const PLATFORM: Record<SourcePlatform, string> = {
   tiktok: "TikTok", instagram: "Instagram", facebook: "Facebook",
@@ -397,20 +419,7 @@ export function CookbookForm({
     try {
       const saved = recipeId
         ? await send<CookbookDetail>(`/me/recipes/${recipeId}`, "PUT", recipe)
-        : await send<CookbookDetail>("/me/recipes", "POST", recipe)
-      if (!recipeId) {
-        // The photo is made while the person reads the recipe; its page shows it arriving.
-        makePhoto(saved.id)
-          .then((photo) => mutate(`/me/recipes/${saved.id}`, photo, { revalidate: false }))
-          .catch((e) => toast.warning("Recipe saved. Its photo could not be generated.", {
-            description: e instanceof Error ? e.message : "You can try again from the recipe.",
-          }))
-          .finally(() => {
-            mutate("/me/recipes")
-            mutate("/me")
-            mutate("/me/usage")
-          })
-      }
+        : await saveNewRecipe(recipe, mutate)
       toast.success(`Saved ${saved.title}`)
       onSaved(saved)
     } catch (e) {
@@ -527,6 +536,15 @@ export function CookbookForm({
           </Label>
           <Textarea id="steps" value={stepsText} rows={8} className="min-h-40 bg-surface"
                     onChange={(e) => setStepsText(e.target.value)} />
+        </Panel>
+
+        <Panel className="grid gap-2">
+          <PanelTitle className="mb-0">Notes</PanelTitle>
+          <Label htmlFor="notes" className="text-muted-foreground">
+            Optional. Substitutions, storage, tips. One note per line.
+          </Label>
+          <Textarea id="notes" value={r.notes ?? ""} rows={4} maxLength={3000} className="bg-surface"
+                    onChange={(e) => setR({ ...r, notes: e.target.value })} />
         </Panel>
       </div>
 

@@ -53,8 +53,8 @@ test("amounts show once, US measures as fractions, and a line can be shown in an
   await expect(list).toContainText("1 cup basmati rice")
   await expect(list).not.toContainText("1 cup 1 cup")
   await expect(list).toContainText("454 g chicken thighs")
-  await expect(list).toContainText("1 1/4 tsp paprika")
-  await expect(list).toContainText("1/2 tsp oregano")
+  await expect(list).toContainText("1¼ tsp paprika")
+  await expect(list).toContainText("½ tsp oregano")
 
   // The ruler at the end of the line opens the units; so does tapping the amount.
   await page.getByRole("button", { name: "Change measurement for chicken thighs" }).click()

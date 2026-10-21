@@ -11,7 +11,7 @@ import { toast } from "sonner"
 import useSWR from "swr"
 
 import { Amount, IngredientText } from "@/components/amount"
-import { bareName } from "@/lib/amounts"
+import { bareName, niceFractions } from "@/lib/amounts"
 import { useAuth } from "@/components/auth-provider"
 import { TemperatureToggle } from "@/components/temperature-toggle"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -266,7 +266,7 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
                     {stepHeading(recipe.stepSections, page)}
                   </p>
                 )}
-                <p className="text-[22px] leading-[34px] font-medium md:text-[28px] md:leading-[42px]">{showTemps(step, unit)}</p>
+                <p className="text-[22px] leading-[34px] font-medium md:text-[28px] md:leading-[42px]">{showTemps(niceFractions(step), unit)}</p>
                 {uses.length > 0 && (
                   <div role="group" aria-label="Ingredients for this step">
                     <p className="mb-2 text-[12px] font-medium text-muted-foreground">For this step (tap when completed)</p>

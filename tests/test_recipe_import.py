@@ -249,7 +249,7 @@ def test_check_image_refuses_other_types_and_big_files():
 
 def test_estimates_gain_the_allergens_of_table_foods_the_line_names():
     curry = imported().model_dump()["ingredients"][2]
-    curry.update(name="2 tbsp medium curry powder")
+    curry.update(name="2 tbsp madras curry powder")
     curry["estimate"]["allergens"] = []
     draft, notes = to_draft(imported(ingredients=[curry]), "link", None)
     assert draft.ingredients[0].estimate.allergens == ["mustard"]
@@ -636,3 +636,38 @@ def test_video_repair_failure_is_not_reported_as_no_recipe():
     client = amount_client(raw, [])
     with pytest.raises(AmountEstimateFailed, match="Could not estimate ingredient amounts"):
         Importer(client=client).from_video(wav(2), [])
+
+
+def test_unmatched_lines_that_name_a_table_food_keep_the_sources_measure():
+    from pantrila.cookbook import derive
+
+    soda = imported().ingredients[2].model_dump()
+    soda.update(name="baking soda", quantity=0.5, unit="tsp")
+    soda["estimate"].update(description="baking soda", allergens=[], grams_per_ml=None)
+    salt = {**soda, "name": "salt", "quantity": 0.125, "estimate": {**soda["estimate"]}}
+    client = amount_client(imported(ingredients=[soda, salt]), [])
+    result = Importer(client=client).from_text("Whisk the baking soda and salt. Bake.")
+    lines = result.draft.ingredients
+    assert [(line.food, line.quantity, line.unit) for line in lines] == [
+        ("baking_powder", 0.5, "tsp"),
+        ("salt", 0.125, "tsp"),
+    ]
+    assert all(line.estimate is None for line in lines)
+    assert result.usage.llm_calls == 1  # no amount repair needed
+    assert not derive(result.draft).estimated
+
+
+def test_estimated_food_in_spoons_keeps_its_spoons_and_learns_its_weight():
+    from pantrila.cookbook import derive
+
+    line = imported().ingredients[2].model_dump()
+    line.update(name="coconut sugar", quantity=0.5, unit="cup")
+    line["estimate"].update(description="coconut sugar", allergens=[], grams_per_ml=None)
+    client = amount_client(
+        imported(ingredients=[line]), [{"index": 0, "grams": 96, "reason": "About 96 g."}]
+    )
+    result = Importer(client=client).from_text("Stir in the coconut sugar.")
+    (kept,) = result.draft.ingredients
+    assert (kept.quantity, kept.unit) == (0.5, "cup")
+    assert kept.estimate.grams_per_ml == pytest.approx(0.8)
+    assert derive(result.draft).ingredients[0].grams == pytest.approx(96)

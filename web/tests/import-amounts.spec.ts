@@ -71,11 +71,7 @@ test(`estimated import saves and retains its nutrition notes when photo ${photoF
   await page.getByRole("button", { name: /From a post/ }).click()
   await page.getByLabel("Post link").fill(initial.source_url!)
   await page.getByRole("button", { name: "Read recipe" }).click()
-  await expect(page.getByText("A typical basil sprig weighs about 2 g.").filter({ visible: true })).toBeVisible()
-  await expect(page.getByText("Estimated nutrition", { exact: true }).filter({ visible: true })).toBeVisible()
-  await expect(page.getByText("To fix before saving")).toHaveCount(0)
-  await page.getByRole("button", { name: "Save to my recipes", exact: true }).click()
-  // The recipe opens at once; its photo slot shows the photo being made.
+  // Saved without a review form; the recipe opens at once and its photo slot shows the photo being made.
   await expect(page).toHaveURL(/\/recipes\/mine\/9$/)
   const making = page.getByRole("status").filter({ hasText: "Making the photo…" })
   await expect(making).toBeVisible()

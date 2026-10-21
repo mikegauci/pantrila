@@ -327,6 +327,8 @@ export interface CookbookRecipeIn {
   ingredients: RecipeLine[]
   steps: string[]
   step_sections?: StepSection[]
+  /** The author's notes, one per line. */
+  notes?: string
   source: RecipeSource
   source_url: string | null
   /** Credit for a recipe from a social post: source_url is the post. */

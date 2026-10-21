@@ -24,17 +24,27 @@ const GRAMS: Partial<Record<ShowUnit, number>> = { g: 1, kg: 1000, oz: 28.3495, 
 const US = new Set<ShowUnit>(["tsp", "tbsp", "cup", "lb", "oz", "piece", "pinch"])
 
 const FRACTIONS: [number, string][] = [
-  [0, ""], [1 / 8, "1/8"], [1 / 4, "1/4"], [1 / 3, "1/3"], [1 / 2, "1/2"], [2 / 3, "2/3"], [3 / 4, "3/4"], [1, ""],
+  [0, ""], [1 / 8, "⅛"], [1 / 4, "¼"], [1 / 3, "⅓"], [1 / 2, "½"], [2 / 3, "⅔"], [3 / 4, "¾"], [1, ""],
 ]
+const GLYPHS: Record<string, string> = {
+  "1/8": "⅛", "1/4": "¼", "1/3": "⅓", "1/2": "½", "2/3": "⅔", "3/4": "¾", "3/8": "⅜", "5/8": "⅝", "7/8": "⅞",
+}
 
-/** "1 1/4" for 1.25: the nearest eighth, quarter or third; never 0 for an amount above 0. */
+/** "1¼" for 1.25: the nearest eighth, quarter or third; never 0 for an amount above 0. */
 export function fraction(q: number): string {
   let whole = Math.floor(q)
   const [value, text] = FRACTIONS.reduce((best, f) =>
     Math.abs(q - whole - f[0]) < Math.abs(q - whole - best[0]) ? f : best)
   if (value === 1) whole += 1
-  if (!whole && !text) return q > 0 ? "1/8" : "0"
-  return [whole || "", text].filter(Boolean).join(" ")
+  if (!whole && !text) return q > 0 ? "⅛" : "0"
+  return `${whole || ""}${text}`
+}
+
+/** Typed fractions in text as fraction characters: "1 1/2 cups" -> "1½ cups", "1/4 tsp" -> "¼ tsp". */
+export function niceFractions(text: string): string {
+  return text.replace(/(?<![\d/.])(?:(\d+)(?:\s+|-))?([1-7])\/([2348])(?![\d/])/g,
+    (whole, int: string | undefined, n: string, d: string) =>
+      GLYPHS[`${n}/${d}`] ? `${int ?? ""}${GLYPHS[`${n}/${d}`]}` : whole)
 }
 
 /** The number for `q` in `unit`: fractions for US measures and counts, decimals for metric. */

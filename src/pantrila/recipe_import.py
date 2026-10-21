@@ -61,7 +61,8 @@ from pantrila.cookbook import (
     bare_name,
 )
 from pantrila.corpus import FoodKey
-from pantrila.foods import UnitError, load_foods, to_grams
+from pantrila.foods import ML_PER_UNIT, UnitError, load_foods, to_grams
+from pantrila.pantry import UnknownFood, resolve_food
 from pantrila.planner import Usage
 from pantrila.schema import Allergen, MealType, Unit
 
@@ -612,6 +613,19 @@ def _clamp(value: int, low: int, high: int) -> int:
     return max(low, min(high, value))
 
 
+def table_food(name: str, quantity: float, unit: Unit) -> str | None:
+    """The table food a line the model left unmatched names ("baking soda", "salt"), the
+    same match as typing it in the form, when its amount fits that food's units."""
+    for text in dict.fromkeys((name, name.split(",")[0])):
+        try:
+            key = resolve_food(bare_name(text))
+            to_grams(key, quantity, unit)
+            return key
+        except (UnknownFood, UnitError):
+            continue
+    return None
+
+
 def draft_line(n: int, name: str, quantity: float, unit: Unit, food: str | None,
                estimate: FoodEstimate | None, notes: list[str]) -> RecipeLine:  # fmt: skip
     """One model-written ingredient line, checked in code; appends what to review to `notes`."""
@@ -619,6 +633,8 @@ def draft_line(n: int, name: str, quantity: float, unit: Unit, food: str | None,
     if quantity <= 0:
         quantity = 1.0
         notes.append(f"Ingredient {n} ({name}): check the amount.")
+    if food not in foods and (known := table_food(name, quantity, unit)):
+        food = known
     if food is not None and food in foods:
         estimate = None
         try:
@@ -837,6 +853,17 @@ class Importer:
                 raise AmountEstimateFailed(AMOUNT_FAILED)
             for repair in repairs.ingredients:
                 line = draft.ingredients[repair.index]
+                # An estimated food measured in spoons or pieces keeps the source's measure
+                # ("1/2 tsp"); the estimate learns its weight instead.
+                if line.estimate and imported.ingredients[repair.index].quantity > 0:
+                    if line.unit in ML_PER_UNIT:
+                        ml = line.quantity * ML_PER_UNIT[line.unit]
+                        if 0 < repair.grams / ml <= 2000:
+                            line.estimate.grams_per_ml = round(repair.grams / ml, 3)
+                            continue
+                    if line.unit is Unit.PIECE and 0 < repair.grams / line.quantity <= 2000:
+                        line.estimate.grams_per_piece = round(repair.grams / line.quantity, 1)
+                        continue
                 line.quantity, line.unit = repair.grams, Unit.G
                 reasons = [line.amount_estimate, repair.reason.strip()]
                 line.amount_estimate = " ".join(reason for reason in reasons if reason)[:600]

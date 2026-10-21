@@ -33,6 +33,21 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Import measures, auto-save, fractions and fan ovens: an unmatched import line that names a table food
+(`recipe_import.table_food`, the form's `resolve_food` match: "baking soda", "salt") now gets that food, and an
+estimated food in spoons, cups or pieces keeps the source's measure, the amount repair setting the estimate's
+`grams_per_ml`/`grams_per_piece` instead of turning "½ tsp" into "2.3 g" (Amy's red velvet cookies: ½ tsp baking
+soda, ⅛ tsp salt kept). Imports skip the review form: the new-recipe page saves the draft (`saveNewRecipe`) and opens
+it, with its photo made in the background; a draft with an unknown food or no method (`needsReview`), or one the API
+refuses, still opens the form. Import notes are no longer shown (per-line estimates stay on the recipe). Amounts show
+fraction characters (1¼ tsp, ⅛ tsp) and typed fractions in steps do too (`niceFractions`). Oven steps (oven, bake,
+roast, preheat; not when a fan or air fryer is named) add the fan-oven setting, 25°F lower, rounded to 5°C:
+"180°C (165°C fan)", "350°F (325°F fan)" (`fanTemp` in `temperature.ts`). Import eval before (code at `main`)
+`import-2026-10-21T121751Z` vs after `import-2026-10-21T121957Z`, 27 cases: 0 missed allergens both, food matching 99%
+both, amount cases 100% both, $0.0077 -> $0.0072/import, p50/p95 5.2/13.5 -> 4.7/13.6 s (no prompt change; the eval
+has no unmatched table-food case). Playwright specs updated for auto-save, plus a no-method fallback test; all 21 pass
+locally with `PLAYWRIGHT_CHANNEL=chrome`.
+
 Mobile viewport and cook button: the viewport is locked (`viewport` export in `web/src/app/layout.tsx`: device width, scale 1, no pinch zoom) and `html`/`body` clip horizontal overflow, so pages no longer wobble sideways on phones. Recipe pages (corpus and cookbook) end with a full-width "Start cooking" button after the method (`StartCooking fullWidth`). Web only, no model call, so no eval rerun.
 
 Import progress and units: an import job now records the steps the importer actually takes (`Importer(on_step=)`,
