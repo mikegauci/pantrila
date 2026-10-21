@@ -90,7 +90,7 @@ const MEAL_ART: Record<MealType, { icon: typeof Salad; bg: string; fg: string }>
 /** The recipe's 4:3 photo when it has one (served resized by next/image; `sizes` says how
  * wide it shows), else meal-type art on a tint. */
 export function RecipeArt({
-  meal, cuisine, className, size = "md", photo, sizes = "(min-width: 768px) 33vw, 100vw",
+  meal, cuisine, className, size = "md", photo, sizes = "(min-width: 768px) 33vw, 100vw", making = false,
 }: {
   meal: MealType
   cuisine?: string
@@ -98,6 +98,8 @@ export function RecipeArt({
   size?: "sm" | "md" | "lg"
   photo?: string | null
   sizes?: string
+  /** A photo is being made: a light sweeps over the slot until it arrives. */
+  making?: boolean
 }) {
   const art = MEAL_ART[meal] ?? MEAL_ART.dinner
   const Icon = art.icon
@@ -105,12 +107,23 @@ export function RecipeArt({
     <div className={cn("relative grid place-items-center overflow-hidden rounded-2xl", art.bg, className)}>
       {photo ? (
         <Image src={photo} alt="" fill sizes={sizes} className="object-cover" />
-      ) : (
+      ) : !making && (
         <Icon
           className={cn(art.fg, size === "sm" ? "size-6" : size === "lg" ? "size-16" : "size-11")}
           strokeWidth={1.5}
           aria-hidden
         />
+      )}
+      {making && (
+        <div role="status" className="absolute inset-0 grid place-items-center bg-surface/40">
+          <span aria-hidden className="absolute inset-y-0 -left-1/2 w-1/2 animate-shimmer bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+          {size !== "sm" && (
+            <span className="relative inline-flex items-center gap-1.5 rounded-full bg-surface/90 px-3 py-1 text-[13px] font-medium shadow-sm">
+              <Sparkles className="size-4 animate-pulse text-primary-text" aria-hidden /> Making the photo…
+            </span>
+          )}
+          {size === "sm" && <span className="sr-only">Making the photo…</span>}
+        </div>
       )}
       {cuisine && size !== "sm" && (
         <span className="absolute bottom-2 left-2 rounded-full bg-surface/90 px-2 py-0.5 text-[11px] font-medium">
