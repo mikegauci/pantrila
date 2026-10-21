@@ -15,6 +15,7 @@ import { TemperatureToggle } from "@/components/temperature-toggle"
 import { Skeleton } from "@/components/ui/skeleton"
 import { label } from "@/lib/format"
 import { useApi, useProfile, useRecipe } from "@/lib/hooks"
+import { niceFractions } from "@/lib/amounts"
 import { hasTemp, showTemps, useTempUnit } from "@/lib/temperature"
 import { cn } from "@/lib/utils"
 import type { Ingredient, SwapList } from "@/lib/types"
@@ -193,7 +194,7 @@ export default function RecipePage() {
               <span className="tabular grid size-8 shrink-0 place-items-center rounded-full bg-primary-soft font-semibold text-primary-text">
                 {i + 1}
               </span>
-              <p className="pt-1">{showTemps(step, unit)}</p>
+              <p className="pt-1">{showTemps(niceFractions(step), unit)}</p>
             </li>
           ))}
         </ol>

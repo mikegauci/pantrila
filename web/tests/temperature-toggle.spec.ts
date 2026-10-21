@@ -19,7 +19,7 @@ const recipe = {
   },
 }
 
-test("temperatures switch between °C and °F and the choice is remembered", async ({ page }) => {
+test("temperatures switch between °C and °F, ovens show the fan setting, and the choice is remembered", async ({ page }) => {
   await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
@@ -36,14 +36,14 @@ test("temperatures switch between °C and °F and the choice is remembered", asy
   await page.waitForURL("http://127.0.0.1:3100/")
   await page.goto("/recipes/mine/1")
 
-  await expect(page.getByText("Preheat the oven to 180°C.")).toBeVisible()
+  await expect(page.getByText("Preheat the oven to 180°C (165°C fan).")).toBeVisible()
   await expect(page.getByText("a probe reads 74°C.")).toBeVisible()
 
   await page.getByRole("button", { name: "°F" }).click()
-  await expect(page.getByText("Preheat the oven to 350°F.")).toBeVisible()
+  await expect(page.getByText("Preheat the oven to 350°F (325°F fan).")).toBeVisible()
   await expect(page.getByText("a probe reads 165°F.")).toBeVisible()
 
   await page.reload()
   await expect(page.getByRole("button", { name: "°F" })).toHaveAttribute("aria-pressed", "true")
-  await expect(page.getByText("Preheat the oven to 350°F.")).toBeVisible()
+  await expect(page.getByText("Preheat the oven to 350°F (325°F fan).")).toBeVisible()
 })

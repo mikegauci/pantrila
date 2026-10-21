@@ -21,6 +21,7 @@ import { label } from "@/lib/format"
 import { groupLines, groupSteps } from "@/lib/sections"
 import { useCookbookRecipe, useMe, useProfile } from "@/lib/hooks"
 import { makePhoto, usePhotoPending } from "@/lib/photo-jobs"
+import { niceFractions } from "@/lib/amounts"
 import { hasTemp, showTemps, useTempUnit } from "@/lib/temperature"
 import { cn } from "@/lib/utils"
 import type { CookbookDetail } from "@/lib/types"
@@ -190,7 +191,18 @@ export default function MyRecipePage() {
               : <span className="text-[12px]">none of the 14 EU allergens</span>}
           </div>
           <div className="mt-auto pt-2">
-            <StartCooking href={`/recipes/mine/${r.id}/cook`} recipeKey={`mine:${r.id}`}
+            {r.recipe.notes?.trim() && (
+        <Panel>
+          <PanelTitle>Notes</PanelTitle>
+          <ul className="grid gap-3">
+            {r.recipe.notes.split("\n").filter((l) => l.trim()).map((line, i) => (
+              <li key={i}>{showTemps(niceFractions(line), unit)}</li>
+            ))}
+          </ul>
+        </Panel>
+      )}
+
+      <StartCooking href={`/recipes/mine/${r.id}/cook`} recipeKey={`mine:${r.id}`}
                           match={{ cookbook_id: r.id }} />
           </div>
         </div>
@@ -261,7 +273,7 @@ export default function MyRecipePage() {
                   <span className="tabular grid size-8 shrink-0 place-items-center rounded-full bg-primary-soft font-semibold text-primary-text">
                     {i + 1}
                   </span>
-                  <p className="pt-1">{showTemps(step, unit)}</p>
+                  <p className="pt-1">{showTemps(niceFractions(step), unit)}</p>
                 </li>
               ))}
             </ol>
