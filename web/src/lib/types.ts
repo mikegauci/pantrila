@@ -106,6 +106,9 @@ export interface Food {
   key: string
   name: string
   aisle: string
+  /** From `/foods` only: what converts its amounts (null: it is weighed). */
+  grams_per_ml?: number | null
+  grams_per_piece?: number | null
 }
 
 export interface PantryItem extends Food {

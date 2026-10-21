@@ -258,17 +258,16 @@ def test_guard_checks_drafts_even_when_model_calls_them_safe(corpus, profile, pr
     )
     result = a.reply("Write a cake")
     assert problem in result.draft_problems[0]
-    assert problem in result.text.split("Note from Pantrila:")[1]
+    assert "Note from Pantrila:" not in result.text
     assert result.cited == []
 
 
-def test_guard_warns_about_unchecked_ingredients_independently_of_model(corpus):
+def test_guard_hides_unchecked_ingredients_from_the_warning_card(corpus):
     args = cake(("eggs", 1, "piece"), ("unicorn sprinkles", 5, "g"))
     a, _ = bot(corpus, MemoryKitchen(), tool_reply("write_recipe", **args), text_reply("All safe."))
     result = a.reply("Write a recipe")
-    assert any(
-        "unicorn sprinkles" in p and "could not be checked" in p for p in result.draft_problems[0]
-    )
+    assert not any("could not be checked" in p for p in result.draft_problems[0])
+    assert "unicorn sprinkles" not in result.text
 
 
 def test_safety_eval_does_not_accept_an_allergen_name_as_a_warning():

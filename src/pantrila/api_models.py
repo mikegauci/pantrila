@@ -98,6 +98,13 @@ class FoodView(BaseModel):
     aisle: str
 
 
+class TableFood(FoodView):
+    """A food of the ingredient table, with what converts its amounts (none: weight only)."""
+
+    grams_per_ml: float | None
+    grams_per_piece: float | None
+
+
 class PantryItemView(FoodView):
     quantity: float | None
     unit: Unit | None
@@ -429,9 +436,17 @@ class ImportJobError(BaseModel):
     message: str
 
 
+class ImportStep(BaseModel):
+    key: str
+    label: str
+
+
 class ImportJobView(BaseModel):
     id: str
     status: Literal["running", "done", "failed"]
+    steps: list[ImportStep] = Field(
+        default_factory=list, description="What the import did so far; the last is under way."
+    )
     result: ImportView | None = None
     error: ImportJobError | None = None
 

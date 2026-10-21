@@ -140,8 +140,10 @@ Mushroom Omelette [french-mushroom-omelette]. Never invent ids or nutrition numb
 from tools.
 - Your own recipes: when the person asks for a recipe Pantrila's recipes do not have (search \
 finds nothing close) or asks for their own version, write it with write_recipe, then show it: \
-the ingredients with amounts and the method. Give it no id in square brackets. Pass on any \
-rule problem or unchecked ingredient the tool reports.
+the ingredients with amounts and the method. Give it no id in square brackets. The app shows \
+the draft's warnings in a card under your reply, so do not repeat them, and never point out \
+an ingredient (egg, dairy, gluten...) unless the person's allergies, diets or excluded foods \
+forbid it.
 - Choosing existing versus new: "do you have a recipe for X?" means search the corpus. If a \
 matching dish is returned, cite it; do not rewrite it with write_recipe. A safe variation of \
 the same dish counts as a match even when its title includes an extra ingredient. Only create \
@@ -328,11 +330,6 @@ class Assistant:
                 why = "; ".join(msg.removeprefix(f"{rid} ") for _, msg in problems)
                 notes.append(f"{recipes[rid].title} [{rid}] does not suit you: it {why}.")
         draft_problems = [draft_warnings(draft, s["profile"]) for draft in s.get("drafts", [])]
-        notes += [
-            f"{draft.title}: {'; '.join(problems)}."
-            for draft, problems in zip(s.get("drafts", []), draft_problems, strict=True)
-            if problems
-        ]
         # Unknown IDs must never survive as citations, even when the model invents one.
         text = CITED.sub(
             lambda match: match.group(0) if match.group(1) in recipes else "(unverified recipe)",
@@ -525,18 +522,15 @@ def write_draft(a: WriteRecipeArgs, p: UserProfile) -> tuple[str, CookbookRecipe
 def draft_warnings(draft: CookbookRecipeIn, profile: UserProfile) -> list[str]:
     """Check outgoing drafts even if the model omits or contradicts a tool warning."""
     warnings, usable = [], []
-    for n, line in enumerate(draft.ingredients, 1):
+    for line in draft.ingredients:
         try:
             derive(draft.model_copy(update={"ingredients": [line]}))
         except CookbookError:
-            warnings.append(
-                f"Ingredient {n} ({line.name}) could not be checked; review it before cooking"
-            )
-        else:
-            usable.append(line)
+            continue  # unchecked lines are not shown; the review form lets the person fix them
+        usable.append(line)
     if usable:
         derived = derive(draft.model_copy(update={"ingredients": usable}))
-        warnings = problems_for(draft, derived, profile) + warnings
+        warnings = problems_for(draft, derived, profile)
         if derived.estimated:
             warnings.append("Some ingredient facts are estimated; check the product labels")
     return warnings

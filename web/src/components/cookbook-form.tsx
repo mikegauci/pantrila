@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { convertAmount } from "@/lib/amounts"
 import { ApiError, send } from "@/lib/api"
 import { label, MEAL_ORDER } from "@/lib/format"
 import { useFoods, useProfile } from "@/lib/hooks"
@@ -20,8 +21,8 @@ import { makePhoto } from "@/lib/photo-jobs"
 import { groupLines, stepsToText, textToSteps } from "@/lib/sections"
 import { cn } from "@/lib/utils"
 import type {
-  Allergen, CookbookDetail, CookbookPreview, CookbookRecipeIn, EstimateView, FoodEstimate, RecipeLine,
-  RecipeSource, SourcePlatform, Unit,
+  Allergen, CookbookDetail, CookbookPreview, CookbookRecipeIn, EstimateView, Food, FoodEstimate,
+  RecipeLine, RecipeSource, SourcePlatform, Unit,
 } from "@/lib/types"
 
 export const RECIPE_SOURCE: Record<RecipeSource, { icon: typeof Camera; text: string }> = {
@@ -150,11 +151,22 @@ function FoodField({
 }
 
 function LineRow({
-  line, n, keys, onChange, onRemove,
+  line, n, keys, foods, onChange, onRemove,
 }: {
-  line: RecipeLine; n: number; keys: Set<string>
+  line: RecipeLine; n: number; keys: Set<string>; foods: Map<string, Food>
   onChange: (l: RecipeLine) => void; onRemove: () => void
 }) {
+  // A new unit keeps the amount: 1 cup of rice becomes 185 g (an estimate stays one). A food
+  // with no density or piece weight for that unit keeps the number for the person to fix.
+  function changeUnit(unit: Unit) {
+    const food = line.food ? foods.get(line.food) : null
+    const measure = food ?? (!line.food ? line.estimate : null)
+    const quantity = convertAmount(line.quantity, line.unit, unit,
+                                   measure?.grams_per_ml, measure?.grams_per_piece)
+    onChange(quantity === null
+      ? { ...line, unit, amount_estimate: null }
+      : { ...line, unit, quantity })
+  }
   return (
     <li className="grid gap-2 border-b py-3 last:border-0">
       <div className="grid grid-cols-[1fr_auto] gap-2 sm:grid-cols-[minmax(0,2fr)_5rem_6.5rem_minmax(0,1.5fr)_auto]">
@@ -181,7 +193,7 @@ function LineRow({
             className="tabular h-10 bg-surface"
           />
           <NativeSelect aria-label={`Unit for ingredient ${n}`} value={line.unit}
-                        onChange={(e) => onChange({ ...line, unit: e.target.value as Unit, amount_estimate: null })}>
+                        onChange={(e) => changeUnit(e.target.value as Unit)}>
             {UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
           </NativeSelect>
           <FoodField line={line} keys={keys}
@@ -312,6 +324,7 @@ export function CookbookForm({
   const { mutate } = useSWRConfig()
   const { data: foods } = useFoods()
   const keys = useMemo(() => new Set(foods?.map((f) => f.key) ?? []), [foods])
+  const byKey = useMemo(() => new Map((foods ?? []).map((f) => [f.key, f])), [foods])
   const [r, setR] = useState<CookbookRecipeIn>(initial)
   const [stepsText, setStepsText] = useState(stepsToText(initial.steps, initial.step_sections))
   const [busy, setBusy] = useState<"save" | null>(null)
@@ -489,7 +502,7 @@ export function CookbookForm({
               )}
               <ul>
                 {g.items.map(({ item: l, index: i }) => (
-                  <LineRow key={i} line={l} n={i + 1} keys={keys} onChange={(x) => setLine(i, x)}
+                  <LineRow key={i} line={l} n={i + 1} keys={keys} foods={byKey} onChange={(x) => setLine(i, x)}
                            onRemove={() => setR({ ...r, ingredients: r.ingredients.filter((_, j) => j !== i) })} />
                 ))}
               </ul>

@@ -60,10 +60,10 @@ from pantrila.api_models import (
     CookResult,
     EstimateRequest,
     EstimateView,
-    FoodView,
     ImportJobError,
     ImportJobIn,
     ImportJobView,
+    ImportStep,
     ImportTiming,
     ImportView,
     LimitsView,
@@ -81,6 +81,7 @@ from pantrila.api_models import (
     RecipeList,
     SwapList,
     SwapMealRequest,
+    TableFood,
     TextImport,
     ToolCallView,
     UsageEventView,
@@ -114,7 +115,7 @@ from pantrila.cookbook import (
     problems_for,
 )
 from pantrila.cooking import grams_used, use_from_pantry
-from pantrila.foods import UnitError, load_foods
+from pantrila.foods import UnitError, load_foods, measures
 from pantrila.grocery import grocery_list
 from pantrila.import_jobs import ImportJob, ImportJobs
 from pantrila.meal_swap import SwapError, meal_options, replace_meal, swapped_report
@@ -139,6 +140,7 @@ from pantrila.photos import (
 from pantrila.planner import Planner, PlanningError, Usage
 from pantrila.post_media import MediaSource, media_source
 from pantrila.recipe_import import (
+    STEPS,
     Importer,
     ImportFailed,
     check_image,
@@ -268,8 +270,8 @@ def create_app(
                     reel_platforms=sorted(request.app.state.media.platforms))  # fmt: skip
 
     @app.get("/foods")
-    def foods(_: UserDep) -> list[FoodView]:
-        return [FoodView(key=k, name=food_name(k), aisle=f.aisle)
+    def foods(_: UserDep) -> list[TableFood]:
+        return [TableFood(key=k, name=food_name(k), aisle=f.aisle, **measures(f))
                 for k, f in sorted(load_foods().items()) if f.aisle != "tap"]  # fmt: skip
 
     @app.get("/me")
@@ -437,7 +439,8 @@ def create_app(
         return recipe
 
     def paid_import(s: Session, work: Callable[[Importer], Any],
-                    operation: PaidOperation | None = None) -> tuple:  # fmt: skip
+                    operation: PaidOperation | None = None,
+                    on_step: Callable[[str], None] | None = None) -> tuple:  # fmt: skip
         """Run one paid import or estimate under the daily cap and log its usage; a caller that
         already reserved the allowance passes its `operation`.
         Returns (work's result, the importer, latency in ms)."""
@@ -445,7 +448,7 @@ def create_app(
         source = app.state.media
         meter = ReelMeter(s.records, getattr(source, "actor", "media"))
         importer = Importer(client=app.state.backend.client, model=model, media=source,
-                            meter=meter)  # fmt: skip
+                            meter=meter, on_step=on_step)  # fmt: skip
         operation = operation or PaidOperation(s.records, "import", model)
 
         def logged(ok: bool) -> float:
@@ -463,8 +466,9 @@ def create_app(
         return result, importer, logged(ok=True)
 
     def import_view(s: Session, work: Callable[[Importer], Any],
-                    operation: PaidOperation | None = None) -> ImportView:  # fmt: skip
-        result, importer, ms = paid_import(s, work, operation)
+                    operation: PaidOperation | None = None,
+                    on_step: Callable[[str], None] | None = None) -> ImportView:  # fmt: skip
+        result, importer, ms = paid_import(s, work, operation, on_step)
         model_cost, media_cost = importer.usage.cost(), importer.media_cost
         return ImportView(draft=result.draft, notes=result.notes,
                           cost_usd=None if model_cost is None or media_cost is None
@@ -527,7 +531,9 @@ def create_app(
 
     def job_view(job: ImportJob) -> ImportJobView:
         error = ImportJobError(status=job.error[0], message=job.error[1]) if job.error else None
-        return ImportJobView(id=job.id, status=job.status, result=job.result, error=error)
+        steps = [ImportStep(key=k, label=STEPS.get(k, k)) for k in job.steps]
+        return ImportJobView(id=job.id, status=job.status, steps=steps, result=job.result,
+                             error=error)  # fmt: skip
 
     @app.post("/me/recipes/import/jobs", status_code=202)
     def start_import(body: ImportJobIn, user: UserDep) -> ImportJobView:
@@ -550,7 +556,8 @@ def create_app(
         def run() -> None:
             try:
                 with backend.session(user.id) as s:
-                    jobs.succeed(job, import_view(s, work, operation))
+                    view = import_view(s, work, operation, lambda key: jobs.step(job, key))
+                    jobs.succeed(job, view)
             except HTTPException as exc:
                 operation.finish(Usage(), ok=False, discard_empty=True)
                 jobs.fail(job, exc.status_code, str(exc.detail))
