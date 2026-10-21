@@ -33,6 +33,24 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Creator comment links: `from_post` now tries caption -> caption links -> links in the post
+creator's own top comments -> video. `post_media.COMMENT_ACTORS` (Facebook
+`apify/facebook-comments-scraper`, Instagram `apify/instagram-comment-scraper`, TikTok
+`clockworks/tiktok-comments-scraper`), 10 comments per run, token only to api.apify.com, metered as
+usage kind `reel` (same daily cap; an import can now use two runs). Creator check from real
+output: Facebook commenter `profileUrl` vs the post page's `pageAdLibrary.uri_token`; TikTok
+`uniqueId` vs `/@handle/` in `videoWebUrl`; Instagram `ownerUsername` vs the post's handle (no
+handle known -> no run). Other commenters' links are never fetched. Fees are per comment (FREE tier
+$0.0025 FB + $0.001/run, $0.0026 IG, $0.00125 TikTok), so a lookup is $0.013-0.026, not the
+$0.002-0.005 first estimated. Instagram returns newest comments first, so creator comments on busy
+posts are missed. No real IG/TikTok creator link comment was found; fixtures
+(`tests/data/apify_comments.json`) keep recorded fields with edited texts. Reel eval before/after
+`reel-2026-10-21T075706Z` / `reel-2026-10-21T075731Z` (9 cases, 2 new): found 100% both, 0 missed
+allergens, site credited 88% -> 100%, 0 stranger pages fetched, $0.0165 -> $0.0236/import (posts
+without a link pay a comments run), p50/p95 9.3/26.8 -> 8.4/19.3 s. Live Chelsea reel: 25 lines,
+11 steps from the site, no video read, $0.026 service + $0.056 model, 57 s
+(`evals/reports/creator-comments-2026-10-21.md`). No prompt/model change.
+
 Import notes accordion: the "Read by AI. Check it before saving." box on `/recipes/mine/new` collapses
 the import notes (post, photo and link imports) into one "N notes to check" row, closed by default, so a long
 list no longer pushes Save off the screen on phones. Per-ingredient messages stay beside their fields, and the
@@ -440,6 +458,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   amounts become notes ("the video only says ..."). Audio and frames are never stored.
 - `src/pantrila/post_media.py`: reel audio from a link. `MediaSource` (`ApifyMedia`: one actor
   run per post, one actor per platform in `ACTORS`, token only to api.apify.com; `NoMedia`),
+  `creator_comments` (`COMMENT_ACTORS`, `COMMENT_LIMIT` comments; keeps only the post creator's,
+  used by `Importer._creator_links` before the video),
   `media_source()` from the environment (off by default),
   `fetch_video` (SSRF-guarded via `recipe_import.fetch_bytes`, 60 MB), `read_video` (PyAV in
   memory: 16 kHz mono WAV, 4 JPEG frames). `Importer(media=, meter=)` uses it in `from_post`
@@ -535,8 +555,8 @@ uv run python -m evals.video_cases       # regenerate the video-import eval case
 uv run python -m evals.video_audio [--only ids] [--force]   # their audio, once (paid TTS)
 uv run python -m evals.run_video [--plain] [--transcribe-model m --transcribe-price usd] [--only ids]  # video eval (paid)
 uv run python -m evals.reel_cases        # regenerate the reel eval cases
-uv run python -m evals.run_reel [--media off] [--fee usd] [--only ids]   # reel eval, fake service (paid)
-uv run python scripts/reel_media_check.py --actor <id> --input '<json with {url}>' <post links>  # Apify actor check
+uv run python -m evals.run_reel [--media off] [--comments off] [--fee usd] [--only ids]   # reel eval, fake service (paid)
+uv run python scripts/reel_media_check.py --actor <id> --input '<json with {url}>' [--save dir] <post links>  # Apify actor check
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 uv run pantrila photos generate [--only ids] [--limit n] [--force] [--dry-run]  # corpus photos (paid; ~$0.014 each)
 uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # LangSmith dashboard
