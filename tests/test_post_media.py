@@ -144,6 +144,9 @@ def test_ingredients_only_caption_hears_the_video_and_keeps_the_caption():
     assert media.asked == [REEL] and meter.runs == [(0.003, True)]
     assert result.notes[0] == HEARD and NO_METHOD not in result.notes
     assert result.draft.steps == ["Brown the sausage.", "Layer and bake."]
+    # The caption reads at medium; the video, the slowest call, at low.
+    efforts = [kw["reasoning"]["effort"] for kind, kw in client.calls if kind == "parse"]
+    assert efforts == ["medium", "low"]
     d = result.draft
     assert (d.source, d.source_url, d.source_platform, d.source_author) == (
         "post", REEL, "instagram", "zachs.foods")  # fmt: skip
@@ -403,8 +406,7 @@ def test_facebook_shared_reel_reads_video_when_the_caption_only_says_comment_rec
         return httpx.Response(403)
 
     http = httpx.Client(transport=httpx.MockTransport(handle))
-    no_recipe = caption_only().model_copy(update={"is_recipe": False})
-    client, meter = FakeClient(no_recipe, heard()), Meter()
+    client, meter = FakeClient(heard()), Meter()  # "Comment RECIPE" is a hook: no call for it
     source = ApifyMedia("secret-token", http=http)
     result = importer(client, source, meter).from_post(share, http=http, resolve=resolve)
     assert result.notes[0] == HEARD
@@ -521,7 +523,7 @@ def test_facebook_share_uses_the_creators_comment_link_and_never_a_strangers(cre
 
     http = httpx.Client(transport=httpx.MockTransport(handle))
     meter = Meter()
-    client = FakeClient(not_a_recipe(), full_recipe(), heard())
+    client = FakeClient(full_recipe(), heard())  # the hook caption gets no call
     source = ApifyMedia("secret-token", http=http)
     result = importer(client, source, meter).from_post(CHELSEA_SHARE, http=http, resolve=resolve)
     assert not any("stranger" in url for url in seen)
@@ -566,8 +568,7 @@ def test_a_creator_comment_link_wins_over_the_video():
 ])  # fmt: skip
 def test_no_comments_run_when_the_caption_or_its_link_has_the_recipe(caption, page):
     media, seen = CommentMedia(texts=[f"Recipe: {CHELSEA_PAGE}"]), []
-    first = full_recipe() if page is None else not_a_recipe()
-    client = FakeClient(first, full_recipe())
+    client = FakeClient(full_recipe())  # the caption's recipe, or the page (a hook gets no call)
     url = "https://www.tiktok.com/@chelseasmessyapron/video/7698384810506489119"
     result = importer(client, media).from_post(url, caption, pages(seen), resolve)
     assert media.comments_asked == [] and media.asked == []

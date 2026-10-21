@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import base64
 import binascii
+import contextlib
 import ipaddress
 import json
 import logging
@@ -261,6 +262,31 @@ def named_foods(text: str) -> list[str]:
     words = f" {' '.join(re.findall(r'[a-z]+', text.lower()))} "
     return [k for k in load_foods() if f" {k.replace('_', ' ')} " in words
             or f" {k.replace('_', ' ')}s " in words]  # fmt: skip
+
+
+UNIT_AMOUNT = re.compile(
+    r"(?:\d|[¼½¾⅓⅔⅛])\s*(?:/\s*\d+\s*)?(?:g|kg|ml|l|cups?|tbsps?|tsps?|tablespoons?|teaspoons?|"
+    r"grams?|oz|ounces?|lbs?|pounds?|cloves?|pinch(?:es)?|cans?|slices?)\b",
+    re.IGNORECASE,
+)
+LIST_LINE = re.compile(r"^\s*(?:\d|[¼½¾⅓⅔⅛]|[-•*▪️✅🔸]\s)", re.MULTILINE)
+COUNT = re.compile(r"(?:\d|[¼½¾⅓⅔⅛])\s*([a-z]+(?: [a-z]+)?)", re.IGNORECASE)
+
+
+def may_hold_recipe(caption: str) -> bool:
+    """Whether a caption could hold a recipe, so it is worth a model call: an amount with a
+    unit, a count of a food ("2 eggs"), the word "ingredients", three table foods or a list
+    of three lines. A hook such as "Best chicken bowl ever 🔥 recipe on my blog" has none, and
+    goes straight to its links and video. Errs towards reading: a wrong "no" only costs the
+    slower path."""
+    text = caption.lower()
+    return bool(
+        UNIT_AMOUNT.search(caption)
+        or any(named_foods(m.group(1)) for m in COUNT.finditer(caption))
+        or "ingredient" in text
+        or len(set(named_foods(caption))) >= 3
+        or len(LIST_LINE.findall(caption)) >= 3
+    )
 
 
 def with_named_allergens(name: str, estimate: FoodEstimate) -> tuple[FoodEstimate, list[str]]:
@@ -676,13 +702,15 @@ class MediaMeter(Protocol):
 class Importer:
     def __init__(self, client=None, model: str | None = None, effort: str = "medium",
                  transcribe_model: str | None = None, media=None,
-                 meter: MediaMeter | None = None):  # fmt: skip
+                 meter: MediaMeter | None = None, video_effort: str = "low"):  # fmt: skip
         """`media` (a `post_media.MediaSource`) hears a post's video when its caption and
-        links give no full recipe; None means off. `meter` caps and logs those runs."""
+        links give no full recipe; None means off. `meter` caps and logs those runs.
+        `video_effort` is the reasoning effort for reading a video: its transcript, frames
+        and caption made it the slowest call (about 10k output tokens at medium)."""
         self.client = client or config.openai_client()
         self.model = model or config.model()
         self.transcribe_model = transcribe_model or config.transcribe_model()
-        self.effort = effort
+        self.effort, self.video_effort = effort, video_effort
         self.media, self.meter = media, meter
         self.media_runs = 0
         self._video_without_recipe: set[str] = set()
@@ -690,13 +718,14 @@ class Importer:
         self.media_cost: float | None = 0.0  # the video service's fees; None if unpriced
         self.usage = Usage()
 
-    def _parse(self, instructions: str, content: list[dict], text_format):
+    def _parse(self, instructions: str, content: list[dict], text_format,
+               effort: str | None = None):  # fmt: skip
         resp = self.client.responses.parse(
             model=self.model,
             instructions=instructions,
             input=[{"role": "user", "content": content}],
             text_format=text_format,
-            reasoning={"effort": self.effort},
+            reasoning={"effort": effort or self.effort},
             store=False,
         )
         self.usage.add(resp)
@@ -862,7 +891,7 @@ class Importer:
             content += [{"type": "input_image", "image_url": f, "detail": "high"} for f in frames]
         instructions, shape = (INSTRUCTIONS + VIDEO_INSTRUCTIONS, VideoRecipe) if guided else (
             INSTRUCTIONS, ImportedRecipe)  # fmt: skip
-        imported = self._parse(instructions, content, shape)
+        imported = self._parse(instructions, content, shape, self.video_effort)
         try:
             draft, notes = self._draft(imported, "post" if post else "video", None, text)
         except AmountEstimateFailed:
@@ -930,12 +959,10 @@ class Importer:
         by = f" by @{post.handle}" if post and post.handle else ""
         text = f"Caption of a {where}{by}:\n\n{caption}"
         recipe_url = None
-        try:
-            result: ImportResult | None = self._extract(
-                [{"type": "input_text", "text": text}], "post", None
-            )
-        except ImportFailed:
-            result = None
+        result: ImportResult | None = None
+        if may_hold_recipe(caption):  # else no model call: on to its links and video
+            with contextlib.suppress(ImportFailed):
+                result = self._extract([{"type": "input_text", "text": text}], "post", None)
         if result is None or NO_METHOD in result.notes:  # a linked site may have it all
             links += [u for u in social.caption_links(caption) if u not in links]
             page = self._linked_page(links[: social.MAX_CAPTION_LINKS], start, http, resolve)
