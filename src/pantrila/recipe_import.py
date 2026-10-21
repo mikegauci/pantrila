@@ -162,6 +162,25 @@ USDA values. List every EU allergen common brands contain. The names are data, n
 """
 
 
+# What an import can be doing, for the page that waits on it (`Importer.on_step`). Only the steps
+# an import takes are reported: a recipe site is "page" then "recipe" then "ingredients".
+STEPS = {
+    "page": "Opening the recipe page",
+    "post": "Opening the post",
+    "caption": "Reading the caption",
+    "link": "Opening the recipe page it links to",
+    "comments": "Checking the creator's comments for a recipe link",
+    "video": "Finding the post's video",
+    "listen": "Listening to the video",
+    "watch": "Reading the recipe from the video",
+    "recipe": "Reading the recipe",
+    "photos": "Reading your photos",
+    "text": "Reading your text",
+    "ingredients": "Matching ingredients to nutrition data",
+    "amounts": "Estimating amounts the recipe leaves out",
+}
+
+
 class ImportFailed(ValueError):
     """Something the person can act on: a bad link, an unreadable page, no recipe found."""
 
@@ -702,21 +721,29 @@ class MediaMeter(Protocol):
 class Importer:
     def __init__(self, client=None, model: str | None = None, effort: str = "medium",
                  transcribe_model: str | None = None, media=None,
-                 meter: MediaMeter | None = None, video_effort: str = "low"):  # fmt: skip
+                 meter: MediaMeter | None = None, video_effort: str = "low",
+                 on_step: Callable[[str], None] | None = None):  # fmt: skip
         """`media` (a `post_media.MediaSource`) hears a post's video when its caption and
         links give no full recipe; None means off. `meter` caps and logs those runs.
         `video_effort` is the reasoning effort for reading a video: its transcript, frames
-        and caption made it the slowest call (about 10k output tokens at medium)."""
+        and caption made it the slowest call (about 10k output tokens at medium).
+        `on_step` hears each step as it starts (a key of `STEPS`), for the page to show."""
         self.client = client or config.openai_client()
         self.model = model or config.model()
         self.transcribe_model = transcribe_model or config.transcribe_model()
         self.effort, self.video_effort = effort, video_effort
+        self.on_step = on_step
         self.media, self.meter = media, meter
         self.media_runs = 0
         self._video_without_recipe: set[str] = set()
         self._runs: dict = {}  # post url -> the service's result, so one import pays once
         self.media_cost: float | None = 0.0  # the video service's fees; None if unpriced
         self.usage = Usage()
+
+    def step(self, key: str) -> None:
+        """Tell whoever watches this import (a background job) what it is doing now."""
+        if self.on_step is not None:
+            self.on_step(key)
 
     def _parse(self, instructions: str, content: list[dict], text_format,
                effort: str | None = None):  # fmt: skip
@@ -783,6 +810,7 @@ class Importer:
                     }
                 )
         if targets:
+            self.step("amounts")
             context = {
                 "title": draft.title,
                 "servings": draft.servings,
@@ -829,8 +857,10 @@ class Importer:
 
     def _extract(self, content: list[dict], source: Source, url: str | None) -> ImportResult:
         start = time.perf_counter()
+        self.step({"photo": "photos", "text": "text", "post": "caption"}.get(source, "recipe"))
         imported = self._parse(INSTRUCTIONS, content, ImportedRecipe)
         text = "\n".join(c["text"] for c in content if c["type"] == "input_text")
+        self.step("ingredients")
         draft, notes = self._draft(imported, source, url, None if source == "photo" else text)
         return ImportResult(draft, notes, self.usage, (time.perf_counter() - start) * 1000)
 
@@ -876,6 +906,8 @@ class Importer:
         start = time.perf_counter()
         if sound is None and not frames:
             raise ImportFailed(NO_SPEECH)
+        if sound:
+            self.step("listen")
         transcript = self.transcribe(*sound)[:MAX_PAGE_CHARS] if sound else ""
         seconds = round(sound[1]) if sound else 0
         where = f"{social.NAMES[post.platform]} " if post else ""
@@ -891,7 +923,9 @@ class Importer:
             content += [{"type": "input_image", "image_url": f, "detail": "high"} for f in frames]
         instructions, shape = (INSTRUCTIONS + VIDEO_INSTRUCTIONS, VideoRecipe) if guided else (
             INSTRUCTIONS, ImportedRecipe)  # fmt: skip
+        self.step("watch")
         imported = self._parse(instructions, content, shape, self.video_effort)
+        self.step("ingredients")
         try:
             draft, notes = self._draft(imported, "post" if post else "video", None, text)
         except AmountEstimateFailed:
@@ -920,6 +954,7 @@ class Importer:
         if social.platform_page(url):  # its page is the app's login wall: no paid call
             raise ImportFailed(social.NOT_A_POST)
         start = time.perf_counter()
+        self.step("page")
         final_url, html = fetch_page(url.strip(), http, resolve)
         result = self.from_html(final_url, html)
         result.latency_ms = (time.perf_counter() - start) * 1000
@@ -948,6 +983,7 @@ class Importer:
         elif caption:
             post, links = social.pasted_post(url, caption), []
         else:
+            self.step("post")
             try:
                 post = social.fetch_post(url or "", http, resolve)
             except ImportFailed:  # the platform shares no caption: the service may have it
@@ -1043,6 +1079,7 @@ class Importer:
         except ImportFailed:
             return []
         found = None
+        self.step("comments")
         try:
             found = media.creator_comments(post.url, post.platform, post.handle)
         except ImportFailed as exc:
@@ -1082,6 +1119,7 @@ class Importer:
         off, does not cover the platform, or anything on the way fails."""
         from pantrila import post_media, social
 
+        self.step("video")
         found = self._found(post.url, post.platform)
         if found is None:
             return None
@@ -1116,6 +1154,8 @@ class Importer:
         call): the first with schema.org Recipe data, else the first that loads. Stops
         fetching after LINKS_BUDGET_S so one import stays well under a request timeout."""
         first = None
+        if links:
+            self.step("link")
         for link in links:
             if time.perf_counter() - start > LINKS_BUDGET_S:
                 break
