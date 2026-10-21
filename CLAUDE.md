@@ -33,6 +33,13 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Temperature toggle: recipe Method (corpus and cookbook pages) and cooking mode show a °C/°F switch
+when a step names a temperature. Display only: `web/src/lib/temperature.ts` converts in code
+(oven temperatures round like cookbooks: 350°F -> 180°C, 200°C -> 400°F; meat and candy stay exact),
+collapses "350°F (180°C)" pairs to the chosen unit, and the choice is kept in `localStorage["pantrila-temp-unit"]`
+(default °C). Stored recipe text is unchanged. Web only, no model call, so no eval rerun; 1 new Playwright test
+(`web/tests/temperature-toggle.spec.ts`).
+
 Google sign-in: login page leads with "Continue with Google" (Supabase `signInWithOAuth`, PKCE,
 back to `/auth/callback`), guest stays second, owner magic link unchanged. Guests add Google from
 the account menu ("Keep my data with Google") or Profile ("Keep your data") via `linkIdentity`,

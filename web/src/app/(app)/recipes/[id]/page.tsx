@@ -10,9 +10,11 @@ import { AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert, RecipeArt } 
 import { StartCooking } from "@/components/cooking-mode"
 import { MacroRing } from "@/components/macro-ring"
 import { Button, buttonVariants } from "@/components/ui/button"
+import { TemperatureToggle } from "@/components/temperature-toggle"
 import { Skeleton } from "@/components/ui/skeleton"
 import { label } from "@/lib/format"
 import { useApi, useProfile, useRecipe } from "@/lib/hooks"
+import { hasTemp, showTemps, useTempUnit } from "@/lib/temperature"
 import { cn } from "@/lib/utils"
 import type { Ingredient, SwapList } from "@/lib/types"
 
@@ -94,6 +96,7 @@ export default function RecipePage() {
   const { data: profile } = useProfile()
   const [servings, setServings] = useState<number | null>(null)
   const [swapFood, setSwapFood] = useState<string | null>(null)
+  const [unit] = useTempUnit()
 
   if (error) {
     return <p role="alert" className="text-danger">{error.status === 404 ? "No such recipe." : error.message}</p>
@@ -180,14 +183,14 @@ export default function RecipePage() {
       </div>
 
       <Panel>
-        <PanelTitle>Method</PanelTitle>
+        <PanelTitle action={hasTemp(r.steps) && <TemperatureToggle />}>Method</PanelTitle>
         <ol className="grid gap-4">
           {r.steps.map((step, i) => (
             <li key={i} className="flex gap-4">
               <span className="tabular grid size-8 shrink-0 place-items-center rounded-full bg-primary-soft font-semibold text-primary-text">
                 {i + 1}
               </span>
-              <p className="pt-1">{step}</p>
+              <p className="pt-1">{showTemps(step, unit)}</p>
             </li>
           ))}
         </ol>
