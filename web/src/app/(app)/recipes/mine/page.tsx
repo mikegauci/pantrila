@@ -3,7 +3,7 @@
 import { ArrowLeft, BookOpen, Clock, Flame, Plus, TriangleAlert } from "lucide-react"
 import Link from "next/link"
 
-import { AiBadge, DietBadge, EmptyState, RecipeArt } from "@/components/bits"
+import { DietBadge, EmptyState, RecipeArt } from "@/components/bits"
 import { RECIPE_SOURCE } from "@/components/cookbook-form"
 import { buttonVariants } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -45,7 +45,6 @@ function Card({ r }: { r: CookbookCard }) {
           <p className="text-[12px] text-[#a65a00]">Needs a fix before nutrition can be shown.</p>
         )}
         <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
-          {r.estimated && <AiBadge>Estimated</AiBadge>}
           {r.diet_tags.slice(0, 3).map((d) => <DietBadge key={d} diet={d} />)}
         </div>
       </div>

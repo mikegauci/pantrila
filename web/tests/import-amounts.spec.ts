@@ -84,7 +84,7 @@ test(`estimated import saves and retains its nutrition notes when photo ${photoF
   expect(writes).toBe(1)
   if (photoFails) await expect(page.getByText("Recipe saved. Its photo could not be generated.")).toBeVisible()
   expect(saved.ingredients[0].amount_estimate).toBe(initial.ingredients[0].amount_estimate)
-  await expect(page.getByText("Estimated nutrition", { exact: true }).filter({ visible: true })).toBeVisible()
+  await expect(page.getByText("Some amounts or foods are estimated, so nutrition is approximate.", { exact: false }).filter({ visible: true })).toBeVisible()
   await expect(page.getByText("Estimated amount: A typical basil sprig weighs about 2 g.")).toBeVisible()
   await page.screenshot({ path: `test-results/estimated-recipe-photo-${photoFails ? "failure" : "success"}.png`, fullPage: true })
 
