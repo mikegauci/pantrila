@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
 import { type ScopedMutator, useSWRConfig } from "swr"
 
-import { AiBadge, AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert } from "@/components/bits"
+import { AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert } from "@/components/bits"
 import { MacroRing } from "@/components/macro-ring"
 import { NativeSelect } from "@/components/native-select"
 import { Button } from "@/components/ui/button"
@@ -120,8 +120,7 @@ function EstimateNote({
   return (
     <div className="grid gap-1.5 text-[12px] text-muted-foreground">
       <p className="flex flex-wrap items-center gap-2">
-        <AiBadge>Estimated</AiBadge>
-        {e.description}: about {Math.round(e.kcal)} kcal and {Math.round(e.protein_g)} g protein per 100 g.
+        Estimated: {e.description}: about {Math.round(e.kcal)} kcal and {Math.round(e.protein_g)} g protein per 100 g.
       </p>
       <div className="flex flex-wrap items-center gap-1.5">
         <span className="font-medium">Allergens:</span>
@@ -224,7 +223,7 @@ function LineRow({
       </div>
       {line.amount_estimate && (
         <p className="text-[12px] text-muted-foreground">
-          <AiBadge>Estimated amount</AiBadge> {line.amount_estimate}
+          Estimated amount: {line.amount_estimate}
         </p>
       )}
       {!line.food && line.estimate && (
@@ -276,7 +275,6 @@ function Preview({ recipe }: { recipe: CookbookRecipeIn }) {
       {preview && (
         <>
           <ProblemAlert title="This recipe does not suit you" items={preview.problems} />
-          {preview.estimated && <AiBadge>Estimated nutrition</AiBadge>}
           <MacroRing nutrition={preview.nutrition} size={140} />
           <div className="flex flex-wrap gap-1.5">{preview.diet_tags.map((d) => <DietBadge key={d} diet={d} />)}</div>
           <div className="flex flex-wrap items-center gap-1.5">

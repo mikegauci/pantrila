@@ -9,7 +9,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
-import { AiBadge, AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
+import { AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
 import { CookbookForm, PLATFORM, RECIPE_SOURCE, siteOf } from "@/components/cookbook-form"
 import { StartCooking } from "@/components/cooking-mode"
 import { MacroRing } from "@/components/macro-ring"
@@ -136,7 +136,6 @@ export default function MyRecipePage() {
                 <ImageOff /> Remove
               </Button>
             )}
-            {r.photo_url && <AiBadge />}
           </div>
           <p className="text-[12px] text-muted-foreground">
             An AI photo made from this recipe&apos;s own ingredients, about 15 seconds.
@@ -181,7 +180,6 @@ export default function MyRecipePage() {
             </p>
           )}
           <div className="flex flex-wrap gap-1.5">
-            {r.estimated && <AiBadge>Estimated</AiBadge>}
             {r.diet_tags.map((d) => <DietBadge key={d} diet={d} />)}
           </div>
           <div className="flex flex-wrap items-center gap-1.5">
@@ -237,7 +235,6 @@ export default function MyRecipePage() {
                               </span>
                             )}
                           </span>
-                          {!ing.food && ing.estimate && <AiBadge>Estimated</AiBadge>}
                           {picker}
                         </>
                       )}
@@ -251,7 +248,6 @@ export default function MyRecipePage() {
 
         <Panel>
           <PanelTitle>Per serving</PanelTitle>
-          {r.estimated && <AiBadge>Estimated nutrition</AiBadge>}
           {r.nutrition ? <MacroRing nutrition={r.nutrition} size={150} /> : <p className="text-muted-foreground">Fix the recipe to see nutrition.</p>}
           <p className="mt-4 text-[12px] text-muted-foreground">
             {r.estimated
