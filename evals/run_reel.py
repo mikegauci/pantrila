@@ -174,9 +174,9 @@ def score(case: dict, draft: CookbookRecipeIn | None, media: EvalMedia, media_on
 
 
 def run_one(case: dict, model: str, media_on: bool, fee: float | None,
-            comments: bool = True) -> dict:  # fmt: skip
+            comments: bool = True, video_effort: str = "low") -> dict:  # fmt: skip
     media, fetched = EvalMedia(case, fee, comments), []
-    importer = Importer(model=model, media=media if media_on else None)
+    importer = Importer(model=model, media=media if media_on else None, video_effort=video_effort)
     base = {"case_id": case["id"], "kind": case["kind"], "ok": True}
     resolve = lambda host, port: ["93.184.216.34"]  # noqa: E731  (the mock serves the page)
     try:
@@ -323,6 +323,8 @@ def main() -> None:
                         help="off: no comments run (before creator comment links)")  # fmt: skip
     parser.add_argument("--fee", type=float,
                         help="USD per service run (else each platform's actor fee)")  # fmt: skip
+    parser.add_argument("--video-effort", default="low",
+                        help="reasoning effort for the video read (medium before)")  # fmt: skip
     parser.add_argument("--concurrency", type=int, default=5)
     args = parser.parse_args()
     fee = args.fee
@@ -334,7 +336,8 @@ def main() -> None:
     model = config.model()
     with ThreadPoolExecutor(args.concurrency) as pool:
         comments = args.comments == "on"
-        rows = list(pool.map(lambda c: run_one(c, model, args.media == "on", fee, comments),
+        rows = list(pool.map(lambda c: run_one(c, model, args.media == "on", fee, comments,
+                                                      args.video_effort),
                              cases))  # fmt: skip
 
     summary = summarise(rows)
@@ -345,6 +348,7 @@ def main() -> None:
         "transcribe_model": config.transcribe_model(),
         "media": args.media,
         "comments": args.comments,
+        "video_effort": args.video_effort,
         "fee_usd": fee if fee is not None else "per platform",
     }
     report = markdown(summary, rows, meta)

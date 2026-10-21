@@ -33,6 +33,21 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Faster social imports: production showed social imports at 65-100 s, almost all of it the video read's reasoning
+(about 10k output tokens at effort medium; Apify runs about 6 s). `Importer(video_effort="low")` now reads videos at
+low effort (pages, photos, text and captions stay medium), and `recipe_import.may_hold_recipe` skips the caption call
+for a hook ("Comment RECIPE 👇", "Full recipe at the link"): a caption is read only when it has an amount with a
+unit, a count of a table food ("2 eggs"), "ingredients", three table foods or a three-line list; a wrong "no" only
+takes the slower link/comments/video path. Evals take `--video-effort` (low by default; medium is the before).
+Video before/after `video-2026-10-21T103351Z` (medium) / `video-2026-10-21T103356Z` (low), 6 cases: 0 missed
+allergens both, food matching, stated amounts and vague flagged 100% both, output tokens about 60% fewer, $0.0133 ->
+$0.0087/import, p50/p95 11.2/21.8 -> 9.0/9.3 s. Reel before (code at `728053a`) `reel-2026-10-21T102748Z` vs after
+`reel-2026-10-21T103352Z`, 9 cases: 0 missed allergens both, food matching 98% -> 100%, service and comments runs as
+expected 100% both, $0.0248 -> $0.0200/import, p50/p95 12.9/43.0 -> 6.6/15.4 s. Import eval after
+`import-2026-10-21T103355Z` vs `import-2026-10-21T101807Z`: 0 missed allergens, captions 100% food matching both
+(pages 97.8%: one curry line, a page path this change does not touch), $0.0074 -> $0.0072. Single runs; the live
+gain is larger in production, where the video read was the 10k-token call.
+
 Ingredient amounts: imported lines showed their amount twice ("1 cup 1 cup basmati rice"), since the import kept
 the whole source line as `name`. The prompt and `ImportedLine.name` now ask for the name without its amount
 (vague wording is quoted in `amount_estimate`), and `cookbook.bare_name` strips a leftover leading amount in

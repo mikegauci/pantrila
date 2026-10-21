@@ -94,8 +94,9 @@ def score(case: dict, draft: CookbookRecipeIn | None, notes: list[str]) -> dict:
     }
 
 
-def run_one(case: dict, model: str, transcribe_model: str, guided: bool, frames: bool) -> dict:
-    importer = Importer(model=model, transcribe_model=transcribe_model)
+def run_one(case: dict, model: str, transcribe_model: str, guided: bool, frames: bool,
+            video_effort: str = "low") -> dict:  # fmt: skip
+    importer = Importer(model=model, transcribe_model=transcribe_model, video_effort=video_effort)
     base = {"case_id": case["id"], "kind": case["kind"], "ok": True}
     try:
         result = importer.from_video(audio_url(case), frame_urls(case) if frames else [],
@@ -225,6 +226,8 @@ def main() -> None:
     parser.add_argument("--transcribe-price", type=float, metavar="USD_PER_MIN",
                         help="its price (else PANTRILA_PRICE_TRANSCRIBE_PER_MIN)")  # fmt: skip
     parser.add_argument("--no-frames", action="store_true", help="send the audio only")
+    parser.add_argument("--video-effort", default="low",
+                        help="reasoning effort for the video read (medium before)")  # fmt: skip
     parser.add_argument("--concurrency", type=int, default=6)
     args = parser.parse_args()
     if args.transcribe_model and args.transcribe_price is None:
@@ -238,7 +241,8 @@ def main() -> None:
     model, transcribe = config.model(), args.transcribe_model or config.transcribe_model()
     with ThreadPoolExecutor(args.concurrency) as pool:
         rows = list(pool.map(
-            lambda c: run_one(c, model, transcribe, not args.plain, not args.no_frames), cases
+            lambda c: run_one(c, model, transcribe, not args.plain, not args.no_frames,
+                              args.video_effort), cases
         ))  # fmt: skip
 
     summary = summarise(rows)
@@ -249,6 +253,7 @@ def main() -> None:
         "transcribe_model": transcribe,
         "transcribe_usd_per_min": config.prices().transcribe_per_min,
         "frames": 0 if args.no_frames else 4,
+        "video_effort": args.video_effort,
         "prompt": "plain import (before)" if args.plain else "video (HEAD)",
     }
     report = markdown(summary, rows, meta)
