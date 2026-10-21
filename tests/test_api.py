@@ -536,6 +536,12 @@ def test_background_import_finishes_without_the_request_that_started_it(api, bac
     job = wait_for_job(api, started.json()["id"])
     assert job["status"] == "done" and job["error"] is None
     assert job["result"]["draft"]["ingredients"][0]["food"] == "white_bread"
+    # The page lists what the import did, in plain words.
+    assert job["steps"] == [
+        {"key": "page", "label": "Opening the recipe page"},
+        {"key": "recipe", "label": "Reading the recipe"},
+        {"key": "ingredients", "label": "Matching ingredients to nutrition data"},
+    ]
     assert [e["kind"] for e in api.get("/me/usage").json()["events"]] == ["import"]
     assert api.get("/me/recipes").json() == []
 

@@ -33,6 +33,17 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Import progress and units: an import job now records the steps the importer actually takes (`Importer(on_step=)`,
+keys of `recipe_import.STEPS`: page, post, caption, link, comments, video, listen, watch, recipe, photos, text,
+ingredients, amounts; a repeat of the current step is not new) and `GET /me/recipes/import/jobs/{id}` returns
+them as `steps: [{key, label}]`. The new-recipe page shows them live (`web/src/components/import-progress.tsx`,
+replacing the guessed "Reading the caption…" countdown) for photo, link, post and resumed imports: earlier steps
+ticked, the current one spinning, time so far or "About m:ss left" for posts. The review form converts the amount
+when the unit changes (1 cup of rice -> 185 g) through grams with the food's `grams_per_ml`/`grams_per_piece`
+(`/foods` now returns them as `TableFood`; estimates carry their own); an estimate note stays, and a unit the food
+cannot convert to keeps the number. Recipe pages put a ruler button ("Change measurement for …") at the end of each
+line beside the tappable amount (`MeasuredLine` in `amount.tsx`). No prompt or model change, so no eval rerun.
+
 Assistant draft notes: a recipe the assistant writes no longer gets its warnings pasted into the message as "Note from
 Pantrila: ..."; they show only in the red card under the reply (cited-recipe notes are unchanged). The card no longer
 lists "could not be checked" lines (the review form still lets the person fix unmatched foods), and the prompt tells the

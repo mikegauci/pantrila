@@ -12,11 +12,28 @@ export type ImportRequest =
   | { kind: "text"; text: string }
   | { kind: "photos"; images: string[] }
 
+/** A step the import took ("Reading the caption"); the last one is under way. */
+export interface ImportStep {
+  key: string
+  label: string
+}
+
 interface JobView {
   id: string
   status: "running" | "done" | "failed"
+  steps?: ImportStep[]
   result: ImportView | null
   error: { status: number; message: string } | null
+}
+
+// Who wants to hear a job's steps as they arrive: the form that started it, or a resumed page.
+const listeners = new Map<string, Set<(steps: ImportStep[]) => void>>()
+
+function listen(id: string, onSteps?: (steps: ImportStep[]) => void) {
+  if (!onSteps) return
+  const set = listeners.get(id) ?? new Set()
+  set.add(onSteps)
+  listeners.set(id, set)
 }
 
 const POLL_MS = 2000
@@ -83,6 +100,7 @@ async function poll(id: string, startedAt: number): Promise<ImportView> {
       const transient = e instanceof ApiError && (e.status === 0 || e.status >= 502)
       if (!transient) throw e
     }
+    if (job?.steps) for (const hear of listeners.get(id) ?? []) hear(job.steps)
     if (job?.status === "done" && job.result) return job.result
     if (job?.status === "failed") throw new ApiError(job.error?.status ?? 500, job.error?.message ?? "The import failed.")
     if (Date.now() - startedAt > GIVE_UP_MS) throw new ApiError(504, "The import is taking too long. Try again.")
@@ -90,12 +108,16 @@ async function poll(id: string, startedAt: number): Promise<ImportView> {
   }
 }
 
-/** Follow a job to its result; the saved id is cleared once the person has been told. */
-export function watchImport(userId: string, id: string, startedAt = Date.now()): Promise<ImportView> {
+/** Follow a job to its result; the saved id is cleared once the person has been told.
+ * `onSteps` hears the steps it has taken at each poll. */
+export function watchImport(userId: string, id: string, startedAt = Date.now(),
+                            onSteps?: (steps: ImportStep[]) => void): Promise<ImportView> {
+  listen(id, onSteps)
   const existing = watching.get(id)
   if (existing) return existing
   const promise = poll(id, startedAt).finally(() => {
     watching.delete(id)
+    listeners.delete(id)
     startedHere.delete(id)
     forgetImport(userId, id)
   })
@@ -103,7 +125,8 @@ export function watchImport(userId: string, id: string, startedAt = Date.now()):
   return promise
 }
 
-export async function importRecipe(userId: string, request: ImportRequest): Promise<ImportView> {
+export async function importRecipe(userId: string, request: ImportRequest,
+                                   onSteps?: (steps: ImportStep[]) => void): Promise<ImportView> {
   // The id is chosen and saved before sending: if the page dies while a large upload is in
   // flight, the server may still have started the job, and a reload can pick it up.
   const id = crypto.randomUUID().replaceAll("-", "")
@@ -116,5 +139,5 @@ export async function importRecipe(userId: string, request: ImportRequest): Prom
     forgetImport(userId, id)
     throw e
   }
-  return watchImport(userId, id)
+  return watchImport(userId, id, Date.now(), onSteps)
 }

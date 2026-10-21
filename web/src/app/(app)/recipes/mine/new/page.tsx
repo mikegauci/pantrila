@@ -8,14 +8,16 @@ import { useSWRConfig } from "swr"
 
 import { useAuth } from "@/components/auth-provider"
 import { Panel, PanelTitle } from "@/components/bits"
-import { ImportCountdown } from "@/components/import-countdown"
+import { ImportProgress } from "@/components/import-progress"
 import { BLANK_RECIPE, CHAT_DRAFT, CookbookForm } from "@/components/cookbook-form"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { seconds, usd } from "@/lib/format"
 import { useApi, useMe, useMeta } from "@/lib/hooks"
-import { forgetImport, importRecipe, pendingImport, wasStartedHere, watchImport } from "@/lib/import-jobs"
+import {
+  forgetImport, type ImportStep, importRecipe, pendingImport, wasStartedHere, watchImport,
+} from "@/lib/import-jobs"
 import { toJpegDataUrl } from "@/lib/images"
 import { cn } from "@/lib/utils"
 import type { CookbookRecipeIn, ImportView } from "@/lib/types"
@@ -38,6 +40,7 @@ function PhotoImport({ onDone }: { onDone: (v: ImportView) => void }) {
   const userId = useAuth().session!.user.id
   const [photos, setPhotos] = useState<string[]>([])
   const [busy, setBusy] = useState(false)
+  const [steps, setSteps] = useState<ImportStep[]>([])
   const [error, setError] = useState<string | null>(null)
 
   async function add(files: FileList | null) {
@@ -53,9 +56,10 @@ function PhotoImport({ onDone }: { onDone: (v: ImportView) => void }) {
 
   async function read() {
     setBusy(true)
+    setSteps([])
     setError(null)
     try {
-      onDone(await importRecipe(userId, { kind: "photos", images: photos }))
+      onDone(await importRecipe(userId, { kind: "photos", images: photos }, setSteps))
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not read the photos.")
     } finally {
@@ -92,6 +96,7 @@ function PhotoImport({ onDone }: { onDone: (v: ImportView) => void }) {
       <Button size="lg" className="w-fit" disabled={!photos.length || busy} onClick={read}>
         <Sparkles /> {busy ? "Reading the recipe…" : "Read recipe"}
       </Button>
+      {busy && <ImportProgress steps={steps} />}
     </div>
   )
 }
@@ -108,6 +113,7 @@ function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [estimatedSeconds, setEstimatedSeconds] = useState<number | null>(null)
+  const [steps, setSteps] = useState<ImportStep[]>([])
   const { data: timing } = useApi<{ estimated_seconds: number }>("/me/recipes/import/timing")
   return (
     <form
@@ -116,9 +122,10 @@ function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
         e.preventDefault()
         setBusy(true)
         setEstimatedSeconds(POST_LINK.test(url.trim()) ? timing?.estimated_seconds ?? 105 : null)
+        setSteps([])
         setError(null)
         try {
-          onDone(await importRecipe(userId, { kind: "link", url: url.trim() }))
+          onDone(await importRecipe(userId, { kind: "link", url: url.trim() }, setSteps))
         } catch (err) {
           setError(err instanceof Error ? err.message : "Could not import that link.")
         } finally {
@@ -135,7 +142,7 @@ function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
       <Button type="submit" size="lg" className="h-12 w-full sm:w-fit" disabled={busy}>
         <Sparkles /> {busy ? "Reading the page…" : "Read recipe"}
       </Button>
-      {busy && estimatedSeconds !== null && <ImportCountdown estimatedSeconds={estimatedSeconds} />}
+      {busy && <ImportProgress steps={steps} estimatedSeconds={estimatedSeconds} />}
       <p className="text-[12px] text-muted-foreground">
         Pantrila reads the recipe data the site publishes (or the page text) and keeps the link as the source.
       </p>
@@ -171,13 +178,15 @@ function PostImport({ onDone }: { onDone: (v: ImportView) => void }) {
   const hears = (meta?.reel_platforms ?? []).includes(postPlatform(link) ?? "")
   const { data: timing } = useApi<{ estimated_seconds: number }>("/me/recipes/import/timing")
   const [estimatedSeconds, setEstimatedSeconds] = useState<number | null>(null)
+  const [steps, setSteps] = useState<ImportStep[]>([])
 
   async function read() {
     setBusy(true)
     setEstimatedSeconds(hears ? timing?.estimated_seconds ?? 105 : null)
+    setSteps([])
     setError(null)
     try {
-      onDone(await importRecipe(userId, { kind: "post", url: link }))
+      onDone(await importRecipe(userId, { kind: "post", url: link }, setSteps))
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not read that post.")
     } finally {
@@ -200,7 +209,7 @@ function PostImport({ onDone }: { onDone: (v: ImportView) => void }) {
       <Button type="submit" size="lg" className="h-12 w-full sm:w-fit" disabled={busy || !link}>
         <Sparkles /> {busy ? "Reading the post…" : "Read recipe"}
       </Button>
-      {busy && estimatedSeconds !== null && <ImportCountdown estimatedSeconds={estimatedSeconds} />}
+      {busy && <ImportProgress steps={steps} estimatedSeconds={estimatedSeconds} />}
       <p className="text-[12px] text-muted-foreground">
         Pantrila reads the recipe from your post and credits the creator.
       </p>
@@ -221,6 +230,7 @@ export default function NewRecipePage() {
   const [fromChat, setFromChat] = useState(false)
   const [resuming, setResuming] = useState(false)
   const [resumeError, setResumeError] = useState<string | null>(null)
+  const [resumeSteps, setResumeSteps] = useState<ImportStep[]>([])
   const stopWaiting = useRef<(() => void) | null>(null)
   const sectionRef = useRef<HTMLDivElement>(null)
 
@@ -273,7 +283,7 @@ export default function NewRecipePage() {
       setResuming(false)
     }
     queueMicrotask(() => { if (active) setResuming(true) })
-    watchImport(userId, id)
+    watchImport(userId, id, Date.now(), (steps) => { if (active) setResumeSteps(steps) })
       .then((v) => { if (active) imported(v) })
       .catch((e) => { if (active) setResumeError(e instanceof Error ? e.message : "The import failed.") })
       .finally(() => { if (active) setResuming(false) })
@@ -325,11 +335,12 @@ export default function NewRecipePage() {
 
       {resuming && !draft && (
         <Panel>
-          <div role="status" className="grid gap-2 text-[13px]">
+          <div className="grid gap-2 text-[13px]">
             <p className="font-semibold">Finishing your import…</p>
             <p className="text-muted-foreground">
               It kept running while you were away. The recipe will appear here when it is read.
             </p>
+            <ImportProgress steps={resumeSteps} />
             <Button variant="ghost" size="sm" className="w-fit"
                     onClick={() => stopWaiting.current?.()}>
               Stop waiting

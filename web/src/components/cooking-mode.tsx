@@ -279,7 +279,7 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
                                                 on ? "border-primary bg-primary-soft text-primary-text" : "bg-surface hover:bg-surface-muted")}>
                             {on && <Check className="size-4 shrink-0" strokeWidth={3} aria-hidden />}
                             <span className="shrink-0 whitespace-nowrap rounded-lg bg-surface-muted px-2 py-0.5">
-                              <Amount line={ing} scale={scale} name={bareName(ing.name)} fixed />
+                              <Amount line={ing} scale={scale} />
                             </span>{" "}
                             <span className="min-w-0">{bareName(ing.name)}</span>
                           </button>
@@ -411,7 +411,7 @@ function IngredientChecklist({ ingredients, scale, ticked, onToggle }: {
                       {on && <Check className="size-3.5" strokeWidth={3} aria-hidden />}
                     </span>
                     <span className={cn("flex-1", on && "text-muted-foreground line-through")}>
-                      <IngredientText line={ing} scale={scale} fixed />
+                      <IngredientText line={ing} scale={scale} />
                     </span>
                     {ing.in_pantry && !on && (
                       <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-medium text-primary-text">In pantry</span>
