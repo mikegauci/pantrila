@@ -329,6 +329,7 @@ class CookbookDetail(CookbookCard):
     ingredients: list[CookbookLine]
     steps: list[str]
     step_sections: list[StepSection]
+    notes: str = ""
     recipe: CookbookRecipeIn = Field(description="As stored, for the edit form.")
 
 

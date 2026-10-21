@@ -178,6 +178,10 @@ class CookbookRecipeIn(BaseModel):
         default_factory=list, max_length=20,
         description="Method headings, in step order; empty when the method is not grouped.",
     )  # fmt: skip
+    notes: str = Field(
+        default="", max_length=3000,
+        description="The author's notes (substitutions, storage, tips), one per line.",
+    )  # fmt: skip
     source: Source = "manual"
     source_url: str | None = Field(default=None, max_length=2000)
     # Credit for a recipe from a social post: source_url is the post, recipe_url the recipe

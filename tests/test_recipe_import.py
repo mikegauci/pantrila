@@ -671,3 +671,15 @@ def test_estimated_food_in_spoons_keeps_its_spoons_and_learns_its_weight():
     assert (kept.quantity, kept.unit) == (0.5, "cup")
     assert kept.estimate.grams_per_ml == pytest.approx(0.8)
     assert derive(result.draft).ingredients[0].grams == pytest.approx(96)
+
+
+def test_recipe_notes_read_from_the_page_html():
+    from pantrila.recipe_import import recipe_notes
+
+    html = (
+        '<div class="wprm-recipe-notes-container"><h3>Notes</h3>'
+        "<div>FLOUR: use <b>plain</b> flour.<br>DOUBLING: easily doubled.</div>"
+        "<span>{vegan, low fat}</span></div><p>Comments</p>"
+    )
+    assert recipe_notes(html) == "FLOUR: use plain flour.\nDOUBLING: easily doubled."
+    assert recipe_notes("<p>No notes here</p>") == ""

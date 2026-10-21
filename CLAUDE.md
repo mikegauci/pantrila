@@ -33,6 +33,16 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Recipe notes: an imported recipe keeps the author's notes (substitutions, storage, tips) in a new `notes` field of
+`CookbookRecipeIn` (text, one note per line, 3000 chars, inside the recipe JSON, so no migration). `recipe_notes(html)`
+reads them from the page's notes block (WP Recipe Maker and similar keep them in HTML, not schema.org) into
+`recipeNotes` in `jsonld_recipe`; the prompt and `ImportedRecipe.notes` also copy a "Notes" section from page text.
+Cookbook recipe pages show a "Notes" panel after the Method and the form has a Notes box. Checked on Amy's Healthy
+Baking red velvet cookies (11 notes). Import eval before (prompt at `HEAD`) `import-2026-10-21T122302Z` vs after
+`import-2026-10-21T122307Z`, 27 cases: 0 missed allergens both, found/refused 100% both, food matching 99% both,
+groups 100% both, $0.0067 -> $0.0077/import (notes add output tokens), p50/p95 5.5/9.0 -> 5.4/14.9 s (single runs).
+The eval has no page with a notes section, so this checks for regressions only.
+
 Import measures, auto-save, fractions and fan ovens: an unmatched import line that names a table food
 (`recipe_import.table_food`, the form's `resolve_food` match: "baking soda", "salt") now gets that food, and an
 estimated food in spoons, cups or pieces keeps the source's measure, the amount repair setting the estimate's
