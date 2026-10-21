@@ -2,7 +2,8 @@
 
 Foods are keys of the ingredient table. Free text from people or the model ("red onions",
 "Greek yoghurt") goes through `resolve_food`, which only accepts a key it can match exactly
-after normalising; anything else comes back with suggestions instead of being guessed.
+after normalising (dropping words like "melted"); anything else comes back with suggestions
+instead of being guessed.
 """
 
 from __future__ import annotations
@@ -44,7 +45,18 @@ ALIASES = {
     "tuna": "canned_tuna",
     "stock": "vegetable_stock",
     "lentils": "red_lentils",
+    "all_purpose_flour": "plain_flour",
+    "whole_wheat_flour": "wholemeal_flour",
+    "wholewheat_flour": "wholemeal_flour",
+    "white_chocolate_chips": "white_chocolate",
+    "chocolate_chips": "dark_chocolate",
 }
+
+# Words that describe the state or form of a food, not which food it is.
+PREP_WORDS = frozenset({
+    "melted", "softened", "chopped", "diced", "sliced", "minced", "grated", "shredded",
+    "sifted", "packed", "plain", "unsweetened", "large", "medium", "small",
+})  # fmt: skip
 
 
 class UnknownFood(ValueError):
@@ -62,11 +74,13 @@ def resolve_food(text: str) -> str:
     """The food key for a name: the key itself, an alias, or the plural or singular form."""
     foods = load_foods()
     key = _normalise(text)
-    for candidate in (key, f"{key}s", key.removesuffix("es"), key.removesuffix("s")):
-        if candidate in foods:
-            return candidate
-        if candidate in ALIASES:
-            return ALIASES[candidate]
+    bare = "_".join(w for w in key.split("_") if w not in PREP_WORDS)
+    for name in dict.fromkeys((key, bare)):
+        for candidate in (name, f"{name}s", name.removesuffix("es"), name.removesuffix("s")):
+            if candidate in foods:
+                return candidate
+            if candidate in ALIASES:
+                return ALIASES[candidate]
     raise UnknownFood(text, suggest_foods(text))
 
 

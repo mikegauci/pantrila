@@ -17,7 +17,10 @@ from pantrila.schema import Allergen, PantryItem, Unit, UserProfile
     "text, key",
     [("egg", "egg"), ("Eggs", "egg"), ("red onions", "red_onion"), ("tomatoes", "tomato"),
      ("chickpea", "chickpeas"), ("Greek yoghurt", "greek_yogurt"), ("zucchini", "courgette"),
-     ("spring-onion", "spring_onion")],
+     ("spring-onion", "spring_onion"), ("all-purpose flour", "plain_flour"),
+     ("whole wheat flour", "wholemeal_flour"), ("plain Greek yogurt", "greek_yogurt"),
+     ("melted coconut oil", "coconut_oil"), ("unsweetened cocoa powder", "cocoa_powder"),
+     ("white chocolate chips", "white_chocolate")],
 )  # fmt: skip
 def test_resolve_food(text, key):
     assert resolve_food(text) == key
