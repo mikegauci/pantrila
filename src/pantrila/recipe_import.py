@@ -799,7 +799,8 @@ class Importer:
     def from_post(self, url: str | None = None, caption: str | None = None, http=None,
                   resolve: Resolver = resolve_host) -> ImportResult:  # fmt: skip
         """A TikTok, Instagram or Facebook post: its caption (pasted, else fetched), then a
-        recipe website the caption links to. Any other link alone is a plain link import; with
+        recipe website the caption links to, then one the creator links to in the post's
+        comments, then the post's video. Any other link alone is a plain link import; with
         a pasted caption, it is the first page to try when the caption holds no recipe."""
         from pantrila import social
 
@@ -839,6 +840,16 @@ class Importer:
                     recipe_url = page[0] if len(page[0]) <= 2000 else None
             except ImportFailed:
                 pass  # keep the caption's ingredients, if any
+        if (result is None or NO_METHOD in result.notes) and post is not None:
+            mine = [u for u in self._creator_links(post) if u not in links]
+            page = self._linked_page(mine[: social.MAX_CAPTION_LINKS], time.perf_counter(),
+                                     http, resolve)  # fmt: skip
+            try:
+                if page is not None:
+                    result = self.from_html(*page)
+                    recipe_url = page[0] if len(page[0]) <= 2000 else None
+            except ImportFailed:
+                pass
         if (result is None or NO_METHOD in result.notes) and post is not None:
             heard = self._heard(post, caption, http, resolve)
             if heard is not None and (result is None or NO_METHOD not in heard.notes):
@@ -882,6 +893,41 @@ class Importer:
                 self.meter.finish(fee, found is not None)
         self._runs[post_url] = found
         return found
+
+    def _creator_links(self, post) -> list[str]:
+        """Recipe-site links the post's creator gave in its top comments (one metered service
+        run), or [] when the service is off, does not read this platform's comments, cannot
+        tell the creator, is over today's cap or fails. Other people's links are never used."""
+        from pantrila import post_media, social
+
+        media = self.media
+        if media is None or post.platform not in media.comment_platforms:
+            return []
+        if not post.handle and not post_media.comments_name_owner(post.platform):
+            return []
+        try:
+            if self.meter is not None:
+                self.meter.start()
+        except ImportFailed:
+            return []
+        found = None
+        try:
+            found = media.creator_comments(post.url, post.platform, post.handle)
+        except ImportFailed as exc:
+            log.info("comments service failed: %s", exc)
+        finally:
+            self.media_runs += 1
+            fee = media.comment_fee_for(post.platform, found.fetched if found else 0)
+            self.media_cost = None if fee is None or self.media_cost is None else (
+                self.media_cost + fee)  # fmt: skip
+            if self.meter is not None:
+                self.meter.finish(fee, found is not None)
+        if found and not post.handle and (handle := social.clean_handle(found.handle or "")):
+            post.handle = handle  # credit the creator the comments name
+        links: list[str] = []
+        for text in found.texts if found else []:
+            links += [u for u in social.caption_links(text) if u not in links]
+        return links
 
     def _serviced_post(self, url: str):
         """A post whose platform shared no caption, with the caption the service read."""

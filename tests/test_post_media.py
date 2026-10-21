@@ -2,6 +2,7 @@
 attempts in `from_post`. Offline: the service, the video host and OpenAI are faked."""
 
 import io
+import json
 import wave
 from pathlib import Path
 from types import SimpleNamespace
@@ -12,6 +13,7 @@ import pytest
 from pantrila import post_media
 from pantrila.post_media import (
     ApifyMedia,
+    CreatorComments,
     MediaFailed,
     NoMedia,
     PostVideo,
@@ -88,6 +90,7 @@ def heard(steps=("Brown the sausage.", "Layer and bake.")) -> VideoRecipe:
 
 class FakeMedia:
     platforms = frozenset({"instagram", "tiktok"})
+    comment_platforms: frozenset[str] = frozenset()
 
     def __init__(self, found: PostVideo | None = None, error: Exception | None = None):
         self.found = found if found is not None or error else PostVideo([VIDEO], None,
@@ -408,8 +411,8 @@ def test_facebook_shared_reel_reads_video_when_the_caption_only_says_comment_rec
     assert result.draft.source_url == share and result.draft.source_platform == "facebook"
     assert result.draft.source_author == "samcooks"
     assert result.draft.steps == ["Brown the sausage.", "Layer and bake."]
-    assert meter.runs == [(0.006, True)]
-    assert len([r for r in requested if r.url.host == "api.apify.com"]) == 1
+    assert meter.runs == [(0.006, True), (0.0035, True)]  # the post, then its top comment
+    assert len([r for r in requested if r.url.host == "api.apify.com"]) == 2
     assert all("authorization" not in r.headers for r in requested if r.url.host != "api.apify.com")
 
 
@@ -421,3 +424,160 @@ def test_unreadable_video_is_not_reported_as_a_successfully_read_incomplete_reci
     with pytest.raises(ImportFailed) as exc:
         importer(client, FakeMedia()).from_post(REEL, "Comment RECIPE", video_host(b"bad"), resolve)
     assert str(exc.value) == NO_RECIPE
+
+
+# --- The creator's comment links ---------------------------------------------------------------
+
+COMMENTS = json.loads((Path(__file__).parent / "data" / "apify_comments.json").read_text())
+CHELSEA_SHARE = "https://www.facebook.com/share/r/1FmTKqfSLP/"
+CHELSEA_PAGE = "https://www.chelseasmessyapron.com/chicken-broth-bowl/"
+RECIPE_HTML = ('<html><script type="application/ld+json">{"@type": "Recipe", "name": "Chicken '
+               'Broth Bowl", "recipeIngredient": ["1 egg"], "recipeInstructions": ["Cook."]}'
+               "</script></html>")  # fmt: skip
+
+
+def full_recipe() -> ImportedRecipe:
+    return ImportedRecipe.model_validate({**caption_only().model_dump(), "steps": ["Cook."]})
+
+
+def not_a_recipe() -> ImportedRecipe:
+    return ImportedRecipe.model_validate({**caption_only().model_dump(), "is_recipe": False})
+
+
+class CommentMedia(FakeMedia):
+    comment_platforms = frozenset({"instagram", "tiktok", "facebook"})
+
+    def __init__(self, texts=(), **kwargs):
+        super().__init__(**kwargs)
+        self.texts, self.comments_asked = list(texts), []
+
+    def comment_fee_for(self, platform, fetched):
+        return 0.0025 * fetched
+
+    def creator_comments(self, post_url, platform, handle):
+        self.comments_asked.append((post_url, handle))
+        return CreatorComments(self.texts, 10)
+
+
+def pages(seen: list, site: str = CHELSEA_PAGE) -> httpx.Client:
+    """The creator's recipe site and the post video; everything else is a 404."""
+
+    def handle(req: httpx.Request) -> httpx.Response:
+        seen.append(str(req.url))
+        if str(req.url) == site:
+            return httpx.Response(200, html=RECIPE_HTML)
+        if str(req.url) == VIDEO:
+            return httpx.Response(200, content=MP4, headers={"content-type": "video/mp4"})
+        return httpx.Response(404)
+
+    return httpx.Client(transport=httpx.MockTransport(handle))
+
+
+@pytest.mark.parametrize("platform, handle, want", [
+    ("facebook", None, ["https://www.chelseasmessyapron.com/chicken-broth-bowl/"]),
+    ("instagram", "chelseasmessyapron",
+     ["Recipe is on the blog: chelseasmessyapron.com/creamy-chicken-pasta/"]),
+    ("instagram", None, []),  # Instagram's comments never say whose post it is
+    ("tiktok", None, ["Full recipe: https://www.chelseasmessyapron.com/beef-vegetable-soup/"]),
+])  # fmt: skip
+def test_apify_keeps_only_the_post_creators_comments(platform, handle, want):
+    seen: list[httpx.Request] = []
+    items = COMMENTS[platform]
+    media = ApifyMedia("secret-token", http=apify(httpx.Response(200, json=items), seen))
+    got = media.creator_comments("https://example.com/post", platform, handle)
+    assert got.texts == want and got.fetched == len(items)
+    assert got.handle == ("chelseasmessyapron" if want else None)
+    (req,) = seen
+    assert req.headers["authorization"] == "Bearer secret-token"
+    assert "secret-token" not in str(req.url) and "secret-token" not in req.content.decode()
+    assert f"/acts/{post_media.COMMENT_ACTORS[platform].id}/" in str(req.url)
+    assert str(post_media.COMMENT_LIMIT) in req.content.decode()
+
+
+def test_comment_fees_are_per_comment_plus_any_start_fee(monkeypatch):
+    media = ApifyMedia("t")
+    assert media.comment_fee_for("facebook", 10) == pytest.approx(0.026)
+    assert media.comment_fee_for("tiktok", 10) == pytest.approx(0.0125)
+    monkeypatch.setenv("PANTRILA_PRICE_COMMENT_INSTAGRAM", "0.001")
+    assert media.comment_fee_for("instagram", 10) == pytest.approx(0.01)
+
+
+@pytest.mark.parametrize("creator_commented", [True, False])
+def test_facebook_share_uses_the_creators_comment_link_and_never_a_strangers(creator_commented):
+    items = COMMENTS["facebook"] if creator_commented else COMMENTS["facebook"][1:]
+    post = {"message": {"text": "Write EAT for this recipe!"},
+            "short_form_video_context": {"playback_video": {"videoDeliveryLegacyFields": {
+                "browser_native_sd_url": VIDEO}}}}  # fmt: skip
+    seen: list[str] = []
+    site = pages(seen)
+
+    def handle(req: httpx.Request) -> httpx.Response:
+        seen.append(str(req.url))
+        if "facebook-comments-scraper" in str(req.url):
+            return httpx.Response(200, json=items)
+        if "facebook-posts-scraper" in str(req.url):
+            return httpx.Response(200, json=[post])
+        return site._transport.handle_request(req)
+
+    http = httpx.Client(transport=httpx.MockTransport(handle))
+    meter = Meter()
+    client = FakeClient(not_a_recipe(), full_recipe(), heard())
+    source = ApifyMedia("secret-token", http=http)
+    result = importer(client, source, meter).from_post(CHELSEA_SHARE, http=http, resolve=resolve)
+    assert not any("stranger" in url for url in seen)
+    if creator_commented:
+        assert result.draft.recipe_url == CHELSEA_PAGE and HEARD not in result.notes
+        assert VIDEO not in seen and "transcribe" not in [k for k, _ in client.calls]
+        assert result.draft.source_url == CHELSEA_SHARE
+        assert result.draft.source_author == "chelseasmessyapron"
+    else:  # no creator link: the video, as before
+        assert result.notes[0] == HEARD and result.draft.recipe_url is None
+        assert CHELSEA_PAGE not in seen
+    assert [ok for _, ok in meter.runs] == [True, True]  # the post, then its comments
+    assert meter.runs[1][0] == pytest.approx(0.001 + 0.0025 * len(items))
+
+
+def test_no_creator_link_in_the_comments_falls_through_to_the_video():
+    media, meter = CommentMedia(texts=["Thanks everyone! DM me for the recipe 💌"]), Meter()
+    client = FakeClient(caption_only(), heard())
+    result = importer(client, media, meter).from_post(REEL, CAPTION, video_host(), resolve)
+    assert media.comments_asked == [] and media.asked == [REEL]  # no handle on a /reel/ link
+    url = "https://www.instagram.com/zachs.foods/reel/Dclv5Rgizvm/"
+    client = FakeClient(caption_only(), heard())
+    result = importer(client, media, meter).from_post(url, CAPTION, video_host(), resolve)
+    assert media.comments_asked == [(url, "zachs.foods")] and result.notes[0] == HEARD
+    assert meter.runs[-2:] == [(0.025, True), (0.003, True)]  # comments, then the video
+
+
+def test_a_creator_comment_link_wins_over_the_video():
+    seen: list[str] = []
+    media = CommentMedia(texts=[f"Full recipe 👉 {CHELSEA_PAGE}"])
+    client = FakeClient(caption_only(), full_recipe())
+    url = "https://www.tiktok.com/@chelseasmessyapron/video/7698384810506489119"
+    result = importer(client, media).from_post(url, CAPTION, pages(seen), resolve)
+    assert result.draft.recipe_url == CHELSEA_PAGE and result.draft.steps == ["Cook."]
+    assert media.comments_asked == [(url, "chelseasmessyapron")] and media.asked == []
+    assert VIDEO not in seen
+
+
+@pytest.mark.parametrize("caption, page", [
+    (CAPTION + "\nBrown the sausage, then layer and bake.", None),  # the caption has it all
+    ("Lasagna 🤤 Recipe: https://www.chelseasmessyapron.com/chicken-broth-bowl/", CHELSEA_PAGE),
+])  # fmt: skip
+def test_no_comments_run_when_the_caption_or_its_link_has_the_recipe(caption, page):
+    media, seen = CommentMedia(texts=[f"Recipe: {CHELSEA_PAGE}"]), []
+    first = full_recipe() if page is None else not_a_recipe()
+    client = FakeClient(first, full_recipe())
+    url = "https://www.tiktok.com/@chelseasmessyapron/video/7698384810506489119"
+    result = importer(client, media).from_post(url, caption, pages(seen), resolve)
+    assert media.comments_asked == [] and media.asked == []
+    assert result.draft.recipe_url == page
+
+
+def test_comments_run_is_capped_like_the_video():
+    media = CommentMedia(texts=[f"Recipe: {CHELSEA_PAGE}"])
+    client = FakeClient(caption_only())
+    url = "https://www.tiktok.com/@chelseasmessyapron/video/7698384810506489119"
+    imp = importer(client, media, Meter(allow=False))
+    result = imp.from_post(url, CAPTION, pages([]), resolve)
+    assert media.comments_asked == [] and NO_METHOD in result.notes and imp.media_runs == 0

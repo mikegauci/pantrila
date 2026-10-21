@@ -12,6 +12,8 @@ printed). Each run is billed to the Apify account (a fraction of a cent on the f
 
 `--input` is the actor's input as JSON with `{url}` where the post link goes (each actor names
 its fields differently; see its page on apify.com). The actor id uses `~` for `/`.
+`--save DIR` also writes each run's raw result to DIR (for comment actors, whose results are
+comments, not videos: read the saved JSON to find the author and text fields).
 """
 
 from __future__ import annotations
@@ -19,8 +21,10 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 import time
+from pathlib import Path
 
 import httpx
 
@@ -63,7 +67,7 @@ def probe(url: str) -> None:
         print(f"      fetch failed: {type(exc).__name__}: {exc}")
 
 
-def check(actor: str, template: str, link: str, token: str) -> None:
+def check(actor: str, template: str, link: str, token: str, save: Path | None = None) -> None:
     print(f"== {actor}: {link}")
     body = json.loads(template.replace("{url}", link))
     start = time.perf_counter()
@@ -80,6 +84,11 @@ def check(actor: str, template: str, link: str, token: str) -> None:
     except ValueError:
         print(f"   body: {' '.join(r.text.split())[:300]}")
         return
+    if save:
+        save.mkdir(parents=True, exist_ok=True)
+        name = re.sub(r"[^A-Za-z0-9]+", "-", f"{actor}-{link.split('//')[-1]}").strip("-")
+        (save / f"{name}.json").write_text(json.dumps(items, indent=2, ensure_ascii=False))
+        print(f"   saved: {save / name}.json")
     if not isinstance(items, list) or not items:
         print(f"   no items: {json.dumps(items)[:300]}")
         return
@@ -101,13 +110,14 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--actor", required=True, help="e.g. apify~instagram-scraper")
     parser.add_argument("--input", required=True, help="actor input JSON with {url}")
+    parser.add_argument("--save", type=Path, help="write each raw result here as JSON")
     parser.add_argument("links", nargs="+")
     args = parser.parse_args()
     token = os.environ.get("APIFY_TOKEN")
     if not token:
         sys.exit("APIFY_TOKEN is not set (put it in .env)")
     for link in args.links:
-        check(args.actor, args.input, link, token)
+        check(args.actor, args.input, link, token, args.save)
 
 
 if __name__ == "__main__":

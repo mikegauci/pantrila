@@ -8,10 +8,13 @@
     "service_caption": null,
     "video": "video-vague-aglio-olio",
     "page": null,
+    "comments": [],
     "expect": {
       "is_recipe": true,
       "title": "Spaghetti Aglio e Olio",
       "service_calls": 1,
+      "comment_calls": 0,
+      "recipe_url": null,
       "lines": [
         {
           "text": "200 g spaghetti",
@@ -85,10 +88,13 @@
     "service_caption": null,
     "video": "video-clear-prawns",
     "page": null,
+    "comments": [],
     "expect": {
       "is_recipe": true,
       "title": "Garlic Butter Prawns",
       "service_calls": 1,
+      "comment_calls": 0,
+      "recipe_url": null,
       "lines": [
         {
           "text": "300 g raw prawns",
@@ -162,10 +168,13 @@
     "service_caption": null,
     "video": "video-music-shakshuka",
     "page": null,
+    "comments": [],
     "expect": {
       "is_recipe": true,
       "title": "Shakshuka",
       "service_calls": 0,
+      "comment_calls": 0,
+      "recipe_url": null,
       "lines": [
         {
           "text": "1 tbsp olive oil",
@@ -273,10 +282,13 @@
       "url": "https://pantrila-eval.example/peanut-noodles",
       "html": "<html><head><title>Peanut noodles</title><script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"Recipe\", \"name\": \"Peanut Noodles\", \"recipeYield\": \"2\", \"totalTime\": \"PT15M\", \"recipeIngredient\": [\"200 g rice noodles\", \"3 tbsp peanut butter\", \"2 tbsp soy sauce\", \"1 tbsp sesame oil\", \"1 tbsp lime juice\", \"1 tbsp honey\", \"2 spring onions, sliced\"], \"recipeInstructions\": [\"Cook the rice noodles.\", \"Whisk the peanut butter, soy sauce, sesame oil, lime juice and honey with a splash of the noodle water.\", \"Toss the noodles in the sauce and top with the spring onions.\"]}</script></head><body><h1>Peanut noodles</h1></body></html>"
     },
+    "comments": [],
     "expect": {
       "is_recipe": true,
       "title": "Peanut Noodles",
       "service_calls": 0,
+      "comment_calls": 0,
+      "recipe_url": "https://pantrila-eval.example/peanut-noodles",
       "lines": [
         {
           "text": "200 g rice noodles",
@@ -374,10 +386,13 @@
     "service_caption": null,
     "video": "video-not-recipe",
     "page": null,
+    "comments": [],
     "expect": {
       "is_recipe": false,
       "title": "",
       "service_calls": 1,
+      "comment_calls": 0,
+      "recipe_url": null,
       "lines": [],
       "allergens": []
     }
@@ -391,10 +406,13 @@
     "service_caption": "Peanut noodles 🥜 15 min, the method's in the video #noodles #fyp",
     "video": "video-fast-peanut-noodles",
     "page": null,
+    "comments": [],
     "expect": {
       "is_recipe": true,
       "title": "Peanut Noodles",
       "service_calls": 1,
+      "comment_calls": 1,
+      "recipe_url": null,
       "lines": [
         {
           "text": "200 g rice noodles",
@@ -492,10 +510,13 @@
     "service_caption": null,
     "video": "video-music-shakshuka",
     "page": null,
+    "comments": [],
     "expect": {
       "is_recipe": true,
       "title": "Shakshuka",
       "service_calls": 1,
+      "comment_calls": 1,
+      "recipe_url": null,
       "lines": [
         {
           "text": "1 tbsp olive oil",
@@ -588,6 +609,206 @@
       ],
       "allergens": [
         "eggs"
+      ]
+    }
+  },
+  {
+    "id": "reel-creator-comment-link",
+    "kind": "creator-comment-link",
+    "platform": "facebook",
+    "url": "https://www.facebook.com/pantrila.eval/videos/7/",
+    "caption": "Peanut noodles in 15 min 🥜🍜 Write EAT for this recipe!",
+    "service_caption": null,
+    "video": "video-fast-peanut-noodles",
+    "page": {
+      "url": "https://pantrila-eval.example/peanut-noodles",
+      "html": "<html><head><title>Peanut noodles</title><script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"Recipe\", \"name\": \"Peanut Noodles\", \"recipeYield\": \"2\", \"totalTime\": \"PT15M\", \"recipeIngredient\": [\"200 g rice noodles\", \"3 tbsp peanut butter\", \"2 tbsp soy sauce\", \"1 tbsp sesame oil\", \"1 tbsp lime juice\", \"1 tbsp honey\", \"2 spring onions, sliced\"], \"recipeInstructions\": [\"Cook the rice noodles.\", \"Whisk the peanut butter, soy sauce, sesame oil, lime juice and honey with a splash of the noodle water.\", \"Toss the noodles in the sauce and top with the spring onions.\"]}</script></head><body><h1>Peanut noodles</h1></body></html>"
+    },
+    "comments": [
+      {
+        "author": "pantrila.eval",
+        "text": "https://pantrila-eval.example/peanut-noodles"
+      }
+    ],
+    "expect": {
+      "is_recipe": true,
+      "title": "Peanut Noodles",
+      "service_calls": 0,
+      "comment_calls": 1,
+      "recipe_url": "https://pantrila-eval.example/peanut-noodles",
+      "lines": [
+        {
+          "text": "200 g rice noodles",
+          "foods": [
+            "rice_noodles"
+          ],
+          "amount": [
+            200,
+            "g"
+          ],
+          "vague": false
+        },
+        {
+          "text": "3 tbsp peanut butter",
+          "foods": [
+            "peanut_butter"
+          ],
+          "amount": [
+            3,
+            "tbsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "2 tbsp soy sauce",
+          "foods": [
+            "soy_sauce"
+          ],
+          "amount": [
+            2,
+            "tbsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "1 tbsp sesame oil",
+          "foods": [
+            "sesame_oil"
+          ],
+          "amount": [
+            1,
+            "tbsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "1 tbsp lime juice",
+          "foods": [
+            "lime_juice",
+            "lime"
+          ],
+          "amount": [
+            1,
+            "tbsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "1 tbsp honey",
+          "foods": [
+            "honey"
+          ],
+          "amount": [
+            1,
+            "tbsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "2 spring onions, sliced",
+          "foods": [
+            "spring_onion"
+          ],
+          "amount": [
+            2,
+            "piece"
+          ],
+          "vague": false
+        }
+      ],
+      "allergens": [
+        "gluten",
+        "peanuts",
+        "sesame",
+        "soy"
+      ]
+    }
+  },
+  {
+    "id": "reel-stranger-comment-link",
+    "kind": "stranger-comment-link",
+    "platform": "tiktok",
+    "url": "https://www.tiktok.com/@pantrila.eval/video/7410000000000000008",
+    "caption": "Garlic butter prawns in 15 minutes 🍤🧈 Comment PRAWNS for the recipe!",
+    "service_caption": null,
+    "video": "video-clear-prawns",
+    "page": {
+      "url": "https://stranger.pantrila-eval.example/peanut-noodles",
+      "html": "<html><head><title>Peanut noodles</title><script type=\"application/ld+json\">{\"@context\": \"https://schema.org\", \"@type\": \"Recipe\", \"name\": \"Peanut Noodles\", \"recipeYield\": \"2\", \"totalTime\": \"PT15M\", \"recipeIngredient\": [\"200 g rice noodles\", \"3 tbsp peanut butter\", \"2 tbsp soy sauce\", \"1 tbsp sesame oil\", \"1 tbsp lime juice\", \"1 tbsp honey\", \"2 spring onions, sliced\"], \"recipeInstructions\": [\"Cook the rice noodles.\", \"Whisk the peanut butter, soy sauce, sesame oil, lime juice and honey with a splash of the noodle water.\", \"Toss the noodles in the sauce and top with the spring onions.\"]}</script></head><body><h1>Peanut noodles</h1></body></html>"
+    },
+    "comments": [
+      {
+        "author": "noodle.fan",
+        "text": "Made a better one: https://stranger.pantrila-eval.example/peanut-noodles"
+      }
+    ],
+    "expect": {
+      "is_recipe": true,
+      "title": "Garlic Butter Prawns",
+      "service_calls": 1,
+      "comment_calls": 1,
+      "recipe_url": null,
+      "lines": [
+        {
+          "text": "300 g raw prawns",
+          "foods": [
+            "prawns"
+          ],
+          "amount": [
+            300,
+            "g"
+          ],
+          "vague": false
+        },
+        {
+          "text": "30 g butter",
+          "foods": [
+            "butter"
+          ],
+          "amount": [
+            30,
+            "g"
+          ],
+          "vague": false
+        },
+        {
+          "text": "4 cloves garlic",
+          "foods": [
+            "garlic"
+          ],
+          "amount": [
+            4,
+            "piece"
+          ],
+          "vague": false
+        },
+        {
+          "text": "1 tbsp lemon juice",
+          "foods": [
+            "lemon_juice",
+            "lemon"
+          ],
+          "amount": [
+            1,
+            "tbsp"
+          ],
+          "vague": false
+        },
+        {
+          "text": "2 tbsp chopped parsley",
+          "foods": [
+            "parsley"
+          ],
+          "amount": [
+            2,
+            "tbsp"
+          ],
+          "vague": false
+        }
+      ],
+      "allergens": [
+        "crustaceans",
+        "milk"
       ]
     }
   }
