@@ -27,6 +27,7 @@ from pantrila.cookbook import (
     derive,
     problems_for,
 )
+from pantrila.foods import load_foods, measures
 from pantrila.meal_swap import MealOption, find_meal
 from pantrila.photos import (
     public_url,
@@ -61,10 +62,11 @@ def recipe_card(r: Recipe, profile: UserProfile, photo: str | None = None) -> Re
 
 
 def recipe_detail(r: Recipe, profile: UserProfile, photo: str | None = None) -> RecipeDetail:
-    pantry = set(profile.pantry)
+    pantry, foods = set(profile.pantry), load_foods()
     return RecipeDetail(
         **recipe_card(r, profile, photo).model_dump(),
-        ingredients=[IngredientView(**i.model_dump(), in_pantry=i.food in pantry)
+        ingredients=[IngredientView(**i.model_dump(), in_pantry=i.food in pantry,
+                                    **measures(foods[i.food]))
                      for i in r.ingredients],
         steps=r.steps,
     )  # fmt: skip

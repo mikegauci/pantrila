@@ -20,7 +20,14 @@ import psycopg
 from pydantic import BaseModel, Field, HttpUrl, field_validator, model_validator
 
 from pantrila.constraints import rule_problems
-from pantrila.foods import Food, UnitError, derive_allergens, derive_ingredient_diets, load_foods
+from pantrila.foods import (
+    Food,
+    UnitError,
+    derive_allergens,
+    derive_ingredient_diets,
+    load_foods,
+    measures,
+)
 from pantrila.foods import to_grams as table_grams
 from pantrila.nutrition import nutrition_diets, recipe_nutrition
 from pantrila.schema import (
@@ -39,6 +46,31 @@ HANDLE = re.compile(r"[A-Za-z0-9._]{1,30}")
 DietClass = Literal["plant", "dairy", "egg", "honey", "fish", "shellfish", "meat"]
 Source = Literal["manual", "photo", "link", "post", "text", "video"]
 Platform = Literal["tiktok", "instagram", "facebook"]
+
+# A leading amount in an ingredient name ("1 cup", "1-1/4 teaspoons", "½ lb", "2 pinches of"):
+# the line's quantity and unit already say it. Numbers do not start with 0, so "00 flour" stays.
+_FRACTION = r"[¼½¾⅓⅔⅛⅜⅝⅞]"
+_NUM = (
+    rf"(?:0[.,]\d+|[1-9]\d*(?:[.,]\d+)?(?:\s*/\s*\d+)?|{_FRACTION})"
+    rf"(?:[\s-]*(?:\d+/\d+|{_FRACTION}))?"
+)
+_UNITS = (
+    r"cups?|c\.|tablespoons?|tbsps?|tbs|teaspoons?|tsps?|pounds?|lbs?|ounces?|oz|grams?|g|"
+    r"kilograms?|kg|millilit(?:er|re)s?|ml|lit(?:er|re)s?|l|pinch(?:es)?|dash(?:es)?"
+)
+LEADING_AMOUNT = re.compile(
+    rf"^\s*{_NUM}(?:\s*(?:-|–|to)\s*{_NUM})?\s*(?:(?:{_UNITS})\b\.?)?\s*(?:of\s+)?",
+    re.IGNORECASE,
+)
+
+
+def bare_name(name: str) -> str:
+    """The ingredient name without a leading amount: "1 cup basmati rice" -> "basmati rice".
+    A name that is only an amount, or a multiple ("2 x 400 g cans"), is kept as it is."""
+    rest = LEADING_AMOUNT.sub("", name, count=1).strip()
+    if not re.match(r"[a-z(]", rest, re.IGNORECASE) or re.match(r"x\b", rest):
+        return name.strip()
+    return rest
 
 
 class FoodFacts(BaseModel):
@@ -180,6 +212,8 @@ class CookbookRecipeIn(BaseModel):
 
 class LineView(RecipeLine):
     grams: float
+    grams_per_ml: float | None = Field(default=None, description="For showing it by volume.")
+    grams_per_piece: float | None = Field(default=None, description="For showing it in pieces.")
 
 
 class Derived(BaseModel):
@@ -235,7 +269,7 @@ def derive(recipe: CookbookRecipeIn) -> Derived:
     allergens = derive_allergens(keys, table)
     diets = derive_ingredient_diets(keys, table) | nutrition_diets(nutrition)
     return Derived(
-        ingredients=[LineView(**line.model_dump(), grams=i.grams)
+        ingredients=[LineView(**line.model_dump(), grams=i.grams, **measures(table[i.food]))
                      for line, i in zip(recipe.ingredients, ingredients, strict=True)],
         nutrition=nutrition,
         allergens=sorted(allergens, key=list(Allergen).index),

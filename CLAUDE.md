@@ -33,6 +33,22 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Ingredient amounts: imported lines showed their amount twice ("1 cup 1 cup basmati rice"), since the import kept
+the whole source line as `name`. The prompt and `ImportedLine.name` now ask for the name without its amount
+(vague wording is quoted in `amount_estimate`), and `cookbook.bare_name` strips a leftover leading amount in
+`draft_line`; the web strips it on display too (`bareName` in `web/src/lib/amounts.ts`), so older saved recipes
+read right without a migration. Amounts show US measures and counts as fractions (1 1/4 tsp) and metric as whole
+numbers (454 g; recipes stay metric). On the recipe pages (corpus and cookbook) tapping an amount picks another
+unit for that line (g, oz, lb, ml, tsp, tbsp, cup, piece, from the line's grams and the food's
+`grams_per_ml`/`grams_per_piece`, now on `LineView`/`IngredientView`; display only, not remembered). Cooking mode
+shows fractions and clean names, no picker (its lines are tap-to-tick buttons). New eval metric "names repeating
+the amount". Before (code at `e45d531`) `import-2026-10-21T101509Z` vs after `import-2026-10-21T101807Z`, 27 cases:
+names repeating the amount 95% -> 0%, lines kept 100% both, food matching 99% -> 100%, 0 missed allergens both,
+groups 100% both, $0.0069 -> $0.0074/import, p50/p95 4.3/7.6 -> 5.6/14.8 s (single runs). A first wording
+("the amount goes only in quantity and unit") split "1 tbsp butter, plus extra for the pan" into two lines in 3
+of 4 runs (lines kept 96%); the prompt now says one entry per source line, never split, keeping such notes in
+the name (4/4 runs kept 5 lines). 1 new Playwright test (`web/tests/ingredient-amounts.spec.ts`).
+
 Background recipe photo: "Save to my recipes" now opens the saved recipe at once; its photo is made while the
 person reads it. `web/src/lib/photo-jobs.ts` (`makePhoto`, `usePhotoPending`) runs the existing
 `POST /me/recipes/{id}/photo` outside the form and marks the id in `sessionStorage["pantrila-photo-jobs"]`; the
@@ -475,7 +491,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `chat_threads`, `MemoryChats`): model `history` plus the `messages` the app shows; titled
   from the first message; 100 threads per user, least recently used dropped.
 - `src/pantrila/cookbook.py`: the person's own recipes. `CookbookRecipeIn` (what is stored:
-  lines with a table `food` or a `FoodEstimate`, an optional `section` per line, `step_sections` headings), `derive` (grams, nutrition, allergens, diets
+  lines with a table `food` or a `FoodEstimate`, an optional `section` per line, `step_sections` headings), `bare_name`
+  (drops a leading amount from a line's name), `derive` (grams, nutrition, allergens, diets
   in code; estimates join the food table for that recipe only), `problems_for`, the `Cookbook`
   protocol (`DbCookbook` on `user_recipes`, `MemoryCookbook`), 200 recipes per user.
 - `src/pantrila/recipe_import.py`: `Importer` (one structured-output call, effort medium,

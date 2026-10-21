@@ -4,6 +4,7 @@ from urllib.parse import quote
 import httpx
 import pytest
 
+from pantrila.cookbook import bare_name
 from pantrila.recipe_import import ImportedRecipe, Importer, ImportFailed
 from pantrila.social import (
     NO_RECIPE,
@@ -390,7 +391,7 @@ def test_caption_with_only_ingredients_becomes_a_draft_that_asks_for_the_method(
     client = FakeClient(ingredients_only(*lines))
     url = "https://www.instagram.com/reel/Dclv5Rgizvm/"
     result = Importer(client=client, model="m").from_post(url, LASAGNA)
-    assert [i.name for i in result.draft.ingredients] == list(lines)
+    assert [i.name for i in result.draft.ingredients] == [bare_name(line) for line in lines]
     assert result.draft.steps == [NO_METHOD_STEP] and NO_METHOD in result.notes
     assert result.draft.source_url == url and len(client.calls) == 1  # no link to try
 
@@ -414,5 +415,5 @@ def test_caption_with_only_ingredients_prefers_a_linked_full_recipe():
 
     client = FakeClient(ingredients_only(*lines))  # the linked page fails: keep the caption's
     result = Importer(client=client, model="m").from_post(TIKTOK, caption, mock_http({}), resolve)
-    assert [i.name for i in result.draft.ingredients] == list(lines)
+    assert [i.name for i in result.draft.ingredients] == [bare_name(line) for line in lines]
     assert result.draft.recipe_url is None

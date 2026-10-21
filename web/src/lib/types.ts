@@ -41,6 +41,8 @@ export interface Ingredient {
   unit: Unit
   grams: number
   in_pantry: boolean
+  grams_per_ml?: number | null
+  grams_per_piece?: number | null
 }
 
 export interface RecipeDetail extends RecipeCard {
@@ -333,6 +335,9 @@ export interface CookbookRecipeIn {
 
 export interface LineView extends RecipeLine {
   grams: number
+  /** The food's grams per ml and per piece, for showing the line in another unit. */
+  grams_per_ml?: number | null
+  grams_per_piece?: number | null
 }
 
 export interface CookbookCard {

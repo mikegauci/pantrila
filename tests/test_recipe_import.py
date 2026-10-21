@@ -515,7 +515,8 @@ def test_import_repairs_sprigs_and_missing_pasta_without_manual_edits():
     result = Importer(client=client).from_text("Basil pasta for four. Toss and serve.")
     derived = derive(result.draft)
     assert [i.grams for i in derived.ingredients] == [2, 300]
-    assert [i.name for i in result.draft.ingredients] == ["1 sprig basil leaves", "cooked pasta"]
+    # The amount is in quantity and unit, so a leading one is dropped from the name.
+    assert [i.name for i in result.draft.ingredients] == ["sprig basil leaves", "cooked pasta"]
     assert derived.estimated and derived.nutrition.kcal > 0
     assert derived.allergens == ["gluten"]
     assert all(line.amount_estimate for line in result.draft.ingredients)

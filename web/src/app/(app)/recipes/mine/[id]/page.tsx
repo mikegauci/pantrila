@@ -1,5 +1,6 @@
 "use client"
 
+import { IngredientText } from "@/components/amount"
 import { NutritionSource } from "@/components/nutrition-source"
 import { ArrowLeft, Camera, Check, Clock, ExternalLink, ImageOff, Loader2, Pencil, Trash2, Users } from "lucide-react"
 import Link from "next/link"
@@ -23,10 +24,6 @@ import { makePhoto, usePhotoPending } from "@/lib/photo-jobs"
 import { hasTemp, showTemps, useTempUnit } from "@/lib/temperature"
 import { cn } from "@/lib/utils"
 import type { CookbookDetail } from "@/lib/types"
-
-function amount(q: number) {
-  return q < 10 ? String(Math.round(q * 100) / 100) : String(Math.round(q))
-}
 
 const SOURCE_LINK = "inline-flex items-center gap-1 font-medium text-primary-text underline-offset-2 hover:underline"
 
@@ -217,7 +214,7 @@ export default function MyRecipePage() {
                       {ing.in_pantry && <Check className="size-3" strokeWidth={3} />}
                     </span>
                     <span className="flex-1">
-                      <span className="tabular font-semibold">{amount(ing.quantity)} {ing.unit}</span> {ing.name}
+                      <IngredientText line={ing} />
                       {ing.in_pantry && <span className="sr-only"> (in your pantry)</span>}
                       {ing.amount_estimate && (
                         <span className="mt-1 block text-[12px] text-muted-foreground">
