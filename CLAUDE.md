@@ -33,6 +33,17 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Background imports: a locked phone or a tab in the background used to drop the import's HTTP
+request and show an error. The web app now starts imports with `POST /me/recipes/import/jobs`
+(`kind` link|post|text|photos; the page picks the job `id` and saves it first, so a cut-off request can be followed up, and the daily allowance is reserved at once) and polls `GET /me/recipes/import/jobs/{id}` every 2 s (sooner when
+the page returns to the foreground; dropped connections and 502+ are retried). The job runs in a
+server thread (`import_jobs.py`, in memory, kept 1 h, 2 running per person, same daily cap and
+usage log as before). The job id is kept in `localStorage["pantrila-import-job:<user>"]`, so a
+reload shows "Finishing your import…" (with "Stop waiting") and delivers the draft. A server restart loses jobs in flight
+(404 "interrupted"); an upload still has to finish before the phone sleeps. The synchronous
+`/import/link|post|text|photos` routes stay for API/eval callers. No prompt/model change, so no eval
+rerun; 4 new API tests and `web/tests/background-import.spec.ts`.
+
 Creator comment links: `from_post` now tries caption -> caption links -> links in the post
 creator's own top comments -> video. `post_media.COMMENT_ACTORS` (Facebook
 `apify/facebook-comments-scraper`, Instagram `apify/instagram-comment-scraper`, TikTok
@@ -448,6 +459,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   then a recipe site it links: a second call on the same import) / `estimate`; `fetch_page` with SSRF
   guards; `jsonld_recipe`, `page_text`; `to_draft` checks every line in code and returns notes;
   `with_named_allergens` adds the allergens of table foods an estimated line names.
+- `src/pantrila/import_jobs.py`: `ImportJobs`, the in-memory registry behind background imports
+  (`app.state.import_jobs`); web side is `web/src/lib/import-jobs.ts`.
 - `src/pantrila/social.py`: TikTok/Instagram/Facebook posts. `detect`, short links, `clean_url`
   (tracking query dropped), `fetch_post` (TikTok oEmbed; Instagram/Facebook Open Graph tags;
   all through `fetch_page`, Pantrila's own user agent; refusal or empty caption -> "Paste the
@@ -483,7 +496,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   GET, PUT to swap), `POST /chat` (continues `thread_id` or starts a
   thread; the server supplies the thread's history), `/me/chats` (list, get, delete),
   `/me/cooked` (GET log, POST "I cooked this"; `/preview`), `/me/recipes` (cookbook CRUD,
-  `/preview`, `/import/link`, `/import/photos`, `/import/post`, `/import/text`, `/import/video`, `/estimate`, `/{id}/photo` POST/DELETE). Every
+  `/preview`, `/import/link|photos|post|text` (one request), `/import/jobs` POST + `/import/jobs/{id}` GET (the same imports as background jobs), `/import/timing`, `/estimate`, `/{id}/photo` POST/DELETE). Every
   recipe returned carries the hard rules it breaks for the person's current profile and its
   `photo_url` (or null). Paid calls are capped per user per day (`PANTRILA_DAILY_PLANS`,
   `PANTRILA_DAILY_CHATS`, `PANTRILA_DAILY_IMPORTS`, `PANTRILA_DAILY_PHOTOS`) and in total
