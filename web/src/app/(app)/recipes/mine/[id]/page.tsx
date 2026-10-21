@@ -2,7 +2,7 @@
 
 import { MeasuredLine } from "@/components/amount"
 import { NutritionSource } from "@/components/nutrition-source"
-import { ArrowLeft, Camera, Check, Clock, ExternalLink, ImageOff, Loader2, Pencil, Trash2, Users } from "lucide-react"
+import { ArrowLeft, Camera, Check, ChevronDown, Clock, ExternalLink, ImageOff, Loader2, Pencil, Trash2, Users } from "lucide-react"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { useState } from "react"
@@ -190,18 +190,7 @@ export default function MyRecipePage() {
               : <span className="text-[12px]">none of the 14 EU allergens</span>}
           </div>
           <div className="mt-auto pt-2">
-            {r.recipe.notes?.trim() && (
-        <Panel>
-          <PanelTitle>Notes</PanelTitle>
-          <ul className="grid gap-3">
-            {r.recipe.notes.split("\n").filter((l) => l.trim()).map((line, i) => (
-              <li key={i}>{showTemps(niceFractions(line), unit)}</li>
-            ))}
-          </ul>
-        </Panel>
-      )}
-
-      <StartCooking href={`/recipes/mine/${r.id}/cook`} recipeKey={`mine:${r.id}`}
+            <StartCooking href={`/recipes/mine/${r.id}/cook`} recipeKey={`mine:${r.id}`}
                           match={{ cookbook_id: r.id }} />
           </div>
         </div>
@@ -284,6 +273,22 @@ export default function MyRecipePage() {
 
       <StartCooking href={`/recipes/mine/${r.id}/cook`} recipeKey={`mine:${r.id}`}
                     match={{ cookbook_id: r.id }} fullWidth />
+
+      {r.recipe.notes?.trim() && (
+        <Panel>
+          <details className="group">
+            <summary className="flex min-h-9 cursor-pointer list-none items-center justify-between gap-2 text-[18px] font-semibold [&::-webkit-details-marker]:hidden">
+              Notes
+              <ChevronDown className="size-5 transition-transform group-open:rotate-180" aria-hidden />
+            </summary>
+            <ul className="mt-3 grid gap-3">
+              {r.recipe.notes.split("\n").filter((l) => l.trim()).map((line, i) => (
+                <li key={i}>{showTemps(niceFractions(line), unit)}</li>
+              ))}
+            </ul>
+          </details>
+        </Panel>
+      )}
     </div>
   )
 }

@@ -114,8 +114,14 @@ const LEADING_AMOUNT = new RegExp(
   `^\\s*${NUM}(?:\\s*(?:-|–|to)\\s*${NUM})?\\s*(?:(?:${UNITS})\\b\\.?)?\\s*(?:of\\s+)?`, "i",
 )
 
+// What a source adds after the first amount: "+ 1 tbsp" or a second measure, "(97g)".
+const LEADING_EXTRA = new RegExp(
+  `^\\s*(?:\\+\\s*${NUM}\\s*(?:(?:${UNITS})\\b\\.?)?|\\(\\s*${NUM}\\s*(?:${UNITS})\\b\\.?\\s*\\))\\s*`, "i",
+)
+
 /** The name without a leading amount: "1 cup basmati rice" -> "basmati rice". */
 export function bareName(name: string): string {
-  const rest = name.replace(LEADING_AMOUNT, "").trim()
+  let rest = name.replace(LEADING_AMOUNT, "").trim()
+  for (let more = rest.replace(LEADING_EXTRA, "").trim(); more && more !== rest; more = rest.replace(LEADING_EXTRA, "").trim()) rest = more
   return !/^[a-z(]/i.test(rest) || /^x\b/.test(rest) ? name.trim() : rest
 }

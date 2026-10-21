@@ -62,12 +62,20 @@ LEADING_AMOUNT = re.compile(
     rf"^\s*{_NUM}(?:\s*(?:-|–|to)\s*{_NUM})?\s*(?:(?:{_UNITS})\b\.?)?\s*(?:of\s+)?",
     re.IGNORECASE,
 )
+# What a source adds after the first amount: "+ 1 tbsp" or a second measure, "(97g)".
+LEADING_EXTRA = re.compile(
+    rf"^\s*(?:\+\s*{_NUM}\s*(?:(?:{_UNITS})\b\.?)?|\(\s*{_NUM}\s*(?:{_UNITS})\b\.?\s*\))\s*",
+    re.IGNORECASE,
+)
 
 
 def bare_name(name: str) -> str:
     """The ingredient name without a leading amount: "1 cup basmati rice" -> "basmati rice".
-    A name that is only an amount, or a multiple ("2 x 400 g cans"), is kept as it is."""
+    A second measure ("3 tbsp (15g) cocoa" -> "cocoa") goes too. A name that is only an amount,
+    or a multiple ("2 x 400 g cans"), is kept as it is."""
     rest = LEADING_AMOUNT.sub("", name, count=1).strip()
+    while (more := LEADING_EXTRA.sub("", rest, count=1).strip()) != rest and more:
+        rest = more
     if not re.match(r"[a-z(]", rest, re.IGNORECASE) or re.match(r"x\b", rest):
         return name.strip()
     return rest
