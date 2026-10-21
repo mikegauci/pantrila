@@ -10,42 +10,63 @@ import { useCookbook } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
 import type { CookbookRecipeIn, RecipeCard as Recipe, RecipeDetail } from "@/lib/types"
 
-/** Copies a corpus recipe into the person's cookbook (no photo is generated). */
+const myRecipes = (
+  <Link href="/recipes/mine" className="font-bold underline underline-offset-2">My Recipes</Link>
+)
+
+/** Copies a corpus recipe into the person's cookbook (no photo is generated); tap again to remove it. */
 function SaveButton({ recipe }: { recipe: Recipe }) {
   const { mutate } = useSWRConfig()
   const { data: cookbook } = useCookbook()
   const [busy, setBusy] = useState(false)
-  const [done, setDone] = useState(false)
-  const saved = done || !!cookbook?.some((c) => c.title === recipe.title)
+  const [savedId, setSavedId] = useState<number | null>(null)
+  const [removed, setRemoved] = useState(false)
+  const existing = cookbook?.find((c) => c.title === recipe.title)?.id ?? null
+  const id = removed ? savedId : (savedId ?? existing)
+  const saved = id !== null
 
-  async function save() {
-    if (busy || saved) return
+  async function remove(id: number) {
+    await send(`/me/recipes/${id}`, "DELETE")
+    setSavedId(null)
+    setRemoved(true)
+    await mutate("/me/recipes")
+    toast(<span><strong>{recipe.title}</strong> removed from {myRecipes}</span>)
+  }
+
+  async function add() {
+    const full = await api<RecipeDetail>(`/recipes/${recipe.id}`)
+    const body: CookbookRecipeIn = {
+      title: recipe.title,
+      summary: recipe.summary,
+      cuisine: recipe.cuisine,
+      meal_types: recipe.meal_types,
+      total_minutes: recipe.total_minutes,
+      servings: recipe.servings,
+      ingredients: full.ingredients.map((i) => ({
+        name: i.name, quantity: i.quantity, unit: i.unit, food: i.food, estimate: null,
+      })),
+      steps: full.steps,
+      source: "manual",
+      source_url: null,
+      source_platform: null,
+      source_author: null,
+      recipe_url: null,
+    }
+    const created = await send<{ id: number }>("/me/recipes", "POST", body)
+    setSavedId(created.id)
+    setRemoved(false)
+    await mutate("/me/recipes")
+    toast.success(<span><strong>{recipe.title}</strong> saved to {myRecipes}</span>)
+  }
+
+  async function toggle() {
+    if (busy) return
     setBusy(true)
     try {
-      const full = await api<RecipeDetail>(`/recipes/${recipe.id}`)
-      const body: CookbookRecipeIn = {
-        title: recipe.title,
-        summary: recipe.summary,
-        cuisine: recipe.cuisine,
-        meal_types: recipe.meal_types,
-        total_minutes: recipe.total_minutes,
-        servings: recipe.servings,
-        ingredients: full.ingredients.map((i) => ({
-          name: i.name, quantity: i.quantity, unit: i.unit, food: i.food, estimate: null,
-        })),
-        steps: full.steps,
-        source: "manual",
-        source_url: null,
-        source_platform: null,
-        source_author: null,
-        recipe_url: null,
-      }
-      await send("/me/recipes", "POST", body)
-      setDone(true)
-      mutate("/me/recipes")
-      toast.success(`${recipe.title} saved to My Recipes`)
+      if (id !== null) await remove(id)
+      else await add()
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Could not save the recipe")
+      toast.error(e instanceof Error ? e.message : "Could not update My Recipes")
     } finally {
       setBusy(false)
     }
@@ -55,9 +76,9 @@ function SaveButton({ recipe }: { recipe: Recipe }) {
   return (
     <button
       type="button"
-      onClick={save}
+      onClick={toggle}
       disabled={busy}
-      aria-label={saved ? `${recipe.title} is in My Recipes` : `Save ${recipe.title} to My Recipes`}
+      aria-label={saved ? `Remove ${recipe.title} from My Recipes` : `Save ${recipe.title} to My Recipes`}
       aria-pressed={saved}
       className={cn(
         "absolute top-5 right-5 z-10 grid size-9 place-items-center rounded-full bg-surface/90 shadow-soft backdrop-blur transition-colors duration-150 hover:bg-surface disabled:opacity-60",
