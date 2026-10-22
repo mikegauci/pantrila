@@ -444,10 +444,6 @@ def full_recipe() -> ImportedRecipe:
     return ImportedRecipe.model_validate({**caption_only().model_dump(), "steps": ["Cook."]})
 
 
-def not_a_recipe() -> ImportedRecipe:
-    return ImportedRecipe.model_validate({**caption_only().model_dump(), "is_recipe": False})
-
-
 class CommentMedia(FakeMedia):
     comment_platforms = frozenset({"instagram", "tiktok", "facebook"})
 
