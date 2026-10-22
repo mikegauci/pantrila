@@ -1,8 +1,8 @@
 # Pantrila icon
 
 A white chef hat on a green gradient (#4cb85a to #2a7a38). The big AI sparkle is
-cut out of the hat so the background shows through; two small white sparkles sit
-top right.
+cut out of the hat so the background shows through; two small white sparkles are
+tucked in at its top right. The hat itself is centred; the sparkles do not count.
 
 | File | Use |
 | --- | --- |
