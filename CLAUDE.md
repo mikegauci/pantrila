@@ -539,7 +539,8 @@ visible match wins because hidden pages stay mounted). Opens once per user id
 (`localStorage["pantrila-tour-done:<id>"]`), replay from the account menu ("App tour") or Profile
 ("Help"). Web only, no new dependency, so no eval rerun.
 Favicon and app icon: a white chef hat on a green gradient, its big AI sparkle cut out so the background shows
-through, two small white sparkles top right. `web/src/app/icon.svg` (favicon), `favicon.ico` (16/32/48) and
+through, two small white sparkles tucked in at its top right; the hat
+itself is centred. `web/src/app/icon.svg` (favicon), `favicon.ico` (16/32/48) and
 `apple-icon.png` (180 px, full bleed); `web/brand/` holds the store master (`app-icon.svg`, `app-icon-1024.png`, no
 transparency) and the Android adaptive foreground/background, described in `web/brand/README.md`. `Logo` draws the
 same mark inline. `node scripts/icons.mjs` (from `web/`) renders every PNG and the .ico with `sharp`.

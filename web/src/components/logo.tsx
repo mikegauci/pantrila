@@ -12,7 +12,7 @@ const SPARKLE = "M0-1C.12-.32.32-.12 1 0C.32.12.12.32 0 1C-.12.32-.32.12-1 0C-.3
 function Mark({ className }: { className?: string }) {
   const mask = `pantrila-logo-cut-${useId().replace(/[^\w-]/g, "")}`
   return (
-    <svg viewBox="17 9 77 77" className={className} aria-hidden="true">
+    <svg viewBox="8 9 84 84" className={className} aria-hidden="true">
       <mask id={mask} maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
         <g fill="#fff">
           <circle cx="33" cy="46" r="14" />
@@ -25,8 +25,8 @@ function Mark({ className }: { className?: string }) {
       </mask>
       <rect width="100" height="100" fill="currentColor" mask={`url(#${mask})`} />
       <g fill="currentColor">
-        <path transform="translate(81 20) scale(7)" d={SPARKLE} />
-        <path transform="translate(89 33) scale(3.5)" d={SPARKLE} />
+        <path transform="translate(77 22) scale(5.5)" d={SPARKLE} />
+        <path transform="translate(84 31) scale(2.8)" d={SPARKLE} />
       </g>
     </svg>
   )
