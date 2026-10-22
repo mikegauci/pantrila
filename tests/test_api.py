@@ -147,6 +147,16 @@ def test_profile_round_trip_resolves_excluded_foods(api):
     assert bad.status_code == 422
 
 
+def test_profile_energy_range_round_trips_and_must_be_in_order(api):
+    body = {"targets": {"min_kcal": 1600, "max_kcal": 1900}}
+    r = api.put("/me/profile", json=body)
+    assert r.status_code == 200
+    t = r.json()["targets"]
+    assert (t["min_kcal"], t["max_kcal"]) == (1600, 1900)
+    assert api.put("/me/profile", json={"targets": {"min_kcal": 2000, "max_kcal": 1500}}
+                   ).status_code == 422  # fmt: skip
+
+
 def test_users_do_not_see_each_others_pantry(api):
     assert api.post("/me/pantry", json={"food": "eggs", "quantity": 6, "unit": "piece"}
                     ).status_code == 201  # fmt: skip

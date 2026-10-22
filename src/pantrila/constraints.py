@@ -147,7 +147,12 @@ def day_nutrition(day: PlanDay, recipes: Mapping[str, Recipe]) -> NutritionFacts
 def _target_cost(n: dict[str, float], profile: UserProfile) -> float:
     t = profile.targets
     cost = 0.0
-    if t.kcal:
+    if t.kcal_range:  # anywhere inside the range is as good as anywhere else
+        if t.min_kcal:
+            cost += max(0.0, t.min_kcal - n["kcal"]) / t.min_kcal
+        if t.max_kcal:
+            cost += max(0.0, n["kcal"] - t.max_kcal) / t.max_kcal
+    elif t.kcal:
         cost += abs(n["kcal"] - t.kcal) / t.kcal
     if t.min_protein_g:
         cost += max(0.0, t.min_protein_g - n["protein_g"]) / t.min_protein_g
@@ -167,7 +172,7 @@ def fit_slot_portion(
     """Portions for one meal of a day that bring the day closest to the targets, with the
     day's other meals left as they are. Ties go to a normal portion; 1.0 without targets."""
     t = profile.targets
-    if not (t.kcal or t.min_protein_g or t.max_carbs_g):
+    if not t.any:
         return 1.0
     base = dict.fromkeys(("kcal", "protein_g", "carbs_g"), 0.0)
     for i, m in enumerate(day.meals):
@@ -195,8 +200,7 @@ def fit_portions(plan: MealPlan, profile: UserProfile, recipes: Mapping[str, Rec
         for d in plan.days
     ):
         return plan
-    t = profile.targets
-    if not (t.kcal or t.min_protein_g or t.max_carbs_g):
+    if not profile.targets.any:
         return plan
     days = []
     for day in plan.days:
@@ -263,7 +267,10 @@ def check_plan(
 
         t = profile.targets
         n = day_nutrition(day, recipes)
-        if t.kcal and abs(n.kcal - t.kcal) > KCAL_TOLERANCE * t.kcal:
+        if t.kcal_range:
+            if (t.min_kcal and n.kcal < t.min_kcal) or (t.max_kcal and n.kcal > t.max_kcal):
+                soft("kcal", f"{n.kcal:.0f} kcal, target {t.kcal_text()}", day.day)
+        elif t.kcal and abs(n.kcal - t.kcal) > KCAL_TOLERANCE * t.kcal:
             soft("kcal", f"{n.kcal:.0f} kcal, target {t.kcal:.0f} +/-10%", day.day)
         if t.min_protein_g and n.protein_g < t.min_protein_g:
             soft("protein", f"{n.protein_g:.0f} g protein, need {t.min_protein_g:.0f}", day.day)

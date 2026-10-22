@@ -157,3 +157,38 @@ def test_malformed_plan_is_checked_before_exponential_portion_fitting(recipes, m
     )
     assert fit_portions(oversized, p, recipes) is oversized
     assert "structure" in rules(check_plan(oversized, p, recipes))
+
+
+MEALS = [(B, "french-mushroom-omelette"), (D, "greek-lemon-chicken")]
+
+
+def test_an_energy_range_is_met_anywhere_inside_it(recipes):
+    base = day_nutrition(plan(MEALS).days[0], recipes).kcal
+    inside = profile(targets=NutritionTargets(min_kcal=base * 0.8, max_kcal=base * 1.2))
+    assert check_plan(plan(MEALS), inside, recipes) == []
+    # Inside the range every portion is as good, so normal portions stay.
+    assert fit_portions(plan(MEALS), inside, recipes) == plan(MEALS)
+
+    low = profile(targets=NutritionTargets(min_kcal=base * 1.3, max_kcal=base * 1.6))
+    (warning,) = check_plan(plan(MEALS), low, recipes)
+    assert warning.rule == "kcal" and f"{base * 1.3:.0f}-{base * 1.6:.0f} kcal" in warning.message
+    fitted = day_nutrition(fit_portions(plan(MEALS), low, recipes).days[0], recipes).kcal
+    assert base * 1.3 <= fitted <= base * 1.6
+
+    ceiling = profile(targets=NutritionTargets(max_kcal=base * 0.7))
+    assert rules(check_plan(plan(MEALS), ceiling, recipes)) == ["kcal"]
+    fitted = day_nutrition(fit_portions(plan(MEALS), ceiling, recipes).days[0], recipes).kcal
+    assert fitted <= base * 0.7
+    floor = profile(targets=NutritionTargets(min_kcal=base * 0.5))
+    assert check_plan(plan(MEALS), floor, recipes) == []
+
+
+def test_a_range_replaces_the_single_number_and_must_be_in_order():
+    t = NutritionTargets(kcal=2000, min_kcal=1600, max_kcal=1900)
+    assert t.kcal_range and t.kcal_goal == 1750 and t.kcal_text() == "1600-1900 kcal"
+    assert NutritionTargets(kcal=2000).kcal_text() == "2000 kcal"
+    assert NutritionTargets(max_kcal=1800).kcal_text() == "at most 1800 kcal"
+    assert NutritionTargets(min_kcal=2800).kcal_goal == 2800
+    assert not NutritionTargets().any and NutritionTargets(max_kcal=1800).any
+    with pytest.raises(ValueError):
+        NutritionTargets(min_kcal=2000, max_kcal=1500)

@@ -14,6 +14,8 @@
       ],
       "targets": {
         "kcal": 2000.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": 90.0,
         "max_carbs_g": null
       },
@@ -43,6 +45,8 @@
       ],
       "targets": {
         "kcal": 2200.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": 110.0,
         "max_carbs_g": null
       },
@@ -75,6 +79,8 @@
       ],
       "targets": {
         "kcal": 1900.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": 80.0,
         "max_carbs_g": null
       },
@@ -109,6 +115,8 @@
       ],
       "targets": {
         "kcal": 2100.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": null,
         "max_carbs_g": null
       },
@@ -139,6 +147,8 @@
       ],
       "targets": {
         "kcal": 2000.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": 85.0,
         "max_carbs_g": null
       },
@@ -168,6 +178,8 @@
       ],
       "targets": {
         "kcal": 1800.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": 120.0,
         "max_carbs_g": 100.0
       },
@@ -197,6 +209,8 @@
       ],
       "targets": {
         "kcal": 2000.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": 90.0,
         "max_carbs_g": null
       },
@@ -228,6 +242,8 @@
       ],
       "targets": {
         "kcal": 2200.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": null,
         "max_carbs_g": null
       },
@@ -261,6 +277,8 @@
       ],
       "targets": {
         "kcal": 2000.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": null,
         "max_carbs_g": null
       },
@@ -293,6 +311,8 @@
       ],
       "targets": {
         "kcal": 3000.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": 160.0,
         "max_carbs_g": null
       },
@@ -320,6 +340,8 @@
       ],
       "targets": {
         "kcal": 1600.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": 130.0,
         "max_carbs_g": null
       },
@@ -347,6 +369,8 @@
       ],
       "targets": {
         "kcal": 2000.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": null,
         "max_carbs_g": null
       },
@@ -388,6 +412,8 @@
       ],
       "targets": {
         "kcal": 2100.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": 80.0,
         "max_carbs_g": null
       },
@@ -423,6 +449,8 @@
       ],
       "targets": {
         "kcal": 2000.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": 70.0,
         "max_carbs_g": null
       },
@@ -451,6 +479,8 @@
       ],
       "targets": {
         "kcal": 2400.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": 100.0,
         "max_carbs_g": null
       },
@@ -485,6 +515,8 @@
       ],
       "targets": {
         "kcal": 1500.0,
+        "min_kcal": null,
+        "max_kcal": null,
         "min_protein_g": null,
         "max_carbs_g": null
       },
@@ -496,6 +528,118 @@
         "moroccan",
         "middle_eastern"
       ],
+      "notes": ""
+    }
+  },
+  {
+    "id": "range-weight-loss",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 5,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_kcal": 1500.0,
+        "max_kcal": 1800.0,
+        "min_protein_g": 100.0,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "chicken_breast",
+        "spinach"
+      ],
+      "cuisines": [],
+      "notes": ""
+    }
+  },
+  {
+    "id": "range-maintenance",
+    "profile": {
+      "allergies": [],
+      "diets": [
+        "vegetarian"
+      ],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 7,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_kcal": 1900.0,
+        "max_kcal": 2300.0,
+        "min_protein_g": null,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "chickpeas",
+        "feta"
+      ],
+      "cuisines": [],
+      "notes": ""
+    }
+  },
+  {
+    "id": "ceiling-only",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 4,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_kcal": null,
+        "max_kcal": 1700.0,
+        "min_protein_g": 80.0,
+        "max_carbs_g": null
+      },
+      "pantry": [],
+      "cuisines": [],
+      "notes": ""
+    }
+  },
+  {
+    "id": "floor-only",
+    "profile": {
+      "allergies": [],
+      "diets": [],
+      "exclude_foods": [],
+      "max_minutes": null,
+      "days": 4,
+      "meals": [
+        "breakfast",
+        "lunch",
+        "dinner",
+        "snack"
+      ],
+      "targets": {
+        "kcal": null,
+        "min_kcal": 2800.0,
+        "max_kcal": null,
+        "min_protein_g": 140.0,
+        "max_carbs_g": null
+      },
+      "pantry": [
+        "rolled_oats",
+        "egg"
+      ],
+      "cuisines": [],
       "notes": ""
     }
   }

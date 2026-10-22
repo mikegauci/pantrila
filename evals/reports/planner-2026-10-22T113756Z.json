@@ -1,0 +1,835 @@
+{
+  "meta": {
+    "finished_at": "2026-10-22T113756Z",
+    "plans": 4,
+    "model": "gpt-5.4-mini",
+    "effort": "low",
+    "embed_model": "text-embedding-3-small",
+    "concurrency": 4,
+    "range_as_target": false
+  },
+  "summary": {
+    "plans": 4,
+    "failed": 0,
+    "hard_violations": 0,
+    "plans_with_first_draft_hard": 0,
+    "plans_with_first_draft_soft": 1,
+    "plans_clean": 4,
+    "soft_violations": 0.0,
+    "kcal_error": 0.054405505611335454,
+    "kcal_days_met": 1.0,
+    "protein_days_met": 1.0,
+    "carb_days_met": null,
+    "pantry_use": 1.0,
+    "variety": 0.8252976190476191,
+    "repairs": 0.25,
+    "fallbacks": 0.0,
+    "llm_calls": 1.25,
+    "tool_calls": 0.0,
+    "input_tokens": 3147.0,
+    "output_tokens": 1407.75,
+    "cost_per_plan_usd": 0.008695685,
+    "latency_p50_ms": 14295.643163990462,
+    "latency_p95_ms": 21611.27956499695
+  },
+  "results": [
+    {
+      "profile_id": "range-weight-loss",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 0,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {},
+      "kcal_error": 0.04772121212121213,
+      "kcal_days_met": 1.0,
+      "protein_days_met": 1.0,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 0.8666666666666667,
+      "repairs": 0,
+      "fallbacks": 0,
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "input_tokens": 2374,
+      "output_tokens": 1076,
+      "cost_usd": 0.0066231,
+      "latency_ms": 14295.643163990462,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "greek-spinach-feta-omelette",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "chinese-chicken-noodle-soup",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-chicken-tikka-traybake",
+                "portions": 1.25,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "chinese-tofu-scramble-bowl",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "greek-avgolemono",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "thai-green-curry-chicken",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "indian-raita-chicken-wrap",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-turkey-chilli",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-huevos-rancheros",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "mexican-chicken-tortilla-soup",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "french-chicken-dijon",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "chinese-tofu-scramble-bowl",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "indian-raita-chicken-wrap",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-bbq-chicken-traybake",
+                "portions": 1.25,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          }
+        ],
+        "notes": "This plan uses the pantry spinach on day 1 and chicken breast on day 1 lunch and several later meals, with high-protein choices spread across the week. Each day lands in the target calorie range while staying comfortably above 100 g protein, with a mix of cuisines and mostly distinct recipes for variety."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "range-maintenance",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 1,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {
+        "variety": 1
+      },
+      "kcal_error": 0.04126530612244899,
+      "kcal_days_met": 1.0,
+      "protein_days_met": null,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 0.8095238095238095,
+      "repairs": 1,
+      "fallbacks": 0,
+      "llm_calls": 2,
+      "tool_calls": 0,
+      "input_tokens": 5113,
+      "output_tokens": 2037,
+      "cost_usd": 0.01300185,
+      "latency_ms": 19083.17889198952,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-protein-oats",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "indian-chana-chaat",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "chinese-sweet-sour-tofu",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-huevos-rancheros",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "moroccan-couscous-salad",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-buddha-bowl",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "vietnamese-banh-mi-eggs",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-chickpea-salad-sandwich",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-buddha-bowl",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-avocado-toast-egg",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "japanese-soba-salad",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-mac-cheese",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 5,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-protein-oats",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "middle-eastern-halloumi-style-traybake",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "greek-orzo-style-pasta-salad",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 6,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-beans-on-toast",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "moroccan-couscous-salad",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "greek-spanakopita-pie",
+                "portions": 1.25,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 7,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-tofu-breakfast-tacos",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "french-lentil-salad",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-mac-cheese",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          }
+        ],
+        "notes": "This plan uses chickpeas early and repeatedly through lunches and dinners, and includes feta on multiple days through breakfasts and Mediterranean dishes. It keeps meals varied across cuisines while aiming for balanced daily energy and solid protein across the week."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "ceiling-only",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 0,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {},
+      "kcal_error": 0.09086764705882351,
+      "kcal_days_met": 1.0,
+      "protein_days_met": 1.0,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 1.0,
+      "repairs": 0,
+      "fallbacks": 0,
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "input_tokens": 2229,
+      "output_tokens": 707,
+      "cost_usd": 0.00485349,
+      "latency_ms": 8946.924065996427,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-full-english-lite",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-turkey-chilli",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "greek-turkey-meatballs",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "chinese-chicken-noodle-soup",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "indian-chicken-tikka-traybake",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "chinese-tofu-scramble-bowl",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "french-nicoise-salad",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "japanese-chicken-yakitori",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "british-beans-on-toast",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "japanese-soba-salad",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-jambalaya",
+                "portions": 0.75,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          }
+        ],
+        "notes": "This plan keeps each day under 1700 kcal while staying comfortably above 80 g protein. It uses a mix of higher-protein mains and lighter breakfasts to balance the totals, with broad variety across cuisines and ingredients."
+      },
+      "warnings": []
+    },
+    {
+      "profile_id": "floor-only",
+      "ok": true,
+      "hard_violations": 0,
+      "first_draft_hard": 0,
+      "first_draft_soft": 0,
+      "soft_violations": 0,
+      "violation_rules": {},
+      "first_draft_rules": {},
+      "kcal_error": 0.037767857142857186,
+      "kcal_days_met": 1.0,
+      "protein_days_met": 1.0,
+      "carb_days_met": null,
+      "pantry_use": 1.0,
+      "variety": 0.625,
+      "repairs": 0,
+      "fallbacks": 0,
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "input_tokens": 2872,
+      "output_tokens": 1811,
+      "cost_usd": 0.0103043,
+      "latency_ms": 21611.27956499695,
+      "plan": {
+        "days": [
+          {
+            "day": 1,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-protein-oats",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "french-nicoise-salad",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "mexican-burrito-bowl",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "american-trail-mix",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "american-avocado-toast-egg",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-turkey-club",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-bbq-chicken-traybake",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "vietnamese-fresh-rolls-veg",
+                "portions": 1.25,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "american-turkey-club",
+                "portions": 1.25,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-turkey-chilli",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "american-trail-mix",
+                "portions": 1.25,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "meals": [
+              {
+                "meal_type": "breakfast",
+                "recipe_id": "mexican-breakfast-burrito",
+                "portions": 1.5,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "lunch",
+                "recipe_id": "french-nicoise-salad",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "dinner",
+                "recipe_id": "american-turkey-chilli",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              },
+              {
+                "meal_type": "snack",
+                "recipe_id": "vietnamese-fresh-rolls-veg",
+                "portions": 1.0,
+                "kind": "recipe",
+                "from_day": null,
+                "from_meal": null,
+                "out_kcal": null
+              }
+            ]
+          }
+        ],
+        "notes": "The plan uses rolled oats on day 1 and includes egg-based recipes early in the week, while keeping each day comfortably above the calorie and protein targets. It also repeats only a few high-protein staples to stay within variety limits while still covering the pantry items."
+      },
+      "warnings": []
+    }
+  ]
+}
