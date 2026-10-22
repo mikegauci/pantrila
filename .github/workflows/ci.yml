@@ -95,18 +95,12 @@ jobs:
           path: web/.next/cache
           key: next-${{ hashFiles('web/package-lock.json') }}-${{ hashFiles('web/src/**') }}
           restore-keys: next-${{ hashFiles('web/package-lock.json') }}-
-      - id: playwright
-        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
-      - uses: actions/cache@v4
-        id: browsers
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ steps.playwright.outputs.version }}
-      - if: steps.browsers.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
-      - if: steps.browsers.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
+      # Tests run in the Google Chrome that ships with the runner image, so there is no browser
+      # download and no apt install of its libraries (that step took 5-10 minutes).
+      - run: google-chrome --version
       - run: npm run test:e2e
+        env:
+          PLAYWRIGHT_CHANNEL: chrome
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
