@@ -45,5 +45,5 @@ test("a preheat step in cooking mode shows the bake sentence on hover, not on th
   await cooking.getByRole("button", { name: "Start cooking" }).click()
   const trigger = cooking.getByRole("button", { name: "Preheat the oven" })
   await trigger.hover()
-  await expect(page.getByText("Step 3: Bake at 180°C (165°C fan) for 9-12 minutes.")).toBeVisible()
+  await expect(page.getByText("Shown in Step 3: Bake at 180°C (165°C fan) for 9-12 minutes.")).toBeVisible()
 })

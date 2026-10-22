@@ -45,7 +45,7 @@ five seasonings instead of both olive oils. Web only, no model call, so no eval 
 
 Preheat hint: in cooking mode only, a step that says preheat (or heat the oven) without a time underlines
 "Preheat the oven" (dotted, like tappable amounts); hover, focus or tap opens a popover with the sentence of the next
-timed step within 3 steps that names the time ("Step 3: Bake at 180°C (165°C fan) for 9-12 minutes.";
+timed step within 3 steps that names the time ("Shown in Step 3: Bake at 180°C (165°C fan) for 9-12 minutes.";
 `preheatHint` in `web/src/lib/cooking.ts`, `web/src/components/preheat-text.tsx`, Base UI Popover). Recipe pages no
 longer show the old "Coming up in step N" note. Web only, no model call, so no eval rerun; 1 new Playwright test
 (`web/tests/preheat-hint.spec.ts`).
