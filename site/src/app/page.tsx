@@ -17,7 +17,7 @@ import {
 import { OpenApp } from "@/components/chrome"
 import { BrowserFrame, PhoneFrame } from "@/components/frames"
 import { FlipWord } from "@/components/flip-word"
-import { APP_URL, GITHUB_URL } from "@/lib"
+import { APP_URL, GITHUB_URL, cn } from "@/lib"
 
 const FEATURES = [
   {
@@ -37,8 +37,9 @@ const FEATURES = [
   },
   {
     icon: ChefHat,
-    title: "Cooking mode",
-    text: "One step at a time, with timers taken from the recipe and the screen kept awake. Say “next” or “start timer” when your hands are messy.",
+    title: "Cooking mode, hands free",
+    text: "One step at a time, with timers taken from the recipe and the screen kept awake. Turn on the mic and say “next”, “back” or “start timer” when your hands are in the bowl.",
+    highlight: true,
   },
   {
     icon: ShoppingBasket,
@@ -82,6 +83,14 @@ const SHOWCASE = [
     points: ["Links, photos, posts or typed in", "Keeps the creator’s notes and credit", "Allergens checked like every other recipe"],
     image: { src: "/screens/recipe.jpg", alt: "A recipe in Pantrila with its photo, allergens, ingredients and nutrition", width: 1280, height: 800 },
   },
+  {
+    eyebrow: "Cook",
+    title: "Cooking mode that listens, so your hands stay busy",
+    text: "Open a recipe and start cooking. Pantrila shows one step at a time, starts the timers the method asks for and keeps the screen awake. Turn on the mic and it follows your voice.",
+    points: ["Say “next”, “back”, “start timer” or “stop timer”", "A chime and a short label confirm each command", "Keeps your place if the screen locks, and the mic picks up again when you return"],
+    image: { src: "/screens/cooking.jpg", alt: "Cooking mode on a phone, showing one step and a timer", width: 390, height: 844 },
+    phone: true,
+  },
 ]
 
 const SAFETY = [
@@ -119,6 +128,10 @@ const FAQ = [
     q: "Is there a phone app?",
     a: "Pantrila works in the browser on your phone today, including cooking mode and voice commands. Apps for iPhone and Android are on the way.",
   },
+  {
+    q: "Does cooking mode work hands free?",
+    a: "Yes. Turn on the mic in cooking mode and say “next”, “back”, “start timer” or “stop timer”. Your browser sends the speech to Google or Apple to turn it into words, the mic stops when the page is hidden, and the buttons still work if your browser has no speech recognition.",
+  },
 ]
 
 export default function Home() {
@@ -153,7 +166,8 @@ function Hero() {
           </h1>
           <p className="max-w-xl text-[17px] leading-[28px] text-muted-foreground text-pretty">
             Tell Pantrila what is in your kitchen, how you eat and what you can’t. It finds recipes, plans your week,
-            writes the grocery list and talks you through the cooking, and checks every meal against your allergies.
+            writes the grocery list and talks you through the cooking, hands free if you like, and checks every meal
+            against your allergies.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <OpenApp className="h-12 px-6 text-[16px]">Open Pantrila, it’s free</OpenApp>
@@ -234,12 +248,25 @@ function Features() {
           text="From the first idea to the last step at the stove, in one place."
         />
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map(({ icon: Icon, title, text }) => (
-            <li key={title} className="rounded-2xl border border-border bg-surface p-6 shadow-soft">
+          {FEATURES.map(({ icon: Icon, title, text, highlight }) => (
+            <li
+              key={title}
+              className={cn(
+                "rounded-2xl border bg-surface p-6 shadow-soft",
+                highlight ? "border-primary ring-4 ring-primary/15" : "border-border",
+              )}
+            >
               <span className="mb-4 grid size-11 place-items-center rounded-xl bg-primary-soft text-primary-text">
                 <Icon className="size-5" aria-hidden="true" />
               </span>
-              <h3 className="mb-1.5 text-[17px] font-bold">{title}</h3>
+              <h3 className="mb-1.5 flex flex-wrap items-center gap-2 text-[17px] font-bold">
+                {title}
+                {highlight && (
+                  <span className="rounded-full bg-primary px-2 py-0.5 text-[11px] font-semibold tracking-wide text-primary-foreground uppercase">
+                    Voice
+                  </span>
+                )}
+              </h3>
               <p className="text-[14px] leading-[22px] text-muted-foreground">{text}</p>
             </li>
           ))}
@@ -258,9 +285,15 @@ function Showcase() {
           className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-14"
         >
           <div className={i % 2 === 1 ? "lg:order-2" : undefined}>
-            <BrowserFrame>
-              <Image {...item.image} alt={item.image.alt} sizes="(min-width: 1024px) 540px, 100vw" />
-            </BrowserFrame>
+            {item.phone ? (
+              <PhoneFrame className="mx-auto w-[240px] sm:w-[260px]">
+                <Image {...item.image} alt={item.image.alt} sizes="260px" />
+              </PhoneFrame>
+            ) : (
+              <BrowserFrame>
+                <Image {...item.image} alt={item.image.alt} sizes="(min-width: 1024px) 540px, 100vw" />
+              </BrowserFrame>
+            )}
           </div>
           <div className="space-y-4">
             <p className="text-[13px] font-semibold tracking-wide text-primary-text uppercase">{item.eyebrow}</p>
