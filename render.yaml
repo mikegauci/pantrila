@@ -21,7 +21,7 @@ services:
         value: https://tlnigvzkselebbtetibt.supabase.co
       - key: SUPABASE_SERVICE_ROLE_KEY # uploads cookbook photos to Supabase Storage
         sync: false
-      - key: PANTRILA_CORS_ORIGINS # the Vercel URL(s), comma separated
+      - key: PANTRILA_CORS_ORIGINS # web origins, comma separated: https://app.pantrila.com,https://pantrila.vercel.app
         sync: false
       - key: PANTRILA_MODEL
         value: gpt-5.4-mini
