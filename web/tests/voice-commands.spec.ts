@@ -79,7 +79,9 @@ test("voice commands move between steps and run timers", async ({ page }) => {
   await expect(cooking.getByText("Cook hands-free.")).toBeHidden()
   expect(await page.evaluate(() => (window as unknown as { __listening: boolean }).__listening)).toBe(true)
 
-  await say(page, "Next")
+  await say(page, "start cooking")
+  await expect(cooking.getByText("Whisk the eggs.")).toBeVisible()
+  await say(page, "start") // only the get-ready page starts cooking
   await expect(cooking.getByText("Whisk the eggs.")).toBeVisible()
   await say(page, "start timer")
   await expect(page.getByRole("status").filter({ hasText: "No timer in this step" })).toBeVisible()

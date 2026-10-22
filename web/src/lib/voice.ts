@@ -4,7 +4,8 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 
 // --- Commands -------------------------------------------------------------------------------
 
-export type VoiceCommand = "next" | "back" | "start-timer" | "stop-timer"
+// "start" ("start cooking") only acts on the get-ready page, so it is not in the commands list.
+export type VoiceCommand = "next" | "back" | "start" | "start-timer" | "stop-timer"
 
 /** What each command does, for the commands list and the tour. */
 export const VOICE_COMMANDS: { say: string; does: string }[] = [
@@ -32,6 +33,7 @@ export function voiceCommand(heard: string): VoiceCommand | null {
     if (BACK.has(words[i])) return "back"
     if (words[i] === "stop" || words[i] === "pause" || words[i] === "silence") return "stop-timer"
   }
+  if (words.some((w) => w === "start" || w === "begin" || w === "cook" || w === "cooking")) return "start"
   return null
 }
 

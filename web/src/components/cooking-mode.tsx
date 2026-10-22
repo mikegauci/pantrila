@@ -222,6 +222,11 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
       chime()
       setHeard({ text, at })
     }
+    if (c === "start") {
+      if (page !== 0) return
+      go(1)
+      return say("Step 1")
+    }
     if (c === "next") {
       if (page > n) return say("That was the last step")
       go(page + 1)
