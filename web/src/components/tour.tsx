@@ -66,6 +66,11 @@ const STEPS: Step[] = [
     body: "Paste a TikTok, Instagram or Facebook link. Pantrila reads the recipe from the caption, the creator’s recipe page or the video, and credits the creator.",
   },
   {
+    path: "/recipes",
+    title: "Cook hands-free",
+    body: "Open any recipe and tap Start cooking for one step at a time. Tap the mic and say “next”, “back”, “start timer” or “stop timer” when your hands are busy.",
+  },
+  {
     path: "/plan",
     anchor: "plan-generate",
     title: "Plan your week",
