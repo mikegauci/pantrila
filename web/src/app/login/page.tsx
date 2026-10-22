@@ -166,6 +166,12 @@ export default function LoginPage() {
               </p>
             )}
           </div>
+          <p className="mt-6 text-center text-[12px] text-muted-foreground">
+            By continuing you agree to the{" "}
+            <a href="https://pantrila.com/terms" className="underline underline-offset-4 hover:text-foreground">Terms</a>
+            {" "}and{" "}
+            <a href="https://pantrila.com/privacy" className="underline underline-offset-4 hover:text-foreground">Privacy policy</a>.
+          </p>
         </div>
       </section>
     </main>
