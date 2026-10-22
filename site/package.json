@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "lucide-react": "^1.58.0",
+    "motion": "^12.43.0",
     "next": "16.4.2",
     "react": "19.3.0",
     "react-dom": "19.3.0"

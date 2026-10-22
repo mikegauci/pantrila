@@ -63,3 +63,27 @@
     outline-offset: 2px;
   }
 }
+
+/* FAQ answers slide open and shut where the browser can animate to height: auto
+   (Chrome and Edge today); elsewhere they open at once as before. */
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+  details.faq::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 0.3s ease,
+      content-visibility 0.3s allow-discrete;
+  }
+  details.faq[open]::details-content {
+    block-size: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  details.faq::details-content {
+    transition: none;
+  }
+}

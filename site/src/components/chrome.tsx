@@ -1,6 +1,7 @@
 import Link from "next/link"
 
 import { Logo } from "@/components/logo"
+import { ScrollHeader } from "@/components/scroll-header"
 import { APP_URL, GITHUB_URL, cn } from "@/lib"
 
 export function OpenApp({ className, children = "Open Pantrila" }: { className?: string; children?: React.ReactNode }) {
@@ -8,7 +9,7 @@ export function OpenApp({ className, children = "Open Pantrila" }: { className?:
     <a
       href={APP_URL}
       className={cn(
-        "inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 font-semibold text-primary-foreground shadow-soft transition-colors hover:bg-primary-text",
+        "group inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 font-semibold text-primary-foreground shadow-soft transition-[background-color,transform,box-shadow] hover:bg-primary-text hover:shadow-lift active:scale-[0.97]",
         className,
       )}
     >
@@ -25,7 +26,7 @@ const NAV = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-border/70 bg-background/85 backdrop-blur">
+    <ScrollHeader>
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/" aria-label="Pantrila home">
           <Logo />
@@ -39,7 +40,7 @@ export function SiteHeader() {
         </nav>
         <OpenApp className="h-10 px-4 text-[14px]" />
       </div>
-    </header>
+    </ScrollHeader>
   )
 }
 

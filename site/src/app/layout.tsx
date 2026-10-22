@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Plus_Jakarta_Sans } from "next/font/google"
 
 import { SiteFooter, SiteHeader } from "@/components/chrome"
+import { MotionProvider } from "@/components/motion"
 import { SITE_URL } from "@/lib"
 import "./globals.css"
 
@@ -35,9 +36,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${sans.variable} antialiased`}>
       <body className="flex min-h-dvh flex-col font-sans text-[15px] leading-[24px]">
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-        <SiteFooter />
+        <MotionProvider>
+          <SiteHeader />
+          <main className="flex-1">{children}</main>
+          <SiteFooter />
+        </MotionProvider>
       </body>
     </html>
   )

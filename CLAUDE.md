@@ -33,6 +33,15 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Landing site animations: `site/` gains Motion (`motion/react`, `LazyMotion` + `m.*` only, `MotionConfig
+reducedMotion="user"`; `src/components/motion.tsx`: `Reveal`, `StaggerList`, `CountUp`, `usePhases`). Hero glow
+drifts, the screenshots rise in, the phone floats and the pair tilts towards a mouse (`hero-art.tsx`); facts count up;
+sections and cards reveal on scroll; each "up close" screenshot carries a looping demo card (`demos.tsx`: plan day
+filling, assistant reply, post import steps, voice timer), played only while on screen and shown finished under
+reduced motion; Safety ticks off the 14 EU allergens (`allergen-check.tsx`); the header turns frosted once scrolled
+(`scroll-header.tsx`); buttons press and their arrows nudge; FAQ answers slide (CSS `interpolate-size`, Chrome/Edge).
+Landing site only, no model call, so no eval rerun.
+
 Old address retired, custom domain phase 5: `web/src/proxy.ts` redirects `pantrila.vercel.app` and
 `pantrio-azure.vercel.app` to `https://app.pantrila.com` (308, path and query kept); guests who never linked Google
 start over there, by the owner's choice. Render `PANTRILA_CORS_ORIGINS` is `https://app.pantrila.com` plus
@@ -729,7 +738,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - `render.yaml`: Render Blueprint for the API.
 - `site/`: the pantrila.com landing site (Next.js, static, no API or sign-in): `src/app/page.tsx` (sections),
   `privacy/`, `terms/`, `src/lib.ts` (addresses and contact), `src/components/` (header/footer, screenshot
-  frames, logo copied from `web/`), `public/screens/` (app screenshots).
+  frames, logo copied from `web/`; animation in `motion.tsx`, `hero-art.tsx`, `demos.tsx`, `allergen-check.tsx`),
+  `public/screens/` (app screenshots).
 - `data/`: `ingredients.csv` (hand-curated), `usda_foods.csv` (built by
   `scripts/build_usda_table.py`), `dish_briefs.csv` (300 fixed briefs), `recipes/*.json`
   (generated corpus, one file per recipe), `corpus_manifest.json` (generation runs and cost).
