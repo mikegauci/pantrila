@@ -33,6 +33,20 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Energy range: `NutritionTargets` gains `min_kcal` / `max_kcal` (either end may be open; a range replaces `kcal`; floor
+above ceiling is a 422). Inside the range a day meets the target and costs nothing in portion fitting, so normal
+portions stay; outside, the cost is the distance past the nearer end (`constraints._target_cost`, soft "kcal" warning
+"1450 kcal, target 1600-1900 kcal"). Prompts use `NutritionTargets.kcal_text()`: one number reads exactly as before
+("2000 kcal"), so the 16 existing planner profiles and every chat case get byte-identical prompts; a two-ended range
+adds "(any day inside the range is fine; aim for about 1750)". Profile page: "One number / A range" switch (range
+prefilled at +/-10%); the plan's Energy bar draws the range as a band. Eval: 4 range profiles (`range-weight-loss`,
+`range-maintenance`, `ceiling-only`, `floor-only`), new "Days meeting the energy target" metric, and
+`evals.run_planner --range-as-target` (the range given as its middle, as people had to before). Before
+`planner-2026-10-22T113728Z` vs after `planner-2026-10-22T113756Z` on `gpt-5.4-mini`: 0 hard violations both, days
+meeting the energy target 81% -> 100%, plans meeting every target 2/4 -> 4/4, kcal error against the middle 0% -> 5%
+(any day inside counts), distinct recipes 98% -> 83%, $0.0061 -> $0.0087/plan (one repair), p50/p95 13.8/17.1 ->
+14.3/21.6 s (single runs). 1 new Playwright test (`web/tests/energy-range.spec.ts`).
+
 Meal prep (repeat a meal): the meal menu's "Repeat on other days" sheet (`web/src/components/repeat-meal.tsx`) turns
 chosen meals on later days into leftovers of one cooked meal through `PUT /plans/latest/meals/{day}/{meal_type}/repeat`
 (`meal_swap.repeat_meal`: up to 12 meals, all or none, each with `set_slot`'s leftovers checks; only a cooked meal
@@ -725,7 +739,7 @@ uv run python -m evals.retrieval_queries # regenerate labelled queries from the 
 uv run python -m evals.run_retrieval     # retrieval eval (vector vs full text vs hybrid)
 uv run pantrila plan vegan-high-protein   # plan for an eval profile id or a UserProfile JSON file
 uv run python -m evals.plan_profiles     # regenerate the planner eval profiles
-uv run python -m evals.run_planner [--only ids]   # planner eval (paid; ~$0.03/plan on mini)
+uv run python -m evals.run_planner [--only ids] [--range-as-target]   # planner eval (paid; ~$0.03/plan on mini)
 uv run pantrila plan --user me --grocery [--people 2]   # plan from a saved profile + grocery list
 uv run pantrila profile set coeliac --with-pantry [--user me]   # save a profile (file or eval id)
 uv run pantrila pantry add eggs 6 piece | remove eggs | list [--user me]   # or PANTRILA_USER

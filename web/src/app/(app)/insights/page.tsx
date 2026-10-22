@@ -7,11 +7,13 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { EVALS } from "@/lib/evals"
 import { percentile, seconds, usd } from "@/lib/format"
 import { usePlan, useUsage } from "@/lib/hooks"
+import { kcalGoal, kcalTargetText } from "@/lib/plan"
 import type { Plan, UsageEvent } from "@/lib/types"
 
 function DayChart({ plan }: { plan: Plan }) {
-  const target = plan.targets.kcal
-  const max = Math.max(target ?? 0, ...plan.days.map((d) => d.nutrition.kcal)) * 1.15 || 1
+  const target = kcalTargetText(plan.targets)
+  const top = plan.targets.max_kcal ?? kcalGoal(plan.targets) ?? 0
+  const max = Math.max(top, ...plan.days.map((d) => d.nutrition.kcal)) * 1.15 || 1
   return (
     <figure>
       <div className="flex h-48 items-end gap-2 border-b pb-px" aria-hidden>
@@ -42,7 +44,7 @@ function DayChart({ plan }: { plan: Plan }) {
         <span className="text-muted-foreground">Bar height is energy; colours split it by macro.</span>
       </figcaption>
       <table className="sr-only">
-        <caption>Daily nutrition per person{target ? `, target ${target} kcal` : ""}</caption>
+        <caption>Daily nutrition per person{target ? `, target ${target}` : ""}</caption>
         <thead><tr><th>Day</th><th>kcal</th><th>Protein g</th><th>Carbs g</th><th>Fat g</th></tr></thead>
         <tbody>
           {plan.days.map((d) => (

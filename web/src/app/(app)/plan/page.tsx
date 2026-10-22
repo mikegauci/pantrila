@@ -14,7 +14,7 @@ import { SwapMealSheet, type SwapTarget } from "@/components/swap-meal"
 import { ApiError, streamPlan } from "@/lib/api"
 import { label, MEAL_ORDER, planDayIndex, seconds, usd } from "@/lib/format"
 import { useMe, usePlan, useProfile } from "@/lib/hooks"
-import { mealHref } from "@/lib/plan"
+import { hasKcalRange, kcalMet, kcalTargetText, mealHref } from "@/lib/plan"
 import { cn } from "@/lib/utils"
 import type { Nutrition, NutritionTargets, Plan, PlanMeal } from "@/lib/types"
 
@@ -52,10 +52,37 @@ function Bar({ value, target, color, name, unit, kind }: {
   )
 }
 
+/** Energy against one number (±10%) or a range, drawn as a band between its ends. */
+function EnergyBar({ value, t }: { value: number; t: NutritionTargets }) {
+  if (!hasKcalRange(t)) {
+    return <Bar name="Energy" value={value} target={t.kcal} unit="kcal" color="var(--foreground)" kind="near" />
+  }
+  const lo = t.min_kcal ?? 0
+  const hi = t.max_kcal ?? null
+  const max = Math.max(value, hi ?? lo) * 1.1 || 1
+  const ok = kcalMet(value, t)
+  return (
+    <div className="grid gap-1">
+      <div className="flex justify-between text-[12px]">
+        <span className="text-muted-foreground">Energy</span>
+        <span className={cn("tabular font-medium", !ok && "text-[#a65a00]")}>
+          {Math.round(value)} kcal <span className="text-muted-foreground">· {kcalTargetText(t)}</span>
+          {!ok && <span className="sr-only"> (target missed)</span>}
+        </span>
+      </div>
+      <div className="relative h-1.5 rounded-full bg-surface-muted">
+        <div className="absolute inset-y-0 rounded-full bg-primary-soft ring-1 ring-primary/40"
+             style={{ left: `${(lo / max) * 100}%`, width: `${(((hi ?? max) - lo) / max) * 100}%` }} aria-hidden />
+        <div className="relative h-full rounded-full bg-foreground" style={{ width: `${(value / max) * 100}%` }} />
+      </div>
+    </div>
+  )
+}
+
 function DayTargets({ n, t }: { n: Nutrition; t: NutritionTargets }) {
   return (
     <div className="grid gap-2">
-      <Bar name="Energy" value={n.kcal} target={t.kcal} unit="kcal" color="var(--foreground)" kind="near" />
+      <EnergyBar value={n.kcal} t={t} />
       <Bar name="Protein" value={n.protein_g} target={t.min_protein_g} unit="g" color="var(--primary)" kind="min" />
       <Bar name="Carbs" value={n.carbs_g} target={t.max_carbs_g} unit="g" color="var(--accent-yellow)" kind="max" />
     </div>

@@ -148,3 +148,15 @@ def test_portions_are_fitted_and_unknown_pantry_foods_dropped(store):
     result = Planner(store, client=FakeClient(plan_reply(CHICKEN, CURRY)), model="m").plan(p)
     assert all(abs(n.kcal - 1500) <= 150 for n in result.nutrition)
     assert result.pantry_use == 1.0
+
+
+def test_the_prompt_states_a_range_and_keeps_single_targets_as_they_were():
+    from pantrila.planner import profile_text
+
+    single = profile_text(UserProfile(targets={"kcal": 2000, "min_protein_g": 90}))
+    assert "Daily targets: 2000 kcal, at least 90 g protein." in single
+    ranged = profile_text(UserProfile(targets={"min_kcal": 1600, "max_kcal": 1900}))
+    assert "1600-1900 kcal (any day inside the range is fine; aim for about 1750)" in ranged
+    assert "Daily targets: at most 1800 kcal." in profile_text(
+        UserProfile(targets={"max_kcal": 1800})
+    )

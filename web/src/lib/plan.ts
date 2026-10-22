@@ -1,5 +1,5 @@
 import { label } from "@/lib/format"
-import type { MealType, Plan, PlanMeal } from "@/lib/types"
+import type { MealType, NutritionTargets, Plan, PlanMeal } from "@/lib/types"
 
 /** Rough energy for eating out, offered as one tap each; "Don't count" leaves it unknown. */
 export const EATING_OUT_SIZES = [
@@ -78,4 +78,29 @@ export function cookPortions(plan: Plan, day: number, meal: MealType): { total: 
     .filter((m) => m.kind === "leftovers" && m.from_day === day && m.from_meal === meal)
     .reduce((sum, m) => sum + m.portions, 0)
   return { total: (own?.portions ?? 0) + later, later }
+}
+
+/** True when energy is a range (min and/or max) rather than one number. */
+export const hasKcalRange = (t: NutritionTargets) => Boolean(t.min_kcal || t.max_kcal)
+
+/** One number to aim for: the range's middle (or its only end), else the single target. */
+export function kcalGoal(t: NutritionTargets): number | null {
+  if (t.min_kcal && t.max_kcal) return (t.min_kcal + t.max_kcal) / 2
+  return t.min_kcal || t.max_kcal || t.kcal || null
+}
+
+/** The energy target as people say it: "2000 kcal", "1600–1900 kcal", "at least 2800 kcal". */
+export function kcalTargetText(t: NutritionTargets): string | null {
+  const [lo, hi] = [t.min_kcal, t.max_kcal]
+  if (lo && hi) return `${Math.round(lo)}–${Math.round(hi)} kcal`
+  if (lo) return `at least ${Math.round(lo)} kcal`
+  if (hi) return `at most ${Math.round(hi)} kcal`
+  return t.kcal ? `${Math.round(t.kcal)} kcal` : null
+}
+
+/** Whether a day's energy meets the target: inside the range, or within ±10% of one number
+ * (the same rule as the server's checker). */
+export function kcalMet(kcal: number, t: NutritionTargets): boolean {
+  if (hasKcalRange(t)) return (!t.min_kcal || kcal >= t.min_kcal) && (!t.max_kcal || kcal <= t.max_kcal)
+  return !t.kcal || Math.abs(kcal - t.kcal) <= 0.1 * t.kcal
 }

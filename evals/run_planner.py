@@ -27,15 +27,33 @@ from evals.metrics import percentile
 from evals.plan_profiles import OUT as PROFILES
 from evals.plan_profiles import load_profiles
 from pantrila import config, db
-from pantrila.constraints import Severity, check_plan, hard_violations
+from pantrila.constraints import KCAL_TOLERANCE, Severity, check_plan, hard_violations
 from pantrila.planner import MAX_REPAIRS, DbStore, Planner, PlanResult
-from pantrila.schema import UserProfile
+from pantrila.schema import NutritionTargets, UserProfile
 from pantrila.search import openai_query_embedder
 
 REPORTS = Path(__file__).parent / "reports"
+BEFORE_NOTE = "; energy ranges given to the planner as their middle (the before run)"
+
+
+def kcal_met(kcal: float, t: NutritionTargets) -> bool:
+    if t.kcal_range:
+        return (not t.min_kcal or kcal >= t.min_kcal) and (not t.max_kcal or kcal <= t.max_kcal)
+    return abs(kcal - t.kcal) <= KCAL_TOLERANCE * t.kcal
+
+
+def as_target(profile: UserProfile) -> UserProfile:
+    """The profile with an energy range given as one number (its middle), as people had to
+    set it before ranges: the before side of the range eval."""
+    t = profile.targets
+    if not t.kcal_range:
+        return profile
+    point = t.model_copy(update={"kcal": t.kcal_goal, "min_kcal": None, "max_kcal": None})
+    return profile.model_copy(update={"targets": point})
 
 
 def score(pid: str, profile: UserProfile, r: PlanResult) -> dict:
+    """Scores against `profile` as the person set it, whatever the planner was given."""
     t = profile.targets
     violations = check_plan(r.plan, profile, r.recipes)  # independent re-check
     meals = [m.recipe_id for _, m in r.plan.meals]
@@ -49,8 +67,13 @@ def score(pid: str, profile: UserProfile, r: PlanResult) -> dict:
         "soft_violations": sum(v.severity is Severity.SOFT for v in violations),
         "violation_rules": dict(Counter(v.rule for v in violations)),
         "first_draft_rules": dict(Counter(v.rule for v in first)),
-        "kcal_error": statistics.fmean(abs(n.kcal - t.kcal) / t.kcal for n in r.nutrition)
-        if t.kcal
+        # Against the range's middle for a range, so before/after runs compare the same way.
+        "kcal_error": statistics.fmean(abs(n.kcal - goal) / goal for n in r.nutrition)
+        if (goal := t.kcal_goal)
+        else None,
+        # The energy target as the person set it: inside the range, or within +/-10%.
+        "kcal_days_met": statistics.fmean(kcal_met(n.kcal, t) for n in r.nutrition)
+        if t.kcal_goal
         else None,
         "protein_days_met": statistics.fmean(n.protein_g >= t.min_protein_g for n in r.nutrition)
         if t.min_protein_g
@@ -73,11 +96,13 @@ def score(pid: str, profile: UserProfile, r: PlanResult) -> dict:
     }
 
 
-def run_one(pid: str, profile: UserProfile, model: str, effort: str) -> dict:
+def run_one(pid: str, profile: UserProfile, model: str, effort: str, point: bool = False) -> dict:
+    """`point`: give the planner an energy range as one number (the before side)."""
     with db.connect(config.database_url()) as conn:
         store = DbStore(conn, openai_query_embedder(config.embed_model()))
         try:
-            result = Planner(store, model=model, effort=effort, source="eval").plan(profile)
+            given = as_target(profile) if point else profile
+            result = Planner(store, model=model, effort=effort, source="eval").plan(given)
         except Exception as exc:  # a refused or failed plan is a result, not a crash
             return {"profile_id": pid, "ok": False, "error": f"{type(exc).__name__}: {exc}"}
     row = score(pid, profile, result)
@@ -107,6 +132,7 @@ def summarise(rows: list[dict]) -> dict:
             for k in (
                 "soft_violations",
                 "kcal_error",
+                "kcal_days_met",
                 "protein_days_met",
                 "carb_days_met",
                 "pantry_use",
@@ -139,7 +165,8 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"# Meal-planning eval {meta['finished_at']}",
         "",
         f"{meta['plans']} profiles, model `{meta['model']}` (reasoning {meta['effort']}), "
-        f"up to {MAX_REPAIRS} repairs, {meta['concurrency']} plans in parallel.",
+        f"up to {MAX_REPAIRS} repairs, {meta['concurrency']} plans in parallel"
+        f"{BEFORE_NOTE if meta.get('range_as_target') else ''}.",
         "",
         "| Metric | Value |",
         "|---|---|",
@@ -149,6 +176,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"| First drafts missing a target | {s['plans_with_first_draft_soft']} |",
         f"| Plans meeting every target | {s['plans_clean']} |",
         f"| Mean daily kcal error | {pct(s['kcal_error'])} |",
+        f"| Days meeting the energy target | {pct(s['kcal_days_met'])} |",
         f"| Days meeting protein minimum | {pct(s['protein_days_met'])} |",
         f"| Days under carb limit | {pct(s['carb_days_met'])} |",
         f"| Pantry foods used | {pct(s['pantry_use'])} |",
@@ -163,18 +191,20 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"| Latency p50 / p95 | {s['latency_p50_ms'] / 1000:.1f}s / "
         f"{s['latency_p95_ms'] / 1000:.1f}s |",
         "",
-        "| Profile | First draft | Repairs | Left | kcal err | Protein days | Pantry | s |",
-        "|---|---|---|---|---|---|---|---|",
+        "| Profile | First draft | Repairs | Left | kcal err | kcal days | Protein days | Pantry "
+        "| s |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for r in rows:
         if not r["ok"]:
-            lines.append(f"| {r['profile_id']} | failed: {r['error']} | | | | | | |")
+            lines.append(f"| {r['profile_id']} | failed: {r['error']} | | | | | | | |")
             continue
         first = ", ".join(f"{k} {v}" for k, v in sorted(r["first_draft_rules"].items())) or "-"
         left = ", ".join(f"{k} {v}" for k, v in sorted(r["violation_rules"].items())) or "-"
         lines.append(
             f"| {r['profile_id']} | {first} | {r['repairs']} | {left} | {pct(r['kcal_error'])} "
-            f"| {pct(r['protein_days_met'])} | {pct(r['pantry_use'])} "
+            f"| {pct(r.get('kcal_days_met'))} | {pct(r['protein_days_met'])} "
+            f"| {pct(r['pantry_use'])} "
             f"| {r['latency_ms'] / 1000:.0f} |"
         )
     return "\n".join(lines) + "\n"
@@ -235,6 +265,11 @@ def main() -> None:
     parser.add_argument("--only", help="comma-separated profile ids")
     parser.add_argument("--effort", default="low", choices=["minimal", "low", "medium", "high"])
     parser.add_argument("--concurrency", type=int, default=4)
+    parser.add_argument(
+        "--range-as-target",
+        action="store_true",
+        help="give energy ranges to the planner as their middle (the before run)",
+    )
     args = parser.parse_args()
 
     profiles = load_profiles()
@@ -243,7 +278,9 @@ def main() -> None:
         profiles = [(pid, p) for pid, p in profiles if pid in wanted]
     model = config.model()
     with ThreadPoolExecutor(args.concurrency) as pool:
-        rows = list(pool.map(lambda pp: run_one(*pp, model, args.effort), profiles))
+        rows = list(
+            pool.map(lambda pp: run_one(*pp, model, args.effort, args.range_as_target), profiles)
+        )
 
     summary = summarise(rows)
     meta = {
@@ -253,6 +290,7 @@ def main() -> None:
         "effort": args.effort,
         "embed_model": config.embed_model(),
         "concurrency": args.concurrency,
+        "range_as_target": args.range_as_target,
     }
     report = markdown(summary, rows, meta)
     print(report)

@@ -113,13 +113,50 @@ DEFAULT_MEALS = [MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER]
 
 
 class NutritionTargets(BaseModel):
-    """Daily targets for one person. Unset means no target."""
+    """Daily targets for one person. Unset means no target.
+
+    Energy is either one number (`kcal`, met within +/-10%) or a range (`min_kcal` and/or
+    `max_kcal`, met anywhere inside it); a range, when set, replaces `kcal`."""
 
     model_config = ConfigDict(allow_inf_nan=False)
 
     kcal: float | None = Field(default=None, gt=0, description="Energy per day.")
+    min_kcal: float | None = Field(default=None, gt=0, le=10_000, description="Energy floor.")
+    max_kcal: float | None = Field(default=None, gt=0, le=10_000, description="Energy ceiling.")
     min_protein_g: float | None = Field(default=None, gt=0)
     max_carbs_g: float | None = Field(default=None, gt=0)
+
+    @model_validator(mode="after")
+    def _range_in_order(self) -> NutritionTargets:
+        if self.min_kcal and self.max_kcal and self.min_kcal > self.max_kcal:
+            raise ValueError("the energy floor is above the ceiling")
+        return self
+
+    @property
+    def kcal_range(self) -> bool:
+        return bool(self.min_kcal or self.max_kcal)
+
+    @property
+    def kcal_goal(self) -> float | None:
+        """One number to aim for: the range's middle (or its only end), else `kcal`."""
+        if self.min_kcal and self.max_kcal:
+            return (self.min_kcal + self.max_kcal) / 2
+        return self.min_kcal or self.max_kcal or self.kcal
+
+    @property
+    def any(self) -> bool:
+        return bool(self.kcal or self.kcal_range or self.min_protein_g or self.max_carbs_g)
+
+    def kcal_text(self) -> str | None:
+        """The energy target as people say it: '2000 kcal', '1600-1900 kcal', 'at least ...'."""
+        lo, hi = self.min_kcal, self.max_kcal
+        if lo and hi:
+            return f"{lo:.0f}-{hi:.0f} kcal"
+        if lo:
+            return f"at least {lo:.0f} kcal"
+        if hi:
+            return f"at most {hi:.0f} kcal"
+        return f"{self.kcal:.0f} kcal" if self.kcal else None
 
 
 class UserProfile(BaseModel):

@@ -121,6 +121,31 @@ PROFILES: dict[str, dict] = {
         "pantry": ["lamb_shoulder", "couscous"],
         "cuisines": ["moroccan", "middle_eastern"],
     },
+    # Energy as a range: any day inside it meets the target.
+    "range-weight-loss": {
+        "days": 5,
+        "meals": [B, L, D],
+        "targets": {"min_kcal": 1500, "max_kcal": 1800, "min_protein_g": 100},
+        "pantry": ["chicken_breast", "spinach"],
+    },
+    "range-maintenance": {
+        "days": 7,
+        "meals": [B, L, D],
+        "diets": ["vegetarian"],
+        "targets": {"min_kcal": 1900, "max_kcal": 2300},
+        "pantry": ["chickpeas", "feta"],
+    },
+    "ceiling-only": {
+        "days": 4,
+        "meals": [B, L, D],
+        "targets": {"max_kcal": 1700, "min_protein_g": 80},
+    },
+    "floor-only": {
+        "days": 4,
+        "meals": [B, L, D, S],
+        "targets": {"min_kcal": 2800, "min_protein_g": 140},
+        "pantry": ["rolled_oats", "egg"],
+    },
 }
 
 

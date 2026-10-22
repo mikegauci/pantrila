@@ -167,7 +167,7 @@ plainly. Explain jargon, e.g. "macros" means protein, carbs and fat.
 def person_text(p: UserProfile) -> str:
     t = p.targets
     targets = [
-        f"{t.kcal:.0f} kcal" if t.kcal else None,
+        t.kcal_text(),
         f"at least {t.min_protein_g:.0f} g protein" if t.min_protein_g else None,
         f"at most {t.max_carbs_g:.0f} g carbs" if t.max_carbs_g else None,
     ]

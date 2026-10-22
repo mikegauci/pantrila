@@ -165,8 +165,11 @@ def recipe_line(r: Recipe, pantry: set[str]) -> str:
 
 def profile_text(p: UserProfile) -> str:
     t = p.targets
+    energy = t.kcal_text()
+    if t.min_kcal and t.max_kcal:  # the instructions size portions against one number
+        energy += f" (any day inside the range is fine; aim for about {t.kcal_goal:.0f})"
     targets = [
-        f"{t.kcal:.0f} kcal" if t.kcal else None,
+        energy,
         f"at least {t.min_protein_g:.0f} g protein" if t.min_protein_g else None,
         f"at most {t.max_carbs_g:.0f} g carbs" if t.max_carbs_g else None,
     ]

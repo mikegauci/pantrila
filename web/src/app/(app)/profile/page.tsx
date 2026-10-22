@@ -20,7 +20,8 @@ import { useFoods, useMe, useMeta, useProfile, useRefreshKitchen } from "@/lib/h
 import { toAvatarDataUrl } from "@/lib/images"
 import { googlePicture, linkGoogle } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
-import type { Allergen, DietTag, MealType, Me, Profile } from "@/lib/types"
+import { hasKcalRange, kcalGoal } from "@/lib/plan"
+import type { Allergen, DietTag, MealType, Me, NutritionTargets, Profile } from "@/lib/types"
 
 const DIET_HELP: Partial<Record<DietTag, string>> = {
   low_carb: "at most 20 g carbs per serving",
@@ -109,6 +110,58 @@ function Toggle<T extends string>({ value, on, onToggle, danger }: { value: T; o
 const flip = <T,>(list: T[], v: T) => (list.includes(v) ? list.filter((x) => x !== v) : [...list, v])
 const num = (s: string) => (s.trim() === "" ? null : Number(s))
 
+/** Daily energy as one number (met within ±10%) or a range (met anywhere inside it; either
+ * end may be left open). Switching keeps the person's numbers: ±10% becomes the range. */
+function EnergyTarget({ t, range, onRange, onChange }: {
+  t: NutritionTargets; range: boolean; onRange: (range: boolean) => void
+  onChange: (t: NutritionTargets) => void
+}) {
+  function pick(toRange: boolean) {
+    if (toRange === range) return
+    const goal = kcalGoal(t)
+    onRange(toRange)
+    onChange(toRange
+      ? { ...t, kcal: null, min_kcal: goal ? Math.round(goal * 0.9) : null, max_kcal: goal ? Math.round(goal * 1.1) : null }
+      : { ...t, kcal: goal ? Math.round(goal) : null, min_kcal: null, max_kcal: null })
+  }
+  const field = (k: "kcal" | "min_kcal" | "max_kcal", name: string) => (
+    <div className="grid gap-1.5">
+      <Label htmlFor={k} className="text-[12px]">{name}</Label>
+      <Input id={k} type="number" min="1" inputMode="numeric" className="tabular h-10"
+             value={t[k] ?? ""} onChange={(e) => onChange({ ...t, [k]: num(e.target.value) })} />
+    </div>
+  )
+  return (
+    <fieldset className="grid gap-2" aria-labelledby="energy-label">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span id="energy-label" className="text-[13px] font-medium">Energy per day</span>
+        <div role="radiogroup" aria-label="Energy target" className="flex gap-1 rounded-full bg-surface-muted p-1">
+          {([[false, "One number"], [true, "A range"]] as const).map(([value, name]) => (
+            <button key={name} type="button" role="radio" aria-checked={range === value} onClick={() => pick(value)}
+              className={cn("h-7 rounded-full px-3 text-[12px] font-medium transition-colors",
+                range === value ? "bg-surface shadow-soft" : "text-muted-foreground hover:text-foreground")}>
+              {name}
+            </button>
+          ))}
+        </div>
+      </div>
+      {range ? (
+        <div className="grid grid-cols-2 gap-3">
+          {field("min_kcal", "At least (kcal)")}
+          {field("max_kcal", "At most (kcal)")}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-3">{field("kcal", "Energy (kcal)")}</div>
+      )}
+      <p className="text-[12px] text-muted-foreground">
+        {range
+          ? "Any day inside the range meets it. Leave one end blank for only a floor or a ceiling."
+          : "A day within 10% of it meets it."}
+      </p>
+    </fieldset>
+  )
+}
+
 function PictureCard() {
   const { session } = useAuth()
   const { data: me, mutate } = useMe()
@@ -169,6 +222,7 @@ export default function ProfilePage() {
   const [draft, setP] = useState<Profile | null>(null)
   const [exclude, setExclude] = useState("")
   const [saving, setSaving] = useState(false)
+  const [kcalRange, setKcalRange] = useState<boolean | null>(null) // null: follow the saved profile
   const p = draft ?? data ?? null
 
   if (isLoading || !p || !meta) return <Skeleton className="h-96 rounded-[20px]" />
@@ -194,7 +248,7 @@ export default function ProfilePage() {
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-[13px] text-muted-foreground">Start from an example:</span>
         {PRESETS.map((x) => (
-          <Button key={x.name} variant="outline" size="sm" onClick={() => set(x.patch)}>{x.name}</Button>
+          <Button key={x.name} variant="outline" size="sm" onClick={() => { setKcalRange(null); set(x.patch) }}>{x.name}</Button>
         ))}
       </div>
 
@@ -264,9 +318,10 @@ export default function ProfilePage() {
             Goals, not rules: the planner sets portions to hit your energy target and reports any
             day it misses. Leave blank for no target.
           </p>
-          <div className="grid grid-cols-3 gap-3">
+          <EnergyTarget t={p.targets} range={kcalRange ?? hasKcalRange(p.targets)} onRange={setKcalRange}
+            onChange={(targets) => set({ targets })} />
+          <div className="mt-4 grid grid-cols-2 gap-3">
             {([
-              ["kcal", "Energy (kcal)"],
               ["min_protein_g", "Protein at least (g)"],
               ["max_carbs_g", "Carbs at most (g)"],
             ] as const).map(([k, name]) => (
