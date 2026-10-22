@@ -150,10 +150,35 @@ class UserProfile(BaseModel):
     )
 
 
+class SlotKind(StrEnum):
+    """What the person does at a meal of a plan. The planner only makes `recipe` slots."""
+
+    RECIPE = "recipe"  # cook `recipe_id`: a corpus recipe, or `mine-<id>` from the cookbook
+    LEFTOVERS = "leftovers"  # eat more of the recipe cooked at `from_day`/`from_meal`
+    SKIPPED = "skipped"
+    EATING_OUT = "eating_out"
+
+
+MINE_PREFIX = "mine-"  # recipe ids of cookbook recipes in a plan: mine-<cookbook id>
+
+
 class PlannedMeal(BaseModel):
     meal_type: MealType
-    recipe_id: str
+    recipe_id: str = Field(
+        description="The recipe eaten; for skipped and eating out, the one planned there before."
+    )
     portions: float = Field(default=1.0, description="Servings of the recipe per person.")
+    kind: SlotKind = SlotKind.RECIPE
+    from_day: int | None = Field(default=None, ge=1, description="Leftovers: day it was cooked.")
+    from_meal: MealType | None = Field(default=None, description="Leftovers: meal it was cooked.")
+    out_kcal: float | None = Field(
+        default=None, gt=0, le=3000, description="Eating out: the person's rough energy estimate."
+    )
+
+    @property
+    def eats_recipe(self) -> bool:
+        """True when the recipe's food is eaten here (cooked now or as leftovers)."""
+        return self.kind in (SlotKind.RECIPE, SlotKind.LEFTOVERS)
 
 
 class PlanDay(BaseModel):
@@ -204,3 +229,7 @@ class GroceryList(BaseModel):
     people: int = 1
     items: list[GroceryItem] = Field(description="Foods to buy, grouped by aisle.")
     covered: list[GroceryItem] = Field(description="Foods the pantry fully covers.")
+    unlisted: list[str] = Field(
+        default_factory=list,
+        description="Estimated foods of the person's own recipes, which cannot be weighed here.",
+    )

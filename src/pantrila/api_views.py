@@ -24,6 +24,7 @@ from pantrila.cookbook import (
     Derived,
     LineView,
     SavedRecipe,
+    cookbook_id,
     derive,
     problems_for,
 )
@@ -34,7 +35,9 @@ from pantrila.photos import (
 )
 from pantrila.records import SavedPlan
 from pantrila.schema import (
+    MINE_PREFIX,
     MealType,
+    PlannedMeal,
     Recipe,
     UserProfile,
 )
@@ -110,6 +113,14 @@ def cookbook_card(saved: SavedRecipe, profile: UserProfile) -> CookbookCard:
     return CookbookCard(**detail.model_dump(include=set(CookbookCard.model_fields)))
 
 
+def meal_view(m: PlannedMeal, recipe: RecipeCard | None) -> PlanMealView:
+    return PlanMealView(
+        meal_type=m.meal_type, portions=m.portions, recipe=recipe, kind=m.kind,
+        cookbook_id=cookbook_id(m.recipe_id), from_day=m.from_day, from_meal=m.from_meal,
+        out_kcal=m.out_kcal,
+    )  # fmt: skip
+
+
 def plan_view(saved: SavedPlan, store: Catalog, profile: UserProfile) -> PlanView:
     ids = {m.recipe_id for _, m in saved.plan.meals}
     recipes, photos = store.get(ids), store.photos(ids)
@@ -118,13 +129,18 @@ def plan_view(saved: SavedPlan, store: Catalog, profile: UserProfile) -> PlanVie
         meals = []
         for m in day.meals:
             r = recipes.get(m.recipe_id)
-            if r is None:  # removed from the corpus since; never show it
+            if not m.eats_recipe:  # skipped or eating out: the recipe is only there to add back
+                card = recipe_card(r, profile, photos.get(r.id)) if r else None
+                meals.append(meal_view(m, card))
+                continue
+            if r is None:  # removed from the corpus or the cookbook since; never show it
+                mine = m.recipe_id.startswith(MINE_PREFIX)
                 problems.append(
                     PlanProblem(
                         day=day.day,
                         meal_type=m.meal_type,
                         recipe_id=m.recipe_id,
-                        message="is no longer in Pantrila's recipes",
+                        message=f"is no longer in {'your' if mine else 'Pantrila’s'} recipes",
                     )
                 )
                 continue
@@ -132,8 +148,7 @@ def plan_view(saved: SavedPlan, store: Catalog, profile: UserProfile) -> PlanVie
                 PlanProblem(day=day.day, meal_type=m.meal_type, recipe_id=r.id, message=msg)
                 for msg in problem_messages(r, profile)
             ]
-            card = recipe_card(r, profile, photos.get(r.id))
-            meals.append(PlanMealView(meal_type=m.meal_type, portions=m.portions, recipe=card))
+            meals.append(meal_view(m, recipe_card(r, profile, photos.get(r.id))))
         days.append(PlanDayView(day=day.day, meals=meals, nutrition=day_nutrition(day, recipes)))
     return PlanView(id=saved.id, created_at=saved.created_at, days=days, notes=saved.plan.notes,
                     targets=profile.targets, problems=problems, report=saved.report)  # fmt: skip
@@ -141,23 +156,22 @@ def plan_view(saved: SavedPlan, store: Catalog, profile: UserProfile) -> PlanVie
 
 def meal_options_view(
     saved: SavedPlan, day: int, meal_type: MealType, options: list[MealOption], store: Catalog,
-    profile: UserProfile,
-) -> MealOptions | None:  # fmt: skip
-    """The meal in the slot and the recipes it could be swapped for; None if the meal's own
-    recipe has left the corpus (the plan view does not show such a meal either)."""
+    profile: UserProfile, total: int, offset: int = 0,
+) -> MealOptions:  # fmt: skip
+    """The meal in the slot and one page of the recipes it could be swapped for. The current
+    meal's recipe is null when it has left the corpus or the cookbook."""
     d, m = find_meal(saved.plan, day, meal_type)
     meal = saved.plan.days[d].meals[m]
     current = store.get({meal.recipe_id}).get(meal.recipe_id)
-    if current is None:
-        return None
     photos = store.photos({meal.recipe_id} | {o.recipe.id for o in options})
+    card = recipe_card(current, profile, photos.get(current.id)) if current else None
     return MealOptions(
-        plan_id=saved.id, day=day, meal_type=meal_type,
-        current=PlanMealView(meal_type=meal_type, portions=meal.portions,
-                             recipe=recipe_card(current, profile, photos.get(current.id))),
+        plan_id=saved.id, day=day, meal_type=meal_type, current=meal_view(meal, card),
         options=[MealOptionView(recipe=recipe_card(o.recipe, profile, photos.get(o.recipe.id)),
                                 portions=o.portions, day_nutrition=o.day_nutrition,
-                                kcal_change=o.kcal_change) for o in options],
+                                kcal_change=o.kcal_change, protein_change=o.protein_change)
+                 for o in options],
+        total=total, offset=offset,
     )  # fmt: skip
 
 

@@ -33,6 +33,8 @@ def plan_needs(
     units: dict[str, set[Unit]] = defaultdict(set)
     used_by: dict[str, list[str]] = defaultdict(list)
     for _, meal in plan.meals:
+        if not meal.eats_recipe:  # skipped or eating out: nothing to buy
+            continue
         r = recipes[meal.recipe_id]
         for ing in r.ingredients:
             grams[ing.food] += ing.grams / r.servings * meal.portions * people

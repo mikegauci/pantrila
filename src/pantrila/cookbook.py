@@ -1,12 +1,13 @@
 """A person's own recipes: added from a photo, a web page or typed in.
 
 They live in the person's cookbook (table `user_recipes`), not the shared corpus, and the
-planner never uses them. What is stored is what the person reviewed: ingredient lines, steps
-and, for each line, either a food from the ingredient table or a model estimate for a food the
-table lacks (`FoodEstimate`). Grams, nutrition, allergens and diet tags are derived in code on
-every read, the same way as for the corpus, with estimated foods joining the table for that
-recipe only. A recipe with any estimated food or amount is marked `estimated`. Amount
-assumptions are stored on each line and shown beside the ingredients.
+planner never picks them; the person can put one in a meal of their plan (`plan_recipe`).
+What is stored is what the person reviewed: ingredient lines, steps and, for each line,
+either a food from the ingredient table or a model estimate for a food the table lacks
+(`FoodEstimate`). Grams, nutrition, allergens and diet tags are derived in code on every read,
+the same way as for the corpus, with estimated foods joining the table for that recipe only. A
+recipe with any estimated food or amount is marked `estimated`. Amount assumptions are stored
+on each line and shown beside the ingredients.
 """
 
 from __future__ import annotations
@@ -31,11 +32,13 @@ from pantrila.foods import (
 from pantrila.foods import to_grams as table_grams
 from pantrila.nutrition import nutrition_diets, recipe_nutrition
 from pantrila.schema import (
+    MINE_PREFIX,
     Allergen,
     DietTag,
     Ingredient,
     MealType,
     NutritionFacts,
+    Recipe,
     Unit,
     UserProfile,
 )
@@ -298,6 +301,41 @@ def problems_for(recipe: CookbookRecipeIn, derived: Derived, profile: UserProfil
     found = rule_problems("", set(derived.allergens), set(derived.diet_tags), set(derived.foods),
                           recipe.total_minutes, profile)  # fmt: skip
     return [msg.strip() for _, msg in found]
+
+
+def plan_recipe(saved: SavedRecipe) -> tuple[Recipe, list[str]] | None:
+    """A cookbook recipe as a recipe a plan can hold (id `mine-<id>`), with the names of its
+    estimated foods; None when it cannot be derived (a food left the table since).
+
+    Nutrition, allergens and diets come from `derive`, estimates included. Only table foods
+    become ingredients, since the grocery list measures foods by the table; the estimated ones
+    are returned so the list can name them."""
+    r = saved.recipe
+    try:
+        d = derive(r)
+    except CookbookError:
+        return None
+    ingredients = [
+        Ingredient(name=line.name, food=line.food, quantity=line.quantity, unit=line.unit,
+                   grams=line.grams)
+        for line in d.ingredients if line.food is not None
+    ]  # fmt: skip
+    others = [bare_name(line.name) for line in d.ingredients if line.food is None]
+    # Built without validation: an all-estimated recipe has no table ingredients, and every
+    # field here was checked when the person saved it or derived above.
+    recipe = Recipe.model_construct(
+        id=f"{MINE_PREFIX}{saved.id}", title=r.title, summary=r.summary, cuisine=r.cuisine,
+        meal_types=r.meal_types, diet_tags=d.diet_tags, allergens=d.allergens,
+        total_minutes=r.total_minutes, servings=r.servings, ingredients=ingredients,
+        steps=r.steps, nutrition=d.nutrition,
+    )  # fmt: skip
+    return recipe, others
+
+
+def cookbook_id(recipe_id: str) -> int | None:
+    """The cookbook id in a plan's `mine-<id>` recipe id; None for a corpus id."""
+    rest = recipe_id.removeprefix(MINE_PREFIX)
+    return int(rest) if rest != recipe_id and rest.isdigit() else None
 
 
 # --- Storage ----------------------------------------------------------------------------------

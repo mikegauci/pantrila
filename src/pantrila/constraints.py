@@ -20,13 +20,16 @@ from enum import StrEnum
 from pantrila.foods import derive_allergens, derive_ingredient_diets
 from pantrila.nutrition import nutrition_diets
 from pantrila.schema import (
+    MINE_PREFIX,
     Allergen,
     DietTag,
     MealPlan,
     MealType,
     NutritionFacts,
     PlanDay,
+    PlannedMeal,
     Recipe,
+    SlotKind,
     UserProfile,
 )
 from pantrila.search import SearchFilters
@@ -123,12 +126,21 @@ def rule_problems(
     return out
 
 
+def meal_facts(m: PlannedMeal, recipes: Mapping[str, Recipe]) -> dict[str, float]:
+    """What one meal adds to its day, per person. A skipped meal adds nothing; eating out adds
+    only the person's energy estimate (protein and carbs are not known)."""
+    if m.kind is SlotKind.EATING_OUT:
+        return {"kcal": m.out_kcal or 0.0}
+    if m.eats_recipe and (r := recipes.get(m.recipe_id)):
+        return {f: getattr(r.nutrition, f) * m.portions for f in NutritionFacts.model_fields}
+    return {}
+
+
 def day_nutrition(day: PlanDay, recipes: Mapping[str, Recipe]) -> NutritionFacts:
     totals = dict.fromkeys(NutritionFacts.model_fields, 0.0)
     for m in day.meals:
-        if r := recipes.get(m.recipe_id):
-            for f in totals:
-                totals[f] += getattr(r.nutrition, f) * m.portions
+        for f, v in meal_facts(m, recipes).items():
+            totals[f] += v
     return NutritionFacts(**{k: round(v, 1) for k, v in totals.items()})
 
 
@@ -159,9 +171,10 @@ def fit_slot_portion(
         return 1.0
     base = dict.fromkeys(("kcal", "protein_g", "carbs_g"), 0.0)
     for i, m in enumerate(day.meals):
-        if i != index and (r := recipes.get(m.recipe_id)):
-            for f in base:
-                base[f] += getattr(r.nutrition, f) * m.portions
+        if i != index:
+            for f, v in meal_facts(m, recipes).items():
+                if f in base:
+                    base[f] += v
     facts = recipes[day.meals[index].recipe_id].nutrition
 
     def cost(p: float) -> float:
@@ -187,7 +200,7 @@ def fit_portions(plan: MealPlan, profile: UserProfile, recipes: Mapping[str, Rec
         return plan
     days = []
     for day in plan.days:
-        known = [i for i, m in enumerate(day.meals) if m.recipe_id in recipes]
+        known = [i for i, m in enumerate(day.meals) if m.eats_recipe and m.recipe_id in recipes]
         best, best_cost = None, float("inf")
         for combo in itertools.product(PORTION_STEPS, repeat=len(known)):
             n = dict.fromkeys(("kcal", "protein_g", "carbs_g"), 0.0)
@@ -226,16 +239,26 @@ def check_plan(
         if slots != Counter(profile.meals):
             hard("structure", f"meals must be exactly {', '.join(profile.meals)}", day.day)
         for m in day.meals:
+            if not m.eats_recipe:
+                continue  # skipped or eating out: nothing of Pantrila's is eaten
             recipe = recipes.get(m.recipe_id)
             if recipe is None:
                 hard("unknown_recipe", f"{m.recipe_id!r} is not a known recipe", day.day,
                      m.meal_type)  # fmt: skip
                 continue
-            for rule, msg in recipe_violations(recipe, profile, m.meal_type):
+            # Leftovers may be eaten at any meal; the person's own recipes carry their own
+            # meal types. Both still pass every food rule.
+            free_slot = m.kind is SlotKind.LEFTOVERS or m.recipe_id.startswith(MINE_PREFIX)
+            check = (
+                recipe_problems(recipe, profile)
+                if free_slot
+                else recipe_violations(recipe, profile, m.meal_type)
+            )
+            for rule, msg in check:
                 hard(rule, msg, day.day, m.meal_type)
             if not PORTION_STEPS[0] <= m.portions <= PORTION_STEPS[-1]:
                 hard("portions", f"{m.portions} portions is outside 0.5-2", day.day, m.meal_type)
-        if any(c > 1 for c in Counter(m.recipe_id for m in day.meals).values()):
+        if any(c > 1 for c in Counter(m.recipe_id for m in day.meals if m.eats_recipe).values()):
             soft("variety", "the same recipe twice in one day", day.day)
 
         t = profile.targets
@@ -247,10 +270,16 @@ def check_plan(
         if t.max_carbs_g and n.carbs_g > t.max_carbs_g:
             soft("carbs", f"{n.carbs_g:.0f} g carbs, limit {t.max_carbs_g:.0f}", day.day)
 
-    for rid, count in Counter(m.recipe_id for _, m in plan.meals).items():
+    for rid, count in cooked_counts(plan).items():
         if count > MAX_REPEATS and rid in recipes:
             soft("variety", f"{rid} appears {count} times (limit {MAX_REPEATS})")
     return out
+
+
+def cooked_counts(plan: MealPlan) -> Counter[str]:
+    """How often each recipe is cooked. Leftovers are the same cooking, so they do not count
+    towards the repeat limit; skipped meals and eating out are not cooked."""
+    return Counter(m.recipe_id for _, m in plan.meals if m.kind is SlotKind.RECIPE)
 
 
 def hard_violations(violations: list[Violation]) -> list[Violation]:
@@ -261,6 +290,7 @@ def pantry_use(plan: MealPlan, profile: UserProfile, recipes: Mapping[str, Recip
     """Share of the pantry foods the plan uses at least once (1.0 when the pantry is empty)."""
     if not profile.pantry:
         return 1.0
-    plan_foods = [recipes[m.recipe_id].foods for _, m in plan.meals if m.recipe_id in recipes]
+    plan_foods = [recipes[m.recipe_id].foods for _, m in plan.meals
+                  if m.eats_recipe and m.recipe_id in recipes]  # fmt: skip
     used = set().union(*plan_foods)
     return len(used & set(profile.pantry)) / len(set(profile.pantry))

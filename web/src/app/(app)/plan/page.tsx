@@ -1,6 +1,6 @@
 "use client"
 
-import { CalendarDays, Check, Loader2, Shuffle, Sparkles, TriangleAlert } from "lucide-react"
+import { CalendarDays, Check, CircleSlash, Loader2, Repeat2, Sparkles, TriangleAlert, UtensilsCrossed } from "lucide-react"
 import Link from "next/link"
 import { useRef, useState } from "react"
 import { toast } from "sonner"
@@ -9,12 +9,14 @@ import { useSWRConfig } from "swr"
 import { AiBadge, EmptyState, Panel, PanelTitle, ProblemAlert, RecipeArt, Stat } from "@/components/bits"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
+import { MealMenu } from "@/components/meal-menu"
 import { SwapMealSheet, type SwapTarget } from "@/components/swap-meal"
 import { ApiError, streamPlan } from "@/lib/api"
 import { label, MEAL_ORDER, planDayIndex, seconds, usd } from "@/lib/format"
 import { useMe, usePlan, useProfile } from "@/lib/hooks"
+import { mealHref } from "@/lib/plan"
 import { cn } from "@/lib/utils"
-import type { Nutrition, NutritionTargets, Plan } from "@/lib/types"
+import type { Nutrition, NutritionTargets, Plan, PlanMeal } from "@/lib/types"
 
 const STEPS: Record<string, string> = {
   profile: "Read your profile and pantry",
@@ -60,6 +62,55 @@ function DayTargets({ n, t }: { n: Nutrition; t: NutritionTargets }) {
   )
 }
 
+/** One meal of a day: a recipe (Pantrila's or the person's own), leftovers, skipped or eating
+ * out. Skipped and eating-out meals are quiet rows; the menu can add their recipe back. */
+function MealRow({ m, bad }: { m: PlanMeal; bad: boolean }) {
+  const href = mealHref(m)
+  if (m.kind === "skipped" || m.kind === "eating_out" || !m.recipe || !href) {
+    const out = m.kind === "eating_out"
+    const Icon = out ? UtensilsCrossed : CircleSlash
+    return (
+      <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-dashed p-2 text-muted-foreground">
+        <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-surface-muted">
+          <Icon className="size-5" aria-hidden />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[11px] font-medium uppercase">{m.meal_type}</span>
+          <span className="block font-medium text-foreground">{out ? "Eating out" : "Skipped"}</span>
+          {m.recipe && <span className="block truncate text-[12px]">Was {m.recipe.title}</span>}
+        </span>
+        <span className="tabular shrink-0 text-right text-[12px]">
+          {out ? (m.out_kcal ? `~${Math.round(m.out_kcal)} kcal` : "Not counted") : "0 kcal"}
+        </span>
+      </div>
+    )
+  }
+  return (
+    <Link
+      href={href}
+      className={cn("flex min-w-0 flex-1 items-center gap-3 rounded-2xl border p-2 hover:shadow-soft",
+        bad && "border-danger bg-danger-soft")}
+    >
+      <RecipeArt meal={m.meal_type} size="sm" photo={m.recipe.photo_url} sizes="48px" className="size-12 shrink-0 rounded-xl" />
+      <span className="min-w-0 flex-1">
+        <span className="block text-[11px] font-medium text-muted-foreground uppercase">{m.meal_type}</span>
+        <span className="block truncate font-medium">{m.recipe.title}</span>
+        {m.kind === "leftovers" ? (
+          <span className="flex items-center gap-1 text-[12px] font-medium text-primary-text">
+            <Repeat2 className="size-3" aria-hidden /> Leftovers from day {m.from_day}
+          </span>
+        ) : m.cookbook_id != null && (
+          <span className="block text-[12px] font-medium text-primary-text">Your recipe</span>
+        )}
+      </span>
+      <span className="tabular shrink-0 text-right text-[12px] text-muted-foreground">
+        {Math.round(m.recipe.nutrition.kcal * m.portions)} kcal
+        <span className="block">×{m.portions}</span>
+      </span>
+    </Link>
+  )
+}
+
 function Week({ plan }: { plan: Plan }) {
   const today = planDayIndex(plan.created_at, plan.days.length)
   const bad = new Set(plan.problems.map((p) => `${p.day}-${p.meal_type}`))
@@ -75,28 +126,8 @@ function Week({ plan }: { plan: Plan }) {
           <ul className="mb-4 grid grid-cols-1 gap-2">
             {[...d.meals].sort((a, b) => MEAL_ORDER.indexOf(a.meal_type) - MEAL_ORDER.indexOf(b.meal_type)).map((m) => (
               <li key={m.meal_type} className="flex items-center gap-1">
-                <Link
-                  href={`/recipes/${m.recipe.id}`}
-                  className={cn("flex min-w-0 flex-1 items-center gap-3 rounded-2xl border p-2 hover:shadow-soft",
-                    bad.has(`${d.day}-${m.meal_type}`) && "border-danger bg-danger-soft")}
-                >
-                  <RecipeArt meal={m.meal_type} size="sm" photo={m.recipe.photo_url} sizes="48px" className="size-12 shrink-0 rounded-xl" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-[11px] font-medium text-muted-foreground uppercase">{m.meal_type}</span>
-                    <span className="block truncate font-medium">{m.recipe.title}</span>
-                  </span>
-                  <span className="tabular shrink-0 text-right text-[12px] text-muted-foreground">
-                    {Math.round(m.recipe.nutrition.kcal * m.portions)} kcal
-                    <span className="block">×{m.portions}</span>
-                  </span>
-                </Link>
-                <Button
-                  variant="ghost" size="icon-lg" className="shrink-0"
-                  aria-label={`Swap ${m.recipe.title}`} title="Swap this meal"
-                  onClick={() => setSwap({ day: d.day, meal: m.meal_type })}
-                >
-                  <Shuffle aria-hidden />
-                </Button>
+                <MealRow m={m} bad={bad.has(`${d.day}-${m.meal_type}`)} />
+                <MealMenu plan={plan} day={d.day} meal={m} onSwap={() => setSwap({ day: d.day, meal: m.meal_type })} />
               </li>
             ))}
           </ul>

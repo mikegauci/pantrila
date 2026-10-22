@@ -2,16 +2,36 @@
 
 import pytest
 
-from pantrila.constraints import PORTION_STEPS, day_nutrition, fit_slot_portion, target_miss
+from pantrila.constraints import (
+    PORTION_STEPS,
+    check_plan,
+    cooked_counts,
+    day_nutrition,
+    fit_slot_portion,
+    target_miss,
+)
+from pantrila.cookbook import CookbookRecipeIn, FoodEstimate, MemoryCookbook, RecipeLine
+from pantrila.grocery import plan_needs
 from pantrila.meal_swap import (
     MAX_OPTIONS,
+    PlanCatalog,
     SwapError,
     find_meal,
+    leftovers_of,
     meal_options,
     replace_meal,
+    set_slot,
     swapped_report,
 )
-from pantrila.schema import MealPlan, MealType, NutritionTargets, PlanDay, PlannedMeal, UserProfile
+from pantrila.schema import (
+    MealPlan,
+    MealType,
+    NutritionTargets,
+    PlanDay,
+    PlannedMeal,
+    SlotKind,
+    UserProfile,
+)
 from tests.conftest import CorpusStore
 
 OMELETTE, CHICKEN, CURRY, SALMON, NOODLES = (
@@ -167,3 +187,156 @@ def test_swapped_report_recomputes_warnings_and_keeps_planning_costs(plan, store
     assert report["swaps"] == 1 and report["pantry_use"] == 1.0
     assert report["warnings"] and all(w != "old" for w in report["warnings"])
     assert swapped_report(report, swapped, p, store)["swaps"] == 2
+
+
+# --- Slots: leftovers, skipped, eating out; the person's own recipes ------------------------
+
+S, L, OUT, R = SlotKind.SKIPPED, SlotKind.LEFTOVERS, SlotKind.EATING_OUT, SlotKind.RECIPE
+GOCHUJANG = {
+    "description": "gochujang (Korean chilli paste)", "diet_class": "plant",
+    "allergens": ["soy", "gluten"], "kcal": 220, "protein_g": 5, "carbs_g": 45, "fat_g": 2,
+    "fibre_g": 3, "grams_per_ml": 1.2, "grams_per_piece": None,
+}  # fmt: skip
+
+
+def own_recipe(**kw) -> CookbookRecipeIn:
+    return CookbookRecipeIn(**{
+        "title": "Gochujang rice bowl", "meal_types": ["dinner"], "total_minutes": 20,
+        "servings": 2, "steps": ["Cook the rice.", "Stir in the paste."],
+        "ingredients": [
+            RecipeLine(name="rice", quantity=150, unit="g", food="white_rice"),
+            RecipeLine(name="2 tbsp gochujang", quantity=2, unit="tbsp",
+                       estimate=FoodEstimate(**GOCHUJANG)),
+        ], **kw,
+    })  # fmt: skip
+
+
+@pytest.fixture
+def catalog(store):
+    cookbook = MemoryCookbook("me")
+    saved = cookbook.add(own_recipe())
+    return PlanCatalog(store, cookbook), f"mine-{saved.id}"
+
+
+def test_skipping_a_meal_keeps_its_recipe_and_counts_nothing(plan, store):
+    skipped = set_slot(plan, 1, MealType.DINNER, S, profile(), store)
+    dinner = skipped.days[0].meals[1]
+    assert dinner.kind is S and dinner.recipe_id == CHICKEN
+    recipes = store.get({OMELETTE, CHICKEN})
+    assert day_nutrition(skipped.days[0], recipes) == day_nutrition(
+        plan.days[0].model_copy(update={"meals": plan.days[0].meals[:1]}), recipes
+    )
+    # The chicken takes 60 minutes: over a new 30-minute limit, but skipped, so not flagged.
+    short = profile(max_minutes=30)
+    assert check_plan(skipped, short, store.get({OMELETTE, CHICKEN, CURRY})) == []
+    assert check_plan(plan, short, store.get({OMELETTE, CHICKEN, CURRY}))
+    needs, _, _ = plan_needs(skipped, store.get({OMELETTE, CHICKEN, CURRY}))
+    assert "chicken_thigh" not in needs
+    with pytest.raises(SwapError):
+        set_slot(skipped, 1, MealType.DINNER, S, profile(), store)
+
+    back = set_slot(skipped, 1, MealType.DINNER, R, profile(), store)
+    assert back.days[0].meals[1].kind is R and back.days[0].meals[1].recipe_id == CHICKEN
+    with pytest.raises(SwapError):
+        set_slot(back, 1, MealType.DINNER, R, profile(), store)
+    with pytest.raises(SwapError) as e:  # over the new time limit: it cannot come back
+        set_slot(skipped, 1, MealType.DINNER, R, short, store)
+    assert e.value.status == 422 and "takes 60 min" in e.value.problems[0]
+
+
+def test_eating_out_counts_only_the_energy_estimate(plan, store):
+    out = set_slot(plan, 1, MealType.DINNER, OUT, profile(), store, out_kcal=800)
+    assert out.days[0].meals[1].kind is OUT and out.days[0].meals[1].out_kcal == 800
+    recipes = store.get({OMELETTE, CHICKEN})
+    omelette = recipes[OMELETTE].nutrition
+    n = day_nutrition(out.days[0], recipes)
+    assert n.kcal == pytest.approx(omelette.kcal + 800, abs=0.1)
+    assert n.protein_g == pytest.approx(omelette.protein_g, abs=0.1)
+    unknown = set_slot(plan, 1, MealType.DINNER, OUT, profile(), store)
+    assert day_nutrition(unknown.days[0], recipes).kcal == pytest.approx(omelette.kcal, abs=0.1)
+    # Swapping the eating-out meal for a recipe makes it a planned meal again.
+    swapped = replace_meal(out, 1, MealType.DINNER, CHICKEN, profile(), store)
+    assert swapped.days[0].meals[1].kind is R and swapped.days[0].meals[1].out_kcal is None
+
+
+def test_leftovers_eat_an_earlier_meal_and_do_not_count_as_a_repeat(plan, store):
+    left = set_slot(plan, 2, MealType.DINNER, L, profile(), store, from_day=1,
+                    from_meal=MealType.DINNER)  # fmt: skip
+    dinner = left.days[1].meals[1]
+    assert (dinner.kind, dinner.recipe_id, dinner.from_day) == (L, CHICKEN, 1)
+    assert cooked_counts(left)[CHICKEN] == 1
+    needs, _, _ = plan_needs(left, store.get({OMELETTE, CHICKEN}))
+    once, _, _ = plan_needs(plan, store.get({OMELETTE, CHICKEN, CURRY}))
+    assert needs["chicken_thigh"] == pytest.approx(2 * once["chicken_thigh"])  # cook double
+    # A breakfast slot may hold dinner leftovers; the food rules still apply.
+    early = set_slot(plan, 2, MealType.BREAKFAST, L, profile(), store, from_day=1,
+                     from_meal=MealType.DINNER)  # fmt: skip
+    assert early.days[1].meals[0].recipe_id == CHICKEN
+    assert check_plan(early, profile(), store.get({OMELETTE, CHICKEN, CURRY})) == []
+    with pytest.raises(SwapError):  # the food rules still apply to leftovers
+        set_slot(plan, 2, MealType.BREAKFAST, L, profile(max_minutes=30), store, from_day=1,
+                 from_meal=MealType.DINNER)  # fmt: skip
+
+    for kw in ({"from_day": 2, "from_meal": MealType.DINNER},  # not an earlier day
+               {"from_day": 1, "from_meal": None}):  # fmt: skip
+        with pytest.raises(SwapError):
+            set_slot(plan, 2, MealType.DINNER, L, profile(), store, **kw)
+    skipped = set_slot(plan, 1, MealType.DINNER, S, profile(), store)
+    with pytest.raises(SwapError):  # leftovers of a meal nobody cooks
+        set_slot(skipped, 2, MealType.DINNER, L, profile(), store, from_day=1,
+                 from_meal=MealType.DINNER)  # fmt: skip
+
+
+def test_a_meal_with_leftovers_cannot_stop_being_cooked_and_swaps_carry_them(plan, store):
+    left = set_slot(plan, 2, MealType.DINNER, L, profile(), store, from_day=1,
+                    from_meal=MealType.DINNER)  # fmt: skip
+    assert leftovers_of(left, 1, MealType.DINNER) == [(2, MealType.DINNER)]
+    with pytest.raises(SwapError) as e:
+        set_slot(left, 1, MealType.DINNER, S, profile(), store)
+    assert "Day 2 dinner is leftovers" in str(e.value)
+    swapped = replace_meal(left, 1, MealType.DINNER, NOODLES, profile(), store)
+    assert swapped.days[1].meals[1].recipe_id == NOODLES
+    assert swapped.days[1].meals[1].kind is L
+
+
+def test_options_can_be_narrowed_paged_and_report_the_protein_change(plan, store):
+    everything = meal_options(plan, 1, MealType.DINNER, profile(), store, None)
+    assert len(everything) == 3
+    assert ids(meal_options(plan, 1, MealType.DINNER, profile(), store, None,
+                            query="salmon pasta")) == [SALMON]  # fmt: skip
+    assert ids(meal_options(plan, 1, MealType.DINNER, profile(), store, None,
+                            query="peanut")) == [NOODLES]  # fmt: skip
+    quick = meal_options(plan, 1, MealType.DINNER, profile(), store, None, quick=True)
+    assert all(o.recipe.total_minutes <= 30 for o in quick)
+    pantry = meal_options(plan, 1, MealType.DINNER, profile(pantry=["salmon"]), store, None,
+                          pantry_only=True)  # fmt: skip
+    assert ids(pantry) == [SALMON]
+    recipes = store.get({OMELETTE, CHICKEN})
+    before = day_nutrition(plan.days[0], recipes).protein_g
+    for o in everything:
+        assert o.protein_change == pytest.approx(o.day_nutrition.protein_g - before, abs=0.1)
+
+
+def test_own_recipes_are_offered_checked_and_derived_with_their_estimates(plan, catalog):
+    store, mine = catalog
+    options = meal_options(plan, 1, MealType.BREAKFAST, profile(), store, None, source="mine")
+    assert ids(options) == [mine]  # own recipes are not held to their meal types
+    assert meal_options(plan, 1, MealType.DINNER, profile(allergies=["soy"]), store, None,
+                        source="mine") == []  # the estimated paste has soy  # fmt: skip
+    with pytest.raises(SwapError):
+        meal_options(plan, 1, MealType.DINNER, profile(), store.store, None, source="mine")
+
+    swapped = replace_meal(plan, 1, MealType.DINNER, mine, profile(), store)
+    assert swapped.days[0].meals[1].recipe_id == mine
+    recipe = store.get({mine})[mine]
+    assert {"soy", "gluten"} <= set(recipe.allergens)
+    assert recipe.foods == {"white_rice"} and store.unlisted(mine) == ["gochujang"]
+    with pytest.raises(SwapError) as e:
+        replace_meal(plan, 1, MealType.DINNER, mine, profile(allergies=["soy"]), store)
+    assert e.value.problems == ["contains soy"]
+    with pytest.raises(SwapError) as e:
+        replace_meal(plan, 1, MealType.DINNER, "mine-999", profile(), store)
+    assert e.value.status == 404 and "your recipes" in str(e.value)
+    needs, _, _ = plan_needs(swapped, store.get({OMELETTE, mine, CURRY}))
+    assert "white_rice" in needs
+    assert swapped_report({}, swapped, profile(), store)["swaps"] == 1

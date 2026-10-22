@@ -79,6 +79,7 @@ from pantrila.api_models import (
     PostImport,
     RecipeDetail,
     RecipeList,
+    SlotRequest,
     SwapList,
     SwapMealRequest,
     TableFood,
@@ -118,7 +119,15 @@ from pantrila.cooking import grams_used, use_from_pantry
 from pantrila.foods import UnitError, load_foods, measures
 from pantrila.grocery import grocery_list
 from pantrila.import_jobs import ImportJob, ImportJobs
-from pantrila.meal_swap import SwapError, meal_options, replace_meal, swapped_report
+from pantrila.meal_swap import (
+    PlanCatalog,
+    Source,
+    SwapError,
+    meal_options,
+    replace_meal,
+    set_slot,
+    swapped_report,
+)
 from pantrila.operations import (
     EmbeddingUsage,
     PaidOperation,
@@ -728,7 +737,7 @@ def create_app(
         saved = s.records.latest_plan()
         if saved is None:
             raise HTTPException(404, "No plan yet.")
-        return plan_view(saved, s.store, s.kitchen.profile())
+        return plan_view(saved, PlanCatalog(s.store, s.cookbook), s.kitchen.profile())
 
     @app.get("/plans/latest/grocery")
     def latest_grocery(s: SessionDep, people: Annotated[int, Query(ge=1, le=12)] = 1
@@ -736,54 +745,99 @@ def create_app(
         saved = s.records.latest_plan()
         if saved is None:
             raise HTTPException(404, "No plan yet.")
-        recipes = s.store.get({m.recipe_id for _, m in saved.plan.meals})
+        store = PlanCatalog(s.store, s.cookbook)
+        recipes = store.get({m.recipe_id for _, m in saved.plan.meals if m.eats_recipe})
         plan = saved.plan.model_copy(update={"days": [
             d.model_copy(update={"meals": [m for m in d.meals if m.recipe_id in recipes]})
             for d in saved.plan.days
         ]})  # fmt: skip
-        return grocery_list(plan, recipes, s.kitchen.pantry(), people)
+        unlisted = [name for rid in dict.fromkeys(m.recipe_id for _, m in plan.meals
+                                                  if m.eats_recipe)
+                    for name in store.unlisted(rid)]  # fmt: skip
+        groceries = grocery_list(plan, recipes, s.kitchen.pantry(), people)
+        return groceries.model_copy(update={"unlisted": list(dict.fromkeys(unlisted))})
 
     def swap_http_error(exc: SwapError) -> HTTPException:
         detail = {"message": str(exc), "problems": exc.problems} if exc.problems else str(exc)
         return HTTPException(exc.status, detail)
 
     @app.get("/plans/latest/meals/{day}/{meal_type}/options")
-    def meal_swap_options(day: int, meal_type: MealType, s: SessionDep) -> MealOptions:
-        """Recipes that could replace one meal of the latest plan, best fit first. Nothing is
-        saved and nothing is paid for: candidates pass the person's rules, ranked in code."""
+    def meal_swap_options(
+        day: int, meal_type: MealType, s: SessionDep, source: Source = "corpus",
+        q: Annotated[str, Query(max_length=80)] = "", quick: bool = False,
+        pantry: bool = False, offset: Annotated[int, Query(ge=0, le=1000)] = 0,
+        limit: Annotated[int, Query(ge=1, le=24)] = 6,
+    ) -> MealOptions:  # fmt: skip
+        """Recipes that could replace one meal of the latest plan, best fit first, a page at a
+        time: Pantrila's (`source=corpus`) or the person's own (`mine`), narrowed by words
+        (`q`), 30 minutes or less (`quick`) or pantry foods (`pantry`). Nothing is saved and
+        nothing is paid for: candidates pass the person's rules, ranked in code."""
         saved = s.records.latest_plan()
         if saved is None:
             raise HTTPException(404, "No plan yet.")
-        profile = s.kitchen.profile()
+        profile, store = s.kitchen.profile(), PlanCatalog(s.store, s.cookbook)
         try:
-            options = meal_options(saved.plan, day, meal_type, profile, s.store)
+            ranked = meal_options(
+                saved.plan,
+                day,
+                meal_type,
+                profile,
+                store,
+                None,
+                source=source,
+                query=q,
+                quick=quick,
+                pantry_only=pantry,
+            )
         except SwapError as exc:
             raise swap_http_error(exc) from exc
-        view = meal_options_view(saved, day, meal_type, options, s.store, profile)
-        if view is None:
-            raise HTTPException(404, "That meal's recipe is no longer in Pantrila's recipes.")
-        return view
+        page = ranked[offset : offset + limit]
+        return meal_options_view(saved, day, meal_type, page, store, profile, len(ranked),
+                                 offset)  # fmt: skip
+
+    def save_change(s: Session, saved, plan, profile, store: PlanCatalog) -> PlanView:
+        report = swapped_report(saved.report, plan, profile, store)
+        updated = s.records.update_plan(saved.id, plan, report)
+        if updated is None:
+            raise HTTPException(409, "Your plan changed. Reload it and try again.")
+        return plan_view(updated, store, profile)
+
+    def editable_plan(s: Session, plan_id: int):
+        saved = s.records.latest_plan()
+        if saved is None:
+            raise HTTPException(404, "No plan yet.")
+        if saved.id != plan_id:
+            raise HTTPException(409, "Your plan changed. Reload it and try again.")
+        return saved
 
     @app.put("/plans/latest/meals/{day}/{meal_type}")
     def swap_meal(day: int, meal_type: MealType, body: SwapMealRequest, s: SessionDep
                   ) -> PlanView:  # fmt: skip
-        """Swap one meal of the latest plan. The recipe is checked against the person's rules
-        and its portions are fitted here, so a request cannot save an unsafe meal."""
-        saved = s.records.latest_plan()
-        if saved is None:
-            raise HTTPException(404, "No plan yet.")
-        if saved.id != body.plan_id:
-            raise HTTPException(409, "Your plan changed. Reload it and try again.")
-        profile = s.kitchen.profile()
+        """Swap one meal of the latest plan for a corpus recipe or the person's own
+        (`mine-<id>`). The recipe is checked against the person's rules and its portions are
+        fitted here, so a request cannot save an unsafe meal."""
+        saved = editable_plan(s, body.plan_id)
+        profile, store = s.kitchen.profile(), PlanCatalog(s.store, s.cookbook)
         try:
-            plan = replace_meal(saved.plan, day, meal_type, body.recipe_id, profile, s.store)
+            plan = replace_meal(saved.plan, day, meal_type, body.recipe_id, profile, store)
         except SwapError as exc:
             raise swap_http_error(exc) from exc
-        report = swapped_report(saved.report, plan, profile, s.store)
-        updated = s.records.update_plan(saved.id, plan, report)
-        if updated is None:
-            raise HTTPException(409, "Your plan changed. Reload it and try again.")
-        return plan_view(updated, s.store, profile)
+        return save_change(s, saved, plan, profile, store)
+
+    @app.put("/plans/latest/meals/{day}/{meal_type}/slot")
+    def change_slot(day: int, meal_type: MealType, body: SlotRequest, s: SessionDep
+                    ) -> PlanView:  # fmt: skip
+        """Skip one meal, eat out, eat leftovers of an earlier meal, or add back the recipe
+        planned there. No model call; rules and portions are checked here."""
+        saved = editable_plan(s, body.plan_id)
+        profile, store = s.kitchen.profile(), PlanCatalog(s.store, s.cookbook)
+        try:
+            plan = set_slot(saved.plan, day, meal_type, body.kind, profile, store,
+                            out_kcal=body.out_kcal, from_day=body.from_day,
+                            from_meal=body.from_meal)  # fmt: skip
+        except SwapError as exc:
+            raise swap_http_error(exc) from exc
+        return save_change(s, saved, plan, profile, store)
 
     @app.post("/plans")
     def create_plan(request: Request, user: UserDep) -> StreamingResponse:
@@ -809,7 +863,7 @@ def create_app(
                         return
                     operation.finish(result.usage)
                     saved = s.records.save_plan(result.plan, plan_report(result, model))
-                    view = plan_view(saved, s.store, s.kitchen.profile())
+                    view = plan_view(saved, PlanCatalog(s.store, s.cookbook), s.kitchen.profile())
                     events.put(("plan", view.model_dump(mode="json")))
             except Exception:
                 operation.finish(planner.usage if planner else Usage(), ok=False)

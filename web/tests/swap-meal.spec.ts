@@ -25,7 +25,8 @@ const plan = (dinner: typeof CHICKEN) => ({
   id: 7, created_at: new Date().toISOString(), notes: "", problems: [], report,
   targets: { kcal: null, min_protein_g: null, max_carbs_g: null },
   days: [{ day: 1, nutrition: nutrition(dinner.nutrition.kcal),
-    meals: [{ meal_type: "dinner", portions: 1, recipe: dinner }] }],
+    meals: [{ meal_type: "dinner", portions: 1, recipe: dinner, kind: "recipe", cookbook_id: null,
+      from_day: null, from_meal: null, out_kcal: null }] }],
 })
 
 async function openPlan(page: Page, onSwap: (body: unknown) => { status: number; json: unknown }) {
@@ -43,11 +44,12 @@ async function openPlan(page: Page, onSwap: (body: unknown) => { status: number;
     const data = path === "/plans/latest" ? plan(current)
       : path === "/plans/latest/meals/1/dinner/options" ? {
         plan_id: 7, day: 1, meal_type: "dinner",
-        current: { meal_type: "dinner", portions: 1, recipe: current },
+        current: plan(current).days[0].meals[0],
         options: [
-          { recipe: CURRY, portions: 1, day_nutrition: nutrition(500), kcal_change: -100 },
-          { recipe: NOODLES, portions: 1.25, day_nutrition: nutrition(875), kcal_change: 275 },
+          { recipe: CURRY, portions: 1, day_nutrition: nutrition(500), kcal_change: -100, protein_change: 0 },
+          { recipe: NOODLES, portions: 1.25, day_nutrition: nutrition(875), kcal_change: 275, protein_change: 8 },
         ],
+        total: 2, offset: 0,
       }
       : path === "/plans/latest/grocery" ? { people: 1, items: [], covered: [] }
       : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null,
@@ -62,7 +64,8 @@ async function openPlan(page: Page, onSwap: (body: unknown) => { status: number;
   await page.goto("/login")
   await page.getByRole("button", { name: "Try it as a guest" }).click()
   await page.getByRole("link", { name: "Meal", exact: true }).first().click()
-  await page.getByRole("button", { name: "Swap Lemon Chicken" }).click()
+  await page.getByRole("button", { name: "Change day 1 dinner" }).click()
+  await page.getByRole("menuitem", { name: "Swap recipe" }).click()
   await expect(page.getByText("Swap day 1 dinner")).toBeVisible()
 }
 
@@ -75,7 +78,8 @@ test("a meal is swapped for one of the safe options and the plan updates", async
   await expect(page.getByText("Peanut Noodles")).toBeVisible()
   await expect(page.getByText("1 from your pantry")).toBeVisible()
   await expect(page.getByText("Day total 500 kcal (−100)")).toBeVisible()
-  await expect(page.getByText("Day total 875 kcal (+275)")).toBeVisible()
+  await expect(page.getByText("Day total 875 kcal (+275) · protein +8 g")).toBeVisible()
+  await expect(page.getByText("Showing 2 of 2")).toBeVisible()
 
   await page.getByRole("button", { name: "Use Chickpea Curry" }).click()
   await expect(page.getByRole("link", { name: /Chickpea Curry/ })).toBeVisible()
