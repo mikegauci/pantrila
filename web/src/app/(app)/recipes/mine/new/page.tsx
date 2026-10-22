@@ -333,11 +333,12 @@ export default function NewRecipePage() {
         <ArrowLeft /> My recipes
       </Link>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-tour="add-recipe">
         {METHODS.map(({ key, icon: Icon, title, text }) => (
           <button
             key={key}
             type="button"
+            data-tour={`add-${key}`}
             aria-pressed={method === key}
             onClick={() => pick(key)}
             className={cn(
