@@ -33,6 +33,12 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Old address retired, custom domain phase 5: `web/src/proxy.ts` redirects `pantrila.vercel.app` and
+`pantrio-azure.vercel.app` to `https://app.pantrila.com` (308, path and query kept); guests who never linked Google
+start over there, by the owner's choice. Render `PANTRILA_CORS_ORIGINS` is `https://app.pantrila.com` plus
+localhost. Sign-in email (phase 3) is half done: Resend domain `send.pantrila.com` and its DNS are in place; Supabase
+SMTP waits on the owner. No model call, so no eval rerun.
+
 Landing site, custom domain phase 2: `site/` is a separate static Next.js app (Vercel project `pantrila-site`,
 root `site/`) on `pantrila.com` (`www` redirects): features, safety, "Get the app" (browser; App Store and Google
 Play "Coming soon"), FAQ, `/privacy` and `/terms` (contact `hello@pantrila.com`, no inbox yet). Tokens and logo are
@@ -755,7 +761,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `src/components/voice-control.tsx` and `src/lib/voice.ts`. The assistant's
   thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrila.tsx`. `RecipeArt` (`src/components/bits.tsx`)
   shows the recipe photo with `next/image` (host allowed from `NEXT_PUBLIC_SUPABASE_URL` in
-  `next.config.ts`) or the meal-type art when there is none. Read `web/AGENTS.md`: this Next.js differs from
+  `next.config.ts`) or the meal-type art when there is none. `src/proxy.ts` only redirects the retired Vercel addresses. Read `web/AGENTS.md`: this Next.js differs from
   older versions (e.g. `proxy.ts` replaces middleware; check `node_modules/next/dist/docs/`).
 
 ## Commands
