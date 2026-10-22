@@ -5,8 +5,41 @@ on:
     branches: [main]
   pull_request:
 
+# A newer push to the same branch cancels the run still going for the old one.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  # Which side changed: a Python-only change skips the web job and the other way round.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      python: ${{ steps.filter.outputs.python }}
+      web: ${{ steps.filter.outputs.web }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            python:
+              - "src/**"
+              - "tests/**"
+              - "evals/**"
+              - "data/**"
+              - "scripts/**"
+              - "supabase/**"
+              - "pyproject.toml"
+              - "uv.lock"
+              - ".github/workflows/ci.yml"
+            web:
+              - "web/**"
+              - ".github/workflows/ci.yml"
+
   python:
+    needs: changes
+    if: needs.changes.outputs.python == 'true'
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -27,12 +60,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
       - run: uv sync --locked
       - run: uv run ruff check .
       - run: uv run ruff format --check .
       - run: uv run pytest
 
   web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -51,8 +88,24 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
-      - run: npm run build
-      - run: npx playwright install --with-deps chromium
+      # Playwright's server builds the app (with the test API settings), so that build is also
+      # the build check; no separate `npm run build`.
+      - uses: actions/cache@v4
+        with:
+          path: web/.next/cache
+          key: next-${{ hashFiles('web/package-lock.json') }}-${{ hashFiles('web/src/**') }}
+          restore-keys: next-${{ hashFiles('web/package-lock.json') }}-
+      - id: playwright
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        id: browsers
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ steps.playwright.outputs.version }}
+      - if: steps.browsers.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - if: steps.browsers.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         if: failure()
