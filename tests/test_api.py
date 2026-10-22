@@ -8,6 +8,7 @@ import pytest
 from fastapi.testclient import TestClient
 from openai.types.responses import ResponseFunctionToolCall
 
+from pantrila import config
 from pantrila.api import Session, create_app
 from pantrila.auth import AuthError, User
 from pantrila.chats import MAX_THREADS_PER_USER, MemoryChats
@@ -1054,16 +1055,25 @@ def test_dessert_swap_api_rejects_suggestions_and_direct_calls(api, backend, rep
 
 def test_post_import_hears_the_reel_under_its_own_daily_cap(backend, monkeypatch):
     from pantrila import post_media
+    from pantrila.recipe_import import DishPage
     from tests.test_post_media import CAPTION, MP4, FakeMedia, caption_only, heard
 
     monkeypatch.setenv("PANTRILA_PRICE_INPUT_PER_MTOK", "1")
     monkeypatch.setenv("PANTRILA_PRICE_OUTPUT_PER_MTOK", "10")
     monkeypatch.setenv("PANTRILA_PRICE_TRANSCRIBE_PER_MIN", "0.003")
     monkeypatch.setenv("PANTRILA_DAILY_REEL_FETCHES", "1")
+    monkeypatch.setenv("PANTRILA_PRICE_WEB_SEARCH_PER_CALL", "0.01")
     monkeypatch.setattr(post_media, "fetch_video", lambda url, *args: MP4)
     media = FakeMedia()
     reply = lambda parsed: SimpleNamespace(output=[], output_parsed=parsed, usage=USAGE)  # noqa: E731
-    backend.client.replies = [reply(caption_only()), reply(heard()), reply(caption_only())]
+    no_page = reply(DishPage(url=None))  # the web search finds no page for the dish
+    backend.client.replies = [
+        reply(caption_only()),
+        reply(heard()),
+        no_page,
+        reply(caption_only()),
+        no_page,
+    ]
     backend.client.transcripts = ["Brown the sausage, then layer and bake."]
     reel = "https://www.instagram.com/reel/Dclv5Rgizvm/"
     with TestClient(create_app(backend, verify, media)) as api:
@@ -1071,9 +1081,11 @@ def test_post_import_hears_the_reel_under_its_own_daily_cap(backend, monkeypatch
         body = api.post("/me/recipes/import/post", json={"url": reel, "caption": CAPTION}).json()
         assert body["draft"]["steps"] == ["Brown the sausage.", "Layer and bake."]
         assert body["media_cost_usd"] == pytest.approx(0.003)
+        # two reads, sound and the service; plus the dish search (one call and its fee)
+        chat = config.prices().chat_cost(1000, 100)
         assert body["cost_usd"] == pytest.approx(
-            0.004 + body["transcription_cost_usd"] + 0.003
-        )  # two reads, sound and the service
+            0.004 + body["transcription_cost_usd"] + 0.003 + chat + 0.01
+        )
         events = api.get("/me/usage").json()["events"]
         assert sorted(e["kind"] for e in events) == ["import", "reel"]
         assert next(e for e in events if e["kind"] == "reel")["cost_usd"] == pytest.approx(0.003)

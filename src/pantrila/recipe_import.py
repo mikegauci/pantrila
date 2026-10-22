@@ -19,7 +19,8 @@ no recipe but links a recipe website, that page is imported like a link (a secon
 on the same import). The draft keeps the post link and the creator's handle as its credit.
 A caption that names a dish and lists ingredients but has no method takes its method from a
 Pantrila recipe for that dish, else from the recipe page a web search finds. The creator's
-ingredients stay; any food the two disagree on is flagged for the person to check.
+ingredients stay; any food the two disagree on is flagged for the person to check. A method
+read from the post's video is replaced the same way when a recipe is found.
 
 Videos are read automatically from a social post's link. Its audio is transcribed, then an
 extraction call reads the transcript, frames and caption. Media is discarded after reading.
@@ -1171,7 +1172,8 @@ class Importer:
             heard = self._heard(post, caption, http, resolve)
             if heard is not None and (result is None or NO_METHOD not in heard.notes):
                 result, recipe_url = heard, None
-        if MATCH_ENABLED and result is not None and NO_METHOD in result.notes:  # its dish
+        if MATCH_ENABLED and result is not None and (  # a real recipe beats a video's method
+                NO_METHOD in result.notes or HEARD in result.notes):  # fmt: skip
             try:
                 matched = self._matched(result.draft, http, resolve)
             except Exception:  # best effort: the caption's ingredients are still a draft
@@ -1262,7 +1264,7 @@ class Importer:
         draft = draft.model_copy(update={
             "steps": [s[:2000] for s in matched.steps[:MAX_STEPS]], "notes": notes[:3000],
         })  # fmt: skip
-        kept = [n for n in result.notes if n != NO_METHOD]
+        kept = [n for n in result.notes if n not in (NO_METHOD, HEARD)]
         return ImportResult(draft, kept + lines, result.usage, result.latency_ms)
 
     def _found(self, post_url: str, platform: str):

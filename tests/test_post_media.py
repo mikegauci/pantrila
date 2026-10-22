@@ -142,7 +142,7 @@ def test_full_caption_never_calls_the_service():
 
 def test_ingredients_only_caption_hears_the_video_and_keeps_the_caption():
     media, meter, steps = FakeMedia(), Meter(), []
-    client = FakeClient(caption_only(), heard())
+    client = FakeClient(caption_only(), heard(), NO_PAGE)
     imp = importer(client, media, meter)
     imp.on_step = steps.append
     result = imp.from_post(REEL, CAPTION, video_host(), resolve)
@@ -151,14 +151,14 @@ def test_ingredients_only_caption_hears_the_video_and_keeps_the_caption():
     assert result.draft.steps == ["Brown the sausage.", "Layer and bake."]
     # The caption reads at medium; the video, the slowest call, at low.
     efforts = [kw["reasoning"]["effort"] for kind, kw in client.calls if kind == "parse"]
-    assert efforts == ["medium", "low"]
-    assert steps == ["caption", "ingredients", "video", "listen", "watch", "ingredients"]
+    assert efforts == ["medium", "low", "low"]  # the last: the web search for a dish
+    assert steps == ["caption", "ingredients", "video", "listen", "watch", "ingredients", "match"]
     d = result.draft
     assert (d.source, d.source_url, d.source_platform, d.source_author) == (
         "post", REEL, "instagram", "zachs.foods")  # fmt: skip
     kinds = [kind for kind, _ in client.calls]
-    assert kinds == ["parse", "transcribe", "parse"]
-    sent = client.calls[-1][1]["input"][0]["content"]
+    assert kinds == ["parse", "transcribe", "parse", "parse"]  # the last: the dish search
+    sent = client.calls[-2][1]["input"][0]["content"]  # the video read; the last is the dish search
     assert "Transcript of the audio of a Instagram cooking video by @zachs.foods" in sent[0][
         "text"]  # fmt: skip
     assert "The post's caption:\n\nSpicy Sausage" in sent[0]["text"]
@@ -584,3 +584,17 @@ def test_comments_run_is_capped_like_the_video():
     imp = importer(client, media, Meter(allow=False))
     result = imp.from_post(url, CAPTION, pages([]), resolve)
     assert media.comments_asked == [] and NO_METHOD in result.notes and imp.media_runs == 0
+
+
+def test_a_method_heard_from_the_video_gives_way_to_a_recipe_found_for_the_dish():
+    page = "https://recipes.example/lasagna"
+    method = ImportedRecipe.model_validate({**caption_only().model_dump(),
+        "steps": ["Brown the sausage.", "Layer the sheets and bake."]})  # fmt: skip
+    client = FakeClient(caption_only(), heard(), DishPage(url=page), method)
+    seen: list = []
+    result = importer(client, FakeMedia()).from_post(REEL, CAPTION, pages(seen, page), resolve)
+    d = result.draft
+    assert d.steps == ["Brown the sausage.", "Layer the sheets and bake."]
+    assert d.recipe_url == page and HEARD not in result.notes
+    assert "Method from recipes.example" in d.notes
+    assert len(d.ingredients) == len(heard().ingredients)  # the video’s list stays
