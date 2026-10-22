@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useState } from "react"
 
 import { EmptyState } from "@/components/bits"
+import { FilterMenu } from "@/components/filter-menu"
 import { RecipeCard } from "@/components/recipe-card"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -19,35 +20,6 @@ const TIMES = [15, 30, 45, 60]
 const MEALS: MealType[] = ["breakfast", "lunch", "dinner", "snack", "dessert"]
 const DIETS: DietTag[] = ["vegan", "vegetarian", "gluten_free", "dairy_free", "high_protein", "low_carb"]
 
-function Chip({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      aria-pressed={on}
-      onClick={onClick}
-      className={cn(
-        "h-8 shrink-0 rounded-full border px-3 whitespace-nowrap text-[13px] font-medium transition-colors duration-150",
-        on ? "border-primary bg-primary-soft text-primary-text" : "bg-surface text-muted-foreground hover:text-foreground",
-      )}
-    >
-      {children}
-    </button>
-  )
-}
-
-/** One row of chips: scrolls sideways edge to edge on phones, wraps from md. */
-function ChipRow({ label: name, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div
-      role="group"
-      aria-label={name}
-      className="no-scrollbar -mx-3 -my-1 flex gap-2 overflow-x-auto px-3 py-1 sm:-mx-4 sm:px-4 md:m-0 md:flex-wrap md:overflow-visible md:p-0"
-    >
-      {children}
-    </div>
-  )
-}
-
 function rulesText(r: SearchRules): string[] {
   const out = []
   if (r.exclude_allergens.length) out.push(`no ${r.exclude_allergens.map(label).join(", ").toLowerCase()}`)
@@ -61,16 +33,16 @@ export default function RecipesPage() {
   const { data: meta } = useMeta()
   const [text, setText] = useState("")
   const [q, setQ] = useState("")
-  const [meal, setMeal] = useState<MealType | null>(null)
+  const [meal, setMeal] = useState<MealType[]>([])
   const [time, setTime] = useState<number | null>(null)
-  const [cuisine, setCuisine] = useState<string | null>(null)
+  const [cuisine, setCuisine] = useState<string[]>([])
   const [diets, setDiets] = useState<DietTag[]>([])
   const [safe, setSafe] = useState(true)
 
   const params = new URLSearchParams({ q, safe: String(safe), limit: "36" })
-  if (meal) params.set("meal", meal)
+  meal.forEach((m) => params.append("meal", m))
   if (time) params.set("max_minutes", String(time))
-  if (cuisine) params.set("cuisine", cuisine)
+  cuisine.forEach((c) => params.append("cuisine", c))
   diets.forEach((d) => params.append("diet", d))
   const { data, isLoading, error } = useApi<RecipeList>(`/recipes?${params}`, { keepPreviousData: true })
   const rules = data ? rulesText(data.rules) : []
@@ -102,30 +74,22 @@ export default function RecipesPage() {
         </Link>
       </form>
 
-      <div className="grid gap-2 md:gap-3">
-        <ChipRow label="Meal">
-          {MEALS.map((m) => (
-            <Chip key={m} on={meal === m} onClick={() => setMeal(meal === m ? null : m)}>{label(m)}</Chip>
-          ))}
-        </ChipRow>
-        <ChipRow label="Time">
-          {TIMES.map((t) => (
-            <Chip key={t} on={time === t} onClick={() => setTime(time === t ? null : t)}>≤ {t} min</Chip>
-          ))}
-        </ChipRow>
-        <ChipRow label="Diet">
-          {DIETS.map((d) => (
-            <Chip key={d} on={diets.includes(d)}
-                  onClick={() => setDiets(diets.includes(d) ? diets.filter((x) => x !== d) : [...diets, d])}>
-              {label(d)}
-            </Chip>
-          ))}
-        </ChipRow>
-        <ChipRow label="Cuisine">
-          {meta?.cuisines.map((c) => (
-            <Chip key={c} on={cuisine === c} onClick={() => setCuisine(cuisine === c ? null : c)}>{label(c)}</Chip>
-          ))}
-        </ChipRow>
+      <div className="flex flex-wrap gap-2">
+        <FilterMenu name="Meal" options={MEALS.map((m) => ({ value: m, label: label(m) }))} selected={meal} onChange={setMeal} />
+        <FilterMenu
+          name="Time"
+          single
+          options={TIMES.map((t) => ({ value: String(t), label: `≤ ${t} min` }))}
+          selected={time ? [String(time)] : []}
+          onChange={(next) => setTime(next[0] ? Number(next[0]) : null)}
+        />
+        <FilterMenu name="Diet" options={DIETS.map((d) => ({ value: d, label: label(d) }))} selected={diets} onChange={setDiets} />
+        <FilterMenu
+          name="Cuisine"
+          options={(meta?.cuisines ?? []).map((c) => ({ value: c, label: label(c) }))}
+          selected={cuisine}
+          onChange={setCuisine}
+        />
       </div>
 
       <div className="flex items-center gap-3 rounded-2xl bg-primary-soft px-4 py-3 sm:flex-wrap">
