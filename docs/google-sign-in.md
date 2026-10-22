@@ -7,14 +7,16 @@ dashboards. No new environment variables on Vercel or Render.
 Values used below:
 
 - Supabase callback: `https://tlnigvzkselebbtetibt.supabase.co/auth/v1/callback`
-- Web app: `https://pantrila.vercel.app` (and `http://localhost:3000` for local work)
+- Web app: `https://app.pantrila.com` (the old `https://pantrila.vercel.app` still works; and
+  `http://localhost:3000` for local work)
 
 ## 1. Google Cloud Console
 
 1. Open <https://console.cloud.google.com/>, create or pick a project (for example "Pantrila").
 2. **Google Auth Platform → Branding**: app name `Pantrila`, a support email, your developer
    contact email. Under **Authorised domains** add `tlnigvzkselebbtetibt.supabase.co` and
-   `pantrila.vercel.app`. Home page: `https://pantrila.vercel.app`.
+   `pantrila.vercel.app`; `pantrila.com` joins them once it is verified in Google Search Console
+   (phase 4 of `docs/plans/custom-domain.md`), and the home page becomes `https://pantrila.com`.
 3. **Audience**: user type **External**, then **Publish app** (status "In production").
    While it is "Testing", only listed test users can sign in.
 4. **Data access**: keep only the basic scopes `openid`, `.../auth/userinfo.email`,
@@ -22,7 +24,8 @@ Values used below:
    Until the branding is verified, Google's consent screen names the Supabase domain instead
    of "Pantrila"; that does not block sign-in.
 5. **Clients → Create client**, type **Web application**, name `Pantrila web`:
-   - Authorised JavaScript origins: `https://pantrila.vercel.app`, `http://localhost:3000`
+   - Authorised JavaScript origins: `https://app.pantrila.com`, `https://pantrila.vercel.app`,
+     `http://localhost:3000`
    - Authorised redirect URIs: `https://tlnigvzkselebbtetibt.supabase.co/auth/v1/callback`
    Save, then copy the **Client ID** and **Client secret**.
 
@@ -36,9 +39,10 @@ Values used below:
    disabled"). This lets a guest add Google and keep the same user id (and so
    their profile, pantry, plans, cookbook and chats). Anonymous sign-ins stay on.
 3. **Authentication → URL Configuration**: check that the redirect URLs still include
-   `https://pantrila.vercel.app/auth/callback` and `http://localhost:3000/auth/callback`
-   and that the Site URL is `https://pantrila.vercel.app/`. Add the old
-   `https://pantrio-azure.vercel.app/auth/callback` too if people still use that address.
+   `https://app.pantrila.com/auth/callback`, `https://pantrila.vercel.app/auth/callback` and
+   `http://localhost:3000/auth/callback`, and that the Site URL is `https://app.pantrila.com`.
+   Add the old `https://pantrio-azure.vercel.app/auth/callback` too if people still use that
+   address.
    Vercel preview URLs are not listed, so Google sign-in on a preview deploy falls back to the
    Site URL.
 

@@ -33,6 +33,13 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Custom domain, phase 1 (plan `docs/plans/custom-domain.md`): pantrila.com's nameservers moved from GoDaddy to Vercel
+(GoDaddy stays the registrar; it held only parking records). The web app is on `app.pantrila.com` (Vercel project
+`pantrila`) and the API on `api.pantrila.com` (Render custom domain, CNAME in Vercel DNS); `NEXT_PUBLIC_API_URL` on
+Vercel and `PANTRILA_CORS_ORIGINS` on Render point at them, Supabase Site URL is `https://app.pantrila.com` and Google
+allows it as an origin. `pantrila.vercel.app` and `pantrio-api.onrender.com` keep working until phase 5 redirects the
+old web address. Next: the `site/` landing page on `pantrila.com` (phase 2). No prompt/model change, so no eval rerun.
+
 Dish-name match, video too: a method heard from a post's video (`HEARD`) is replaced by a recipe found for the dish (corpus, else the web search), the same way as a caption with no method; the video's ingredients stay and the notes say where the method is from. Reel eval before `reel-2026-10-22T133955Z` vs after `reel-2026-10-22T134102Z`, 9 cases: food matching 100% both, 0 missed allergens both, method 100% both, same service calls; the eval does not check which method was used, so the replacement is covered by `test_a_method_heard_from_the_video_gives_way_to_a_recipe_found_for_the_dish`. Triggered by recipe 24 (a short preview gave a guessed method).
 Dish-name match: a caption that names a dish and lists ingredients but gives no method (`from_post` ends with `NO_METHOD`) takes its method from a Pantrila recipe with the same dish words and at least half the same foods (`Importer._matched`, the shipped corpus, no model call), else from the recipe page one OpenAI web search finds (`_web_method`: `from_link`, only its steps are used). The creator's ingredients stay; each food the two lists disagree on is noted (`_with_method`). Saved straight away; the notes say where the method is from. Web search is priced by `PANTRILA_PRICE_WEB_SEARCH_PER_CALL` (unset: cost unknown). Eval: 4 `caption-dish-*` cases; `run_import --no-match` is the before. Before `import-2026-10-22T130514Z` vs after `import-2026-10-22T130618Z`, 31 cases: method found for a caption's dish 0% -> 75% (3 of 4; the oyakodon search found no page once, and found one on a rerun), 0 missed allergens both, food matching 99% both, lines kept 100% -> 96% and servings/time 100%/100% -> 96%/93% on non-dish pages (same code path; single runs), p50/p95 5.4/12.5 -> 5.7/17.6 s. Average tokens per import 3,177/1,063 -> 4,729/1,054 (the page text); the search fee is not in the run's cost. 8 new offline tests (in `tests/test_social.py`), 2 existing tests updated for the extra call.
 Voice commands in cooking mode: a mic button in the cooking header (`web/src/components/voice-control.tsx`) listens
@@ -469,8 +476,8 @@ Step 4 (PR #7): FastAPI `api.py` (Supabase Auth ES256 tokens verified via JWKS; 
 `user_id`), migration 0004 (`meal_plans`, `usage_events`, RLS; applied on Supabase), plan
 progress as SSE, daily caps per user and a total daily budget; Next.js 16 app in `web/` (10
 screens per `DESIGN_SYSTEM.md`). Local end-to-end run on `gpt-5.4-mini`: plan 17 s / $0.012,
-chat turn 4.5 s / $0.0023. Deployed: web https://pantrila.vercel.app (formerly `pantrio-azure.vercel.app`; Vercel project `pantrila`,
-root `web/`, auto-deploys `main`), API https://pantrio-api.onrender.com (Render Blueprint from
+chat turn 4.5 s / $0.0023. Deployed: web https://app.pantrila.com (also `pantrila.vercel.app`, formerly `pantrio-azure.vercel.app`; Vercel project `pantrila`,
+root `web/`, auto-deploys `main`), API https://api.pantrila.com (Render service `pantrila-api`, also `pantrio-api.onrender.com`; Render Blueprint from
 `render.yaml`, free plan, sleeps when idle). Supabase Auth: anonymous sign-ins on, Site URL and
 `/auth/callback` redirects set for the Vercel URL and localhost:3000. Live check: guest sign-in,
 search, a 2-day plan (18.6 s, $0.005) and a chat turn all pass. Decision: guests are the public
@@ -506,7 +513,7 @@ Server wake-up notice (PR #14): any API request pending over 3 s shows one share
 The toast now appears only when no reply has come back in the last 10 minutes, so slow imports
 and chat replies on an awake server no longer say the server is waking up. `/health` accepts
 HEAD as well as GET for UptimeRobot's default check (free plan, no method setting); the
-UptimeRobot monitor pings `https://pantrio-api.onrender.com/health` every 5 minutes to keep the
+UptimeRobot monitor pings `https://pantrio-api.onrender.com/health` (moving to `https://api.pantrila.com/health`) every 5 minutes to keep the
 free instance awake. Web only.
 Recipe photos (this PR): migration 0007 (`recipe_photos`, `user_recipes.photo_path`, usage kind
 `photo`; applied on Supabase), public Storage bucket `recipe-photos` (created by `pantrila photos

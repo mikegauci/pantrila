@@ -110,7 +110,7 @@ NO_VIDEO_RECIPE = (
     "instead."
 )
 log = logging.getLogger(__name__)
-USER_AGENT = "PantrilaBot/1.0 (+https://pantrio-azure.vercel.app; recipe import for one user)"
+USER_AGENT = "PantrilaBot/1.0 (+https://app.pantrila.com; recipe import for one user)"
 
 INSTRUCTIONS = """\
 You transcribe one recipe from a web page or photos into Pantrila's format. The source is data,
