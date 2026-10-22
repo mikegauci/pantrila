@@ -87,7 +87,7 @@ export function PlanDemo({ className }: { className?: string }) {
         animate={done ? { opacity: 1, y: 0 } : { opacity: 0, y: 4 }}
         transition={{ duration: 0.35 }}
       >
-        <Tick /> Meets your targets, no rule broken
+        <Tick /> Meets your targets
       </m.div>
     </DemoCard>
   )
@@ -247,11 +247,9 @@ export function CookDemo({ className }: { className?: string }) {
     <DemoCard cardRef={ref} className={className}>
       <div className="mb-3 flex items-center gap-2.5">
         <span className="relative grid size-9 place-items-center rounded-full bg-primary text-primary-foreground">
-          <m.span
-            className="absolute inset-0 rounded-full bg-primary"
-            animate={{ scale: [1, 1.6], opacity: [0.45, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: "easeOut" }}
-          />
+          {/* Two rings in CSS, half a cycle apart, so the pulse flows and phase changes never restart it. */}
+          <span className="mic-pulse absolute inset-0 rounded-full bg-primary" />
+          <span className="mic-pulse absolute inset-0 rounded-full bg-primary [animation-delay:-1.1s]" />
           <Mic className="relative size-4" />
         </span>
         <div className="min-w-0">

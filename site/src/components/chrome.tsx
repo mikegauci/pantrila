@@ -59,7 +59,7 @@ export function SiteFooter() {
           <Link href="/privacy" className="text-muted-foreground hover:text-foreground">Privacy</Link>
           <Link href="/#features" className="text-muted-foreground hover:text-foreground">Features</Link>
           <Link href="/terms" className="text-muted-foreground hover:text-foreground">Terms</Link>
-          <Link href="/#faq" className="text-muted-foreground hover:text-foreground">Questions</Link>
+          <Link href="/#faq" className="text-muted-foreground hover:text-foreground">FAQ</Link>
           <a href={GITHUB_URL} className="text-muted-foreground hover:text-foreground">Source code</a>
         </div>
       </div>
