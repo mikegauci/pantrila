@@ -19,6 +19,7 @@ from pantrila.meal_swap import (
     find_meal,
     leftovers_of,
     meal_options,
+    repeat_meal,
     replace_meal,
     set_slot,
     swapped_report,
@@ -59,7 +60,7 @@ def plan():
 
 
 def profile(**kw) -> UserProfile:
-    return UserProfile(days=2, meals=[MealType.BREAKFAST, MealType.DINNER], **kw)
+    return UserProfile(**{"days": 2, "meals": [MealType.BREAKFAST, MealType.DINNER], **kw})
 
 
 def ids(options) -> list[str]:
@@ -340,3 +341,43 @@ def test_own_recipes_are_offered_checked_and_derived_with_their_estimates(plan, 
     needs, _, _ = plan_needs(swapped, store.get({OMELETTE, mine, CURRY}))
     assert "white_rice" in needs
     assert swapped_report({}, swapped, profile(), store)["swaps"] == 1
+
+
+def three_days() -> MealPlan:
+    b, d = MealType.BREAKFAST, MealType.DINNER
+    return MealPlan(days=[
+        PlanDay(day=1, meals=[meal(b, OMELETTE), meal(d, CHICKEN)]),
+        PlanDay(day=2, meals=[meal(b, OMELETTE), meal(d, CURRY)]),
+        PlanDay(day=3, meals=[meal(b, OMELETTE), meal(d, SALMON)]),
+    ])  # fmt: skip
+
+
+def test_a_meal_repeats_on_later_days_as_its_leftovers(store):
+    d, p = MealType.DINNER, profile(days=3)
+    repeated = repeat_meal(three_days(), 1, d, [(3, d), (2, d)], p, store)
+    assert [
+        (x.kind, x.recipe_id, x.from_day)
+        for x in (repeated.days[1].meals[1], repeated.days[2].meals[1])
+    ] == [(L, CHICKEN, 1)] * 2
+    assert leftovers_of(repeated, 1, d) == [(2, d), (3, d)]
+    assert cooked_counts(repeated)[CHICKEN] == 1  # cooked once, eaten three times
+    # Again with a meal already its leftovers: nothing breaks, nothing doubles.
+    again = repeat_meal(repeated, 1, d, [(2, d)], p, store)
+    assert leftovers_of(again, 1, d) == [(2, d), (3, d)]
+
+
+def test_repeat_changes_all_meals_or_none(store):
+    d, b, p = MealType.DINNER, MealType.BREAKFAST, profile(days=3)
+    plan = three_days()
+    with pytest.raises(SwapError):  # day 1 is not later than day 1
+        repeat_meal(plan, 2, d, [(3, d), (1, d)], p, store)
+    assert plan == three_days()  # the plan is untouched
+    with pytest.raises(SwapError):
+        repeat_meal(plan, 1, d, [], p, store)
+    with pytest.raises(SwapError):
+        repeat_meal(plan, 1, d, [(2, d), (2, d)], p, store)
+    with pytest.raises(SwapError):  # the omelette is a breakfast; the food rules still apply
+        repeat_meal(plan, 1, b, [(2, b)], profile(days=3, allergies=["eggs"]), store)
+    skipped = set_slot(plan, 1, d, S, p, store)
+    with pytest.raises(SwapError):  # a meal nobody cooks cannot be repeated
+        repeat_meal(skipped, 1, d, [(2, d)], p, store)

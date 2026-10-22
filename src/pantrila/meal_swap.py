@@ -338,6 +338,29 @@ def set_slot(
     return plan.model_copy(update={"days": days})
 
 
+MAX_REPEATS_AT_ONCE = 12  # later meals one "Repeat on" can turn into leftovers
+
+
+def repeat_meal(
+    plan: MealPlan, day: int, meal_type: MealType, targets: list[tuple[int, MealType]],
+    profile: UserProfile, store: Catalog,
+) -> MealPlan:  # fmt: skip
+    """Cook once, eat again: every target meal becomes leftovers of the meal at (day,
+    meal_type). All of them change or none does; each passes the same checks as `set_slot`.
+    A target that is already its leftovers just has its portions refitted."""
+    if not targets:
+        raise SwapError("Pick at least one meal to repeat it on.")
+    if len(set(targets)) != len(targets) or len(targets) > MAX_REPEATS_AT_ONCE:
+        raise SwapError(f"Pick up to {MAX_REPEATS_AT_ONCE} different meals.")
+    d, m = find_meal(plan, day, meal_type)
+    if plan.days[d].meals[m].kind is not SlotKind.RECIPE:
+        raise SwapError("Only a meal you cook can be repeated.")
+    for target_day, target_meal in sorted(targets):
+        plan = set_slot(plan, target_day, target_meal, SlotKind.LEFTOVERS, profile, store,
+                        from_day=day, from_meal=meal_type)  # fmt: skip
+    return plan
+
+
 def swapped_report(
     report: dict, plan: MealPlan, profile: UserProfile, store: Catalog
 ) -> dict:  # fmt: skip
