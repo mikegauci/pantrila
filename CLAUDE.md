@@ -44,7 +44,7 @@ step 1 (not in the commands list; ignored on other pages). The first turn-on sho
 notice that the browser sends speech to Google or Apple (`localStorage["pantrila-voice-ok"]`); the mic stays on across
 visits (`pantrila-voice`), stops when the page hides (locked phone) and resumes on return; listening restarts after the
 browser ends it, giving up after 5 quick ends. A one-time tip (`pantrila-voice-tip-done`), a "?" command list, and a new
-tour step ("Cook hands-free", on Recipes) explain it. Web only, no model call, so no eval rerun; new
+tour step ("Cook hands-free", pointing at the mic in the vegetable paella's cooking mode) explain it. Web only, no model call, so no eval rerun; new
 `web/tests/voice-commands.spec.ts` (fake microphone), tour spec updated; all 32 Playwright tests pass locally. Not yet
 checked on a real phone's microphone.
 

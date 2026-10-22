@@ -66,6 +66,7 @@ export function VoiceControl({ onCommand }: { onCommand: (c: VoiceCommand) => vo
         size="icon"
         aria-label={label}
         aria-pressed={enabled}
+        data-tour="voice-mic"
         title={label}
         className="relative"
         onClick={() => {
