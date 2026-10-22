@@ -33,6 +33,19 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Voice commands in cooking mode: a mic button in the cooking header (`web/src/components/voice-control.tsx`) listens
+for "next", "back", "start timer" and "stop timer" through the browser's speech recognition (`SpeechRecognition` or
+`webkitSpeechRecognition`; hidden where neither exists). Words map to commands in code (`voiceCommand` in
+`web/src/lib/voice.ts`, platform-free so a native app can reuse it behind its own `VoiceListener`). "Start timer" resumes
+the latest paused timer, else starts the step's next timer; "stop timer" (or "stop") clears a finished timer, else pauses
+the latest running one. Each command chimes (`chime` in `cooking.ts`) and shows a 2 s label. The first turn-on shows a
+notice that the browser sends speech to Google or Apple (`localStorage["pantrila-voice-ok"]`); the mic stays on across
+visits (`pantrila-voice`), stops when the page hides (locked phone) and resumes on return; listening restarts after the
+browser ends it, giving up after 5 quick ends. A one-time tip (`pantrila-voice-tip-done`), a "?" command list, and a new
+tour step ("Cook hands-free", on Recipes) explain it. Web only, no model call, so no eval rerun; new
+`web/tests/voice-commands.spec.ts` (fake microphone), tour spec updated; all 32 Playwright tests pass locally. Not yet
+checked on a real phone's microphone.
+
 Energy range: `NutritionTargets` gains `min_kcal` / `max_kcal` (either end may be open; a range replaces `kcal`; floor
 above ceiling is a 422). Inside the range a day meets the target and costs nothing in portion fitting, so normal
 portions stay; outside, the cost is the distance past the nearer end (`constraints._target_cost`, soft "kcal" warning
@@ -713,7 +726,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`; "From a post" can
   import the post directly, with an estimated countdown. The first-run tour
   is `src/components/tour.tsx` (`TourProvider` in `AppShell`, `useTour().start`). Cooking mode is
-  `src/components/cooking-mode.tsx` with helpers in `src/lib/cooking.ts`. The assistant's
+  `src/components/cooking-mode.tsx` with helpers in `src/lib/cooking.ts`; voice commands are
+  `src/components/voice-control.tsx` and `src/lib/voice.ts`. The assistant's
   thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrila.tsx`. `RecipeArt` (`src/components/bits.tsx`)
   shows the recipe photo with `next/image` (host allowed from `NEXT_PUBLIC_SUPABASE_URL` in
   `next.config.ts`) or the meal-type art when there is none. Read `web/AGENTS.md`: this Next.js differs from
