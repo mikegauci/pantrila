@@ -63,3 +63,14 @@ export function useRefreshKitchen() {
     )
   }
 }
+
+/** Store a changed plan and refresh what depends on it (grocery list, swap options). */
+export function useSavePlan() {
+  const { mutate } = useSWRConfig()
+  return (plan: Plan) => {
+    mutate("/plans/latest", plan, { revalidate: false })
+    mutate((key) => typeof key === "string" && (
+      key.startsWith("/plans/latest/grocery") || key.startsWith("/plans/latest/meals")
+    ))
+  }
+}

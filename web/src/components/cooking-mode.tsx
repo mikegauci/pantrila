@@ -102,7 +102,10 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
   const { session } = useAuth()
   const key = progressKey(session!.user.id, recipe.key)
   // The URL from the hook: on a client-side visit window.location still shows the last page.
-  const fromUrl = Number(useSearchParams().get("servings"))
+  const params = useSearchParams()
+  const fromUrl = Number(params.get("servings"))
+  // Servings of this batch meant for later meals of the plan (leftovers), when opened from it.
+  const later = Math.max(0, Math.round(Number(params.get("later")) || 0))
   // Rendered only on the client after sign-in, so localStorage is available here.
   const [initial] = useState(() => {
     return loadProgress(key) ?? {
@@ -255,6 +258,11 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
                     <Button variant="ghost" size="sm" className="ml-auto" onClick={() => setTicked(new Set())}>Clear ticks</Button>
                   )}
                 </div>
+                {later > 0 && (
+                  <p className="-mt-3 text-[13px] text-muted-foreground">
+                    {later} of these serving{later === 1 ? " is" : "s are"} for later in your plan: keep {later === 1 ? "it" : "them"} as leftovers.
+                  </p>
+                )}
                 <div className="rounded-[20px] border bg-surface p-4 sm:p-5">{checklist}</div>
               </>
             )}

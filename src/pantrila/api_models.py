@@ -269,6 +269,18 @@ class SlotRequest(BaseModel):
     from_meal: MealType | None = None
 
 
+class MealSlot(BaseModel):
+    day: int = Field(ge=1, le=7)
+    meal_type: MealType
+
+
+class RepeatRequest(BaseModel):
+    """Cook a meal once and eat it again: each meal in `on` becomes its leftovers."""
+
+    plan_id: int = Field(description="The plan being edited; a newer plan makes this a conflict.")
+    on: list[MealSlot] = Field(min_length=1, max_length=12)
+
+
 class ChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=MAX_MESSAGE_CHARS)
     thread_id: int | None = Field(default=None, description="Thread to continue; none starts one.")

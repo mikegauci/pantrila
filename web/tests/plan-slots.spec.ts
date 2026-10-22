@@ -44,12 +44,17 @@ async function openPlan(page: Page, requests: { path: string; body: unknown }[])
     const request = route.request()
     const url = new URL(request.url())
     const path = url.pathname
-    const slot = path.match(/^\/plans\/latest\/meals\/(\d)\/dinner(\/slot)?$/)
+    const slot = path.match(/^\/plans\/latest\/meals\/(\d)\/dinner(\/slot|\/repeat)?$/)
     if (slot && request.method() === "PUT") {
       const body = request.postDataJSON()
       requests.push({ path, body })
       const i = Number(slot[1]) - 1
-      if (slot[2]) {
+      if (slot[2] === "/repeat") {
+        for (const t of body.on) {
+          days[t.day - 1] = { ...days[t.day - 1], kind: "leftovers", recipe: days[i].recipe,
+            from_day: i + 1, from_meal: "dinner" }
+        }
+      } else if (slot[2]) {
         const from = body.kind === "leftovers" ? days[body.from_day - 1].recipe : days[i].recipe
         days[i] = { ...days[i], kind: body.kind, recipe: from, out_kcal: body.out_kcal ?? null,
           from_day: body.from_day ?? null, from_meal: body.from_meal ?? null }
@@ -140,4 +145,23 @@ test("the swap sheet searches and can use one of the person's own recipes", asyn
   expect(requests.some((r) => r.path.includes("source=mine"))).toBe(true)
   expect(requests.find((r) => r.path === "/plans/latest/meals/1/dinner")?.body)
     .toEqual({ plan_id: 7, recipe_id: "mine-5" })
+})
+
+test("a meal is repeated on a later day and cooking mode gets the extra servings", async ({ page }) => {
+  const requests: { path: string; body: unknown }[] = []
+  await openPlan(page, requests)
+  await choose(page, "day 1 dinner", "Repeat on other days")
+  const sheet = page.getByRole("dialog")
+  await expect(sheet.getByText("Repeat Lemon Chicken")).toBeVisible()
+  await expect(sheet.getByText("Instead of Chickpea Curry")).toBeVisible()
+  await sheet.getByLabel(/Day 2 dinner/).click()
+  await expect(sheet.getByText("Cook once, eat 2 times.")).toBeVisible()
+  await sheet.getByRole("button", { name: "Repeat on 1 meal" }).click()
+  await expect(page.getByText("Leftovers for day 2")).toBeVisible()
+  await expect(page.getByText("Leftovers from day 1")).toBeVisible()
+  expect(requests.at(-1)).toEqual({ path: "/plans/latest/meals/1/dinner/repeat",
+    body: { plan_id: 7, on: [{ day: 2, meal_type: "dinner" }] } })
+
+  await choose(page, "day 1 dinner", /Start cooking/)
+  await expect(page).toHaveURL(/\/recipes\/chicken\/cook\?servings=2&later=1$/)
 })

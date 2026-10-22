@@ -346,6 +346,22 @@ def test_meals_can_be_skipped_eaten_out_or_leftovers_and_added_back(api, backend
     assert api.put(slot.format(1, "breakfast"), json=stale).status_code == 409
 
 
+def test_a_meal_is_repeated_on_later_days_all_or_nothing(api, backend):
+    plan = make_plan(api, backend)
+    url = "/plans/latest/meals/1/dinner/repeat"
+    bad = api.put(url, json={"plan_id": plan["id"], "on": [{"day": 1, "meal_type": "breakfast"}]})
+    assert bad.status_code == 422
+    assert api.put(url, json={"plan_id": plan["id"], "on": []}).status_code == 422
+    r = api.put(url, json={"plan_id": plan["id"], "on": [{"day": 2, "meal_type": "dinner"}]})
+    assert r.status_code == 200
+    dinner = r.json()["days"][1]["meals"][1]
+    assert dinner["kind"] == "leftovers" and dinner["recipe"]["id"] == CHICKEN
+    stale = api.put(
+        url, json={"plan_id": plan["id"] + 1, "on": [{"day": 2, "meal_type": "dinner"}]}
+    )
+    assert stale.status_code == 409
+
+
 def test_the_swap_sheet_pages_searches_and_offers_own_recipes(api, backend):
     plan = make_plan(api, backend)
     url = "/plans/latest/meals/1/dinner/options"

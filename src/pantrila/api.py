@@ -79,6 +79,7 @@ from pantrila.api_models import (
     PostImport,
     RecipeDetail,
     RecipeList,
+    RepeatRequest,
     SlotRequest,
     SwapList,
     SwapMealRequest,
@@ -124,6 +125,7 @@ from pantrila.meal_swap import (
     Source,
     SwapError,
     meal_options,
+    repeat_meal,
     replace_meal,
     set_slot,
     swapped_report,
@@ -835,6 +837,21 @@ def create_app(
             plan = set_slot(saved.plan, day, meal_type, body.kind, profile, store,
                             out_kcal=body.out_kcal, from_day=body.from_day,
                             from_meal=body.from_meal)  # fmt: skip
+        except SwapError as exc:
+            raise swap_http_error(exc) from exc
+        return save_change(s, saved, plan, profile, store)
+
+    @app.put("/plans/latest/meals/{day}/{meal_type}/repeat")
+    def repeat_slot(day: int, meal_type: MealType, body: RepeatRequest, s: SessionDep
+                    ) -> PlanView:  # fmt: skip
+        """Cook one meal once and eat it again: the meals in `on` (on later days) become its
+        leftovers, all or none. The grocery list buys for them; they are not repeats."""
+        saved = editable_plan(s, body.plan_id)
+        profile, store = s.kitchen.profile(), PlanCatalog(s.store, s.cookbook)
+        try:
+            plan = repeat_meal(
+                saved.plan, day, meal_type, [(t.day, t.meal_type) for t in body.on], profile, store
+            )
         except SwapError as exc:
             raise swap_http_error(exc) from exc
         return save_change(s, saved, plan, profile, store)

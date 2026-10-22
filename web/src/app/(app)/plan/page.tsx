@@ -1,6 +1,6 @@
 "use client"
 
-import { CalendarDays, Check, CircleSlash, Loader2, Repeat2, Sparkles, TriangleAlert, UtensilsCrossed } from "lucide-react"
+import { CalendarDays, Check, CircleSlash, CopyPlus, Loader2, Repeat2, Sparkles, TriangleAlert, UtensilsCrossed } from "lucide-react"
 import Link from "next/link"
 import { useRef, useState } from "react"
 import { toast } from "sonner"
@@ -64,7 +64,7 @@ function DayTargets({ n, t }: { n: Nutrition; t: NutritionTargets }) {
 
 /** One meal of a day: a recipe (Pantrila's or the person's own), leftovers, skipped or eating
  * out. Skipped and eating-out meals are quiet rows; the menu can add their recipe back. */
-function MealRow({ m, bad }: { m: PlanMeal; bad: boolean }) {
+function MealRow({ m, bad, laterDays }: { m: PlanMeal; bad: boolean; laterDays: number[] }) {
   const href = mealHref(m)
   if (m.kind === "skipped" || m.kind === "eating_out" || !m.recipe || !href) {
     const out = m.kind === "eating_out"
@@ -99,6 +99,10 @@ function MealRow({ m, bad }: { m: PlanMeal; bad: boolean }) {
           <span className="flex items-center gap-1 text-[12px] font-medium text-primary-text">
             <Repeat2 className="size-3" aria-hidden /> Leftovers from day {m.from_day}
           </span>
+        ) : laterDays.length > 0 ? (
+          <span className="flex items-center gap-1 text-[12px] font-medium text-primary-text">
+            <CopyPlus className="size-3" aria-hidden /> Leftovers for day {laterDays.join(", ")}
+          </span>
         ) : m.cookbook_id != null && (
           <span className="block text-[12px] font-medium text-primary-text">Your recipe</span>
         )}
@@ -126,7 +130,9 @@ function Week({ plan }: { plan: Plan }) {
           <ul className="mb-4 grid grid-cols-1 gap-2">
             {[...d.meals].sort((a, b) => MEAL_ORDER.indexOf(a.meal_type) - MEAL_ORDER.indexOf(b.meal_type)).map((m) => (
               <li key={m.meal_type} className="flex items-center gap-1">
-                <MealRow m={m} bad={bad.has(`${d.day}-${m.meal_type}`)} />
+                <MealRow m={m} bad={bad.has(`${d.day}-${m.meal_type}`)}
+                  laterDays={plan.days.filter((x) => x.meals.some((y) => y.kind === "leftovers"
+                    && y.from_day === d.day && y.from_meal === m.meal_type)).map((x) => x.day)} />
                 <MealMenu plan={plan} day={d.day} meal={m} onSwap={() => setSwap({ day: d.day, meal: m.meal_type })} />
               </li>
             ))}

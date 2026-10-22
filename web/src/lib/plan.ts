@@ -1,3 +1,4 @@
+import { label } from "@/lib/format"
 import type { MealType, Plan, PlanMeal } from "@/lib/types"
 
 /** Rough energy for eating out, offered as one tap each; "Don't count" leaves it unknown. */
@@ -43,4 +44,38 @@ export function leftoversOf(plan: Plan, day: number, meal: MealType): string[] {
   return plan.days.flatMap((d) => d.meals
     .filter((m) => m.kind === "leftovers" && m.from_day === day && m.from_meal === meal)
     .map((m) => `day ${d.day} ${m.meal_type}`))
+}
+
+export interface RepeatChoice {
+  day: number
+  meal: MealType
+  /** What the meal is now: a recipe title, "Skipped" or "Eating out". */
+  now: string
+  /** Already leftovers of this meal. */
+  already: boolean
+  /** Why it cannot become leftovers of this meal, if it cannot. */
+  blocked: string | null
+}
+
+/** Meals on later days that the meal at (day, meal) could be repeated on, in plan order. */
+export function repeatChoices(plan: Plan, day: number, meal: MealType): RepeatChoice[] {
+  return plan.days.filter((d) => d.day > day).flatMap((d) => d.meals.map((m) => {
+    const already = m.kind === "leftovers" && m.from_day === day && m.from_meal === meal
+    const kept = leftoversOf(plan, d.day, m.meal_type)
+    const now = m.kind === "skipped" ? "Skipped" : m.kind === "eating_out" ? "Eating out"
+      : m.recipe?.title ?? label(m.meal_type)
+    return {
+      day: d.day, meal: m.meal_type, now, already,
+      blocked: kept.length ? `${kept.join(", ")} ${kept.length === 1 ? "is" : "are"} leftovers of it` : null,
+    }
+  }))
+}
+
+/** Portions to cook for a meal per person: its own plus every meal that eats its leftovers. */
+export function cookPortions(plan: Plan, day: number, meal: MealType): { total: number; later: number } {
+  const own = plan.days.find((d) => d.day === day)?.meals.find((m) => m.meal_type === meal)
+  const later = plan.days.flatMap((d) => d.meals)
+    .filter((m) => m.kind === "leftovers" && m.from_day === day && m.from_meal === meal)
+    .reduce((sum, m) => sum + m.portions, 0)
+  return { total: (own?.portions ?? 0) + later, later }
 }
