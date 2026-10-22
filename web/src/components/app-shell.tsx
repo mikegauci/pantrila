@@ -22,7 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { pingServer } from "@/lib/api"
 import { avatarFor } from "@/lib/avatar"
 import { useMe } from "@/lib/hooks"
-import { linkGoogle, supabase } from "@/lib/supabase"
+import { googlePicture, linkGoogle, supabase } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
 
 const NAV = [
@@ -110,7 +110,7 @@ export function UserAvatar({ userId, email, size, url }: {
   const avatar = userId ? avatarFor(userId) : null
   return (
     <Avatar size={size === "xl" ? undefined : size} className={size === "xl" ? "size-20" : undefined} aria-hidden>
-      {url && <AvatarImage src={url} alt="" />}
+      {url && <AvatarImage src={url} alt="" referrerPolicy="no-referrer" />}
       <AvatarFallback
         className={
           avatar
@@ -127,8 +127,10 @@ export function UserAvatar({ userId, email, size, url }: {
 function UserMenu({ userId, email, guest }: { userId: string | null; email: string | null; guest: boolean }) {
   const router = useRouter()
   const tour = useTour()
+  const { session } = useAuth()
   const { data: me } = useMe()
-  const url = me?.avatar_url
+  // An uploaded picture wins; else the Google profile picture.
+  const url = me?.avatar_url ?? googlePicture(session?.user)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="rounded-full" aria-label="Account menu">

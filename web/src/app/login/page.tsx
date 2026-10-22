@@ -25,6 +25,7 @@ export default function LoginPage() {
   const { session, ready } = useAuth()
   const [email, setEmail] = useState("")
   const [sent, setSent] = useState(false)
+  const [emailOpen, setEmailOpen] = useState(false)
   const [busy, setBusy] = useState<"email" | "google" | "guest" | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -91,67 +92,80 @@ export default function LoginPage() {
       <section className="flex items-center justify-center p-6">
         <div className="w-full max-w-sm">
           <Logo className="mb-10 lg:hidden" />
-          <h1 className="text-[24px] font-bold leading-8">Try Pantrila</h1>
-          <p className="mt-1 text-muted-foreground">
-            Set your diet and allergies, add what is in your kitchen and plan a week.
+          <h1 className="text-[28px] font-bold leading-9">Welcome to Pantrila</h1>
+          <p className="mt-2 text-[15px] text-muted-foreground">
+            Set your diet and allergies, add what is in your kitchen and plan a week of meals.
           </p>
-          <Button size="lg" className="mt-8 w-full" onClick={google} disabled={!ready || busy !== null}>
+
+          {error && (
+            <p role="alert" className="mt-6 rounded-xl bg-danger-soft p-3 text-[13px] text-danger">
+              {error}
+            </p>
+          )}
+
+          <Button
+            size="lg"
+            variant="outline"
+            className="mt-8 h-12 w-full bg-white text-[15px] text-[#1f1f1f] shadow-sm hover:bg-[#f8f9fa] hover:text-[#1f1f1f] dark:bg-white dark:hover:bg-[#f1f3f4]"
+            onClick={google}
+            disabled={!ready || busy !== null}
+          >
             <GoogleMark /> {busy === "google" ? "Opening Google…" : "Continue with Google"}
           </Button>
           <p className="mt-2 text-center text-[12px] text-muted-foreground">
             Keeps your pantry, plans and cookbook on any device.
           </p>
-          <Button size="lg" variant="outline" className="mt-6 w-full" onClick={guest} disabled={!ready || busy !== null}>
+
+          <div className="my-6 flex items-center gap-3 text-[12px] text-muted-foreground" aria-hidden>
+            <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
+          </div>
+
+          <Button size="lg" variant="secondary" className="h-12 w-full text-[15px]" onClick={guest} disabled={!ready || busy !== null}>
             <UserRound /> {busy === "guest" ? "Starting…" : "Try it as a guest"}
           </Button>
           <p className="mt-2 text-center text-[12px] text-muted-foreground">
-            No account needed. Your guest data stays with this browser session; add Google later
-            to keep it.
+            No account needed. Add Google later to keep your data.
           </p>
 
-          <details className="mt-10 rounded-[20px] border bg-surface p-4 text-[13px]">
-            <summary className="cursor-pointer font-medium text-muted-foreground">
-              Sign in with email (owner only)
-            </summary>
+          <div className="mt-8 border-t pt-6 text-[13px]">
             {sent ? (
-              <div className="mt-3">
+              <div role="status">
                 <Mail className="mb-2 size-5 text-primary-text" aria-hidden />
                 <p>
-                  If <strong>{email}</strong> can receive Pantrila email, a link is on its way. Open
-                  it on this device.
+                  Check <strong>{email}</strong> for a sign-in link and open it on this device.
                 </p>
-                <Button variant="link" className="mt-1 px-0" onClick={() => setSent(false)}>
+                <Button variant="link" className="mt-1 h-auto px-0" onClick={() => setSent(false)}>
                   Use another email
                 </Button>
               </div>
-            ) : (
-              <form onSubmit={sendLink} className="mt-3 grid gap-2">
-                <p className="text-muted-foreground">
-                  The demo only emails sign-in links to its owner. Everyone else: use the guest
-                  button above.
-                </p>
-                <Label htmlFor="email" className="sr-only">Email</Label>
+            ) : emailOpen ? (
+              <form onSubmit={sendLink} className="grid gap-2">
+                <Label htmlFor="email">Sign in with email</Label>
                 <Input
                   id="email"
                   type="email"
                   required
+                  autoFocus
                   autoComplete="email"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-10"
+                  className="h-11"
                 />
-                <Button type="submit" variant="outline" disabled={!ready || busy !== null}>
+                <Button type="submit" size="lg" disabled={!ready || busy !== null}>
                   {busy === "email" ? "Sending…" : "Email me a sign-in link"}
                 </Button>
               </form>
+            ) : (
+              <p className="text-center text-muted-foreground">
+                Prefer email?{" "}
+                <button type="button" className="font-medium text-primary-text underline-offset-4 hover:underline"
+                        onClick={() => setEmailOpen(true)}>
+                  Sign in with a link
+                </button>
+              </p>
             )}
-          </details>
-          {error && (
-            <p role="alert" className="mt-4 rounded-xl bg-danger-soft p-3 text-[13px] text-danger">
-              {error}
-            </p>
-          )}
+          </div>
         </div>
       </section>
     </main>
