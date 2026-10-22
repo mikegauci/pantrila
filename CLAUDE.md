@@ -33,6 +33,20 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Plan meal choices: a plan meal now has a `kind` (`SlotKind`: recipe, leftovers, skipped, eating_out) on
+`PlannedMeal`, inside the plan JSON, so no migration; the planner still only makes recipe meals (its `DraftMeal`
+output is unchanged, so no eval rerun). Each meal's menu on the Plan page (`web/src/components/meal-menu.tsx`) swaps
+it, adds its recipe back, eats out (Light ~500, Normal ~800, Big ~1200 kcal, or not counted; only kcal is added to
+the day), uses leftovers of a meal cooked on an earlier day (counted and bought, not a repeat), or skips it. Skipped
+and eating-out meals keep their recipe for "Add back" and are never flagged by rules. A meal with leftovers cannot be
+skipped or eaten out until they change; swapping it moves its leftovers to the new recipe. `PUT
+/plans/latest/meals/{day}/{meal_type}/slot` (`set_slot`) does the changes. Cookbook recipes join a plan as
+`mine-<id>` through `meal_swap.PlanCatalog` (`cookbook.plan_recipe`; food rules only, not their meal types); their
+estimated foods are listed apart on the grocery list (`GroceryList.unlisted`). The swap sheet has Pantrila's
+recipes / My recipes, search over title, cuisine and foods (in code, free), "30 min or less" and "Uses my pantry"
+filters, Show more (pages of 6, up to 24) and the day's protein change (`/options?source&q&quick&pantry&offset&limit`).
+Skipping does not refit the day's other portions. 8 new Python tests (427 pass), 3 new Playwright tests (all 28 pass locally) (`web/tests/plan-slots.spec.ts`).
+
 Lock-phone hint: the import progress box's "You can lock your phone; the import keeps going." shows only below `md`
 (phones); desktop keeps "An estimate from your recent imports." Web only, no eval rerun.
 
@@ -561,11 +575,14 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - `src/pantrila/swaps.py`: same-weight ingredient swaps re-derived like the corpus (nutrition,
   allergens, diets) and checked with `constraints.recipe_problems`; suggestions from the same
   aisle (or any protein) ranked by nutrition distance.
-- `src/pantrila/meal_swap.py`: swap one meal of a saved plan, no model call. `meal_options`
-  (candidates from `slot_filters` via `Catalog.browse`, re-checked with `recipe_violations`,
-  ranked by distance to the day's targets, then pantry use, then calories) and `replace_meal`
-  (re-checks the chosen recipe, fits portions with `constraints.fit_slot_portion`);
-  `swapped_report` recomputes warnings and pantry use. `SwapError` carries the HTTP status.
+- `src/pantrila/meal_swap.py`: change one meal of a saved plan, no model call. `PlanCatalog`
+  (corpus + the person's cookbook as `mine-<id>`), `meal_options` (candidates from
+  `slot_filters` via `Catalog.browse`, or the cookbook with `source="mine"`; query and
+  quick/pantry filters in code; re-checked with `recipe_violations`, ranked by distance to the
+  day's targets, then pantry use, then calories), `replace_meal` (re-checks the chosen recipe,
+  fits portions with `constraints.fit_slot_portion`, moves leftovers along) and `set_slot`
+  (skip, eating out, leftovers, add back); `swapped_report` recomputes warnings and pantry
+  use. `SwapError` carries the HTTP status.
 - `src/pantrila/assistant.py`: LangGraph chat agent agent -> tools (max 4 rounds) -> guard;
   tools search_recipes, check_pantry, update_pantry, swap_ingredient, scale_recipe; replies
   cite recipes as `[recipe-id]` and the guard appends a note for any cited recipe that breaks
