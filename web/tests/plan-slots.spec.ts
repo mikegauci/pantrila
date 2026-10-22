@@ -112,7 +112,7 @@ test("a meal can be skipped, eaten out and added back", async ({ page }) => {
 
   await choose(page, "day 1 dinner", /Normal meal/)
   await expect(page.getByRole("main").getByText("Eating out", { exact: true })).toBeVisible()
-  await expect(page.getByText("~800 kcal", { exact: true })).toBeVisible()
+  await expect(page.getByRole("main").getByText("~800 kcal", { exact: true })).toBeVisible()
   expect(requests.at(-1)?.body).toEqual({ plan_id: 7, kind: "eating_out", out_kcal: 800 })
 
   await choose(page, "day 1 dinner", "Add back Lemon Chicken")
