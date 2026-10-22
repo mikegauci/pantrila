@@ -33,6 +33,9 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Lock-phone hint: the import progress box's "You can lock your phone; the import keeps going." shows only below `md`
+(phones); desktop keeps "An estimate from your recent imports." Web only, no eval rerun.
+
 Step ingredients by group: cooking mode's "For this step" chips come from `stepUses` in `web/src/lib/cooking.ts`.
 When the method has headings, a food on several lines keeps only the line from the group whose name shares a word with
 the step's heading ("Chicken" ~ "Rice & Chicken"), else the first line an earlier step has not used; "seasonings",

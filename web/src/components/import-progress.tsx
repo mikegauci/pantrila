@@ -56,7 +56,8 @@ export function ImportProgress({ steps, estimatedSeconds = null }: {
         </p>
         {remaining !== null && (
           <p className="text-[12px] text-muted-foreground">
-            An estimate from your recent imports. You can lock your phone; the import keeps going.
+            An estimate from your recent imports.
+            <span className="md:hidden"> You can lock your phone; the import keeps going.</span>
           </p>
         )}
       </div>
