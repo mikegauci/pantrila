@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+/* Tokens copied from web/src/app/globals.css (web/DESIGN_SYSTEM.md); keep them in sync. */
+:root {
+  --background: #f7f8f3;
+  --surface: #ffffff;
+  --surface-muted: #f1f3ec;
+  --foreground: #1d2a1f;
+  --muted-foreground: #6b756b;
+  --border: #e6e9e0;
+  --primary: #3fa34d;
+  --primary-text: #2e8a3b;
+  --primary-foreground: #ffffff;
+  --primary-soft: #e4f4e5;
+  --primary-deep: #1f5a2a;
+  --accent-yellow: #f9c74f;
+  --accent-yellow-soft: #fef4d6;
+  --accent-orange: #f8961e;
+  --accent-orange-soft: #feebd4;
+  --danger: #e5484d;
+  --danger-soft: #fdecec;
+  --shadow-soft: 0 4px 20px rgb(29 42 31 / 0.06);
+  --shadow-lift: 0 24px 60px -20px rgb(29 42 31 / 0.25);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-text: var(--primary-text);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-deep: var(--primary-deep);
+  --color-yellow: var(--accent-yellow);
+  --color-yellow-soft: var(--accent-yellow-soft);
+  --color-orange: var(--accent-orange);
+  --color-orange-soft: var(--accent-orange-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
+  --font-sans: var(--font-sans);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+    overflow-x: clip;
+  }
+  body {
+    @apply bg-background text-foreground;
+    overflow-x: clip;
+  }
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
