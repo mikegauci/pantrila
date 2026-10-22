@@ -17,6 +17,7 @@ jobs:
     outputs:
       python: ${{ steps.filter.outputs.python }}
       web: ${{ steps.filter.outputs.web }}
+      site: ${{ steps.filter.outputs.site }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -35,6 +36,9 @@ jobs:
               - ".github/workflows/ci.yml"
             web:
               - "web/**"
+              - ".github/workflows/ci.yml"
+            site:
+              - "site/**"
               - ".github/workflows/ci.yml"
 
   python:
@@ -107,3 +111,23 @@ jobs:
           name: browser-failures
           path: web/test-results/
           retention-days: 7
+
+  # The pantrila.com landing site: static pages, so lint, types and a build are the checks.
+  site:
+    needs: changes
+    if: needs.changes.outputs.site == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
