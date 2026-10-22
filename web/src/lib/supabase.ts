@@ -46,3 +46,16 @@ export function firstName(user: User | undefined): string | null {
   const full = typeof meta.full_name === "string" ? meta.full_name : typeof meta.name === "string" ? meta.name : ""
   return full.trim().split(/\s+/)[0] || null
 }
+
+/**
+ * The Google profile picture, if the person signed in with Google or linked it. A guest who
+ * links Google keeps the old metadata, so the Google identity's own data is checked too.
+ */
+export function googlePicture(user: User | undefined): string | null {
+  const pick = (data: Record<string, unknown> | undefined) => {
+    const url = data?.avatar_url ?? data?.picture
+    return typeof url === "string" && url.startsWith("https://") ? url : null
+  }
+  const google = user?.identities?.find((i) => i.provider === "google")
+  return pick(user?.user_metadata) ?? pick(google?.identity_data) ?? null
+}
