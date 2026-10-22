@@ -10,6 +10,7 @@ import { buttonVariants } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useAuth } from "@/components/auth-provider"
 import { label, planDayIndex } from "@/lib/format"
+import { mealHref } from "@/lib/plan"
 import { useGrocery, usePantry, usePlan } from "@/lib/hooks"
 import { firstName } from "@/lib/supabase"
 
@@ -63,9 +64,14 @@ export default function HomePage() {
             <Skeleton className="h-40 rounded-2xl" />
           ) : today ? (
             <ul className="grid gap-3 sm:grid-cols-3">
-              {today.meals.map((m) => (
+              {today.meals.map((m) => (m.kind === "skipped" || m.kind === "eating_out" || !m.recipe) ? (
+                <li key={m.meal_type} className="flex items-center gap-3 rounded-2xl border border-dashed p-3 text-muted-foreground sm:block">
+                  <p className="text-[12px] font-medium">{label(m.meal_type)}</p>
+                  <p className="font-semibold text-foreground">{m.kind === "eating_out" ? "Eating out" : "Skipped"}</p>
+                </li>
+              ) : (
                 <li key={m.meal_type}>
-                  <Link href={`/recipes/${m.recipe.id}`} className="group flex items-center gap-3 rounded-2xl border p-3 hover:shadow-soft sm:block">
+                  <Link href={mealHref(m)!} className="group flex items-center gap-3 rounded-2xl border p-3 hover:shadow-soft sm:block">
                     <RecipeArt
                       meal={m.meal_type} photo={m.recipe.photo_url} sizes="(min-width: 640px) 340px, 64px"
                       className="size-16 shrink-0 sm:mb-3 sm:aspect-[4/3] sm:size-auto"

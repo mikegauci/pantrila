@@ -146,10 +146,21 @@ export interface Me {
   limits: Limits
 }
 
+/** recipe: cook it; leftovers: eat more of an earlier day's meal; skipped and eating_out keep
+ * the recipe that was planned there so it can be added back. */
+export type SlotKind = "recipe" | "leftovers" | "skipped" | "eating_out"
+
 export interface PlanMeal {
   meal_type: MealType
   portions: number
-  recipe: RecipeCard
+  /** Null only for a skipped or eating-out meal whose old recipe is gone. */
+  recipe: RecipeCard | null
+  kind: SlotKind
+  /** Set when the recipe is the person's own (its id is mine-<cookbook_id>). */
+  cookbook_id: number | null
+  from_day: number | null
+  from_meal: MealType | null
+  out_kcal: number | null
 }
 
 export interface PlanDay {
@@ -196,6 +207,7 @@ export interface MealOption {
   portions: number
   day_nutrition: Nutrition
   kcal_change: number
+  protein_change: number
 }
 
 export interface MealOptions {
@@ -204,6 +216,8 @@ export interface MealOptions {
   meal_type: MealType
   current: PlanMeal
   options: MealOption[]
+  total: number
+  offset: number
 }
 
 export interface GroceryItem {
@@ -220,6 +234,8 @@ export interface GroceryList {
   people: number
   items: GroceryItem[]
   covered: GroceryItem[]
+  /** Estimated foods of the person's own recipes, which the list cannot weigh. */
+  unlisted?: string[]
 }
 
 export interface ToolCall {

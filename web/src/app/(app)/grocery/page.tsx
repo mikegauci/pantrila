@@ -50,7 +50,7 @@ export default function GroceryPage() {
     localStorage.setItem(storageKey, JSON.stringify([...next]))
   }
 
-  const titles = new Map(plan?.days.flatMap((d) => d.meals.map((m) => [m.recipe.id, m.recipe.title] as const)))
+  const titles = new Map(plan?.days.flatMap((d) => d.meals.flatMap((m) => m.recipe ? [[m.recipe.id, m.recipe.title] as const] : [])))
 
   if (planLoading) return <Skeleton className="h-96 rounded-[20px]" />
   if (!plan) {
@@ -108,6 +108,19 @@ export default function GroceryPage() {
                 </ul>
               </section>
             ))}
+            {data.unlisted && data.unlisted.length > 0 && (
+              <section>
+                <h3 className="mb-1 text-[15px] font-semibold">Also for your recipes</h3>
+                <p className="mb-2 text-[12px] text-muted-foreground">
+                  Pantrila estimated these foods, so it cannot say how much to buy. Check the recipe.
+                </p>
+                <ul className="flex flex-wrap gap-2">
+                  {data.unlisted.map((name) => (
+                    <li key={name} className="rounded-full border px-3 py-1 text-[13px]">{name}</li>
+                  ))}
+                </ul>
+              </section>
+            )}
           </div>
         )}
       </Panel>
