@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 import { Logo } from "@/components/logo"
-import { APP_URL, GITHUB_URL, OPERATOR, cn } from "@/lib"
+import { APP_URL, GITHUB_URL, cn } from "@/lib"
 
 export function OpenApp({ className, children = "Open Pantrila" }: { className?: string; children?: React.ReactNode }) {
   return (
@@ -64,7 +64,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-border">
         <p className="mx-auto max-w-6xl px-4 py-5 text-[13px] text-muted-foreground sm:px-6">
-          © 2026 Pantrila · Made by {OPERATOR}
+          © 2026 Pantrila
         </p>
       </div>
     </footer>
