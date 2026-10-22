@@ -88,6 +88,10 @@ test(`estimated import saves and retains its nutrition notes when photo ${photoF
   await expect(page.getByText("Estimated amount: A typical basil sprig weighs about 2 g.")).toBeVisible()
   await page.screenshot({ path: `test-results/estimated-recipe-photo-${photoFails ? "failure" : "success"}.png`, fullPage: true })
 
+  // Toasts sit at the top, over the Edit button on phones, and Sonner pauses them while the
+  // pointer is over them: move the pointer away and let them close before clicking.
+  await page.mouse.move(0, page.viewportSize()!.height - 1)
+  await expect(page.locator("[data-sonner-toast]")).toHaveCount(0)
   await page.getByRole("button", { name: "Edit", exact: true }).click()
   await page.getByRole("spinbutton", { name: "Amount for ingredient 1", exact: true }).fill("3")
   await expect(page.getByText("A typical basil sprig weighs about 2 g.").filter({ visible: true })).toHaveCount(0)
