@@ -1854,5 +1854,361 @@
         "basil"
       ]
     }
+  },
+  {
+    "id": "caption-dish-gyudon",
+    "kind": "caption-dish",
+    "url": "https://www.tiktok.com/@pantrila.eval/video/7300000000000000027",
+    "caption": "Beef and onion rice bowl, my weeknight favourite 🍚 Full recipe in the comments :)\n\n250 g beef steak\n1 onion\n180 g white rice\n120 ml vegetable stock\n3 tbsp soy sauce\n1 1/2 tbsp sugar\n10 g ginger",
+    "expect": {
+      "is_recipe": true,
+      "title": "Japanese Beef and Onion Rice Bowl",
+      "servings": 2,
+      "minutes": 20,
+      "lines": [
+        {
+          "text": "250 g beef steak",
+          "foods": [
+            "beef_steak"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 onion",
+          "foods": [
+            "onion"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "180 g white rice",
+          "foods": [
+            "white_rice"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "120 ml vegetable stock",
+          "foods": [
+            "vegetable_stock"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "3 tbsp soy sauce",
+          "foods": [
+            "soy_sauce"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 1/2 tbsp sugar",
+          "foods": [
+            "sugar"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "10 g ginger",
+          "foods": [
+            "ginger"
+          ],
+          "estimate_allergens": null
+        }
+      ],
+      "allergens": [
+        "celery",
+        "gluten",
+        "soy"
+      ],
+      "sections": {
+        "lines": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "steps": []
+      }
+    }
+  },
+  {
+    "id": "caption-dish-albondigas",
+    "kind": "caption-dish",
+    "url": "https://www.tiktok.com/@pantrila.eval/video/7300000000000000028",
+    "caption": "Spanish beef meatballs in tomato sauce 🇪🇸 Recipe in comments #tapas #meatballs\n\n500 g beef mince\n50 g breadcrumbs\n1 egg\n1 onion\n3 garlic cloves\n15 g parsley\n1 tsp salt\n1/2 tsp black pepper\n2 tbsp olive oil\n2 tsp paprika\n400 g canned tomatoes\n1 tbsp tomato paste\n1 tsp sugar",
+    "expect": {
+      "is_recipe": true,
+      "title": "Spanish Beef Meatballs in Tomato Sauce",
+      "servings": 4,
+      "minutes": 50,
+      "lines": [
+        {
+          "text": "500 g beef mince",
+          "foods": [
+            "beef_mince"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "50 g breadcrumbs",
+          "foods": [
+            "breadcrumbs"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 egg",
+          "foods": [
+            "egg"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 onion",
+          "foods": [
+            "onion"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "3 garlic cloves",
+          "foods": [
+            "garlic"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "15 g parsley",
+          "foods": [
+            "parsley"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 tsp salt",
+          "foods": [
+            "salt"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1/2 tsp black pepper",
+          "foods": [
+            "black_pepper"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "2 tbsp olive oil",
+          "foods": [
+            "olive_oil"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "2 tsp paprika",
+          "foods": [
+            "paprika"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "400 g canned tomatoes",
+          "foods": [
+            "canned_tomatoes"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 tbsp tomato paste",
+          "foods": [
+            "tomato_paste"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 tsp sugar",
+          "foods": [
+            "sugar"
+          ],
+          "estimate_allergens": null
+        }
+      ],
+      "allergens": [
+        "eggs",
+        "gluten"
+      ],
+      "sections": {
+        "lines": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "steps": []
+      }
+    }
+  },
+  {
+    "id": "caption-dish-oyakodon",
+    "kind": "caption-dish",
+    "url": "https://www.tiktok.com/@pantrila.eval/video/7300000000000000029",
+    "caption": "Chicken and egg rice bowl, ready in 25 min 🥚 Full recipe in the comments\n\n150 g chicken thigh\n2 eggs\n1 onion\n200 g cooked white rice\n3 tbsp soy sauce\n1 tbsp sugar\n150 ml vegetable stock",
+    "expect": {
+      "is_recipe": true,
+      "title": "Chicken and Egg Rice Bowl",
+      "servings": 2,
+      "minutes": 25,
+      "lines": [
+        {
+          "text": "150 g chicken thigh",
+          "foods": [
+            "chicken_thigh"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "2 eggs",
+          "foods": [
+            "egg"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 onion",
+          "foods": [
+            "onion"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "200 g cooked white rice",
+          "foods": [
+            "white_rice"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "3 tbsp soy sauce",
+          "foods": [
+            "soy_sauce"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 tbsp sugar",
+          "foods": [
+            "sugar"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "150 ml vegetable stock",
+          "foods": [
+            "vegetable_stock"
+          ],
+          "estimate_allergens": null
+        }
+      ],
+      "allergens": [
+        "celery",
+        "eggs",
+        "gluten",
+        "soy"
+      ],
+      "sections": {
+        "lines": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "steps": []
+      }
+    }
+  },
+  {
+    "id": "caption-dish-lemon-potatoes",
+    "kind": "caption-dish",
+    "url": "https://www.tiktok.com/@pantrila.eval/video/7300000000000000030",
+    "caption": "Greek lemon roast potatoes 🍋 Full recipe in my bio, it's the best side ever\n\n1 kg potatoes\n1 lemon\n3 tbsp olive oil\n1 tsp dried oregano\n3 garlic cloves\n1 tsp salt",
+    "expect": {
+      "is_recipe": true,
+      "title": "Greek Lemon Roast Potatoes",
+      "servings": 4,
+      "minutes": 60,
+      "lines": [
+        {
+          "text": "1 kg potatoes",
+          "foods": [
+            "potato"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 lemon",
+          "foods": [
+            "lemon"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "3 tbsp olive oil",
+          "foods": [
+            "olive_oil"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 tsp dried oregano",
+          "foods": [
+            "dried_oregano"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "3 garlic cloves",
+          "foods": [
+            "garlic"
+          ],
+          "estimate_allergens": null
+        },
+        {
+          "text": "1 tsp salt",
+          "foods": [
+            "salt"
+          ],
+          "estimate_allergens": null
+        }
+      ],
+      "allergens": [],
+      "sections": {
+        "lines": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "steps": []
+      }
+    }
   }
 ]

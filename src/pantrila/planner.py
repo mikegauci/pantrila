@@ -225,6 +225,7 @@ class Usage:
     output_tokens: int = 0
     embed_tokens: int = 0
     audio_seconds: float = 0.0  # transcribed audio, priced per minute
+    web_searches: int = 0  # web search tool calls, priced per call
 
     def add(self, resp) -> None:
         self.llm_calls += 1
@@ -237,9 +238,11 @@ class Usage:
         chat = prices.chat_cost(self.input_tokens, self.output_tokens)
         embed = prices.embed_cost(self.embed_tokens)
         audio = self.transcription_cost()
-        if chat is None or (self.audio_seconds and audio is None):
+        search = prices.web_search_cost(self.web_searches)
+        if chat is None or (self.audio_seconds and audio is None) or (
+                self.web_searches and search is None):  # fmt: skip
             return None
-        return chat + (embed or 0.0) + (audio or 0.0)
+        return chat + (embed or 0.0) + (audio or 0.0) + (search or 0.0)
 
     def transcription_cost(self) -> float | None:
         if not self.audio_seconds:

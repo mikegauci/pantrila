@@ -33,6 +33,7 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Dish-name match: a caption that names a dish and lists ingredients but gives no method (`from_post` ends with `NO_METHOD`) takes its method from a Pantrila recipe with the same dish words and at least half the same foods (`Importer._matched`, the shipped corpus, no model call), else from the recipe page one OpenAI web search finds (`_web_method`: `from_link`, only its steps are used). The creator's ingredients stay; each food the two lists disagree on is noted (`_with_method`). Saved straight away; the notes say where the method is from. Web search is priced by `PANTRILA_PRICE_WEB_SEARCH_PER_CALL` (unset: cost unknown). Eval: 4 `caption-dish-*` cases; `run_import --no-match` is the before. Before `import-2026-10-22T130514Z` vs after `import-2026-10-22T130618Z`, 31 cases: method found for a caption's dish 0% -> 75% (3 of 4; the oyakodon search found no page once, and found one on a rerun), 0 missed allergens both, food matching 99% both, lines kept 100% -> 96% and servings/time 100%/100% -> 96%/93% on non-dish pages (same code path; single runs), p50/p95 5.4/12.5 -> 5.7/17.6 s. Average tokens per import 3,177/1,063 -> 4,729/1,054 (the page text); the search fee is not in the run's cost. 8 new offline tests (in `tests/test_social.py`), 2 existing tests updated for the extra call.
 Voice commands in cooking mode: a mic button in the cooking header (`web/src/components/voice-control.tsx`) listens
 for "next", "back", "start timer" and "stop timer" through the browser's speech recognition (`SpeechRecognition` or
 `webkitSpeechRecognition`; hidden where neither exists). Words map to commands in code (`voiceCommand` in
@@ -763,7 +764,7 @@ uv run pantrila chat [--user me] [--message "..."]  # cooking assistant (paid)
 uv run python -m evals.chat_cases        # regenerate the assistant eval cases
 uv run python -m evals.run_assistant [--only ids] # assistant eval (paid; ~$0.002/turn)
 uv run python -m evals.import_cases      # regenerate the recipe-import eval pages
-uv run python -m evals.run_import [--only ids] [--instructions-from <git ref>]  # recipe-import eval (paid; ~$0.006/import)
+uv run python -m evals.run_import [--only ids] [--instructions-from <git ref>] [--no-match]  # recipe-import eval (paid; ~$0.006/import)
 uv run python -m evals.video_cases       # regenerate the video-import eval cases
 uv run python -m evals.video_audio [--only ids] [--force]   # their audio, once (paid TTS)
 uv run python -m evals.run_video [--plain] [--video-effort low|medium] [--transcribe-model m --transcribe-price usd] [--only ids]  # video eval (paid)

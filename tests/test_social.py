@@ -5,7 +5,13 @@ import httpx
 import pytest
 
 from pantrila.cookbook import bare_name
-from pantrila.recipe_import import ImportedRecipe, Importer, ImportFailed, may_hold_recipe
+from pantrila.recipe_import import (
+    DishPage,
+    ImportedRecipe,
+    Importer,
+    ImportFailed,
+    may_hold_recipe,
+)
 from pantrila.social import (
     NO_RECIPE,
     caption_links,
@@ -402,12 +408,12 @@ def test_caption_with_only_ingredients_becomes_a_draft_that_asks_for_the_method(
     from pantrila.recipe_import import NO_METHOD, NO_METHOD_STEP
 
     lines = ("1 lb spicy Italian sausage", "3 garlic cloves", "2 tbsp vodka")
-    client = FakeClient(ingredients_only(*lines))
+    client = FakeClient(ingredients_only(*lines), DishPage(url=None))
     url = "https://www.instagram.com/reel/Dclv5Rgizvm/"
     result = Importer(client=client, model="m").from_post(url, LASAGNA)
     assert [i.name for i in result.draft.ingredients] == [bare_name(line) for line in lines]
     assert result.draft.steps == [NO_METHOD_STEP] and NO_METHOD in result.notes
-    assert result.draft.source_url == url and len(client.calls) == 1  # no link to try
+    assert result.draft.source_url == url and len(client.calls) == 2  # no link; no page found
 
 
 def test_invented_ingredients_without_a_method_are_still_refused():
@@ -431,3 +437,68 @@ def test_caption_with_only_ingredients_prefers_a_linked_full_recipe():
     result = Importer(client=client, model="m").from_post(TIKTOK, caption, mock_http({}), resolve)
     assert [i.name for i in result.draft.ingredients] == [bare_name(line) for line in lines]
     assert result.draft.recipe_url is None
+
+
+# --- A caption's dish with no method -------------------------------------------------------------
+
+
+def caption_draft(title: str, *foods: tuple[str, str]) -> ImportedRecipe:
+    """What the model reads from a caption that lists (line, food) and no method."""
+    data = recipe().model_dump()
+    data.update(title=title, steps=[], ingredients=[
+        {"name": name, "quantity": 100, "unit": "g", "food": food, "estimate": None}
+        for name, food in foods])  # fmt: skip
+    return ImportedRecipe.model_validate(data)
+
+
+def test_caption_dish_takes_the_method_of_a_pantrila_recipe_for_the_same_dish():
+    from pantrila.recipe_import import shipped_corpus
+
+    dish = shipped_corpus()[0]
+    names = [i.name for i in dish.ingredients]
+    caption = f"{dish.title} 🍽️ ingredients: " + ", ".join(names) + ". Full recipe in comments"
+    draft = caption_draft(dish.title, *((i.name, i.food) for i in dish.ingredients))
+    client = FakeClient(draft)
+    result = Importer(client=client, model="m", corpus=[dish]).from_post(caption=caption)
+    assert result.draft.steps == dish.steps and len(client.calls) == 1  # no web search
+    assert "matched by the dish name" in result.draft.notes
+    assert "Pantrila's recipe" in result.draft.notes and "NO_METHOD" not in result.draft.notes
+
+
+def test_no_pantrila_recipe_takes_the_method_of_the_page_a_search_finds():
+    page = "https://recipes.example/egg-pasta"
+    html = "<html><body><p>Whisk the eggs. Cook the pasta.</p></body></html>"
+    http = mock_http(
+        {page: httpx.Response(200, content=html.encode(), headers={"content-type": "text/html"})}
+    )
+    client = FakeClient(
+        caption_draft("Egg pasta", ("egg", "egg"), ("butter", "butter")),
+        DishPage(url=page),
+        ImportedRecipe.model_validate({**recipe().model_dump(),
+            "steps": ["Whisk the eggs.", "Cook the pasta."],
+            "ingredients": [{"name": "2 eggs", "quantity": 2, "unit": "piece", "food": "egg",
+                             "estimate": None},
+                            {"name": "olive oil", "quantity": 1, "unit": "tbsp",
+                             "food": "olive_oil", "estimate": None}]}),
+    )  # fmt: skip
+    caption = "Egg pasta 🍝 ingredients: egg, butter. Recipe on the link"
+    result = Importer(client=client, model="m", corpus=[]).from_post(
+        caption=caption, http=http, resolve=resolve
+    )
+    d = result.draft
+    assert d.steps == ["Whisk the eggs.", "Cook the pasta."] and d.recipe_url == page
+    assert [i.name for i in d.ingredients] == ["egg", "butter"]  # the creator's list stays
+    assert "Method from recipes.example" in d.notes
+    assert "not in the ingredient list: check it." in d.notes
+    assert "not the method: check it." in d.notes
+    assert len(client.calls) == 3
+
+
+def test_a_failed_search_keeps_the_captions_ingredients_and_asks_for_the_method():
+    from pantrila.recipe_import import NO_METHOD, NO_METHOD_STEP
+
+    client = FakeClient(caption_draft("Egg pasta", ("egg", "egg"), ("butter", "butter")))
+    result = Importer(client=client, model="m", corpus=[]).from_post(
+        caption="Egg pasta 🍝 ingredients: egg, butter. Recipe on the link"
+    )
+    assert result.draft.steps == [NO_METHOD_STEP] and NO_METHOD in result.notes
