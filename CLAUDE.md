@@ -33,6 +33,14 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Meal prep (repeat a meal): the meal menu's "Repeat on other days" sheet (`web/src/components/repeat-meal.tsx`) turns
+chosen meals on later days into leftovers of one cooked meal through `PUT /plans/latest/meals/{day}/{meal_type}/repeat`
+(`meal_swap.repeat_meal`: up to 12 meals, all or none, each with `set_slot`'s leftovers checks; only a cooked meal
+repeats). The cooked meal shows "Leftovers for day 2, 3"; its menu's "Start cooking" opens cooking mode with
+`?servings=` for every portion (own plus leftovers, rounded up) and `&later=`, which cooking mode states ("2 of these
+servings are for later"). The grocery list already buys for leftovers. `useSavePlan` moved to `lib/hooks.ts`. No
+model call, so no eval rerun; 2 new Python tests, 1 API test, 1 Playwright test.
+
 Plan meal choices: a plan meal now has a `kind` (`SlotKind`: recipe, leftovers, skipped, eating_out) on
 `PlannedMeal`, inside the plan JSON, so no migration; the planner still only makes recipe meals (its `DraftMeal`
 output is unchanged, so no eval rerun). Each meal's menu on the Plan page (`web/src/components/meal-menu.tsx`) swaps
@@ -595,7 +603,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   quick/pantry filters in code; re-checked with `recipe_violations`, ranked by distance to the
   day's targets, then pantry use, then calories), `replace_meal` (re-checks the chosen recipe,
   fits portions with `constraints.fit_slot_portion`, moves leftovers along) and `set_slot`
-  (skip, eating out, leftovers, add back); `swapped_report` recomputes warnings and pantry
+  (skip, eating out, leftovers, add back) and `repeat_meal` (several leftovers at once);
+  `swapped_report` recomputes warnings and pantry
   use. `SwapError` carries the HTTP status.
 - `src/pantrila/assistant.py`: LangGraph chat agent agent -> tools (max 4 rounds) -> guard;
   tools search_recipes, check_pantry, update_pantry, swap_ingredient, scale_recipe; replies
