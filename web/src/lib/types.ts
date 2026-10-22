@@ -85,6 +85,9 @@ export interface SwapList {
 
 export interface NutritionTargets {
   kcal: number | null
+  /** An energy range (either end may be open); when set it replaces `kcal`. */
+  min_kcal?: number | null
+  max_kcal?: number | null
   min_protein_g: number | null
   max_carbs_g: number | null
 }
