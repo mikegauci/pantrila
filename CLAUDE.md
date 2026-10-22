@@ -47,6 +47,14 @@ recipes / My recipes, search over title, cuisine and foods (in code, free), "30 
 filters, Show more (pages of 6, up to 24) and the day's protein change (`/options?source&q&quick&pantry&offset&limit`).
 Skipping does not refit the day's other portions. 8 new Python tests (427 pass), 3 new Playwright tests (all 28 pass locally) (`web/tests/plan-slots.spec.ts`).
 
+Login page for real users: the sign-in page drops the "owner only" email box and demo wording. "Welcome to
+Pantrila" leads with a white Google button (Google's neutral style), an "or" divider, then "Try it as a guest";
+email sign-in is a "Prefer email? Sign in with a link" line that opens the form. Supabase's built-in sender only
+emails the project team, so email links need custom SMTP before users can rely on them. Avatars (header menu and
+Profile) fall back to the Google profile picture (`googlePicture` in `web/src/lib/supabase.ts`: user metadata, else
+the Google identity's data, so a guest who links Google gets it too) when no picture is uploaded. Web only, no model
+call, so no eval rerun.
+
 Lock-phone hint: the import progress box's "You can lock your phone; the import keeps going." shows only below `md`
 (phones); desktop keeps "An estimate from your recent imports." Web only, no eval rerun.
 

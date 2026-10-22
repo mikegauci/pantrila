@@ -18,7 +18,7 @@ import { ApiError, send } from "@/lib/api"
 import { label } from "@/lib/format"
 import { useFoods, useMe, useMeta, useProfile, useRefreshKitchen } from "@/lib/hooks"
 import { toAvatarDataUrl } from "@/lib/images"
-import { linkGoogle } from "@/lib/supabase"
+import { googlePicture, linkGoogle } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
 import type { Allergen, DietTag, MealType, Me, Profile } from "@/lib/types"
 
@@ -131,7 +131,7 @@ function PictureCard() {
     <Panel>
       <PanelTitle>Profile picture</PanelTitle>
       <div className="flex items-center gap-4">
-        <UserAvatar userId={session?.user.id ?? null} email={session?.user.email ?? null} size="xl" url={me?.avatar_url} />
+        <UserAvatar userId={session?.user.id ?? null} email={session?.user.email ?? null} size="xl" url={me?.avatar_url ?? googlePicture(session?.user)} />
         <div className="grid gap-2">
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" size="sm" disabled={busy || !me} onClick={() => input.current?.click()}>
@@ -145,7 +145,7 @@ function PictureCard() {
             )}
           </div>
           <p className="text-[12px] text-muted-foreground">
-            Cropped to a square and shrunk on your device first. Without one you get a food emoji.
+            Cropped to a square and shrunk on your device first. Without one you get your Google picture or a food emoji.
           </p>
         </div>
         <input
