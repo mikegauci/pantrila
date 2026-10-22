@@ -38,11 +38,13 @@ for "next", "back", "start timer" and "stop timer" through the browser's speech 
 `webkitSpeechRecognition`; hidden where neither exists). Words map to commands in code (`voiceCommand` in
 `web/src/lib/voice.ts`, platform-free so a native app can reuse it behind its own `VoiceListener`). "Start timer" resumes
 the latest paused timer, else starts the step's next timer; "stop timer" (or "stop") clears a finished timer, else pauses
-the latest running one. Each command chimes (`chime` in `cooking.ts`) and shows a 2 s label. The first turn-on shows a
+the latest running one. Each command chimes (`chime` in `cooking.ts`) and shows a 2 s label. On the get-ready page, "start" or "start cooking" opens
+step 1 (not in the commands list; ignored on other pages). On the get-ready page, "start" or "start cooking" opens
+step 1 (not in the commands list; ignored on other pages). The first turn-on shows a
 notice that the browser sends speech to Google or Apple (`localStorage["pantrila-voice-ok"]`); the mic stays on across
 visits (`pantrila-voice`), stops when the page hides (locked phone) and resumes on return; listening restarts after the
 browser ends it, giving up after 5 quick ends. A one-time tip (`pantrila-voice-tip-done`), a "?" command list, and a new
-tour step ("Cook hands-free", on Recipes) explain it. Web only, no model call, so no eval rerun; new
+tour step ("Cook hands-free", pointing at the mic in the vegetable paella's cooking mode) explain it. Web only, no model call, so no eval rerun; new
 `web/tests/voice-commands.spec.ts` (fake microphone), tour spec updated; all 32 Playwright tests pass locally. Not yet
 checked on a real phone's microphone.
 
