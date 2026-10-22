@@ -1,14 +1,19 @@
+import { useId } from "react"
+
 import { cn } from "@/lib/utils"
 
 // One four-point "AI" sparkle, centred on 0,0 with a radius of 1.
 const SPARKLE = "M0-1C.12-.32.32-.12 1 0C.32.12.12.32 0 1C-.12.32-.32.12-1 0C-.32-.12-.12-.32 0-1Z"
 
 // The chef hat mark from src/app/icon.svg: the big sparkle is cut out of the
-// hat, so the tile colour shows through it.
+// hat, so the tile colour shows through it. Each copy needs its own mask id: pages
+// render several logos (some hidden by breakpoint) and a mask inside a hidden copy
+// draws nothing, which would leave every logo a plain square.
 function Mark({ className }: { className?: string }) {
+  const mask = `pantrila-logo-cut-${useId().replace(/[^\w-]/g, "")}`
   return (
     <svg viewBox="17 9 77 77" className={className} aria-hidden="true">
-      <mask id="pantrila-logo-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+      <mask id={mask} maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
         <g fill="#fff">
           <circle cx="33" cy="46" r="14" />
           <circle cx="50" cy="37" r="17" />
@@ -18,7 +23,7 @@ function Mark({ className }: { className?: string }) {
         </g>
         <path fill="#000" transform="translate(50 52) scale(13)" d={SPARKLE} />
       </mask>
-      <rect width="100" height="100" fill="currentColor" mask="url(#pantrila-logo-cut)" />
+      <rect width="100" height="100" fill="currentColor" mask={`url(#${mask})`} />
       <g fill="currentColor">
         <path transform="translate(81 20) scale(7)" d={SPARKLE} />
         <path transform="translate(89 33) scale(3.5)" d={SPARKLE} />
