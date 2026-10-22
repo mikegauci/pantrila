@@ -311,6 +311,74 @@ def test_a_swap_replaces_a_meal_that_a_new_allergy_flags(api, backend):
     assert r.status_code == 200 and r.json()["problems"] == []
 
 
+def test_meals_can_be_skipped_eaten_out_or_leftovers_and_added_back(api, backend):
+    plan = make_plan(api, backend)
+    slot = "/plans/latest/meals/{}/{}/slot"
+    r = api.put(slot.format(2, "dinner"), json={"plan_id": plan["id"], "kind": "leftovers",
+                                                 "from_day": 1, "from_meal": "dinner"})  # fmt: skip
+    assert r.status_code == 200
+    left = r.json()["days"][1]["meals"][1]
+    assert left["kind"] == "leftovers" and left["recipe"]["id"] == CHICKEN
+    assert (left["from_day"], left["from_meal"]) == (1, "dinner")
+    blocked = api.put(slot.format(1, "dinner"), json={"plan_id": plan["id"], "kind": "skipped"})
+    assert blocked.status_code == 422 and "leftovers of this meal" in blocked.json()["detail"]
+
+    r = api.put(slot.format(1, "breakfast"), json={"plan_id": plan["id"], "kind": "eating_out",
+                                                    "out_kcal": 700})  # fmt: skip
+    day1 = r.json()["days"][0]
+    out = day1["meals"][0]
+    assert out["kind"] == "eating_out" and out["out_kcal"] == 700
+    assert out["recipe"]["id"] == OMELETTE  # kept so it can be added back
+    chicken = day1["meals"][1]
+    assert day1["nutrition"]["kcal"] == pytest.approx(
+        700 + chicken["recipe"]["nutrition"]["kcal"] * chicken["portions"], abs=0.2
+    )
+    grocery = api.get("/plans/latest/grocery").json()
+    foods = {i["food"] for i in grocery["items"] + grocery["covered"]}
+    assert "eggs" not in foods and "chicken_thigh" in foods and grocery["unlisted"] == []
+
+    r = api.put(slot.format(1, "breakfast"), json={"plan_id": plan["id"], "kind": "recipe"})
+    assert r.json()["days"][0]["meals"][0]["kind"] == "recipe"
+    assert r.json()["report"]["swaps"] == 3
+    bad = {"plan_id": plan["id"], "kind": "eating_out", "out_kcal": 9000}
+    assert api.put(slot.format(1, "breakfast"), json=bad).status_code == 422
+    stale = {"plan_id": plan["id"] + 1, "kind": "skipped"}
+    assert api.put(slot.format(1, "breakfast"), json=stale).status_code == 409
+
+
+def test_the_swap_sheet_pages_searches_and_offers_own_recipes(api, backend):
+    plan = make_plan(api, backend)
+    url = "/plans/latest/meals/1/dinner/options"
+    first = api.get(url, params={"limit": 1}).json()
+    assert first["total"] == 2 and len(first["options"]) == 1 and first["offset"] == 0
+    second = api.get(url, params={"limit": 1, "offset": 1}).json()
+    assert {o["recipe"]["id"] for o in first["options"] + second["options"]} == {CURRY, NOODLES}
+    assert "protein_change" in first["options"][0]
+    found = api.get(url, params={"q": "peanut"}).json()["options"]
+    assert [o["recipe"]["id"] for o in found] == [NOODLES]
+    assert api.get(url, params={"limit": 50}).status_code == 422
+
+    own = api.post("/me/recipes", json={**TOAST, "meal_types": ["dinner"]}).json()
+    mine = api.get(url, params={"source": "mine"}).json()["options"]
+    assert [o["recipe"]["id"] for o in mine] == [f"mine-{own['id']}"]
+    r = api.put("/plans/latest/meals/1/dinner",
+                json={"plan_id": plan["id"], "recipe_id": f"mine-{own['id']}"})  # fmt: skip
+    assert r.status_code == 200
+    meal = r.json()["days"][0]["meals"][1]
+    assert meal["cookbook_id"] == own["id"] and meal["recipe"]["title"] == "Cheese toast"
+    grocery = api.get("/plans/latest/grocery").json()
+    assert "white_bread" in {i["food"] for i in grocery["items"] + grocery["covered"]}
+
+    api.put("/me/profile", json={"days": 2, "meals": ["breakfast", "dinner"],
+                                 "allergies": ["fish", "milk"]})  # fmt: skip
+    flagged = api.get("/plans/latest").json()
+    assert {(p["day"], p["meal_type"]) for p in flagged["problems"]} >= {(1, "dinner")}
+    assert api.get(url, params={"source": "mine"}).json()["options"] == []
+    api.delete(f"/me/recipes/{own['id']}")
+    gone = api.get("/plans/latest").json()
+    assert any(p["message"] == "is no longer in your recipes" for p in gone["problems"])
+
+
 def test_planning_error_is_streamed_and_logged(api, backend):
     api.put("/me/profile", json={"days": 1, "meals": ["snack"]})
     with api.stream("POST", "/plans") as r:

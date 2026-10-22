@@ -25,6 +25,7 @@ from pantrila.schema import (
     MealType,
     NutritionFacts,
     NutritionTargets,
+    SlotKind,
     Unit,
 )
 from pantrila.search import SearchFilters
@@ -196,7 +197,15 @@ class Me(BaseModel):
 class PlanMealView(BaseModel):
     meal_type: MealType
     portions: float
-    recipe: RecipeCard
+    recipe: RecipeCard | None = Field(
+        description="The recipe eaten; for skipped and eating out, the one to add back (null "
+        "if it is gone)."
+    )
+    kind: SlotKind = SlotKind.RECIPE
+    cookbook_id: int | None = Field(default=None, description="Set for the person's own recipe.")
+    from_day: int | None = None
+    from_meal: MealType | None = None
+    out_kcal: float | None = None
 
 
 class PlanDayView(BaseModel):
@@ -229,6 +238,7 @@ class MealOptionView(BaseModel):
     portions: float = Field(description="Servings per person that fit the day's targets best.")
     day_nutrition: NutritionFacts = Field(description="The day's total per person with this meal.")
     kcal_change: float = Field(description="Change in the day's kcal against the current meal.")
+    protein_change: float = Field(description="Change in the day's protein, in grams.")
 
 
 class MealOptions(BaseModel):
@@ -239,11 +249,24 @@ class MealOptions(BaseModel):
     options: list[MealOptionView] = Field(
         description="Recipes that pass the person's rules for this slot, best fit first."
     )
+    total: int = Field(description="How many recipes match, across every page.")
+    offset: int = 0
 
 
 class SwapMealRequest(BaseModel):
     plan_id: int = Field(description="The plan being edited; a newer plan makes this a conflict.")
-    recipe_id: str
+    recipe_id: str = Field(max_length=200, description="A corpus id, or mine-<id> for your own.")
+
+
+class SlotRequest(BaseModel):
+    """Skip a meal, eat out, eat leftovers of an earlier meal, or (`recipe`) add back the
+    recipe planned there."""
+
+    plan_id: int = Field(description="The plan being edited; a newer plan makes this a conflict.")
+    kind: SlotKind
+    out_kcal: float | None = Field(default=None, gt=0, le=3000)
+    from_day: int | None = Field(default=None, ge=1, le=7)
+    from_meal: MealType | None = None
 
 
 class ChatRequest(BaseModel):
