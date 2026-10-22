@@ -7,6 +7,7 @@ import {
   Link2,
   ListChecks,
   MessageCircle,
+  Plus,
   ScanSearch,
   ShieldCheck,
   ShoppingBasket,
@@ -450,7 +451,7 @@ function Faq() {
                   aria-hidden="true"
                   className="grid size-6 shrink-0 place-items-center rounded-full bg-surface-muted text-muted-foreground transition-transform group-open:rotate-45"
                 >
-                  +
+                  <Plus className="size-3.5" strokeWidth={2.5} />
                 </span>
               </summary>
               <p className="pt-3 text-[14px] leading-[22px] text-muted-foreground">{a}</p>
