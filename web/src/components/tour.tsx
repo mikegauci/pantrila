@@ -51,7 +51,19 @@ export const STEPS: Step[] = [
     path: "/recipes",
     anchor: "my-recipes",
     title: "Your own cookbook",
-    body: "Add your own recipes from a photo, a web link, or by typing them in. Pantrila works out the nutrition and allergens for you.",
+    body: "Your own recipes live here, next to the 300 in Pantrila.",
+  },
+  {
+    path: "/recipes/mine/new",
+    anchor: "add-recipe",
+    title: "Add a recipe four ways",
+    body: "From photos of a cookbook page, a link to any recipe site, a social post, or by typing it in. Pantrila works out the nutrition and allergens, makes a photo of the dish, and you can cook it step by step in cooking mode.",
+  },
+  {
+    path: "/recipes/mine/new",
+    anchor: "add-post",
+    title: "Save recipes from social posts",
+    body: "Paste a TikTok, Instagram or Facebook link. Pantrila reads the recipe from the caption, the creator’s recipe page or the video, and credits the creator.",
   },
   {
     path: "/plan",

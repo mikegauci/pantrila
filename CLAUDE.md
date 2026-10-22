@@ -466,8 +466,8 @@ in the `recipe-photos` bucket under `avatars/<user>/` (no new bucket). The brows
 square and shrinks to JPEG; `PUT /me/avatar` re-encodes it as a 256 px WebP (`photos.to_avatar_webp`),
 `DELETE /me/avatar` removes it, `/me` carries `avatar_url`. Header and Profile page show it, else the
 emoji avatar. No model call, so no eval rerun.
-First-run tour (this PR): `web/src/components/tour.tsx`, 8 steps across Home, Assistant, Recipes,
-Plan and Grocery, pointing at elements marked `data-tour="…"` (nav links carry `nav-<key>`; the
+First-run tour (this PR): `web/src/components/tour.tsx`, 10 steps across Home, Assistant, Recipes,
+the new-recipe page (the four ways to add a recipe, then "From a post"), Plan and Grocery, pointing at elements marked `data-tour="…"` (nav links carry `nav-<key>`; the
 visible match wins because hidden pages stay mounted). Opens once per user id
 (`localStorage["pantrila-tour-done:<id>"]`), replay from the account menu ("App tour") or Profile
 ("Help"). Web only, no new dependency, so no eval rerun.
