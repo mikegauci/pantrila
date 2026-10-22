@@ -6,7 +6,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { useEffect, useSyncExternalStore } from "react"
+import { useEffect, useState, useSyncExternalStore } from "react"
 import { toast } from "sonner"
 
 import { useAuth } from "@/components/auth-provider"
@@ -101,24 +101,39 @@ function BottomTabs({ pathname }: { pathname: string }) {
   )
 }
 
-export function UserAvatar({ userId, email, size, url }: {
+export function UserAvatar({ userId, email, size, url, pending = false }: {
   userId: string | null
   email: string | null
   size: "lg" | "sm" | "xl"
   url?: string | null
+  /** The picture is not known yet (profile still loading). */
+  pending?: boolean
 }) {
   const avatar = userId ? avatarFor(userId) : null
+  // Base UI shows the fallback while the picture downloads; keep it blank until the
+  // picture fails or there is none, so a Google photo does not flash the emoji first.
+  const [failed, setFailed] = useState<string | null>(null)
+  const blank = pending || (!!url && failed !== url)
   return (
     <Avatar size={size === "xl" ? undefined : size} className={size === "xl" ? "size-20" : undefined} aria-hidden>
-      {url && <AvatarImage src={url} alt="" referrerPolicy="no-referrer" />}
+      {url && (
+        <AvatarImage
+          src={url}
+          alt=""
+          referrerPolicy="no-referrer"
+          onLoadingStatusChange={(status) => status === "error" && setFailed(url)}
+        />
+      )}
       <AvatarFallback
         className={
-          avatar
-            ? cn(avatar.bg, size === "xl" ? "text-[36px]" : size === "lg" ? "text-[20px]" : "text-[13px]")
-            : "bg-primary-soft font-semibold text-primary-text"
+          blank
+            ? "bg-surface-muted"
+            : avatar
+              ? cn(avatar.bg, size === "xl" ? "text-[36px]" : size === "lg" ? "text-[20px]" : "text-[13px]")
+              : "bg-primary-soft font-semibold text-primary-text"
         }
       >
-        {avatar ? avatar.emoji : (email ?? "G").charAt(0).toUpperCase()}
+        {blank ? null : avatar ? avatar.emoji : (email ?? "G").charAt(0).toUpperCase()}
       </AvatarFallback>
     </Avatar>
   )
@@ -128,18 +143,19 @@ function UserMenu({ userId, email, guest }: { userId: string | null; email: stri
   const router = useRouter()
   const tour = useTour()
   const { session } = useAuth()
-  const { data: me } = useMe()
+  const { data: me, isLoading } = useMe()
   // An uploaded picture wins; else the Google profile picture.
   const url = me?.avatar_url ?? googlePicture(session?.user)
+  const pending = isLoading && !url
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="rounded-full" aria-label="Account menu">
-        <UserAvatar userId={userId} email={email} size="lg" url={url} />
+        <UserAvatar userId={userId} email={email} size="lg" url={url} pending={pending} />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuGroup>
           <DropdownMenuLabel className="flex items-center gap-2">
-            <UserAvatar userId={userId} email={email} size="sm" url={url} />
+            <UserAvatar userId={userId} email={email} size="sm" url={url} pending={pending} />
             <span className="truncate">{email ?? "Guest"}</span>
           </DropdownMenuLabel>
         </DropdownMenuGroup>

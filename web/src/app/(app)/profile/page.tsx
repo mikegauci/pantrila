@@ -164,7 +164,7 @@ function EnergyTarget({ t, range, onRange, onChange }: {
 
 function PictureCard() {
   const { session } = useAuth()
-  const { data: me, mutate } = useMe()
+  const { data: me, mutate, isLoading } = useMe()
   const input = useRef<HTMLInputElement>(null)
   const [busy, setBusy] = useState(false)
 
@@ -184,7 +184,7 @@ function PictureCard() {
     <Panel>
       <PanelTitle>Profile picture</PanelTitle>
       <div className="flex items-center gap-4">
-        <UserAvatar userId={session?.user.id ?? null} email={session?.user.email ?? null} size="xl" url={me?.avatar_url ?? googlePicture(session?.user)} />
+        <UserAvatar userId={session?.user.id ?? null} email={session?.user.email ?? null} size="xl" url={me?.avatar_url ?? googlePicture(session?.user)} pending={isLoading && !googlePicture(session?.user)} />
         <div className="grid gap-2">
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" size="sm" disabled={busy || !me} onClick={() => input.current?.click()}>
