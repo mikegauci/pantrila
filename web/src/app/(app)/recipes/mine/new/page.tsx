@@ -15,7 +15,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ApiError } from "@/lib/api"
-import { seconds, usd } from "@/lib/format"
+import { seconds } from "@/lib/format"
 import { useApi, useMe, useMeta } from "@/lib/hooks"
 import {
   forgetImport, type ImportStep, importRecipe, pendingImport, wasStartedHere, watchImport,
@@ -410,7 +410,7 @@ export default function NewRecipePage() {
                   <p className="flex flex-wrap items-center gap-2 font-semibold">
                     <Sparkles className="size-4 text-[#b7860b]" aria-hidden /> Read by AI. Finish it before saving.
                     <span className="tabular font-normal text-muted-foreground">
-                      {seconds(result.latency_ms)} · {usd(result.cost_usd)}
+                      {seconds(result.latency_ms)}
                     </span>
                   </p>
                   {result.notes.length > 0 && (

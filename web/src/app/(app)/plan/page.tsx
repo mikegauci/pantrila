@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { MealMenu } from "@/components/meal-menu"
 import { SwapMealSheet, type SwapTarget } from "@/components/swap-meal"
 import { ApiError, streamPlan } from "@/lib/api"
-import { label, MEAL_ORDER, planDayIndex, seconds, usd } from "@/lib/format"
+import { label, MEAL_ORDER, planDayIndex, seconds } from "@/lib/format"
 import { useMe, usePlan, useProfile } from "@/lib/hooks"
 import { hasKcalRange, kcalMet, kcalTargetText, mealHref } from "@/lib/plan"
 import { cn } from "@/lib/utils"
@@ -282,10 +282,9 @@ export default function PlanPage() {
           <Week plan={plan} />
           <Panel>
             <PanelTitle>How this plan was made</PanelTitle>
-            <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-5 md:grid-cols-3">
               <Stat label="Pantry foods used" value={`${Math.round(plan.report.pantry_use * 100)}%`} />
               <Stat label="Model calls" value={plan.report.llm_calls} hint={`${plan.report.tool_calls} recipe searches`} />
-              <Stat label="Cost" value={usd(plan.report.cost_usd, 3)} hint={plan.report.model} />
               <Stat label="Time" value={seconds(plan.report.latency_ms)} />
             </div>
             <p className="mt-5 text-[13px] text-muted-foreground">

@@ -281,23 +281,6 @@ export interface ChatThread {
   updated_at: string
 }
 
-export interface UsageEvent {
-  kind: "plan" | "chat" | "import" | "photo" | "search" | "reel"
-  model: string
-  created_at: string
-  latency_ms: number
-  llm_calls: number
-  tool_calls: number
-  input_tokens: number
-  output_tokens: number
-  cost_usd: number | null
-  ok: boolean
-}
-
-export interface Usage {
-  events: UsageEvent[]
-  limits: Limits
-}
 
 // --- Cookbook: the person's own recipes ---
 

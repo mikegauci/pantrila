@@ -5,7 +5,6 @@ import useSWR, { useSWRConfig, type SWRConfiguration } from "swr"
 import { api, ApiError } from "@/lib/api"
 import type {
   ChatThread, ChatThreadSummary, CookbookCard, CookbookDetail, Cooked, Food, GroceryList, Me, Meta, PantryItem, Plan, Profile, RecipeDetail,
-  Usage,
 } from "@/lib/types"
 
 const fetcher = <T,>(path: string) => api<T>(path)
@@ -21,7 +20,6 @@ export const useMeta = () => useApi<Meta>("/meta", STATIC)
 export const useFoods = () => useApi<Food[]>("/foods", STATIC)
 export const useProfile = () => useApi<Profile>("/me/profile")
 export const usePantry = () => useApi<PantryItem[]>("/me/pantry")
-export const useUsage = () => useApi<Usage>("/me/usage")
 export const useRecipe = (id: string | null) => useApi<RecipeDetail>(id ? `/recipes/${id}` : null)
 export const useChats = () => useApi<ChatThreadSummary[]>("/me/chats")
 export const useChat = (id: number | null) => useApi<ChatThread>(id ? `/me/chats/${id}` : null)

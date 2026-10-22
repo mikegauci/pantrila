@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send } from "@/lib/api"
-import { seconds, usd } from "@/lib/format"
+import { seconds } from "@/lib/format"
 import { useChat, useChats, useMe, useRefreshKitchen } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
 import type { ChatMessage, ChatReply, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard, ToolCall } from "@/lib/types"
@@ -134,7 +134,7 @@ function Bubble({ m }: { m: Message }) {
       ))}
       {r && (
         <p className="tabular text-[11px] text-muted-foreground">
-          {seconds(r.latency_ms)} · {usd(r.cost_usd)}
+          {seconds(r.latency_ms)}
           {r.flagged.length > 0 && " · safety note added by code"}
         </p>
       )}

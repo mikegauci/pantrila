@@ -45,7 +45,6 @@ export async function saveNewRecipe(recipe: CookbookRecipeIn, mutate: ScopedMuta
     .finally(() => {
       mutate("/me/recipes")
       mutate("/me")
-      mutate("/me/usage")
     })
   return saved
 }
