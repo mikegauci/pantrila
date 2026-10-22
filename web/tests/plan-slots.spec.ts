@@ -85,9 +85,13 @@ async function openPlan(page: Page, requests: { path: string; body: unknown }[])
   await expect(page.getByRole("link", { name: /Lemon Chicken/ })).toBeVisible()
 }
 
+/** Open a meal's menu, pick an item, and wait for that menu to finish closing, so the next
+ * menu opened is the only one on the page. */
 async function choose(page: Page, slot: string, item: string | RegExp) {
   await page.getByRole("button", { name: `Change ${slot}` }).click()
-  await page.getByRole("menuitem", { name: item }).click()
+  const menu = page.getByRole("menu", { name: `Change ${slot}` })
+  await menu.getByRole("menuitem", { name: item }).click()
+  await expect(menu).toHaveCount(0)
 }
 
 test("a meal can be leftovers of an earlier day, which then stays cooked", async ({ page }) => {
@@ -99,8 +103,9 @@ test("a meal can be leftovers of an earlier day, which then stays cooked", async
     body: { plan_id: 7, kind: "leftovers", from_day: 1, from_meal: "dinner" } })
 
   await page.getByRole("button", { name: "Change day 1 dinner" }).click()
-  await expect(page.getByText("Day 2 dinner is leftovers of this meal, so it stays cooked.")).toBeVisible()
-  await expect(page.getByRole("menuitem", { name: "Skip this meal" })).toHaveAttribute("aria-disabled", "true")
+  const menu = page.getByRole("menu", { name: "Change day 1 dinner" })
+  await expect(menu.getByText("Day 2 dinner is leftovers of this meal, so it stays cooked.")).toBeVisible()
+  await expect(menu.getByRole("menuitem", { name: "Skip this meal" })).toHaveAttribute("aria-disabled", "true")
 })
 
 test("a meal can be skipped, eaten out and added back", async ({ page }) => {
