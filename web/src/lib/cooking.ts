@@ -268,6 +268,25 @@ export function ring() {
   } catch {}
 }
 
+/** One soft rising note: a voice command was heard. Silent where audio is blocked. */
+export function chime() {
+  try {
+    const ctx = new AudioContext()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    const t = ctx.currentTime
+    osc.frequency.setValueAtTime(660, t)
+    osc.frequency.exponentialRampToValueAtTime(990, t + 0.12)
+    gain.gain.setValueAtTime(0.0001, t)
+    gain.gain.exponentialRampToValueAtTime(0.12, t + 0.02)
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.25)
+    osc.connect(gain).connect(ctx.destination)
+    osc.start(t)
+    osc.stop(t + 0.27)
+    setTimeout(() => ctx.close(), 600)
+  } catch {}
+}
+
 export const clock = (ms: number) => {
   const s = Math.max(0, Math.ceil(ms / 1000))
   const h = Math.floor(s / 3600)
