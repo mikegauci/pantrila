@@ -31,6 +31,10 @@ class Prices:
     output: float | None
     embed: float | None
     transcribe_per_min: float | None = None  # USD per minute of audio, not per token
+    web_search_per_call: float | None = None  # USD per web search tool call
+
+    def web_search_cost(self, calls: int) -> float | None:
+        return None if self.web_search_per_call is None else calls * self.web_search_per_call
 
     def chat_cost(self, input_tokens: int, output_tokens: int) -> float | None:
         if self.input is None or self.output is None:
@@ -75,6 +79,7 @@ def prices() -> Prices:
         output=_float("PANTRILA_PRICE_OUTPUT_PER_MTOK"),
         embed=_float("PANTRILA_PRICE_EMBED_PER_MTOK"),
         transcribe_per_min=_float("PANTRILA_PRICE_TRANSCRIBE_PER_MIN"),
+        web_search_per_call=_float("PANTRILA_PRICE_WEB_SEARCH_PER_CALL"),
     )
 
 

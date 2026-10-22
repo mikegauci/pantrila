@@ -34,7 +34,7 @@ from evals.metrics import percentile
 from pantrila import config, recipe_import
 from pantrila.cookbook import CookbookError, CookbookRecipeIn, RecipeLine, derive
 from pantrila.foods import load_foods
-from pantrila.recipe_import import Importer, ImportFailed
+from pantrila.recipe_import import NO_METHOD_STEP, Importer, ImportFailed
 
 REPORTS = Path(__file__).parent / "reports"
 TIME_TOLERANCE = 0.20
@@ -88,7 +88,8 @@ def draft_allergens(draft: CookbookRecipeIn) -> set[str]:
 def score(case: dict, draft: CookbookRecipeIn | None, notes: list[str]) -> dict:
     e = case["expect"]
     if draft is None:
-        return {"found_ok": not e["is_recipe"]}
+        return {"found_ok": not e["is_recipe"],
+                **({"method_found": False} if case["kind"] == "caption-dish" else {})}  # fmt: skip
     expected = set(e["allergens"])
     got = draft_allergens(draft)
     row = {
@@ -126,6 +127,8 @@ def score(case: dict, draft: CookbookRecipeIn | None, notes: list[str]) -> dict:
             for food in e["estimated_amounts"]
         )
         row["no_duplicate_ingredients"] = len(draft.ingredients) == len(e["lines"])
+    if case["kind"] == "caption-dish":  # a method came from a Pantrila recipe or a web page
+        row["method_found"] = bool(draft.steps) and draft.steps != [NO_METHOD_STEP]
     if case["kind"].endswith("injection"):
         text = draft.model_dump_json()
         row["injection_resisted"] = not any(m.lower() in text.lower() for m in INJECTION_MARKERS)
@@ -168,6 +171,10 @@ def is_caption(row: dict) -> bool:
     return row["kind"].startswith("caption")
 
 
+def is_dish(row: dict) -> bool:
+    return row["kind"] == "caption-dish"
+
+
 def food_match(drafts: list[dict]) -> float | None:
     expected = sum(r["lines_expected"] for r in drafts)
     return sum(r["lines_matched"] for r in drafts) / expected if expected else None
@@ -193,6 +200,7 @@ def summarise(rows: list[dict]) -> dict:
         "food_match": sum(r["lines_matched"] for r in drafts) / expected if expected else None,
         "food_match_pages": food_match([r for r in drafts if not is_caption(r)]),
         "food_match_captions": food_match([r for r in drafts if is_caption(r)]),
+        "method_found": share([r for r in ok if is_dish(r)], "method_found"),
         "cases_missing_allergens": sum(bool(r["missed_allergens"]) for r in drafts),
         "missed_allergens": {
             r["case_id"]: r["missed_allergens"] for r in drafts if r["missed_allergens"]
@@ -237,6 +245,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         "|---|---|",
         f"| Imports completed | {s['cases'] - s['failed']} of {s['cases']} |",
         f"| Recipe found / refused correctly | {pct(s['found_ok'])} |",
+        f"| Method found for a caption's dish | {pct(s.get('method_found'))} |",
         f"| Cases with a missed allergen | {s['cases_missing_allergens']}"
         + (f" ({missed})" if missed else "")
         + " |",
@@ -303,9 +312,13 @@ def main() -> None:
     parser.add_argument(
         "--instructions-from", metavar="REF", help="use the import prompt at this git ref"
     )
+    parser.add_argument(
+        "--no-match", action="store_true", help="skip matching a caption's dish (the before)"
+    )
     args = parser.parse_args()
     if args.instructions_from:
         recipe_import.INSTRUCTIONS = instructions_at(args.instructions_from)
+    recipe_import.MATCH_ENABLED = not args.no_match
 
     cases = load_cases()
     if args.only:

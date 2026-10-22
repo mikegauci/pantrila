@@ -384,6 +384,105 @@ CHROME_END = (
 )
 
 
+# Captions that name a dish and list its ingredients, with no method: the method comes from a
+# Pantrila recipe for the dish (the first three, whose foods mostly match one), else from the
+# page one web search finds (the last two; `Pantrila` has no recipe for them). Scored on whether
+# a method was found; the lines are the creator's and must still be kept.
+DISH_CASES = [
+    Case(
+        "caption-dish-gyudon",
+        "caption-dish",
+        "Japanese Beef and Onion Rice Bowl",
+        2,
+        20,
+        [
+            line("250 g beef steak", known("beef_steak")),
+            line("1 onion", known("onion")),
+            line("180 g white rice", known("white_rice")),
+            line("120 ml vegetable stock", known("vegetable_stock")),
+            line("3 tbsp soy sauce", known("soy_sauce")),
+            line("1 1/2 tbsp sugar", known("sugar")),
+            line("10 g ginger", known("ginger")),
+        ],
+        caption=(
+            "Beef and onion rice bowl, my weeknight favourite 🍚 Full recipe in the comments :)"
+            "\n\n250 g beef steak\n1 onion\n180 g white rice\n120 ml vegetable stock\n"
+            "3 tbsp soy sauce\n1 1/2 tbsp sugar\n10 g ginger"
+        ),
+        line_sections=(),
+    ),
+    Case(
+        "caption-dish-albondigas",
+        "caption-dish",
+        "Spanish Beef Meatballs in Tomato Sauce",
+        4,
+        50,
+        [
+            line("500 g beef mince", known("beef_mince")),
+            line("50 g breadcrumbs", known("breadcrumbs")),
+            line("1 egg", known("egg")),
+            line("1 onion", known("onion")),
+            line("3 garlic cloves", known("garlic")),
+            line("15 g parsley", known("parsley")),
+            line("1 tsp salt", known("salt")),
+            line("1/2 tsp black pepper", known("black_pepper")),
+            line("2 tbsp olive oil", known("olive_oil")),
+            line("2 tsp paprika", known("paprika")),
+            line("400 g canned tomatoes", known("canned_tomatoes")),
+            line("1 tbsp tomato paste", known("tomato_paste")),
+            line("1 tsp sugar", known("sugar")),
+        ],
+        caption=(
+            "Spanish beef meatballs in tomato sauce 🇪🇸 Recipe in comments #tapas #meatballs"
+            "\n\n500 g beef mince\n50 g breadcrumbs\n1 egg\n1 onion\n3 garlic cloves\n"
+            "15 g parsley\n1 tsp salt\n1/2 tsp black pepper\n2 tbsp olive oil\n2 tsp paprika\n"
+            "400 g canned tomatoes\n1 tbsp tomato paste\n1 tsp sugar"
+        ),
+    ),
+    Case(
+        "caption-dish-oyakodon",
+        "caption-dish",
+        "Chicken and Egg Rice Bowl",
+        2,
+        25,
+        [
+            line("150 g chicken thigh", known("chicken_thigh")),
+            line("2 eggs", known("egg")),
+            line("1 onion", known("onion")),
+            line("200 g cooked white rice", known("white_rice")),
+            line("3 tbsp soy sauce", known("soy_sauce")),
+            line("1 tbsp sugar", known("sugar")),
+            line("150 ml vegetable stock", known("vegetable_stock")),
+        ],
+        caption=(
+            "Chicken and egg rice bowl, ready in 25 min 🥚 Full recipe in the comments"
+            "\n\n150 g chicken thigh\n2 eggs\n1 onion\n200 g cooked white rice\n"
+            "3 tbsp soy sauce\n1 tbsp sugar\n150 ml vegetable stock"
+        ),
+    ),
+    Case(
+        "caption-dish-lemon-potatoes",
+        "caption-dish",
+        "Greek Lemon Roast Potatoes",
+        4,
+        60,
+        [
+            line("1 kg potatoes", known("potato")),
+            line("1 lemon", known("lemon")),
+            line("3 tbsp olive oil", known("olive_oil")),
+            line("1 tsp dried oregano", known("dried_oregano")),
+            line("3 garlic cloves", known("garlic")),
+            line("1 tsp salt", known("salt")),
+        ],
+        caption=(
+            "Greek lemon roast potatoes 🍋 Full recipe in my bio, it's the best side ever"
+            "\n\n1 kg potatoes\n1 lemon\n3 tbsp olive oil\n1 tsp dried oregano\n"
+            "3 garlic cloves\n1 tsp salt"
+        ),
+    ),
+]
+
+
 def expected_step_sections(case: Case) -> list[tuple[str, int]]:
     """The method headings a careful import keeps. The `sections` kind splits its steps under
     "Prepare" and "Cook" in the page's schema.org data."""
@@ -489,7 +588,7 @@ def caption_fields(case: Case, n: int) -> dict:
 
 def generate() -> list[dict]:
     out = []
-    for n, c in enumerate(CASES + CAPTION_CASES):
+    for n, c in enumerate(CASES + CAPTION_CASES + DISH_CASES):
         source = (
             caption_fields(c, n)
             if c.caption
@@ -528,4 +627,4 @@ def load_cases(path: Path = OUT) -> list[dict]:
 
 if __name__ == "__main__":
     OUT.write_text(render(generate()))
-    print(f"wrote {len(CASES) + len(CAPTION_CASES)} cases to {OUT}")
+    print(f"wrote {len(CASES) + len(CAPTION_CASES) + len(DISH_CASES)} cases to {OUT}")

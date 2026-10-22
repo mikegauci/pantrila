@@ -24,6 +24,7 @@ from pantrila.post_media import (
 from pantrila.recipe_import import (
     HEARD,
     NO_METHOD,
+    DishPage,
     ImportedRecipe,
     Importer,
     ImportFailed,
@@ -79,6 +80,9 @@ def caption_only() -> ImportedRecipe:
         "meal_types": ["dinner"], "total_minutes": 60, "servings": 4, "steps": [],
         "ingredients": lines("1 lb spicy Italian sausage", "3 garlic cloves"),
     })  # fmt: skip
+
+
+NO_PAGE = DishPage(url=None)  # the web search finds no recipe page for the caption's dish
 
 
 def heard(steps=("Brown the sausage.", "Layer and bake.")) -> VideoRecipe:
@@ -172,13 +176,13 @@ def test_ingredients_only_caption_hears_the_video_and_keeps_the_caption():
 ])  # fmt: skip
 def test_any_failure_falls_back_to_the_captions_ingredients(media, host):
     meter = Meter()
-    client = FakeClient(caption_only())
+    client = FakeClient(caption_only(), NO_PAGE)
     imp = importer(client, media, meter)
     result = imp.from_post(REEL, CAPTION, host, resolve)
     assert NO_METHOD in result.notes and HEARD not in result.notes
     assert meter.runs == [(0.003, media.error is None)]
     assert imp.media_cost == pytest.approx(0.003)
-    assert [kind for kind, _ in client.calls] == ["parse"]
+    assert [kind for kind, _ in client.calls] == ["parse", "parse"]  # then the web search
 
 
 def test_no_recipe_anywhere_still_says_what_to_do_next():
@@ -204,10 +208,10 @@ def test_video_without_a_method_does_not_replace_the_caption_draft():
     (FakeMedia(), None, "https://www.facebook.com/sam/videos/123/"),  # not covered
 ])  # fmt: skip
 def test_off_capped_or_uncovered_platforms_skip_the_service(media, meter, url):
-    client = FakeClient(caption_only())
+    client = FakeClient(caption_only(), NO_PAGE)
     imp = importer(client, media, meter)
     result = imp.from_post(url, CAPTION, video_host(), resolve)
-    assert NO_METHOD in result.notes and len(client.calls) == 1
+    assert NO_METHOD in result.notes and len(client.calls) == 2
     assert media is None or media.asked == []
     assert imp.media_runs == 0 and imp.media_cost == 0
 
@@ -331,11 +335,11 @@ def test_a_failed_video_link_falls_back_to_the_next_one():
 
 
 def test_a_video_the_service_says_is_too_long_is_never_fetched():
-    client = FakeClient(caption_only())
+    client = FakeClient(caption_only(), NO_PAGE)
     media = FakeMedia(found=PostVideo([VIDEO], seconds=600))
     host = video_host(status=500)  # any fetch would fail loudly in the result
     result = importer(client, media).from_post(REEL, CAPTION, host, resolve)
-    assert NO_METHOD in result.notes and len(client.calls) == 1
+    assert NO_METHOD in result.notes and len(client.calls) == 2
 
 
 def test_tiktok_caption_comes_from_the_service_and_one_run_serves_both():
@@ -575,7 +579,7 @@ def test_no_comments_run_when_the_caption_or_its_link_has_the_recipe(caption, pa
 
 def test_comments_run_is_capped_like_the_video():
     media = CommentMedia(texts=[f"Recipe: {CHELSEA_PAGE}"])
-    client = FakeClient(caption_only())
+    client = FakeClient(caption_only(), NO_PAGE)
     url = "https://www.tiktok.com/@chelseasmessyapron/video/7698384810506489119"
     imp = importer(client, media, Meter(allow=False))
     result = imp.from_post(url, CAPTION, pages([]), resolve)
