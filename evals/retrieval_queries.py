@@ -53,7 +53,6 @@ RICE = {"white_rice", "brown_rice", "sushi_rice", "risotto_rice"}
 CHEESE = {"cheddar", "parmesan", "mozzarella", "feta", "ricotta", "cream_cheese", "goat_cheese"}
 BREAD = {"white_bread", "wholemeal_bread", "pita", "flour_tortilla"}
 CITRUS = {"lemon", "lime", "lemon_juice", "lime_juice"}
-CHILLI = {"chilli", "jalapeno", "cayenne", "chilli_powder", "sriracha"}
 EAST_ASIAN = {"chinese", "japanese", "korean", "thai", "vietnamese"}
 
 

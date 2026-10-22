@@ -33,6 +33,12 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Dead-code cleanup: removed the 20 eval reports no doc cites (intermediate assistant and reel runs, raw live
+captures), unused Python leftovers (`config.EMBED_DIM`, `SearchResult.timings_ms`, an unused eval constant and test
+helper), seven unused shadcn components (badge, card, progress, select, separator, tabs, tooltip) and unused parts of
+avatar, dropdown-menu and sheet. Found with vulture, knip and deptry, each hit checked by hand. No behaviour change, so
+no eval rerun.
+
 Login page for real users: the sign-in page drops the "owner only" email box and demo wording. "Welcome to
 Pantrila" leads with a white Google button (Google's neutral style), an "or" divider, then "Try it as a guest";
 email sign-in is a "Prefer email? Sign in with a link" line that opens the form. Supabase's built-in sender only
@@ -367,7 +373,7 @@ mentions. Before/after 28-case reports: `assistant-2026-10-19T130451Z` and
 `assistant-2026-10-19T132325Z`; after: 0 unsafe/made-up citations, 0 missing draft warnings,
 100% expected tools, 3/4 expected drafting decisions, $0.00375/turn, p50 4.7s/p95 8.0s.
 Existing-recipe citation coverage was 9/11 (before 11/11), so draft/corpus selection remains
-a model-quality limitation. Intermediate reports are retained. Unknown IDs are now blocked
+a model-quality limitation. Unknown IDs are now blocked
 as citations and tracked as blocked attempts. All 8 paid live gates passed. The original stash is retained as a recovery backup.
 
 Review safety/data bounds: saved chats refresh cited cards and expose current-profile warnings.

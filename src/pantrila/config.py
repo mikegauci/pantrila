@@ -16,7 +16,6 @@ DEFAULT_MODEL = "gpt-5.4-mini"
 DEFAULT_EMBED_MODEL = "text-embedding-3-small"
 DEFAULT_IMAGE_MODEL = "gpt-image-2.5-flare"
 DEFAULT_TRANSCRIBE_MODEL = "gpt-4o-mini-transcribe"
-EMBED_DIM = 1536
 
 
 def _float(name: str) -> float | None:
