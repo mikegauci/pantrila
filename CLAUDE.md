@@ -37,7 +37,7 @@ Landing site, custom domain phase 2: `site/` is a separate static Next.js app (V
 root `site/`) on `pantrila.com` (`www` redirects): features, safety, "Get the app" (browser; App Store and Google
 Play "Coming soon"), FAQ, `/privacy` and `/terms` (contact `hello@pantrila.com`, no inbox yet). Tokens and logo are
 copied from `web/` (keep in sync); screenshots in `site/public/screens/` were taken from the live app with a guest
-account. CI gains a `site` job; both Vercel projects skip builds when their folder is unchanged. The app's login
+account. CI gains a `site` job; production builds of both Vercel projects skip when their folder is unchanged (previews always build). The app's login
 page links to the terms and privacy. No model call, so no eval rerun.
 
 Custom domain, phase 1 (plan `docs/plans/custom-domain.md`): pantrila.com's nameservers moved from GoDaddy to Vercel

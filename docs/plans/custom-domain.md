@@ -161,7 +161,8 @@ the old addresses never stop working.
 - 2026-10-22, phase 2: `site/` landing page (home, `/privacy`, `/terms`, sitemap, robots, Open Graph
   image), screenshots retaken from the live app with a guest account (`site/public/screens/`), CI `site`
   job, Vercel project `pantrila-site` (root `site/`) with `pantrila.com` and `www` (308 to the apex).
-  Both Vercel projects skip builds when their folder did not change (`git diff --quiet HEAD^ HEAD -- .`).
+  Production builds of both Vercel projects skip when their folder did not change
+  (`[ "$VERCEL_ENV" = production ] && git diff --quiet HEAD^ HEAD -- .`); previews always build.
   The app's login page links to the terms and privacy pages. The privacy page names `hello@pantrila.com`
   as the contact, which does not receive mail until phase 3 sets up forwarding.
 - Open questions 1-4 above are still unanswered.
