@@ -67,13 +67,22 @@ export function stepTimers(step: string): StepTimer[] {
   return out
 }
 
-/** A heads-up for a preheat step that names no time: the duration of the next timed step (usually the bake), if any. */
-export function preheatNote(steps: string[], index: number): string | null {
+/** The preheat words a step's hint hangs on: "Preheat the oven", "heat your oven", "Pre-heat". */
+export const PREHEAT = /\bpre-?heat(?:\s+(?:the|your))?\s+oven\b|\bheat\s+(?:the|your)\s+oven\b|\bpre-?heat\b/i
+
+export interface PreheatHint {
+  step: number // 1-based
+  sentence: string // the sentence of that step that names the time: "Bake at 180°C for 9-12 minutes."
+}
+
+/** For a preheat step that names no time: the sentence of the next timed step (usually the bake), within 3 steps. */
+export function preheatHint(steps: string[], index: number): PreheatHint | null {
   const step = steps[index]
-  if (!/\bpre-?heat|\bheat (?:the|your) oven/i.test(step) || stepTimers(step).length) return null
+  if (!PREHEAT.test(step) || stepTimers(step).length) return null
   for (let i = index + 1; i < Math.min(steps.length, index + 4); i++) {
-    const [timer] = stepTimers(steps[i])
-    if (timer) return `Coming up in step ${i + 1}: ${timer.label}.`
+    if (!stepTimers(steps[i]).length) continue
+    const sentences = steps[i].split(/(?<=[.!?])\s+(?=[A-Z])/)
+    return { step: i + 1, sentence: sentences.find((s) => stepTimers(s).length)?.trim() ?? steps[i].trim() }
   }
   return null
 }

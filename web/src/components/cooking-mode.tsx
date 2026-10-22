@@ -11,20 +11,21 @@ import { toast } from "sonner"
 import useSWR from "swr"
 
 import { Amount, IngredientText } from "@/components/amount"
-import { bareName, niceFractions } from "@/lib/amounts"
+import { bareName } from "@/lib/amounts"
 import { useAuth } from "@/components/auth-provider"
+import { PreheatText } from "@/components/preheat-text"
 import { TemperatureToggle } from "@/components/temperature-toggle"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Switch } from "@/components/ui/switch"
 import { send } from "@/lib/api"
 import {
-  clock, loadProgress, preheatNote, progressKey, ring, saveProgress, stepTimers, stepUses, useWakeLock,
+  clock, loadProgress, progressKey, ring, saveProgress, stepTimers, stepUses, useWakeLock,
   type RunningTimer, type StepTimer,
 } from "@/lib/cooking"
 import { ago } from "@/lib/format"
 import { useCooked, useRefreshKitchen } from "@/lib/hooks"
-import { hasTemp, showTemps, useTempUnit } from "@/lib/temperature"
+import { hasTemp, useTempUnit } from "@/lib/temperature"
 import { groupLines, stepHeading } from "@/lib/sections"
 import type { CookRequest, CookResult, PantryChange, StepSection, Unit } from "@/lib/types"
 import { cn } from "@/lib/utils"
@@ -270,12 +271,7 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
                     {stepHeading(recipe.stepSections, page)}
                   </p>
                 )}
-                <p className="text-[22px] leading-[34px] font-medium md:text-[28px] md:leading-[42px]">{showTemps(niceFractions(step), unit)}</p>
-                {onStep && preheatNote(recipe.steps, page - 1) && (
-                  <p className="rounded-2xl border border-orange/60 bg-orange-soft px-4 py-3 text-[15px]">
-                    ⏱ {preheatNote(recipe.steps, page - 1)}
-                  </p>
-                )}
+                <p className="text-[22px] leading-[34px] font-medium md:text-[28px] md:leading-[42px]"><PreheatText steps={recipe.steps} index={page - 1} unit={unit} /></p>
                 {uses.length > 0 && (
                   <div role="group" aria-label="Ingredients for this step">
                     <p className="mb-2 text-[12px] font-medium text-muted-foreground">For this step (tap when completed)</p>
