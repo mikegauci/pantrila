@@ -51,11 +51,26 @@ function toolSummary(c: ToolCall): { icon: typeof Search; text: string } {
   }
 }
 
+/** Words only, lower case, so "**Prawn and Rice:** " and "Prawn and Rice" compare equal. */
+function plainTitle(s: string) {
+  return s.replace(/\*\*/g, "").replace(/[\s:–—-]+$/, "").trim().toLowerCase()
+}
+
+/** The model often writes a recipe's title just before its link. The link shows the title, so that text goes. */
+function withoutTitles(parts: string[], recipes: Map<string, RecipeCard>): string[] {
+  return parts.map((part, i) => {
+    const cite = parts[i + 1]?.match(/^\[([a-z0-9-]+)\]$/)
+    const r = cite && recipes.get(cite[1])
+    return r && plainTitle(part) === plainTitle(r.title) ? "" : part
+  })
+}
+
 /** A line's text: **bold** and [recipe-id] citations, each citation a link titled as its recipe. */
 function Inline({ text, recipes }: { text: string; recipes: Map<string, RecipeCard> }) {
+  const parts = withoutTitles(text.split(/(\[[a-z0-9]+(?:-[a-z0-9]+)*\]|\*\*[^*]+\*\*)/g), recipes)
   return (
     <>
-      {text.split(/(\[[a-z0-9]+(?:-[a-z0-9]+)*\]|\*\*[^*]+\*\*)/g).map((part, i) => {
+      {parts.map((part, i) => {
         const cite = part.match(/^\[([a-z0-9-]+)\]$/)
         if (cite) {
           const r = recipes.get(cite[1])
