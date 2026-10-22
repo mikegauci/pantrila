@@ -16,6 +16,7 @@ import {
 
 import { OpenApp } from "@/components/chrome"
 import { BrowserFrame, PhoneFrame } from "@/components/frames"
+import { FlipWord } from "@/components/flip-word"
 import { APP_URL, GITHUB_URL } from "@/lib"
 
 const FEATURES = [
@@ -68,7 +69,15 @@ const SHOWCASE = [
   },
   {
     eyebrow: "Save",
-    title: "That recipe you saw on Instagram, in your cookbook",
+    title: (
+      <>
+        That recipe you saw on{" "}
+        <span className="whitespace-nowrap">
+          <FlipWord words={["Instagram", "Facebook", "TikTok"]} />,
+        </span>{" "}
+        in your cookbook
+      </>
+    ),
     text: "Paste the post link. Pantrila reads the caption, follows the creator’s link or listens to the video, then turns it into a recipe with amounts, steps and nutrition.",
     points: ["Links, photos, posts or typed in", "Keeps the creator’s notes and credit", "Allergens checked like every other recipe"],
     image: { src: "/screens/recipe.jpg", alt: "A recipe in Pantrila with its photo, allergens, ingredients and nutrition", width: 1280, height: 800 },
@@ -245,7 +254,7 @@ function Showcase() {
     <section aria-label="Pantrila up close" className="space-y-20 pb-20">
       {SHOWCASE.map((item, i) => (
         <div
-          key={item.title}
+          key={item.eyebrow}
           className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-14"
         >
           <div className={i % 2 === 1 ? "lg:order-2" : undefined}>
