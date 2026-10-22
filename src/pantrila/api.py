@@ -372,9 +372,9 @@ def create_app(
     def recipes(
         s: SessionDep,
         q: str = "",
-        meal: MealType | None = None,
+        meal: Annotated[list[MealType] | None, Query()] = None,
         max_minutes: Annotated[int | None, Query(gt=0)] = None,
-        cuisine: str | None = None,
+        cuisine: Annotated[list[str] | None, Query()] = None,
         diet: Annotated[list[DietTag] | None, Query()] = None,
         safe: bool = True,
         limit: Annotated[int, Query(ge=1, le=60)] = 24,
@@ -383,8 +383,7 @@ def create_app(
         person's allergies, diets, excluded foods and time limit are added as filters."""
         profile = s.kitchen.profile()
         diets, limits = set(diet or []), [m for m in (max_minutes,) if m]
-        f = SearchFilters(meal_types=[meal] if meal else [],
-                          cuisines=[cuisine] if cuisine else [])  # fmt: skip
+        f = SearchFilters(meal_types=meal or [], cuisines=cuisine or [])  # fmt: skip
         if safe:
             diets |= set(profile.diets)
             limits += [profile.max_minutes] if profile.max_minutes else []
