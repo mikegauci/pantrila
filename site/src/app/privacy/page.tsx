@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 import { LegalPage } from "@/components/legal"
-import { APP_URL, CONTACT_EMAIL, OPERATOR } from "@/lib"
+import { APP_URL, CONTACT_EMAIL } from "@/lib"
 
 export const metadata: Metadata = {
   title: "Privacy",
@@ -13,8 +13,8 @@ export default function Privacy() {
   return (
     <LegalPage title="Privacy" updated="22 October 2026">
       <p>
-        Pantrila is an AI cooking and meal-planning assistant at <a href={APP_URL}>app.pantrila.com</a>. It is run by{" "}
-        {OPERATOR}, who decides how your data is used (the “data controller”). Questions or requests: {mail}.
+        Pantrila is an AI cooking and meal-planning assistant at <a href={APP_URL}>app.pantrila.com</a>. Pantrila
+        decides how your data is used (it is the “data controller”). Questions or requests: {mail}.
       </p>
       <p>
         In short: Pantrila keeps what you tell it so it can plan your meals, sends what you type to an AI model to

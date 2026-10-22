@@ -2,7 +2,7 @@ import Link from "next/link"
 import type { Metadata } from "next"
 
 import { LegalPage } from "@/components/legal"
-import { CONTACT_EMAIL, OPERATOR } from "@/lib"
+import { CONTACT_EMAIL } from "@/lib"
 
 export const metadata: Metadata = {
   title: "Terms",
@@ -13,8 +13,8 @@ export default function Terms() {
   return (
     <LegalPage title="Terms" updated="22 October 2026">
       <p>
-        These terms cover your use of Pantrila, the website at pantrila.com and the app at app.pantrila.com, run by{" "}
-        {OPERATOR}. By using Pantrila you agree to them.
+        These terms cover your use of Pantrila, the website at pantrila.com and the app at app.pantrila.com. By using
+        Pantrila you agree to them.
       </p>
 
       <h2>What Pantrila is</h2>
@@ -63,7 +63,7 @@ export default function Terms() {
 
       <h2>Liability</h2>
       <p>
-        To the extent the law allows, Pantrila and {OPERATOR} are not liable for indirect losses, or for harm from
+        To the extent the law allows, Pantrila is not liable for indirect losses, or for harm from
         relying on a recipe, plan or answer without checking it. Nothing here limits rights you have by law as a
         consumer.
       </p>

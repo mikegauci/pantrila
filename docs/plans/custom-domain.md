@@ -165,4 +165,10 @@ the old addresses never stop working.
   (`[ "$VERCEL_ENV" = production ] && git diff --quiet HEAD^ HEAD -- .`); previews always build.
   The app's login page links to the terms and privacy pages. The privacy page names `hello@pantrila.com`
   as the contact, which does not receive mail until phase 3 sets up forwarding.
-- Open questions 1-4 above are still unanswered.
+- 2026-10-22, owner answers: (1) no existing email; (3) `hello@pantrila.com` will be a FastComet mailbox
+  (server `depro4.fcomet.com`, as for qtmdetailing.mt); (4) the operator is shown as "Pantrila". Added in
+  Vercel DNS: MX `10 depro4.fcomet.com`, SPF `v=spf1 mx ip4:192.250.229.180 ip4:185.201.16.174
+  include:spf.mysecurecloudhost.com ~all` (copied from qtmdetailing.mt), `_dmarc` `v=DMARC1; p=none;`.
+  Still to do: add pantrila.com in FastComet cPanel, create the mailbox, add cPanel's DKIM record
+  (`default._domainkey`) and compare its SPF. Phase 3's Resend records go on `send.pantrila.com`, so they do
+  not touch this SPF. Open question 2 (guests on the old address) is unanswered.
