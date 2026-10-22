@@ -15,12 +15,13 @@ import { bareName } from "@/lib/amounts"
 import { useAuth } from "@/components/auth-provider"
 import { PreheatText } from "@/components/preheat-text"
 import { TemperatureToggle } from "@/components/temperature-toggle"
+import { VoiceControl } from "@/components/voice-control"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Switch } from "@/components/ui/switch"
 import { send } from "@/lib/api"
 import {
-  clock, loadProgress, progressKey, ring, saveProgress, stepTimers, stepUses, useWakeLock,
+  chime, clock, loadProgress, progressKey, ring, saveProgress, stepTimers, stepUses, useWakeLock,
   type RunningTimer, type StepTimer,
 } from "@/lib/cooking"
 import { ago } from "@/lib/format"
@@ -29,6 +30,7 @@ import { hasTemp, useTempUnit } from "@/lib/temperature"
 import { groupLines, stepHeading } from "@/lib/sections"
 import type { CookRequest, CookResult, PantryChange, StepSection, Unit } from "@/lib/types"
 import { cn } from "@/lib/utils"
+import type { VoiceCommand } from "@/lib/voice"
 
 interface CookIngredient {
   name: string
@@ -120,6 +122,7 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
   const [now, setNow] = useState(() => Date.now())
   const [listOpen, setListOpen] = useState(false)
   const [finished, setFinished] = useState<CookResult | null>(null)
+  const [heard, setHeard] = useState<{ text: string; at: number } | null>(null)
   const wake = useWakeLock()
   const heading = useRef<HTMLHeadingElement>(null)
 
@@ -212,6 +215,60 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
     }))
   }, [])
 
+  // Voice: each command chimes and shows what it did for a moment.
+  const onVoice = useCallback((c: VoiceCommand) => {
+    const at = Date.now()
+    const say = (text: string) => {
+      chime()
+      setHeard({ text, at })
+    }
+    if (c === "start") {
+      if (page !== 0) return
+      go(1)
+      return say("Step 1")
+    }
+    if (c === "next") {
+      if (page > n) return say("That was the last step")
+      go(page + 1)
+      return say(page === 0 ? "Step 1" : page === n ? "Finish" : "Next step")
+    }
+    if (c === "back") {
+      if (page === 0) return say("This is the start")
+      go(page - 1)
+      return say("Previous step")
+    }
+    if (c === "stop-timer") {
+      const done = timers.filter((t) => t.rang || (t.endsAt !== null && t.endsAt <= at))
+      if (done.length) {
+        setTimers((all) => all.filter((t) => !done.some((d) => d.id === t.id)))
+        return say(done.length === 1 ? "Timer stopped" : "Timers stopped")
+      }
+      const runs = timers.filter((t) => t.endsAt !== null)
+      if (!runs.length) return say("No timer is running")
+      const last = runs.reduce((a, b) => (b.id > a.id ? b : a))
+      update(last.id, (x, now) => (x.endsAt !== null ? { ...x, endsAt: null, left: x.endsAt - now } : x))
+      return say(`Timer paused: ${clock(last.endsAt! - at)} left`)
+    }
+    // start-timer: resume the latest paused timer, else start this step's next one.
+    const paused = timers.filter((t) => t.endsAt === null && !t.rang)
+    if (paused.length) {
+      const last = paused.reduce((a, b) => (b.id > a.id ? b : a))
+      update(last.id, (x, now) => (x.endsAt === null ? { ...x, endsAt: now + x.left } : x))
+      return say(`Timer resumed: ${clock(last.left)} left`)
+    }
+    if (!found.length) return say("No timer in this step")
+    const next = found.find((t) => !timers.some((x) => x.step === page && x.label === t.label && !x.rang))
+    if (!next) return say("Timer already running")
+    start(next)
+    say(`Timer started: ${next.label}`)
+  }, [page, n, go, timers, found, start, update])
+
+  useEffect(() => {
+    if (!heard) return
+    const id = setTimeout(() => setHeard(null), 2000)
+    return () => clearTimeout(id)
+  }, [heard])
+
   const checklist = (
     <IngredientChecklist ingredients={recipe.ingredients} scale={scale} ticked={ticked} onToggle={toggle} />
   )
@@ -229,11 +286,19 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
           </p>
         </div>
         {hasTemp(recipe.steps) && <TemperatureToggle />}
+        <VoiceControl onCommand={onVoice} />
         <WakeBadge state={wake} />
       </header>
       <div className="h-1 shrink-0 bg-surface-muted" aria-hidden>
         <div className="h-full bg-primary transition-[width] duration-300" style={{ width: `${(Math.min(page, n) / Math.max(n, 1)) * 100}%` }} />
       </div>
+
+      {heard && (
+        <p key={heard.at} role="status"
+           className="pointer-events-none fixed top-20 left-1/2 z-50 -translate-x-1/2 rounded-full bg-foreground px-4 py-2 text-[15px] font-semibold text-background shadow-lg motion-safe:animate-in motion-safe:fade-in-0">
+          {heard.text}
+        </p>
+      )}
 
       <div className="flex min-h-0 flex-1">
         {onStep && (

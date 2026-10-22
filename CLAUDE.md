@@ -34,6 +34,21 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 ## Status (update as work lands)
 
 Dish-name match: a caption that names a dish and lists ingredients but gives no method (`from_post` ends with `NO_METHOD`) takes its method from a Pantrila recipe with the same dish words and at least half the same foods (`Importer._matched`, the shipped corpus, no model call), else from the recipe page one OpenAI web search finds (`_web_method`: `from_link`, only its steps are used). The creator's ingredients stay; each food the two lists disagree on is noted (`_with_method`). Saved straight away; the notes say where the method is from. Web search is priced by `PANTRILA_PRICE_WEB_SEARCH_PER_CALL` (unset: cost unknown). Eval: 4 `caption-dish-*` cases; `run_import --no-match` is the before. Before `import-2026-10-22T130514Z` vs after `import-2026-10-22T130618Z`, 31 cases: method found for a caption's dish 0% -> 75% (3 of 4; the oyakodon search found no page once, and found one on a rerun), 0 missed allergens both, food matching 99% both, lines kept 100% -> 96% and servings/time 100%/100% -> 96%/93% on non-dish pages (same code path; single runs), p50/p95 5.4/12.5 -> 5.7/17.6 s. Average tokens per import 3,177/1,063 -> 4,729/1,054 (the page text); the search fee is not in the run's cost. 8 new offline tests (in `tests/test_social.py`), 2 existing tests updated for the extra call.
+Voice commands in cooking mode: a mic button in the cooking header (`web/src/components/voice-control.tsx`) listens
+for "next", "back", "start timer" and "stop timer" through the browser's speech recognition (`SpeechRecognition` or
+`webkitSpeechRecognition`; hidden where neither exists). Words map to commands in code (`voiceCommand` in
+`web/src/lib/voice.ts`, platform-free so a native app can reuse it behind its own `VoiceListener`). "Start timer" resumes
+the latest paused timer, else starts the step's next timer; "stop timer" (or "stop") clears a finished timer, else pauses
+the latest running one. Each command chimes (`chime` in `cooking.ts`) and shows a 2 s label. On the get-ready page, "start" or "start cooking" opens
+step 1 (not in the commands list; ignored on other pages). On the get-ready page, "start" or "start cooking" opens
+step 1 (not in the commands list; ignored on other pages). The first turn-on shows a
+notice that the browser sends speech to Google or Apple (`localStorage["pantrila-voice-ok"]`); the mic stays on across
+visits (`pantrila-voice`), stops when the page hides (locked phone) and resumes on return; listening restarts after the
+browser ends it, giving up after 5 quick ends. A one-time tip (`pantrila-voice-tip-done`), a "?" command list, and a new
+tour step ("Cook hands-free", pointing at the mic in the vegetable paella's cooking mode) explain it. Web only, no model call, so no eval rerun; new
+`web/tests/voice-commands.spec.ts` (fake microphone), tour spec updated; all 32 Playwright tests pass locally. Not yet
+checked on a real phone's microphone.
+
 Energy range: `NutritionTargets` gains `min_kcal` / `max_kcal` (either end may be open; a range replaces `kcal`; floor
 above ceiling is a 422). Inside the range a day meets the target and costs nothing in portion fitting, so normal
 portions stay; outside, the cost is the distance past the nearer end (`constraints._target_cost`, soft "kcal" warning
@@ -714,7 +729,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`; "From a post" can
   import the post directly, with an estimated countdown. The first-run tour
   is `src/components/tour.tsx` (`TourProvider` in `AppShell`, `useTour().start`). Cooking mode is
-  `src/components/cooking-mode.tsx` with helpers in `src/lib/cooking.ts`. The assistant's
+  `src/components/cooking-mode.tsx` with helpers in `src/lib/cooking.ts`; voice commands are
+  `src/components/voice-control.tsx` and `src/lib/voice.ts`. The assistant's
   thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrila.tsx`. `RecipeArt` (`src/components/bits.tsx`)
   shows the recipe photo with `next/image` (host allowed from `NEXT_PUBLIC_SUPABASE_URL` in
   `next.config.ts`) or the meal-type art when there is none. Read `web/AGENTS.md`: this Next.js differs from

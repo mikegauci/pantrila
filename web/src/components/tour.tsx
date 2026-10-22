@@ -66,6 +66,13 @@ const STEPS: Step[] = [
     body: "Paste a TikTok, Instagram or Facebook link. Pantrila reads the recipe from the caption, the creator’s recipe page or the video, and credits the creator.",
   },
   {
+    // A real recipe's cooking mode as the example: no allergens, and timers in its steps.
+    path: "/recipes/spanish-vegetable-paella/cook",
+    anchor: "voice-mic",
+    title: "Cook hands-free",
+    body: "Start cooking on any recipe shows one step at a time, like this paella. Tap the mic and say “next”, “back”, “start timer” or “stop timer” when your hands are busy.",
+  },
+  {
     path: "/plan",
     anchor: "plan-generate",
     title: "Plan your week",
