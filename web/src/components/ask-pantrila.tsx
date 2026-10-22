@@ -68,12 +68,12 @@ export function AskPantrila() {
       {recent.length > 0 && (
         <div className="mt-4 border-t border-primary/15 pt-3">
           <p className="mb-1.5 text-[12px] font-medium text-muted-foreground">Continue a chat</p>
-          <ul className="grid gap-1">
+          <ul className="grid grid-cols-[minmax(0,1fr)] gap-1">
             {recent.map((t) => (
-              <li key={t.id}>
+              <li key={t.id} className="min-w-0">
                 <Link href={`/assistant?thread=${t.id}`} className="flex min-w-0 items-center gap-2 rounded-lg py-1 hover:text-primary-text">
                   <MessageCircle className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-                  <span className="min-w-0 truncate">{t.title}</span>
+                  <span className="min-w-0 truncate" title={t.title}>{t.title}</span>
                 </Link>
               </li>
             ))}

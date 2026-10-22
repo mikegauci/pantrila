@@ -51,34 +51,76 @@ function toolSummary(c: ToolCall): { icon: typeof Search; text: string } {
   }
 }
 
-/** Plain text with **bold**, # headings, line breaks and [recipe-id] citations turned into links. */
-function Rich({ text, recipes }: { text: string; recipes: Map<string, RecipeCard> }) {
+/** A line's text: **bold** and [recipe-id] citations, each citation a link titled as its recipe. */
+function Inline({ text, recipes }: { text: string; recipes: Map<string, RecipeCard> }) {
   return (
     <>
-      {text.split("\n").map((line, li) => {
-        // A markdown heading ("#### Ingredients") shows as a bold line.
-        const heading = line.match(/^#{1,6}\s+(.*)$/)
-        return (
-          <Fragment key={li}>
-            {li > 0 && <br />}
-            {heading ? <strong>{heading[1].replace(/\*\*/g, "")}</strong> : line.split(/(\[[a-z0-9]+(?:-[a-z0-9]+)*\]|\*\*[^*]+\*\*)/g).map((part, i) => {
-              const cite = part.match(/^\[([a-z0-9-]+)\]$/)
-              if (cite) {
-                const r = recipes.get(cite[1])
-                return r ? (
-                  <Link key={i} href={`/recipes/${r.id}`}
-                        className={cn("font-medium underline underline-offset-2", r.problems.length ? "text-danger" : "text-primary-text")}>
-                    ↗
-                  </Link>
-                ) : <span key={i} className="text-muted-foreground">{part}</span>
-              }
-              if (part.startsWith("**") && part.endsWith("**")) return <strong key={i}>{part.slice(2, -2)}</strong>
-              return <Fragment key={i}>{part}</Fragment>
-            })}
-          </Fragment>
-        )
+      {text.split(/(\[[a-z0-9]+(?:-[a-z0-9]+)*\]|\*\*[^*]+\*\*)/g).map((part, i) => {
+        const cite = part.match(/^\[([a-z0-9-]+)\]$/)
+        if (cite) {
+          const r = recipes.get(cite[1])
+          return r ? (
+            <Fragment key={i}>
+              <Link href={`/recipes/${r.id}`}
+                    className={cn("font-medium underline underline-offset-2", r.problems.length ? "text-danger" : "text-primary-text")}>
+                {r.title}
+              </Link>
+              <span className="text-muted-foreground"> · {Math.round(r.nutrition.kcal)} kcal</span>
+            </Fragment>
+          ) : <span key={i} className="text-muted-foreground">{part}</span>
+        }
+        if (part.startsWith("**") && part.endsWith("**")) return <strong key={i}>{part.slice(2, -2)}</strong>
+        return <Fragment key={i}>{part}</Fragment>
       })}
     </>
+  )
+}
+
+type Block = { list: boolean; lines: string[] }
+
+/** Paragraphs and bulleted lists, with headings as bold lines and blank lines as paragraph breaks. */
+function Rich({ text, recipes }: { text: string; recipes: Map<string, RecipeCard> }) {
+  const blocks: Block[] = []
+  for (const line of text.split("\n")) {
+    const item = line.match(/^\s*(?:[-*]|\d+\.)\s+(.*)$/)
+    const trimmed = line.trim()
+    if (!trimmed) continue
+    const last = blocks.at(-1)
+    if (item) {
+      if (last?.list) last.lines.push(item[1])
+      else blocks.push({ list: true, lines: [item[1]] })
+    } else if (last && !last.list) {
+      last.lines.push(trimmed)
+    } else {
+      blocks.push({ list: false, lines: [trimmed] })
+    }
+  }
+  return (
+    <div className="grid gap-2.5">
+      {blocks.map((b, bi) => {
+        if (b.list) {
+          return (
+            <ul key={bi} className="grid list-disc gap-1.5 pl-5 marker:text-muted-foreground">
+              {b.lines.map((l, li) => <li key={li} className="pl-1"><Inline text={l} recipes={recipes} /></li>)}
+            </ul>
+          )
+        }
+        return (
+          <p key={bi}>
+            {b.lines.map((l, li) => {
+              // A markdown heading ("#### Ingredients") shows as a bold line.
+              const heading = l.match(/^#{1,6}\s+(.*)$/)
+              return (
+                <Fragment key={li}>
+                  {li > 0 && <br />}
+                  {heading ? <strong>{heading[1].replace(/\*\*/g, "")}</strong> : <Inline text={l} recipes={recipes} />}
+                </Fragment>
+              )
+            })}
+          </p>
+        )
+      })}
+    </div>
   )
 }
 
@@ -113,17 +155,6 @@ function Bubble({ m }: { m: Message }) {
       <div className={cn("rounded-[20px] rounded-bl-md border bg-surface px-4 py-3", m.error && "border-danger/50 text-danger")}>
         <Rich text={m.text} recipes={recipes} />
       </div>
-      {r && r.cited.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {r.cited.map((c) => (
-            <Link key={c.id} href={`/recipes/${c.id}`}
-                  className={cn("rounded-full border px-3 py-1 text-[12px] font-medium hover:shadow-soft",
-                    c.problems.length ? "border-danger bg-danger-soft text-danger" : "bg-primary-soft text-primary-text")}>
-              {c.title} · {Math.round(c.nutrition.kcal)} kcal
-            </Link>
-          ))}
-        </div>
-      )}
       {r?.drafts?.map((d, i) => (
         <div key={i} className="grid gap-2">
           <ProblemAlert title={`Check ${d.title}`} items={r.draft_problems?.[i] ?? []} />

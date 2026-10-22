@@ -21,12 +21,12 @@ export function ChatThreads({
     return <p className="px-3 py-2 text-[13px] text-muted-foreground">Your chats appear here.</p>
   }
   return (
-    <ul className="grid gap-1">
+    <ul className="grid grid-cols-[minmax(0,1fr)] gap-1">
       {threads.map((t) => {
         const active = t.id === current
         return (
           <li key={t.id}
-              className={cn("group flex items-center rounded-xl", active ? "bg-primary-soft" : "hover:bg-surface-muted")}>
+              className={cn("group flex min-w-0 items-center rounded-xl", active ? "bg-primary-soft" : "hover:bg-surface-muted")}>
             <button
               type="button"
               disabled={disabled}
