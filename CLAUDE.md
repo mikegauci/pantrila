@@ -537,8 +537,11 @@ the new-recipe page (the four ways to add a recipe, then "From a post"), Plan an
 visible match wins because hidden pages stay mounted). Opens once per user id
 (`localStorage["pantrila-tour-done:<id>"]`), replay from the account menu ("App tour") or Profile
 ("Help"). Web only, no new dependency, so no eval rerun.
-Favicon (this PR): `web/src/app/icon.svg` (white lucide CookingPot on the #3fa34d rounded square, like
-`Logo`), with `apple-icon.png` (180 px) and `favicon.ico` (16/32/48) rendered from it with `sharp`.
+Favicon and app icon: a white chef hat on a green gradient, its big AI sparkle cut out so the background shows
+through, two small white sparkles top right. `web/src/app/icon.svg` (favicon), `favicon.ico` (16/32/48) and
+`apple-icon.png` (180 px, full bleed); `web/brand/` holds the store master (`app-icon.svg`, `app-icon-1024.png`, no
+transparency) and the Android adaptive foreground/background, described in `web/brand/README.md`. `Logo` draws the
+same mark inline. `node scripts/icons.mjs` (from `web/`) renders every PNG and the .ico with `sharp`.
 File-convention icons, no `layout.tsx` change. Web only, so no eval rerun.
 Mobile recipe filters (this PR): Recipes chips are four rows (Meal, Time, Diet, Cuisine) that scroll
 sideways edge to edge below `md` (`no-scrollbar` utility) and wrap from `md`; shorter safety banner on
