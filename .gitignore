@@ -223,3 +223,7 @@ __marimo__/
 .cache/
 !web/src/lib/
 supabase/.temp/
+
+# Local Claude Code state
+.claude/settings.local.json
+.claude/worktrees/
