@@ -154,7 +154,7 @@ test("a meal is repeated on a later day and cooking mode gets the extra servings
   const sheet = page.getByRole("dialog")
   await expect(sheet.getByText("Repeat Lemon Chicken")).toBeVisible()
   await expect(sheet.getByText("Instead of Chickpea Curry")).toBeVisible()
-  await sheet.getByLabel(/Day 2 dinner/).click()
+  await sheet.getByRole("checkbox", { name: /Day 2 dinner/ }).click()
   await expect(sheet.getByText("Cook once, eat 2 times.")).toBeVisible()
   await sheet.getByRole("button", { name: "Repeat on 1 meal" }).click()
   await expect(page.getByText("Leftovers for day 2")).toBeVisible()
