@@ -171,4 +171,12 @@ the old addresses never stop working.
   include:spf.mysecurecloudhost.com ~all` (copied from qtmdetailing.mt), `_dmarc` `v=DMARC1; p=none;`.
   Still to do: add pantrila.com in FastComet cPanel, create the mailbox, add cPanel's DKIM record
   (`default._domainkey`) and compare its SPF. Phase 3's Resend records go on `send.pantrila.com`, so they do
-  not touch this SPF. Open question 2 (guests on the old address) is unanswered.
+  not touch this SPF. Open question 2: the owner accepts that unlinked guests on the old address start
+  over.
+- 2026-10-22, phase 3 started: Resend domain `send.pantrila.com` (eu-west-1, no tracking) and its DKIM,
+  SPF, bounce MX and `rsend` CNAME records in Vercel DNS. Still to do (owner): a sending-only Resend key,
+  Supabase SMTP settings and the email rate limit; then a magic-link test outside the Supabase team.
+- 2026-10-22, phase 5: the Vercel API cannot set a redirect on a project domain, so `web/src/proxy.ts`
+  sends `pantrila.vercel.app` and `pantrio-azure.vercel.app` to `https://app.pantrila.com` with a 308,
+  keeping path and query (built assets are not matched). Render CORS drops the old origins after the
+  redirect is live; the owner removes them from Supabase's redirect list.
