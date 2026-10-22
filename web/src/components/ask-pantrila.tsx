@@ -14,7 +14,6 @@ export const STARTERS = [
   "What can I cook tonight with what I have?",
   "I just bought eggs, spinach and feta.",
   "Find a quick high-protein breakfast.",
-  "What does “fold in” mean?",
 ]
 
 /** Home card: a question typed or picked here opens a new chat on the Assistant page. */
