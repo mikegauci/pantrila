@@ -33,6 +33,13 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Landing site, custom domain phase 2: `site/` is a separate static Next.js app (Vercel project `pantrila-site`,
+root `site/`) on `pantrila.com` (`www` redirects): features, safety, "Get the app" (browser; App Store and Google
+Play "Coming soon"), FAQ, `/privacy` and `/terms` (contact `hello@pantrila.com`, no inbox yet). Tokens and logo are
+copied from `web/` (keep in sync); screenshots in `site/public/screens/` were taken from the live app with a guest
+account. CI gains a `site` job; production builds of both Vercel projects skip when their folder is unchanged (previews always build). The app's login
+page links to the terms and privacy. No model call, so no eval rerun.
+
 Custom domain, phase 1 (plan `docs/plans/custom-domain.md`): pantrila.com's nameservers moved from GoDaddy to Vercel
 (GoDaddy stays the registrar; it held only parking records). The web app is on `app.pantrila.com` (Vercel project
 `pantrila`) and the API on `api.pantrila.com` (Render custom domain, CNAME in Vercel DNS); `NEXT_PUBLIC_API_URL` on
@@ -714,6 +721,9 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `PANTRILA_DAILY_CHATS`, `PANTRILA_DAILY_IMPORTS`, `PANTRILA_DAILY_PHOTOS`) and in total
   (`PANTRILA_DAILY_BUDGET_USD`).
 - `render.yaml`: Render Blueprint for the API.
+- `site/`: the pantrila.com landing site (Next.js, static, no API or sign-in): `src/app/page.tsx` (sections),
+  `privacy/`, `terms/`, `src/lib.ts` (addresses and contact), `src/components/` (header/footer, screenshot
+  frames, logo copied from `web/`), `public/screens/` (app screenshots).
 - `data/`: `ingredients.csv` (hand-curated), `usda_foods.csv` (built by
   `scripts/build_usda_table.py`), `dish_briefs.csv` (300 fixed briefs), `recipes/*.json`
   (generated corpus, one file per recipe), `corpus_manifest.json` (generation runs and cost).
@@ -789,6 +799,7 @@ uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # Lang
 uv run uvicorn pantrila.api:app --env-file .env --reload   # API on :8000 (SUPABASE_URL, DATABASE_URL)
 cd web && npm ci && npm run dev          # :3000; web/.env.local from web/.env.example
 cd web && npm run lint && npm run typecheck && npm run build   # what CI runs for web
+cd site && npm ci && npm run dev         # landing site on :3001 (lint, typecheck, build as for web)
 ```
 
 Update this block when commands change.
