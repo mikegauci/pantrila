@@ -8,10 +8,9 @@ candidate lists, so a recipe that breaks a filter can never be returned by any m
 from __future__ import annotations
 
 import threading
-import time
 from collections import OrderedDict
 from collections.abc import Callable, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import StrEnum
 
 import psycopg
@@ -162,7 +161,6 @@ class SearchResult:
     ids: list[str]
     scores: list[float]
     embed_tokens: int = 0
-    timings_ms: dict[str, float] = field(default_factory=dict)
 
 
 def search(
@@ -175,23 +173,16 @@ def search(
     embed_query: QueryEmbedFn | None = None,
 ) -> SearchResult:
     f = filters or SearchFilters()
-    timings: dict[str, float] = {}
     rankings: list[list[str]] = []
     tokens = 0
 
     if mode in (Mode.VECTOR, Mode.HYBRID):
         if embed_query is None:
             raise ValueError("vector and hybrid search need embed_query")
-        t = time.perf_counter()
         qvec, tokens = embed_query(query)
-        timings["embed"] = (time.perf_counter() - t) * 1000
-        t = time.perf_counter()
         rankings.append(vector_candidates(conn, qvec, f))
-        timings["vector"] = (time.perf_counter() - t) * 1000
     if mode in (Mode.FULLTEXT, Mode.HYBRID):
-        t = time.perf_counter()
         rankings.append(fulltext_candidates(conn, query, f))
-        timings["fulltext"] = (time.perf_counter() - t) * 1000
 
     if mode is Mode.HYBRID:
         merged = rrf_merge(rankings)[:limit]
@@ -202,7 +193,6 @@ def search(
         ids=[d for d, _ in merged],
         scores=[s for _, s in merged],
         embed_tokens=tokens,
-        timings_ms=timings,
     )
 
 
