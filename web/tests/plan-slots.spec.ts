@@ -108,10 +108,10 @@ test("a meal can be skipped, eaten out and added back", async ({ page }) => {
   await openPlan(page, requests)
   await choose(page, "day 1 dinner", "Skip this meal")
   await expect(page.getByText("Was Lemon Chicken")).toBeVisible()
-  await expect(page.getByText("Skipped", { exact: true })).toBeVisible()
+  await expect(page.getByRole("main").getByText("Skipped", { exact: true })).toBeVisible()
 
   await choose(page, "day 1 dinner", /Normal meal/)
-  await expect(page.getByText("Eating out", { exact: true })).toBeVisible()
+  await expect(page.getByRole("main").getByText("Eating out", { exact: true })).toBeVisible()
   await expect(page.getByText("~800 kcal", { exact: true })).toBeVisible()
   expect(requests.at(-1)?.body).toEqual({ plan_id: 7, kind: "eating_out", out_kcal: 800 })
 
@@ -124,7 +124,7 @@ test("the swap sheet searches and can use one of the person's own recipes", asyn
   const requests: { path: string; body: unknown }[] = []
   await openPlan(page, requests)
   await choose(page, "day 1 dinner", "Swap recipe")
-  await expect(page.getByText("Chickpea Curry")).toBeVisible()
+  await expect(page.getByRole("dialog").getByText("Chickpea Curry")).toBeVisible()
   await page.getByRole("textbox", { name: "Search recipes" }).fill("curry")
   await expect.poll(() => requests.some((r) => r.path.includes("q=curry"))).toBe(true)
 
@@ -133,5 +133,6 @@ test("the swap sheet searches and can use one of the person's own recipes", asyn
   await expect(page.getByRole("link", { name: /Grandma's Toast/ })).toHaveAttribute("href", "/recipes/mine/5")
   await expect(page.getByText("Your recipe")).toBeVisible()
   expect(requests.some((r) => r.path.includes("source=mine"))).toBe(true)
-  expect(requests.at(-1)).toEqual({ path: "/plans/latest/meals/1/dinner", body: { plan_id: 7, recipe_id: "mine-5" } })
+  expect(requests.find((r) => r.path === "/plans/latest/meals/1/dinner")?.body)
+    .toEqual({ plan_id: 7, recipe_id: "mine-5" })
 })
