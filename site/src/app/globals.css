@@ -87,3 +87,24 @@
     transition: none;
   }
 }
+
+/* The cooking demo's listening mic: a ring that grows and fades, on a loop. */
+@keyframes mic-pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+.mic-pulse {
+  animation: mic-pulse 2.2s cubic-bezier(0.25, 0.6, 0.4, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mic-pulse {
+    animation: none;
+    opacity: 0;
+  }
+}

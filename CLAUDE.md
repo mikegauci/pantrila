@@ -40,7 +40,8 @@ sections and cards reveal on scroll; each "up close" screenshot carries a loopin
 filling, assistant reply, post import steps, voice timer), played only while on screen and shown finished under
 reduced motion; Safety ticks off the 14 EU allergens (`allergen-check.tsx`); the header turns frosted once scrolled
 (`scroll-header.tsx`); buttons press and their arrows nudge; FAQ answers slide (CSS `interpolate-size`, Chrome/Edge).
-Landing site only, no model call, so no eval rerun.
+The cooking demo's mic pulse is a CSS animation (`.mic-pulse`), so demo phase changes never restart it; the store
+cards show the Apple and Google Play marks (Simple Icons, CC0). Landing site only, no model call, so no eval rerun.
 
 Old address retired, custom domain phase 5: `web/src/proxy.ts` redirects `pantrila.vercel.app` and
 `pantrio-azure.vercel.app` to `https://app.pantrila.com` (308, path and query kept); guests who never linked Google

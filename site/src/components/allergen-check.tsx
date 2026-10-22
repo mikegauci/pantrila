@@ -93,7 +93,7 @@ export function AllergenCheck() {
         className="mt-5 flex w-fit items-center gap-2 rounded-xl bg-[#a8e0b0] px-4 py-2.5 text-[14px] font-bold text-primary-deep"
       >
         <ShieldCheck className="size-4" />
-        Plan approved: 0 rules broken
+        Plan approved
       </m.div>
     </m.div>
   )
