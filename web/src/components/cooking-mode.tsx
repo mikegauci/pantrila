@@ -30,7 +30,7 @@ import { groupLines, stepHeading } from "@/lib/sections"
 import type { CookRequest, CookResult, PantryChange, StepSection, Unit } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
-export interface CookIngredient {
+interface CookIngredient {
   name: string
   food: string | null
   quantity: number
@@ -40,7 +40,7 @@ export interface CookIngredient {
   section?: string
 }
 
-export interface CookRecipe {
+interface CookRecipe {
   /** Unique per recipe, for the progress kept in this browser: "corpus:<id>" or "mine:<id>". */
   key: string
   title: string

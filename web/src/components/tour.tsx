@@ -17,7 +17,7 @@ interface Step {
   body: string
 }
 
-export const STEPS: Step[] = [
+const STEPS: Step[] = [
   {
     path: "/",
     title: "Welcome to Pantrila",
