@@ -47,6 +47,11 @@ pantry, cited and drafts 100% both, 0 unsafe or made-up citations both, 14 of 30
 after run that also searched on "I bought tofu. Find me a dinner" skipped `update_pantry` (pantry 75%), so pantry
 messages are left to the model. Live: "I want stir fry with beef for lunch" took one model call, first words at 3.0 s.
 
+Microphone help: when the browser blocks the mic, cooking mode opens an "Allow the microphone" sheet (instead of a
+toast) with steps for the browser in use (`micHelp(userAgent, touch)` in `web/src/lib/voice.ts`: Safari, Chrome,
+Firefox or Edge on iPhone/iPad, including turning on Dictation; Chrome on Android; Safari on Mac; Chrome/Edge on
+desktop) and a "Try again" button. Web only, no model call, so no eval rerun; 2 new Playwright tests.
+
 Assistant recipe drafts: a second chat draft saved the first one, since the hidden-but-mounted new-recipe page kept its
 form; each draft now gets a fresh form (`formKey`). Save carries the thread (`?from=chat&thread=`), and the saved recipe
 shows "Back to the chat" (`?chat=` on `/recipes/mine/[id]`). A recipe saved from a chat keeps `chat_draft`
