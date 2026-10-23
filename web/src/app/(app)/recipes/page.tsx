@@ -49,6 +49,12 @@ export default function RecipesPage() {
 
   return (
     <div className="grid gap-5">
+      <p className="text-[13px] text-muted-foreground">
+        Pantrila has 300 ready-made recipes, each with a photo, nutrition and allergens worked out from its
+        ingredients. Search or filter them, and turn on “Only what suits me” to hide anything your allergies or
+        diet rule out. Tap the bookmark on any recipe to save it to My recipes for quicker access; the recipes
+        you add yourself are there too.
+      </p>
       <form
         role="search"
         data-tour="recipe-search"
