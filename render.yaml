@@ -19,7 +19,7 @@ services:
         sync: false
       - key: SUPABASE_URL
         value: https://tlnigvzkselebbtetibt.supabase.co
-      - key: SUPABASE_SERVICE_ROLE_KEY # uploads cookbook photos to Supabase Storage
+      - key: SUPABASE_SERVICE_ROLE_KEY # cookbook photos in Storage; deletes accounts
         sync: false
       - key: PANTRILA_CORS_ORIGINS # web origins, comma separated: https://app.pantrila.com,https://pantrila.vercel.app
         sync: false

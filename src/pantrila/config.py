@@ -149,7 +149,7 @@ def supabase_url_or_none() -> str | None:
 
 
 def supabase_service_key() -> str | None:
-    """Server-side only: uploads recipe photos to Supabase Storage."""
+    """Server-side only: recipe photos in Supabase Storage and deleting Auth users."""
     return os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or None
 
 

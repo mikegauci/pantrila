@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 from pantrila import config
+from pantrila.accounts import AuthAdmin, auth_admin, erase_rows
 from pantrila.chats import Chats
 from pantrila.cookbook import (
     Cookbook,
@@ -46,8 +47,13 @@ class Session:
 class Backend(Protocol):
     client: Any  # OpenAI client, or None for the default
     photos: PhotoStore | None  # None: photo generation is off (no Storage key)
+    admin: AuthAdmin | None  # None: accounts cannot be deleted (no service role key)
 
     def session(self, user_id: str) -> AbstractContextManager[Session]: ...
+
+    def erase(self, user_id: str) -> None:
+        """Delete the person's rows in every user table (see pantrila.accounts)."""
+        ...
 
     def close(self) -> None: ...
 
@@ -65,6 +71,7 @@ class DbBackend:
         self.embed_query = openai_query_embedder(config.embed_model())
         self.client = None
         self.photos = photo_store()
+        self.admin = auth_admin()
 
     @contextmanager
     def session(self, user_id: str) -> Iterator[Session]:
@@ -81,10 +88,15 @@ class DbBackend:
             PooledRepository(self.pool, DbChats, user_id),
         )
 
+    def erase(self, user_id: str) -> None:
+        with self.pool.connection() as conn:
+            erase_rows(conn, user_id)
+
     def close(self) -> None:
         self.pool.close()
-        if self.photos is not None:
-            self.photos.close()
+        for client in (self.photos, self.admin):
+            if client is not None:
+                client.close()
 
 
 class PooledRepository:

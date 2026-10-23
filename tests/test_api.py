@@ -14,7 +14,7 @@ from pantrila.auth import AuthError, User
 from pantrila.chats import MAX_THREADS_PER_USER, MemoryChats
 from pantrila.cookbook import MemoryCookbook
 from pantrila.pantry import MemoryKitchen
-from pantrila.photos import MemoryPhotos
+from pantrila.photos import MemoryPhotos, cookbook_path
 from pantrila.planner import PlanDraft
 from pantrila.records import MemoryRecords
 from pantrila.schema import MealType
@@ -92,6 +92,7 @@ class MemoryBackend:
         self.shared: dict = {"plans": [], "events": []}
         self.client = FakeClient()
         self.photos: MemoryPhotos | None = MemoryPhotos()
+        self.admin: FakeAuthAdmin | None = FakeAuthAdmin()
 
     @contextmanager
     def session(self, user_id):
@@ -100,8 +101,28 @@ class MemoryBackend:
                       MemoryCookbook(user_id, self.shared),
                       MemoryChats(user_id, self.shared))  # fmt: skip
 
+    def erase(self, user_id):
+        self.kitchens.pop(user_id, None)
+        for key in ("plans", "events", "cooked", "chats", "cookbook"):
+            self.shared[key] = [row for row in self.shared.get(key, []) if row[0] != user_id]
+        self.shared.get("avatars", {}).pop(user_id, None)
+        reservations = self.shared.get("reservations", {})
+        for rid in [r for r, row in reservations.items() if row[0] == user_id]:
+            del reservations[rid]
+
     def close(self):
         pass
+
+
+class FakeAuthAdmin:
+    def __init__(self):
+        self.deleted: list[str] = []
+        self.error: Exception | None = None
+
+    def delete_user(self, user_id):
+        if self.error:
+            raise self.error
+        self.deleted.append(user_id)
 
 
 def verify(token: str) -> User:
@@ -1210,3 +1231,38 @@ def test_import_timing_is_scoped_to_the_user_and_costs_no_allowance(api, backend
         "sample_count": 0,
     }
     assert len(api.get("/me/usage").json()["events"]) == 2
+
+
+def test_delete_account_removes_everything_and_the_sign_in(api, backend, photo_env):
+    api.post("/me/pantry", json={"food": "eggs", "quantity": 6, "unit": "piece"})
+    assert api.post("/me/recipes", json=TOAST).status_code == 201
+    api.put("/me/avatar", json={"image": avatar_data_url()})
+    backend.photos.put(cookbook_path("alice"), b"photo")
+    backend.photos.put(cookbook_path("bob"), b"photo")
+    bob = {"Authorization": "Bearer bob"}
+    api.post("/me/pantry", json={"food": "eggs", "quantity": 2, "unit": "piece"}, headers=bob)
+    assert api.get("/me/recipes").json() and api.get("/me/pantry").json()
+
+    assert api.delete("/me").status_code == 204
+    assert backend.admin.deleted == ["alice"]
+    assert all(p.startswith("user-recipes/bob/") for p in backend.photos.files)
+    assert api.get("/me/recipes").json() == [] and api.get("/me/pantry").json() == []
+    assert api.get("/me").json()["avatar_url"] is None
+    assert api.get("/me/pantry", headers=bob).json()  # other people keep theirs
+
+
+def test_delete_account_can_be_retried_after_a_failure(api, backend):
+    backend.admin.error = RuntimeError("auth down")
+    assert api.delete("/me").status_code == 502
+    backend.admin.error = None
+    assert api.delete("/me").status_code == 204
+    assert backend.admin.deleted == ["alice"]
+
+
+def test_delete_account_needs_the_admin_key_and_no_running_import(api, backend):
+    backend.admin = None
+    assert api.delete("/me").status_code == 503
+    backend.admin = FakeAuthAdmin()
+    api.app.state.import_jobs.start("alice")
+    assert api.delete("/me").status_code == 409
+    assert backend.admin.deleted == []
