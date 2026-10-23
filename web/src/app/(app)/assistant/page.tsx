@@ -15,10 +15,10 @@ import { CHAT_DRAFT } from "@/components/cookbook-form"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
-import { ApiError, send } from "@/lib/api"
+import { ApiError, send, streamChat } from "@/lib/api"
 import { useChat, useChats, useCookbook, useMe, useRecipe, useRefreshKitchen } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
-import type { ChatMessage, ChatReply, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard, ToolCall } from "@/lib/types"
+import type { ChatMessage, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard, ToolCall } from "@/lib/types"
 
 /** A saved message, or one only this page knows about: the question in flight or an error. */
 interface Message extends ChatMessage {
@@ -249,6 +249,8 @@ export default function AssistantPage() {
   const [pending, setPending] = useState<Message[]>([])
   const [text, setText] = useState("")
   const [busy, setBusy] = useState(false)
+  // The reply in flight: what the assistant is doing, its text so far and the recipes it found.
+  const [live, setLive] = useState<{ label: string; text: string; cards: Map<string, RecipeCard> }>()
   const [drawer, setDrawer] = useState(false)
   const { data: me, mutate: refreshMe } = useMe()
   const { data: threads, mutate: refreshThreads } = useChats()
@@ -286,7 +288,7 @@ export default function AssistantPage() {
 
   useEffect(() => {
     end.current?.scrollIntoView({ behavior: "smooth", block: "end" })
-  }, [messages.length])
+  }, [messages.length, live?.text.length, live?.label])
 
   function open(id: number | null) {
     setThreadId(id)
@@ -311,8 +313,15 @@ export default function AssistantPage() {
     setBusy(true)
     const asked: Message = { role: "user", text: message }
     setPending([asked])
+    setLive({ label: "Thinking…", text: "", cards: new Map() })
     try {
-      const reply = await send<ChatReply>("/chat", "POST", { message, thread_id: thread })
+      const reply = await streamChat({ message, thread_id: thread }, (e) => setLive((l) => {
+        if (!l) return l
+        // A new step after some text means that text led into a tool call; the reply comes after it.
+        if (e.kind === "step") return { ...l, label: e.label, text: "" }
+        if (e.kind === "delta") return { ...l, text: l.text + e.text }
+        return { ...l, cards: new Map([...l.cards, ...e.cards.map((c) => [c.id, c] as const)]) }
+      }))
       const answered: Message = { role: "assistant", text: reply.text, reply }
       // The server saved both messages; put them in the cache instead of fetching the thread again.
       await mutate<ChatThread>(`/me/chats/${reply.thread_id}`, (t) => ({
@@ -331,6 +340,7 @@ export default function AssistantPage() {
       setPending([asked, { role: "assistant", text: msg, error: true }])
     } finally {
       setBusy(false)
+      setLive(undefined)
       refreshMe()
     }
   }
@@ -389,9 +399,13 @@ export default function AssistantPage() {
           ) : (
             <div className="grid gap-4">
               {messages.map((m, i) => <Bubble key={i} m={m} thread={current} />)}
-              {busy && (
+              {busy && live?.text ? (
+                <div className="min-w-0 max-w-[92%] break-words rounded-[20px] rounded-bl-md border bg-surface px-4 py-3">
+                  <Rich text={live.text} recipes={live.cards} />
+                </div>
+              ) : busy && (
                 <p className="flex items-center gap-2 text-[13px] text-muted-foreground">
-                  <Loader2 className="size-4 animate-spin" aria-hidden /> Thinking and checking…
+                  <Loader2 className="size-4 animate-spin" aria-hidden /> {live?.label ?? "Thinking…"}
                 </p>
               )}
               <div ref={end} />
