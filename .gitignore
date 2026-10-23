@@ -224,3 +224,6 @@ supabase/.temp/
 # Local Claude Code state
 .claude/settings.local.json
 .claude/worktrees/
+
+# Playwright MCP browser tool output
+.playwright-mcp/
