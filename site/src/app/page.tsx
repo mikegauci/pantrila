@@ -81,7 +81,7 @@ const SHOWCASE = [
       <>
         That recipe you saw on{" "}
         <span className="whitespace-nowrap">
-          <FlipWord words={["Instagram", "Facebook", "TikTok"]} />,
+          <FlipWord words={["Instagram", "Facebook", "TikTok"]} colors={["#d6249f", "#1877f2", "#00a99d"]} />,
         </span>{" "}
         in your cookbook
       </>

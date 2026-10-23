@@ -33,6 +33,8 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Landing site word switch: the "Instagram / Facebook / TikTok" word in the Save section (`site/src/components/flip-word.tsx`) now rolls like a slot-machine reel (old word slides up and out, the next slides up from below, spring about 0.35 s, box eases to the new word's width) instead of fading, and each platform takes its own colour (pink, blue, teal). Landing site only, no model call, so no eval rerun.
+
 My recipes on Home: a section after "Ask Pantrila" (`web/src/components/my-recipes-home.tsx`) shows the latest 4
 cookbook recipes ("N saved", "See all") and two buttons, "Import from a post" and "From a recipe link", which open
 `/recipes/mine/new?method=post|link` on that method (the page reads `?method=` once and drops it). With no recipes
