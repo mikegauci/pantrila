@@ -2,6 +2,9 @@
 
     agent -> (tools -> agent)* -> guard
 
+- presearch: when the message asks for recipes (`presearch_args`, words only, no model
+  call), code runs search_recipes on it first and hands the results to the model as that
+  tool's call, so most recipe asks take one model call instead of two.
 - agent: one Responses API call (store=False) with the person's profile in the instructions.
 - tools: search_recipes, check_pantry, update_pantry, swap_ingredient, scale_recipe,
   write_recipe. Each one is plain code; the model only picks arguments. Capped at
@@ -10,6 +13,10 @@
   to save through the cookbook's review form.
 - guard: code checks every recipe the reply cites (as `[recipe-id]`) against the person's hard
   rules and appends a note for any that breaks one or does not exist, whatever the model said.
+
+`reply(on_event=)` streams the turn: ("step", label) before each round, ("recipes", ids) after
+each search and ("delta", text) as the reply is written. The final text can still differ
+(the guard's changes), so callers show the returned text once the turn ends.
 """
 
 from __future__ import annotations
@@ -17,6 +24,7 @@ from __future__ import annotations
 import re
 import time
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import TypedDict
 
@@ -40,6 +48,15 @@ MAX_TOOL_ROUNDS = 4
 SEARCH_LIMIT = 6
 MAX_HISTORY = 20  # messages kept from earlier turns
 CITED = re.compile(r"\[([a-z0-9]+(?:-[a-z0-9]+)*)\]")
+PRESEARCH_CALL_ID = "presearch"
+STEPS = {
+    "search_recipes": "Searching recipes…",
+    "check_pantry": "Checking your pantry…",
+    "update_pantry": "Updating your pantry…",
+    "swap_ingredient": "Working out the swap…",
+    "scale_recipe": "Scaling the recipe…",
+    "write_recipe": "Writing your recipe…",
+}
 
 
 # --- Tools the model sees ------------------------------------------------------------------
@@ -134,7 +151,9 @@ You are Pantrila's cooking assistant. You help one person cook from their kitche
 recipes, check what they have, swap ingredients, scale recipes and answer cooking questions. \
 Talk to them as "you".
 
-- Recipes: suggest recipes your tools returned in this conversation first. List each as a dash \
+- Recipes: suggest recipes your tools returned in this conversation first. When search \
+results for the person's latest message are already there, use them; search again only if \
+they miss what was asked. List each as a dash \
 item holding only its id in square brackets, copied exactly from the tool output, e.g. \
 "- [french-mushroom-omelette]". The app shows each recipe's title, calories and a link, so do \
 not write titles, times or calories yourself. Never invent ids or nutrition numbers; get them \
@@ -190,6 +209,42 @@ def person_text(p: UserProfile) -> str:
     return "About the person:\n" + "\n".join(lines)
 
 
+# --- Searching before the model ------------------------------------------------------------
+
+ASKS_FOR_RECIPES = re.compile(
+    r"\b(recipes?|breakfast|brunch|lunch|dinner|supper|tonight|snacks?|desserts?|meals?|"
+    r"dish(es)?|ideas?|cook|something|want|craving|fancy|find me)\b",
+    re.IGNORECASE,
+)
+QUESTION = re.compile(r"^\W*(how|why|when|what (does|do|is|are)\b|what'?s the difference)",
+                      re.IGNORECASE)  # fmt: skip
+OWN_RECIPE = re.compile(r"\byour own\b|\bown (recipe|version)\b", re.IGNORECASE)
+MEAL_WORDS = {
+    "breakfast": MealType.BREAKFAST, "brunch": MealType.BREAKFAST, "lunch": MealType.LUNCH,
+    "dinner": MealType.DINNER, "supper": MealType.DINNER, "tonight": MealType.DINNER,
+    "snack": MealType.SNACK, "dessert": MealType.DESSERT,
+}  # fmt: skip
+MEAL = re.compile(r"\b(" + "|".join(MEAL_WORDS) + r")s?\b", re.IGNORECASE)
+MINUTES = re.compile(r"\b(\d{1,3})\s*(?:min|mins|minutes)\b", re.IGNORECASE)
+
+
+def presearch_args(message: str) -> SearchArgs | None:
+    """The search to run before the model for a message that asks for recipes, else None.
+
+    Words only: a message naming a recipe id, asking for the model's own recipe, or asking a
+    how/what question is left to the model, which can still search with its own words."""
+    if (CITED.search(message) or OWN_RECIPE.search(message) or QUESTION.match(message)
+            or not ASKS_FOR_RECIPES.search(message)):  # fmt: skip
+        return None
+    meal = MEAL.search(message)
+    minutes = MINUTES.search(message)
+    return SearchArgs(
+        query=message.strip()[:300],
+        meal_type=MEAL_WORDS[meal.group(1).lower()] if meal else None,
+        max_minutes=int(minutes.group(1)) if minutes else None,
+    )
+
+
 # --- Results -----------------------------------------------------------------------------------
 
 
@@ -198,6 +253,7 @@ class ToolCall:
     name: str
     arguments: str
     output: str
+    by_code: bool = False  # run before the model (presearch), not chosen by it
 
 
 @dataclass
@@ -236,6 +292,7 @@ class Assistant:
         self.client = client or config.openai_client()
         self.model = model or config.model()
         self.usage = Usage()
+        self.emit: Callable[[str, object], None] | None = None
         self.graph = self._build()
 
     def _build(self):
@@ -250,19 +307,23 @@ class Assistant:
         g.add_edge("guard", END)
         return g.compile()
 
-    def reply(self, message: str, history: list[dict] = ()) -> ChatResult:
+    def reply(self, message: str, history: list[dict] = (),
+              on_event: Callable[[str, object], None] | None = None) -> ChatResult:  # fmt: skip
         self.usage = Usage()
+        self.emit = on_event
         start_tokens = self.store.embed_tokens
         start = time.perf_counter()
         history = list(history)[-MAX_HISTORY:]
         run_id = uuid.uuid4()
         try:
+            profile = self.kitchen.profile()
+            items, calls = self._presearch(message, profile)
             state = self.graph.invoke(
                 {
-                    "profile": self.kitchen.profile(),
-                    "items": [*history, {"role": "user", "content": message}],
+                    "profile": profile,
+                    "items": [*history, {"role": "user", "content": message}, *items],
                     "rounds": 0,
-                    "tool_calls": [],
+                    "tool_calls": calls,
                     "drafts": [],
                 },
                 config.trace_config(
@@ -271,6 +332,7 @@ class Assistant:
             )
         finally:
             self.usage.embed_tokens = self.store.embed_tokens - start_tokens
+            self.emit = None
 
         text = state["text"]
         cited = list(dict.fromkeys(CITED.findall(text)))
@@ -288,11 +350,49 @@ class Assistant:
             draft_problems=state["draft_problems"],
         )  # fmt: skip
 
+    def _step(self, label: str) -> None:
+        if self.emit:
+            self.emit("step", label)
+
+    def _presearch(self, message: str, profile: UserProfile) -> tuple[list[dict], list[ToolCall]]:
+        """search_recipes run in code, as model input items and the tool call log."""
+        args = presearch_args(message)
+        if args is None:
+            self._step("Thinking…")
+            return [], []
+        self._step(STEPS["search_recipes"])
+        arguments = args.model_dump_json()
+        output = self._search_recipes(args, profile)
+        self.usage.tool_calls += 1
+        items = [
+            {"type": "function_call", "call_id": PRESEARCH_CALL_ID, "name": "search_recipes",
+             "arguments": arguments},
+            {"type": "function_call_output", "call_id": PRESEARCH_CALL_ID, "output": output},
+        ]  # fmt: skip
+        self._step("Writing the reply…")
+        return items, [ToolCall("search_recipes", arguments, output, by_code=True)]
+
+    def _respond(self, **kwargs):
+        """One Responses API call; streamed when someone listens, so the reply shows as written."""
+        if self.emit is None:
+            return self.client.responses.create(**kwargs)
+        final = None
+        for event in self.client.responses.create(**kwargs, stream=True):
+            if event.type == "response.output_text.delta":
+                self.emit("delta", event.delta)
+            elif event.type in ("response.completed", "response.incomplete"):
+                final = event.response
+            elif event.type in ("response.failed", "error"):
+                raise RuntimeError(f"the model's reply failed: {event.type}")
+        if final is None:
+            raise RuntimeError("the model's reply stream ended early")
+        return final
+
     # nodes
 
     def _agent(self, s: ChatState) -> ChatState:
         last = s["rounds"] >= MAX_TOOL_ROUNDS
-        resp = self.client.responses.create(
+        resp = self._respond(
             model=self.model,
             instructions=f"{INSTRUCTIONS}\n\n{person_text(s['profile'])}",
             input=s["items"],
@@ -313,11 +413,13 @@ class Assistant:
         items, log = list(s["items"]), list(s["tool_calls"])
         drafts = list(s["drafts"])
         for call in s["pending"]:
+            self._step(STEPS.get(call.name, "Working…"))
             self.usage.tool_calls += 1
             output = self.run_tool(call.name, call.arguments, s["profile"], drafts)
             log.append(ToolCall(call.name, call.arguments, output))
             items.append({"type": "function_call_output", "call_id": call.call_id,
                           "output": output})  # fmt: skip
+        self._step("Writing the reply…")
         return {"items": items, "pending": [], "rounds": s["rounds"] + 1, "tool_calls": log,
                 "drafts": drafts}  # fmt: skip
 
@@ -375,6 +477,8 @@ class Assistant:
         )
         ids = self.store.search(a.query, filters, SEARCH_LIMIT)
         recipes = self.store.get(ids)
+        if self.emit:
+            self.emit("recipes", [rid for rid in ids if rid in recipes])
         pantry = set(self.kitchen.profile().pantry)
         lines = [
             recipe_line(recipes[rid], pantry) + f" | {recipes[rid].servings} servings"

@@ -37,6 +37,54 @@ export function voiceCommand(heard: string): VoiceCommand | null {
   return null
 }
 
+// --- Microphone help ------------------------------------------------------------------------
+
+/** How to unblock the microphone in this browser, as steps for the person to follow. `touch`: an
+ * iPad's Safari says "Macintosh", so a Mac with a touch screen is taken to be an iPad. */
+export function micHelp(ua: string, touch = false): { where: string; steps: string[] } {
+  const ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && touch)
+  if (ios) {
+    const app = /CriOS/.test(ua) ? "Chrome" : /FxiOS/.test(ua) ? "Firefox" : /EdgiOS/.test(ua) ? "Edge" : null
+    const dictation = "If it still says blocked, turn on Settings > General > Keyboard > Enable Dictation (it is needed to recognise speech)."
+    if (app) {
+      return {
+        where: `${app} on iPhone or iPad`,
+        steps: [`Open the Settings app, then Apps > ${app}, and turn on Microphone.`,
+          `Come back to ${app}, reload this page and tap the mic.`, dictation],
+      }
+    }
+    return {
+      where: "Safari on iPhone or iPad",
+      steps: ["Tap aA at the left of the address bar, then Website Settings.", "Set Microphone to Allow.",
+        "Reload this page and tap the mic.",
+        "Microphone not listed? In the Settings app, open Apps > Safari > Microphone and choose Ask or Allow.",
+        dictation],
+    }
+  }
+  if (/Android/.test(ua)) {
+    return {
+      where: "Chrome on Android",
+      steps: ["Tap the icon at the left of the address bar, then Permissions.", "Set Microphone to Allow.",
+        "Reload this page and tap the mic.",
+        "Still blocked? In the phone's Settings, open Apps > Chrome > Permissions > Microphone and choose Allow."],
+    }
+  }
+  if (/Safari/.test(ua) && !/Chrome|Chromium|Edg\//.test(ua)) {
+    return {
+      where: "Safari on Mac",
+      steps: ["In the menu bar, open Safari > Settings > Websites > Microphone.",
+        "Set this site to Allow.", "Reload this page and tap the mic."],
+    }
+  }
+  const app = /Edg\//.test(ua) ? "Edge" : "Chrome"
+  return {
+    where: app,
+    steps: ["Click the icon at the left of the address bar.", "Turn on Microphone (or set it to Allow).",
+      "Reload this page and click the mic.",
+      `On a Mac, also check System Settings > Privacy & Security > Microphone allows ${app}.`],
+  }
+}
+
 // --- Listening ------------------------------------------------------------------------------
 
 /** One way of hearing phrases: the browser here, a native speech module in an app later. */
