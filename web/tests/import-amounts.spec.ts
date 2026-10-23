@@ -68,7 +68,7 @@ test(`estimated import saves and retains its nutrition notes when photo ${photoF
   await page.getByRole("button", { name: "Try it as a guest" }).click()
   await expect(page).not.toHaveURL(/login/)
   await page.goto("/recipes/mine/new")
-  await page.getByRole("button", { name: /From a post/ }).click()
+  await page.getByRole("button", { name: /From social media/ }).click()
   await page.getByLabel("Post link").fill(initial.source_url!)
   await page.getByRole("button", { name: "Read recipe" }).click()
   // Saved without a review form; the recipe opens at once and its photo slot shows the photo being made.

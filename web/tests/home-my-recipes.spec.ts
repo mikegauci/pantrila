@@ -41,10 +41,10 @@ test("home pitches importing a recipe and opens the post import", async ({ page 
   const section = page.locator('[data-tour="my-recipes-home"]')
   await expect(section.getByText(/Saw a recipe on TikTok, Instagram or Facebook/)).toBeVisible()
   await expect(section.getByRole("link", { name: "See all" })).toHaveCount(0)
-  await section.getByRole("link", { name: "Import from a post" }).click()
+  await section.getByRole("link", { name: "Import from social media" }).click()
 
   await expect(page).toHaveURL(/\/recipes\/mine\/new$/)
-  await expect(page.getByRole("button", { name: /From a post/ })).toHaveAttribute("aria-pressed", "true")
+  await expect(page.getByRole("button", { name: /From social media/ })).toHaveAttribute("aria-pressed", "true")
   await expect(page.getByLabel("Post link")).toBeVisible()
 })
 

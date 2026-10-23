@@ -28,7 +28,7 @@ import type {
 export const RECIPE_SOURCE: Record<RecipeSource, { icon: typeof Camera; text: string }> = {
   photo: { icon: Camera, text: "From a photo" },
   link: { icon: Link2, text: "From a link" },
-  post: { icon: Share2, text: "From a post" },
+  post: { icon: Share2, text: "From social media" },
   text: { icon: ClipboardPaste, text: "Pasted text" },
   video: { icon: Clapperboard, text: "From a video" },
   manual: { icon: PenLine, text: "Typed in" },

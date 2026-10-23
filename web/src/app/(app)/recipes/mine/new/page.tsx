@@ -30,12 +30,12 @@ type Method = "photo" | "link" | "post" | "manual"
 const METHODS: { key: Method; icon: typeof Camera; title: string; text: string }[] = [
   { key: "photo", icon: Camera, title: "From photos", text: "A cookbook page, a card or a screenshot. Up to 4 photos." },
   { key: "link", icon: Link2, title: "From a link", text: "Paste a recipe page from any site." },
-  { key: "post", icon: Share2, title: "From a post", text: "A TikTok, Instagram or Facebook post: its caption or the video." },
+  { key: "post", icon: Share2, title: "From social media", text: "A TikTok, Instagram or Facebook post: its caption or the video." },
   { key: "manual", icon: PenLine, title: "Type it in", text: "Fill in the form yourself." },
 ]
 
 const IMPORT_TITLE: Record<Exclude<Method, "manual">, string> = {
-  photo: "Upload photos", link: "Paste a link", post: "Paste a post",
+  photo: "Upload photos", link: "Paste a link", post: "Paste a social media post, reel or video",
 }
 
 function PhotoImport({ onDone }: { onDone: (v: ImportView) => void }) {

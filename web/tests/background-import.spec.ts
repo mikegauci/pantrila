@@ -57,7 +57,7 @@ test("an import survives a dropped connection and a page reload", async ({ page 
   await page.getByRole("button", { name: "Try it as a guest" }).click()
   await expect(page).not.toHaveURL(/login/)
   await page.goto("/recipes/mine/new")
-  await page.getByRole("button", { name: /From a post/ }).click()
+  await page.getByRole("button", { name: /From social media/ }).click()
   await page.getByLabel("Post link").fill(post)
   await page.getByRole("button", { name: "Read recipe" }).click()
 
@@ -145,7 +145,7 @@ test("an import with no method opens the form instead of saving", async ({ page 
   await page.getByRole("button", { name: "Try it as a guest" }).click()
   await expect(page).not.toHaveURL(/login/)
   await page.goto("/recipes/mine/new")
-  await page.getByRole("button", { name: /From a post/ }).click()
+  await page.getByRole("button", { name: /From social media/ }).click()
   await page.getByLabel("Post link").fill(post)
   await page.getByRole("button", { name: "Read recipe" }).click()
   await expect(page.getByLabel("Title", { exact: true })).toHaveValue("Crispy gnocchi")
