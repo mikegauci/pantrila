@@ -341,6 +341,7 @@ class CookbookCard(BaseModel):
     source_platform: Platform | None = None
     source_author: str | None = None
     recipe_url: str | None = Field(default=None, description="Recipe site a post linked to.")
+    chat_draft: str | None = Field(default=None, description="Assistant draft it came from.")
     created_at: datetime
     updated_at: datetime
     ingredient_count: int
