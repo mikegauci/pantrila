@@ -13,8 +13,10 @@ from pantrila.schema import DietTag, MealType, Recipe
 
 @pytest.fixture(autouse=True)
 def no_tracing(monkeypatch):
-    """Offline tests never send traces or feedback to LangSmith, whatever .env says."""
+    """Offline tests never send traces, errors or analytics anywhere, whatever .env says."""
     monkeypatch.setenv("LANGSMITH_TRACING", "false")
+    for name in ("SENTRY_DSN", "POSTHOG_API_KEY"):
+        monkeypatch.delenv(name, raising=False)
 
 
 def draft(**overrides) -> RecipeDraft:
@@ -168,7 +170,8 @@ def conn():
         c.execute(
             "drop table if exists recipe_embeddings, recipe_ingredients, recipes, pantry_items,"
             " user_profiles, meal_plans, usage_events, user_recipes, chat_threads, recipe_photos,"
-            " user_avatars, usage_reservations, cooked_meals, import_jobs, pantrio_migrations"
+            " user_avatars, usage_reservations, cooked_meals, import_jobs, user_activity,"
+            " pantrio_migrations"
             " cascade"
         )
         c.autocommit = False

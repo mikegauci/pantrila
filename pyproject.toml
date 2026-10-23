@@ -20,6 +20,7 @@ dependencies = [
     "pillow>=13.0.0",
     "av>=19.0.1",
     "sentry-sdk[fastapi]>=2.73.0",
+    "posthog>=7.75.10",
 ]
 
 [project.scripts]

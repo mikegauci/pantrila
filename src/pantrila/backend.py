@@ -9,6 +9,7 @@ from typing import Any, Protocol
 
 from pantrila import config
 from pantrila.accounts import AuthAdmin, auth_admin, erase_rows
+from pantrila.analytics import ActivityLog, DbActivity
 from pantrila.chats import Chats
 from pantrila.cookbook import (
     Cookbook,
@@ -56,6 +57,10 @@ class Backend(Protocol):
         """Where background imports are kept (see pantrila.import_jobs)."""
         ...
 
+    def activity(self) -> ActivityLog:
+        """Days each person used the app (see pantrila.analytics)."""
+        ...
+
     def erase(self, user_id: str) -> None:
         """Delete the person's rows in every user table (see pantrila.accounts)."""
         ...
@@ -95,6 +100,9 @@ class DbBackend:
 
     def import_jobs(self) -> DbImportJobs:
         return DbImportJobs(self.pool)
+
+    def activity(self) -> DbActivity:
+        return DbActivity(self.pool)
 
     def erase(self, user_id: str) -> None:
         with self.pool.connection() as conn:

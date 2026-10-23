@@ -33,6 +33,17 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+PostHog funnel: the API sends sign-up -> first import -> first plan -> cooking mode -> return events to PostHog EU
+(`analytics.py`, `POSTHOG_API_KEY`; off when unset), keyed by the Supabase user id only: no browser SDK, no cookies,
+geoip off, no email or content. `current_user` calls `Visits.seen` once per person per day per process; migration
+`20261023150000_user_activity` keeps one row per active day (applied on Supabase), giving `signed_up` (first day),
+`app_opened` (daily, for retention) and `returned_within_7_days` (the second day, if within 7 days). The import routes
+and jobs send `recipe_imported` (kind), POST /plans `plan_created`, and cooking mode posts `cooking_mode_opened` to
+`POST /me/events` (allowlist). Funnels use each event's first occurrence. Account deletion also deletes the PostHog
+person and events (`bulk_delete`, needs `POSTHOG_PERSONAL_API_KEY` + `POSTHOG_PROJECT_ID`) and `user_activity` rows.
+People active before this shipped count as signing up on their first day after it. Privacy page lists PostHog. No
+model call, so no eval rerun.
+
 Sentry and feedback: API errors (unhandled and `log.exception`) and 10% of requests as traces go to Sentry EU when
 `SENTRY_DSN` is set (`config.init_sentry`: no PII, no request bodies; `current_user` sets the user id only). The web
 app uses `@sentry/nextjs` 11 (`instrumentation-client.ts`, `instrumentation.ts`, `app/global-error.tsx`;
@@ -762,6 +773,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   a hard rule or does not exist.
 - `src/pantrila/accounts.py`: account deletion (`USER_TABLES`, `erase_rows`, `storage_folders`,
   `SupabaseAuthAdmin` deletes the Auth user); `Backend.erase` and `Backend.admin` wire it in.
+- `src/pantrila/analytics.py`: PostHog funnel events from the API (`Analytics`, `PostHogAnalytics`,
+  `MemoryAnalytics`), `Visits` (once-a-day sign-up/open/return from `user_activity`).
 - `src/pantrila/auth.py`: verifies Supabase Auth access tokens (ES256 via the project JWKS,
   audience `authenticated`, issuer `SUPABASE_URL/auth/v1`); returns the user id.
 - `src/pantrila/records.py`: saved plans (`save_plan`, `latest_plan`, `update_plan` for a swap)
@@ -812,7 +825,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   without an amount stay). The cooking log is in `records.py` (`Cooked`, `cooked_meals`).
 - `src/pantrila/api.py`: FastAPI app (`create_app(backend, verify)`; tests pass an in-memory
   backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
-  `/me/usage`, `/me/avatar` (PUT/DELETE), `DELETE /me` (the whole account), `/recipes` (search or browse, profile rules as filters unless `safe=false`),
+  `/me/usage`, `/me/avatar` (PUT/DELETE), `DELETE /me` (the whole account), `POST /me/events` (funnel steps from the browser), `/recipes` (search or browse, profile rules as filters unless `safe=false`),
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
   `/plans/latest`, `/plans/latest/grocery`, `/plans/latest/meals/{day}/{meal_type}` (`/options`
   GET, PUT to swap), `POST /chat` (continues `thread_id` or starts a
