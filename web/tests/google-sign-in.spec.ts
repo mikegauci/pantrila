@@ -28,7 +28,7 @@ async function mockBackends(page: Page, seen: string[]) {
     if (path === "/plans/latest") return route.fulfill({ status: 404, json: { detail: "No plan" } })
     const data = path === "/me/profile" ? profile
       : path === "/meta" ? { allergens: ["peanuts"], diets: [], cuisines: [], meal_types: ["dinner"], units: ["g"] }
-      : path === "/me/pantry" || path === "/me/chats" || path === "/foods" ? []
+      : path === "/me/pantry" || path === "/me/chats" || path === "/me/recipes" || path === "/foods" ? []
       : path === "/me" ? { id: GUEST, email: null, anonymous: true, avatar_url: null, limits: { chats_left: 50 } }
       : { ok: true }
     await route.fulfill({ json: data })

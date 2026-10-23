@@ -39,7 +39,7 @@ test("switching accounts drops cached data and remembered chat state", async ({ 
     }
     if (path === "/plans/latest") return route.fulfill({ status: 404, json: { detail: "No plan" } })
     const data = path === "/me/profile" ? profile
-      : path === "/me/chats" ? []
+      : path === "/me/chats" || path === "/me/recipes" ? []
       : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, limits: { chats_left: 50 } }
       : { ok: true }
     await route.fulfill({ json: data })

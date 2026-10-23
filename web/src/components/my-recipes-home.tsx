@@ -13,7 +13,9 @@ const SHOWN = 4
 
 /** Home card: the person's latest cookbook recipes and the two imports worth pushing. */
 export function MyRecipesHome() {
-  const { data, isLoading } = useCookbook()
+  const { data: list, isLoading } = useCookbook()
+  // A reply that is not a list must not take Home down with it.
+  const data = Array.isArray(list) ? list : undefined
   const recent = data?.slice(0, SHOWN) ?? []
   const empty = !isLoading && recent.length === 0
 
