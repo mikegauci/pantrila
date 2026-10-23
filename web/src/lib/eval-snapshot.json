@@ -39,16 +39,16 @@
   },
   {
     "name": "Cooking assistant",
-    "report": "https://github.com/mikegauci/pantrila/blob/main/evals/reports/assistant-2026-10-23T110643Z.md",
+    "report": "https://github.com/mikegauci/pantrila/blob/main/evals/reports/assistant-2026-10-23T121004Z.md",
     "what": "30 chat cases on gpt-5.4-mini",
     "metrics": [
       [
         "Right tools",
-        "97%"
+        "100%"
       ],
       [
         "Expected draft choices",
-        "5 / 6"
+        "6 / 6"
       ],
       [
         "Recipe citations when expected",
@@ -64,11 +64,11 @@
       ],
       [
         "Cost per turn",
-        "$0.0035"
+        "$0.0030"
       ],
       [
         "Latency p50 / p95",
-        "4.6 s / 7.7 s"
+        "3.9 s / 8.1 s"
       ]
     ]
   }

@@ -20,6 +20,7 @@ import hashlib
 import json
 import os
 import statistics
+import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
@@ -99,6 +100,7 @@ def score(case: dict, r: ChatResult, kitchen: MemoryKitchen, store) -> dict:
         "made_up_cites": [rid for rid in r.cited if rid not in known],
         "blocked_unknown_cites": [rid for rid in r.flagged if rid not in flagged_known],
         "tools": called,
+        "searched_by_code": any(c.by_code for c in r.tool_calls),
         "llm_calls": r.usage.llm_calls,
         "tool_calls": r.usage.tool_calls,
         "input_tokens": r.usage.input_tokens,
@@ -120,11 +122,20 @@ def run_one(case: dict, model: str, effort: str) -> dict:
             history: list[dict] = []
             for message in case.get("before", []):
                 history = assistant.reply(message, history).history
-            result = assistant.reply(case["message"], history)
+            # Streamed as the app does, timing the first word of the reply the person sees.
+            first: list[float] = []
+            start = time.perf_counter()
+
+            def on_event(kind: str, _data: object) -> None:
+                if kind == "delta" and not first:
+                    first.append((time.perf_counter() - start) * 1000)
+
+            result = assistant.reply(case["message"], history, on_event=on_event)
         except Exception as exc:  # a failed turn is a result, not a crash
             return {"case_id": case["id"], "kind": case["kind"], "ok": False,
                     "error": f"{type(exc).__name__}: {exc}"}  # fmt: skip
         row = score(case, result, kitchen, store)
+        row["first_text_ms"] = first[0] if first else row["latency_ms"]
     print(f"{case['id']}: tools {'ok' if row['tools_ok'] else 'WRONG'} {row['tools']}, "
           f"{row['latency_ms'] / 1000:.1f}s", flush=True)  # fmt: skip
     return row
@@ -159,6 +170,9 @@ def summarise(rows: list[dict]) -> dict:
         "cost_per_turn_usd": None if None in costs or not costs else statistics.fmean(costs),
         "latency_p50_ms": percentile(latencies, 50),
         "latency_p95_ms": percentile(latencies, 95),
+        "first_text_p50_ms": percentile([r["first_text_ms"] for r in ok], 50),
+        "first_text_p95_ms": percentile([r["first_text_ms"] for r in ok], 95),
+        "searched_by_code": sum(r["searched_by_code"] for r in ok),
     }
 
 
@@ -191,12 +205,16 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
         f"| Wrote its own recipe exactly when expected | {pct(s['draft_ok'])} |",
         f"| Own recipes written in other cases | {s['stray_drafts']} |",
         f"| Own recipes missing required rule warnings | {s['unwarned_drafts']} |",
+        f"| Searched in code before the model | {s['searched_by_code']} of "
+        f"{s['cases'] - s['failed']} |",
         f"| LLM calls / tool calls per turn | {num(s['llm_calls'])} / {num(s['tool_calls'])} |",
         f"| Tokens per turn (in / out) | {num(s['input_tokens'], ',.0f')} / "
         f"{num(s['output_tokens'], ',.0f')} |",
         f"| Cost per turn | {cost} |",
         f"| Latency p50 / p95 | {s['latency_p50_ms'] / 1000:.1f}s / "
         f"{s['latency_p95_ms'] / 1000:.1f}s |",
+        f"| First words of the reply p50 / p95 | {s['first_text_p50_ms'] / 1000:.1f}s / "
+        f"{s['first_text_p95_ms'] / 1000:.1f}s |",
         "",
         "| Case | Tools called | Tools | Pantry | Cited | Draft | s |",
         "|---|---|---|---|---|---|---|",
