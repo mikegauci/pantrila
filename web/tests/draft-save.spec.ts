@@ -45,7 +45,8 @@ test("draft warnings remain visible and the reviewed recipe can be edited and sa
         messages: [{ role: "assistant", text: reply.text, reply }] }
       : path === "/me/recipes/preview" ? { ingredients: [], nutrition, allergens: ["milk"],
         diet_tags: ["vegetarian"], estimated: false, problems: ["contains milk"] }
-      : path === "/me/recipes/7" || path === "/me/recipes/7/photo" || (path === "/me/recipes" && created) ? detail
+      : path === "/me/recipes" && route.request().method() === "GET" ? (created ? [detail] : [])
+      : path === "/me/recipes/7" || path === "/me/recipes/7/photo" || path === "/me/recipes" ? detail
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })
   })
@@ -64,7 +65,13 @@ test("draft warnings remain visible and the reviewed recipe can be edited and sa
   await expect(page.getByText("Amount must be greater than zero", { exact: true })).toBeVisible()
   await page.getByRole("spinbutton", { name: "Amount for ingredient 1" }).fill("30")
   await page.getByRole("button", { name: "Save to my recipes", exact: true }).click()
-  await expect(page).toHaveURL(/\/recipes\/mine\/7$/)
+  await expect(page).toHaveURL(/\/recipes\/mine\/7\?chat=1$/)
   await expect(page.getByRole("heading", { name: "Family cake", exact: true })).toBeVisible()
   expect(saved.title).toBe("Family cake")
+  expect((saved as { chat_draft?: string }).chat_draft).toMatch(/^1:[0-9a-f]{8}$/)
+  // Back in the chat, the draft shows as saved instead of offering Save again.
+  await page.getByRole("link", { name: "Back to the chat" }).click()
+  await expect(page).toHaveURL(/\/assistant/)
+  await expect(page.getByRole("link", { name: "Saved to My recipes as “Family cake”" })).toBeVisible()
+  await expect(page.getByRole("button", { name: "Save “Butter cake” to My recipes" })).toHaveCount(0)
 })
