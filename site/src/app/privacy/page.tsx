@@ -100,14 +100,15 @@ export default function Privacy() {
 
       <h2>How long</h2>
       <p>
-        Your data stays until you delete it or ask for your account to be deleted. You can delete recipes, chats,
-        pantry items and photos yourself in the app at any time.
+        Your data stays until you delete it. You can delete recipes, chats, pantry items and photos yourself in the
+        app at any time, or your whole account from Profile, Delete account: that removes everything Pantrila holds
+        about you, including your sign-in, straight away.
       </p>
 
       <h2>Your rights</h2>
       <p>
-        You can ask for a copy of your data, to correct it, to delete it or your whole account, or to object to how it
-        is used. Write to {mail} from the email linked to your account and you will get an answer within a month.
+        You can delete your account yourself in the app (Profile, Delete account). You can also ask for a copy of
+        your data, to correct it, to delete it, or to object to how it is used. Write to {mail} from the email linked to your account and you will get an answer within a month.
         A guest account has no email, so add Google from your profile first. You can also complain to your data
         protection authority.
       </p>

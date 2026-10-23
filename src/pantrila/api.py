@@ -21,6 +21,9 @@ Cooking mode ends with "I cooked this" (POST /me/cooked): it logs the cook and, 
 person opts out, takes the amounts used out of their pantry (see pantrila.cooking).
 /me/cooked/preview shows that pantry change first without saving anything.
 
+DELETE /me deletes the account: every row, Storage file and the Supabase sign-in, at once
+(see pantrila.accounts).
+
 Recipes carry `photo_url` when they have a photo (Supabase Storage; see pantrila.photos), else
 null and the web app shows its placeholder art.
 
@@ -45,6 +48,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 
 from pantrila import config
+from pantrila.accounts import storage_folders
 from pantrila.api_models import (
     AvatarIn,
     ChatMessage,
@@ -320,6 +324,34 @@ def create_app(
         s.records.set_avatar(None)
         drop_photo(request, old)
         return me(user, s)
+
+    @app.delete("/me", status_code=204)
+    def delete_account(request: Request, user: UserDep) -> Response:
+        """Delete the account and everything in it, at once (see pantrila.accounts)."""
+        backend: Backend = request.app.state.backend
+        jobs: ImportJobs = request.app.state.import_jobs
+        if backend.admin is None:
+            raise HTTPException(503, "Account deletion is not set up on this server. "
+                                     "Email hello@pantrila.com and we will delete it.")  # fmt: skip
+        if jobs.running(user.id):
+            raise HTTPException(409, "An import is still running. Wait for it to finish, "
+                                     "then delete your account.")  # fmt: skip
+        try:
+            if backend.photos is not None:
+                for folder in storage_folders(user.id):
+                    backend.photos.delete_folder(folder)
+            backend.erase(user.id)
+            jobs.forget(user.id)
+            backend.admin.delete_user(user.id)
+        except Exception as exc:
+            log.exception("account deletion failed part way")
+            raise HTTPException(
+                502,
+                "Your account could not be fully deleted. "
+                "Try again; anything already deleted stays deleted.",
+            ) from exc
+        log.info("deleted account %s", user.id)
+        return Response(status_code=204)
 
     @app.get("/me/profile")
     def get_profile(s: SessionDep) -> UserProfile:

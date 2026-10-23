@@ -33,6 +33,14 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Account deletion: Profile ends with "Delete account" (type "delete" to confirm). `DELETE /me` (`accounts.py`)
+deletes, at once and with no grace period, the person's Storage folders (`user-recipes/<id>/`, `avatars/<id>/`, via
+`PhotoStore.delete_folder`), their rows in every user table (`USER_TABLES`, one transaction; a test checks the list
+against the migrations), then the Supabase Auth user (admin API, service role key). Each step is idempotent, so a
+502 part way is fixed by retrying; 503 without the service role key, 409 while an import job runs. The web forgets
+local and session storage keyed by the user id and signs out locally. Privacy page says so. No model call, so no
+eval rerun; 4 new Python tests, 1 Playwright test (`web/tests/delete-account.spec.ts`).
+
 Landing site word switch: the "Instagram / Facebook / TikTok" word in the Save section (`site/src/components/flip-word.tsx`) now rolls like a slot-machine reel (old word slides up and out, the next slides up from below, spring about 0.35 s, box eases to the new word's width) instead of fading, and each platform takes its own colour (pink, blue, teal). Landing site only, no model call, so no eval rerun.
 
 My recipes on Home: a section after "Ask Pantrila" (`web/src/components/my-recipes-home.tsx`) shows the latest 4
@@ -731,6 +739,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   tools search_recipes, check_pantry, update_pantry, swap_ingredient, scale_recipe; replies
   cite recipes as `[recipe-id]` and the guard appends a note for any cited recipe that breaks
   a hard rule or does not exist.
+- `src/pantrila/accounts.py`: account deletion (`USER_TABLES`, `erase_rows`, `storage_folders`,
+  `SupabaseAuthAdmin` deletes the Auth user); `Backend.erase` and `Backend.admin` wire it in.
 - `src/pantrila/auth.py`: verifies Supabase Auth access tokens (ES256 via the project JWKS,
   audience `authenticated`, issuer `SUPABASE_URL/auth/v1`); returns the user id.
 - `src/pantrila/records.py`: saved plans (`save_plan`, `latest_plan`, `update_plan` for a swap)
@@ -781,7 +791,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   without an amount stay). The cooking log is in `records.py` (`Cooked`, `cooked_meals`).
 - `src/pantrila/api.py`: FastAPI app (`create_app(backend, verify)`; tests pass an in-memory
   backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
-  `/me/usage`, `/me/avatar` (PUT/DELETE), `/recipes` (search or browse, profile rules as filters unless `safe=false`),
+  `/me/usage`, `/me/avatar` (PUT/DELETE), `DELETE /me` (the whole account), `/recipes` (search or browse, profile rules as filters unless `safe=false`),
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
   `/plans/latest`, `/plans/latest/grocery`, `/plans/latest/meals/{day}/{meal_type}` (`/options`
   GET, PUT to swap), `POST /chat` (continues `thread_id` or starts a

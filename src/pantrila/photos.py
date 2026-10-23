@@ -183,6 +183,10 @@ class PhotoStore(Protocol):
 
     def delete(self, paths: Iterable[str]) -> None: ...
 
+    def delete_folder(self, folder: str) -> None:
+        """Delete every file directly under `folder` (one person's photos or pictures)."""
+        ...
+
 
 class MemoryPhotos:
     def __init__(self):
@@ -197,6 +201,9 @@ class MemoryPhotos:
     def delete(self, paths: Iterable[str]) -> None:
         for p in paths:
             self.files.pop(p, None)
+
+    def delete_folder(self, folder: str) -> None:
+        self.delete([p for p in self.files if p.startswith(f"{folder}/")])
 
 
 class SupabasePhotos:
@@ -238,6 +245,16 @@ class SupabasePhotos:
         paths = [p for p in paths if p]
         if paths:
             self.http.request("DELETE", f"/object/{BUCKET}", json={"prefixes": paths})
+
+    def delete_folder(self, folder: str) -> None:
+        while True:  # the list is paged; each round deletes what it found
+            r = self.http.post(f"/object/list/{BUCKET}", json={"prefix": folder, "limit": 1000})
+            r.raise_for_status()
+            names = [f"{folder}/{o['name']}" for o in r.json() if o.get("id")]  # files, not folders
+            if not names:
+                return
+            self.http.request("DELETE", f"/object/{BUCKET}", json={"prefixes": names}
+                              ).raise_for_status()  # fmt: skip
 
     def close(self) -> None:
         self.http.close()

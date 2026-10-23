@@ -57,6 +57,14 @@ class ImportJobs:
             job = self._jobs.get(job_id)
         return job if job is not None and job.user_id == user_id else None
 
+    def running(self, user_id: str) -> bool:
+        with self._lock:
+            return any(j.user_id == user_id and j.status == "running" for j in self._jobs.values())
+
+    def forget(self, user_id: str) -> None:
+        with self._lock:
+            self._jobs = {k: j for k, j in self._jobs.items() if j.user_id != user_id}
+
     def step(self, job: ImportJob, key: str) -> None:
         """The import started `key`; a repeat of the current step is not a new one."""
         with self._lock:

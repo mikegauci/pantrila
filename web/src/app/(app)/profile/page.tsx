@@ -1,6 +1,7 @@
 "use client"
 
 import { Camera, Compass, Save, Trash2, X } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useRef, useState } from "react"
 import { toast } from "sonner"
 
@@ -18,7 +19,7 @@ import { ApiError, send } from "@/lib/api"
 import { label } from "@/lib/format"
 import { useFoods, useMe, useMeta, useProfile, useRefreshKitchen } from "@/lib/hooks"
 import { toAvatarDataUrl } from "@/lib/images"
-import { googlePicture, linkGoogle } from "@/lib/supabase"
+import { googlePicture, linkGoogle, supabase } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
 import { hasKcalRange, kcalGoal } from "@/lib/plan"
 import type { Allergen, DietTag, MealType, Me, NutritionTargets, Profile } from "@/lib/types"
@@ -43,6 +44,81 @@ function HelpCard() {
       <Button variant="outline" onClick={tour.start}>
         <Compass /> Replay the tour
       </Button>
+    </Panel>
+  )
+}
+
+/** Forget what this browser kept for the person: drafts, cooking progress, tour, import jobs. */
+function forgetLocal(userId: string) {
+  for (const store of [localStorage, sessionStorage]) {
+    try {
+      for (const key of Object.keys(store)) if (key.includes(userId)) store.removeItem(key)
+      store.removeItem("pantrila-photo-jobs")
+    } catch {
+      // storage blocked: nothing to forget
+    }
+  }
+}
+
+function DeleteAccountCard() {
+  const { session } = useAuth()
+  const router = useRouter()
+  const [open, setOpen] = useState(false)
+  const [typed, setTyped] = useState("")
+  const [busy, setBusy] = useState(false)
+  const user = session?.user
+  if (!user) return null
+
+  async function remove() {
+    if (!user) return
+    setBusy(true)
+    try {
+      await send("/me", "DELETE")
+    } catch (e) {
+      setBusy(false)
+      toast.error(e instanceof ApiError ? e.message : "Your account could not be deleted. Try again.")
+      return
+    }
+    forgetLocal(user.id)
+    await supabase().auth.signOut({ scope: "local" })  // the sign-in is already gone on the server
+    toast.success("Your account and everything in it are deleted.")
+    router.replace("/login")
+  }
+
+  return (
+    <Panel>
+      <PanelTitle>Delete account</PanelTitle>
+      <p className="mb-4 text-muted-foreground">
+        Deletes your profile, pantry, meal plans, chats, cookbook recipes and their photos, your
+        picture and your sign-in, straight away. This cannot be undone.
+      </p>
+      {!open ? (
+        <Button variant="destructive" onClick={() => setOpen(true)}>
+          <Trash2 /> Delete my account
+        </Button>
+      ) : (
+        <form
+          className="grid gap-3"
+          onSubmit={(e) => {
+            e.preventDefault()
+            if (typed.trim().toLowerCase() === "delete") remove()
+          }}
+        >
+          <div className="grid gap-1.5">
+            <Label htmlFor="confirm-delete">Type <strong>delete</strong> to confirm</Label>
+            <Input id="confirm-delete" autoComplete="off" autoCapitalize="none" className="h-10" value={typed}
+                   onChange={(e) => setTyped(e.target.value)} />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button type="submit" variant="destructive" disabled={busy || typed.trim().toLowerCase() !== "delete"}>
+              <Trash2 /> {busy ? "Deleting…" : "Delete everything"}
+            </Button>
+            <Button type="button" variant="outline" disabled={busy} onClick={() => { setOpen(false); setTyped("") }}>
+              Keep my account
+            </Button>
+          </div>
+        </form>
+      )}
     </Panel>
   )
 }
@@ -376,6 +452,7 @@ export default function ProfilePage() {
         </Panel>
 
         <HelpCard />
+        <DeleteAccountCard />
       </div>
 
       <div className="sticky bottom-20 flex justify-end md:bottom-6">
