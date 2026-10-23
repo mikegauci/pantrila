@@ -33,6 +33,12 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+My recipes on Home: a section after "Ask Pantrila" (`web/src/components/my-recipes-home.tsx`) shows the latest 4
+cookbook recipes ("N saved", "See all") and two buttons, "Import from a post" and "From a recipe link", which open
+`/recipes/mine/new?method=post|link` on that method (the page reads `?method=` once and drops it). With no recipes
+yet it is a yellow pitch card for importing from TikTok, Instagram, Facebook or a recipe site. Web only, no model
+call, so no eval rerun; new `web/tests/home-my-recipes.spec.ts`.
+
 Faster assistant replies: a message that asks for recipes (`assistant.presearch_args`, words only: a meal, "recipe",
 "idea", "something"...; not a how/what question, a recipe id, the model's own recipe, a swap, scaling or a pantry change)
 is searched in code first, with meal type and "N minutes" from its words and the profile's rules as filters, and the
