@@ -192,7 +192,7 @@ class MemoryImportJobs:
         with self._lock:
             for r in self._rows.values():
                 if r.owner == self.owner and r.job.status == "running":
-                    r.lease_until = _now()
+                    r.lease_until = _now() - timedelta(seconds=1)
 
 
 class DbImportJobs:
@@ -303,5 +303,5 @@ class DbImportJobs:
 
     def release(self):
         with self.pool.connection() as conn:
-            conn.execute("update import_jobs set lease_until = now() where owner = %s"
-                         " and status = 'running'", (self.owner,))  # fmt: skip
+            conn.execute("update import_jobs set lease_until = now() - interval '1 second'"
+                         " where owner = %s and status = 'running'", (self.owner,))  # fmt: skip
