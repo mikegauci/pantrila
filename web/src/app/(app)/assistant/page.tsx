@@ -13,6 +13,7 @@ import { STARTERS } from "@/components/ask-pantrila"
 import { AiBadge, ProblemAlert, RecipeArt } from "@/components/bits"
 import { ChatThreads } from "@/components/chat-threads"
 import { CHAT_DRAFT } from "@/components/cookbook-form"
+import { DictateButton, addWords } from "@/components/dictate-button"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
@@ -375,7 +376,8 @@ export default function AssistantPage() {
   )
 
   return (
-    <div className="mx-auto flex h-[calc(100dvh-164px)] max-w-5xl gap-4 md:h-[calc(100dvh-72px-4rem)]">
+    // On phones pull up into the page's top padding (20 px) so the gap under the header matches the gap above the chat.
+    <div className="mx-auto -mt-3 flex h-[calc(100dvh-152px)] max-w-5xl gap-4 md:mt-0 md:h-[calc(100dvh-72px-4rem)]">
       <aside className="hidden w-60 shrink-0 flex-col md:flex" aria-label="Chats">
         <Button variant="outline" size="sm" className="mb-3 justify-start" disabled={busy} onClick={() => open(null)}>
           <Plus /> New chat
@@ -384,39 +386,50 @@ export default function AssistantPage() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="mb-1 flex flex-wrap items-center gap-2 md:mb-3">
+        <div className="mb-2 flex flex-wrap items-center gap-2 md:mb-3">
           <div className="hidden md:block"><AiBadge>Cooking assistant</AiBadge></div>
-          <div className="ml-auto flex gap-1 md:hidden">
+          <div className="ml-auto flex gap-1">
             <Popover.Root>
-              <Popover.Trigger className={buttonVariants({ variant: "outline", size: "icon-sm" })} aria-label="About the assistant">
-                <Info />
+              <Popover.Trigger className={buttonVariants({ variant: "outline", size: "sm" })}>
+                <Info /> Info
               </Popover.Trigger>
               <Popover.Portal>
                 <Popover.Positioner side="bottom" align="end" sideOffset={6} className="isolate z-50">
-                  <Popover.Popup className="max-w-64 rounded-xl border bg-popover p-3 text-[13px] text-popover-foreground shadow-lg outline-none">
-                    Knows your profile and pantry. {me && `${me.limits.chats_left} messages left today.`}
+                  <Popover.Popup className="w-72 max-w-[calc(100vw-24px)] rounded-xl border bg-popover p-3 text-[13px] leading-5 text-popover-foreground shadow-lg outline-none">
+                    <p className="font-semibold">What Pantrila does</p>
+                    <ul className="mt-1.5 grid list-disc gap-1 pl-4 text-muted-foreground">
+                      <li>Finds recipes, checks what is in your pantry and suggests swaps.</li>
+                      <li>Scales a recipe to your servings and writes new ones you can save to My recipes.</li>
+                      <li>Updates your pantry when you say you bought or used something.</li>
+                      <li>Uses your profile: allergies, diet and nutrition targets.</li>
+                    </ul>
+                    <p className="mt-2 font-semibold">Good to know</p>
+                    <ul className="mt-1.5 grid list-disc gap-1 pl-4 text-muted-foreground">
+                      <li>Recipes it shows are checked against your rules, but read the ingredients if you have an allergy.</li>
+                      <li>Chats are saved. Start a new one for a new topic.</li>
+                      {me && <li>{me.limits.chats_left} {me.limits.chats_left === 1 ? "message" : "messages"} left today.</li>}
+                    </ul>
                   </Popover.Popup>
                 </Popover.Positioner>
               </Popover.Portal>
             </Popover.Root>
-            <Sheet open={drawer} onOpenChange={setDrawer}>
-              <SheetTrigger render={<Button variant="outline" size="sm" />}>
-                <History /> Chats
-              </SheetTrigger>
-              <SheetContent side="left" className="gap-3 p-4">
-                <SheetHeader className="p-0">
-                  <SheetTitle>Chats</SheetTitle>
-                </SheetHeader>
-                <div className="flex-1 overflow-y-auto">{list}</div>
-              </SheetContent>
-            </Sheet>
-            <Button variant="outline" size="sm" disabled={busy} onClick={() => open(null)}>
-              <Plus /> New
-            </Button>
+            <div className="flex gap-1 md:hidden">
+              <Sheet open={drawer} onOpenChange={setDrawer}>
+                <SheetTrigger render={<Button variant="outline" size="sm" />}>
+                  <History /> Chats
+                </SheetTrigger>
+                <SheetContent side="left" className="gap-3 p-4">
+                  <SheetHeader className="p-0">
+                    <SheetTitle>Chats</SheetTitle>
+                  </SheetHeader>
+                  <div className="flex-1 overflow-y-auto">{list}</div>
+                </SheetContent>
+              </Sheet>
+              <Button variant="outline" size="sm" disabled={busy} onClick={() => open(null)}>
+                <Plus /> New
+              </Button>
+            </div>
           </div>
-          <span className="hidden text-[12px] text-muted-foreground md:inline">
-            Knows your profile and pantry. {me && `${me.limits.chats_left} messages left today.`}
-          </span>
         </div>
 
         <div className="flex-1 overflow-y-auto overflow-x-hidden rounded-[20px] border bg-primary-soft p-4 shadow-soft" aria-live="polite">
@@ -473,6 +486,7 @@ export default function AssistantPage() {
             }}
             className="max-h-32 min-h-11 resize-none rounded-xl bg-surface"
           />
+          <DictateButton onHeard={(words) => setText((t) => addWords(t, words))} />
           <Button type="submit" size="icon" className="size-11" disabled={busy || !text.trim()} aria-label="Send">
             <Send />
           </Button>
