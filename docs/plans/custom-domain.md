@@ -180,3 +180,11 @@ the old addresses never stop working.
   sends `pantrila.vercel.app` and `pantrio-azure.vercel.app` to `https://app.pantrila.com` with a 308,
   keeping path and query (built assets are not matched). Render CORS drops the old origins after the
   redirect is live; the owner removes them from Supabase's redirect list.
+- 2026-10-23, mailbox: pantrila.com added in FastComet cPanel (server `s13599.fra1.stableserver.net`,
+  192.250.229.180, already in the SPF) and `hello@pantrila.com` created; cPanel's DKIM key published as
+  `default._domainkey`; Email Deliverability shows Valid and the owner confirmed mail works.
+- 2026-10-23, phase 3 done: Resend key "Pantrila Sending Access" (sending only), Supabase custom SMTP
+  (`smtp.resend.com:465`, user `resend`, sender `no-reply@send.pantrila.com`), email rate limit 2/h -> 30/h.
+  Test: a magic link to `hello@pantrila.com` (outside the Supabase team) delivered by Resend. A first try
+  failed on a trailing comma in the SMTP host (`lookup smtp.resend.com,: no such host` in the auth log).
+  A first email to a new address uses the "Confirm signup" template, later ones the "Magic link" one.

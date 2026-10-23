@@ -46,8 +46,12 @@ cards show the Apple and Google Play marks (Simple Icons, CC0). Landing site onl
 Old address retired, custom domain phase 5: `web/src/proxy.ts` redirects `pantrila.vercel.app` and
 `pantrio-azure.vercel.app` to `https://app.pantrila.com` (308, path and query kept); guests who never linked Google
 start over there, by the owner's choice. Render `PANTRILA_CORS_ORIGINS` is `https://app.pantrila.com` plus
-localhost. Sign-in email (phase 3) is half done: Resend domain `send.pantrila.com` and its DNS are in place; Supabase
-SMTP waits on the owner. No model call, so no eval rerun.
+localhost. No model call, so no eval rerun.
+
+Sign-in email, custom domain phase 3: Supabase Auth sends through Resend (custom SMTP `smtp.resend.com:465`, sender
+`no-reply@send.pantrila.com`, domain `send.pantrila.com` verified, EU region; 30 emails/hour), so magic links reach
+anyone, not only the Supabase team; checked with a link to `hello@pantrila.com`. `hello@pantrila.com` is a FastComet
+mailbox (MX `depro4.fcomet.com`, SPF and cPanel DKIM in Vercel DNS). Dashboard settings only, no code change.
 
 Landing site, custom domain phase 2: `site/` is a separate static Next.js app (Vercel project `pantrila-site`,
 root `site/`) on `pantrila.com` (`www` redirects): features, safety, "Get the app" (browser; App Store and Google
@@ -124,8 +128,8 @@ no eval rerun.
 
 Login page for real users: the sign-in page drops the "owner only" email box and demo wording. "Welcome to
 Pantrila" leads with a white Google button (Google's neutral style), an "or" divider, then "Try it as a guest";
-email sign-in is a "Prefer email? Sign in with a link" line that opens the form. Supabase's built-in sender only
-emails the project team, so email links need custom SMTP before users can rely on them. Avatars (header menu and
+email sign-in is a "Prefer email? Sign in with a link" line that opens the form. Email links go out
+through Resend (custom SMTP, see the sign-in email entry above). Avatars (header menu and
 Profile) fall back to the Google profile picture (`googlePicture` in `web/src/lib/supabase.ts`: user metadata, else
 the Google identity's data, so a guest who links Google gets it too) when no picture is uploaded. Web only, no model
 call, so no eval rerun.
