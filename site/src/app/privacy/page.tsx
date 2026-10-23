@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function Privacy() {
   const mail = <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
   return (
-    <LegalPage title="Privacy" updated="22 October 2026">
+    <LegalPage title="Privacy" updated="23 October 2026">
       <p>
         Pantrila is an AI cooking and meal-planning assistant at <a href={APP_URL}>app.pantrila.com</a>. Pantrila
         decides how your data is used (it is the “data controller”). Questions or requests: {mail}.
@@ -85,6 +85,11 @@ export default function Privacy() {
         </li>
         <li>
           <strong>Resend</strong> delivers sign-in emails if you choose email sign-in.
+        </li>
+        <li>
+          <strong>Sentry</strong> receives error reports, in the EU (Frankfurt): what went wrong, the page, your
+          browser and your account id, but not your recipes, messages or email. Feedback you send from the app goes
+          there too, with the email you add for a reply.
         </li>
       </ul>
       <p>

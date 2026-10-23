@@ -1,6 +1,6 @@
 "use client"
 
-import { Camera, Compass, Save, Trash2, X } from "lucide-react"
+import { Camera, Compass, MessageSquareHeart, Save, Trash2, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useRef, useState } from "react"
 import { toast } from "sonner"
@@ -8,6 +8,7 @@ import { toast } from "sonner"
 import { UserAvatar } from "@/components/app-shell"
 import { useAuth } from "@/components/auth-provider"
 import { Panel, PanelTitle } from "@/components/bits"
+import { FeedbackSheet } from "@/components/feedback"
 import { GoogleMark } from "@/components/google-mark"
 import { useTour } from "@/components/tour"
 import { Button } from "@/components/ui/button"
@@ -37,13 +38,20 @@ const PRESETS: { name: string; patch: Partial<Profile> }[] = [
 
 function HelpCard() {
   const tour = useTour()
+  const [feedback, setFeedback] = useState(false)
   return (
     <Panel>
       <PanelTitle>Help</PanelTitle>
       <p className="mb-4 text-muted-foreground">A one-minute walk through the Assistant, recipes, your cookbook and the meal plan.</p>
-      <Button variant="outline" onClick={tour.start}>
-        <Compass /> Replay the tour
-      </Button>
+      <div className="flex flex-wrap gap-2">
+        <Button variant="outline" onClick={tour.start}>
+          <Compass /> Replay the tour
+        </Button>
+        <Button variant="outline" onClick={() => setFeedback(true)}>
+          <MessageSquareHeart /> Send feedback
+        </Button>
+      </div>
+      <FeedbackSheet open={feedback} onClose={() => setFeedback(false)} />
     </Panel>
   )
 }

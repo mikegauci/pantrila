@@ -1,8 +1,7 @@
 "use client"
 
 import {
-  BarChart3, CalendarDays, ChefHat, Compass, House, LogOut, MessageCircle, Refrigerator,
-  ShoppingBasket, UserRound,
+  BarChart3, CalendarDays, ChefHat, Compass, House, LogOut, MessageCircle, MessageSquareHeart, Refrigerator, ShoppingBasket, UserRound,
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
@@ -10,6 +9,7 @@ import { useEffect, useState, useSyncExternalStore } from "react"
 import { toast } from "sonner"
 
 import { useAuth } from "@/components/auth-provider"
+import { FeedbackSheet } from "@/components/feedback"
 import { GoogleMark } from "@/components/google-mark"
 import { Logo } from "@/components/logo"
 import { TourProvider, useTour } from "@/components/tour"
@@ -147,7 +147,10 @@ function UserMenu({ userId, email, guest }: { userId: string | null; email: stri
   // An uploaded picture wins; else the Google profile picture.
   const url = me?.avatar_url ?? googlePicture(session?.user)
   const pending = isLoading && !url
+  const [feedback, setFeedback] = useState(false)
   return (
+    <>
+    <FeedbackSheet open={feedback} onClose={() => setFeedback(false)} />
     <DropdownMenu>
       <DropdownMenuTrigger className="rounded-full" aria-label="Account menu">
         <UserAvatar userId={userId} email={email} size="lg" url={url} pending={pending} />
@@ -182,6 +185,9 @@ function UserMenu({ userId, email, guest }: { userId: string | null; email: stri
         <DropdownMenuItem onClick={tour.start}>
           <Compass /> App tour
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setFeedback(true)}>
+          <MessageSquareHeart /> Send feedback
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={async () => {
@@ -193,6 +199,7 @@ function UserMenu({ userId, email, guest }: { userId: string | null; email: stri
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+    </>
   )
 }
 
