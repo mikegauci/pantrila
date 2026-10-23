@@ -30,7 +30,12 @@ function DayChart({ plan }: { plan: Plan }) {
         })}
       </div>
       <div className="flex gap-2 pt-1 text-center text-[12px] text-muted-foreground" aria-hidden>
-        {plan.days.map((d) => <span key={d.day} className="flex-1">Day {d.day}</span>)}
+        {plan.days.map((d) => (
+          <span key={d.day} className="flex-1">
+            <span className="block">Day {d.day}</span>
+            <span className="block text-[11px] text-foreground">{Math.round(d.nutrition.kcal)} kcal</span>
+          </span>
+        ))}
       </div>
       <figcaption className="mt-3 flex flex-wrap gap-4 text-[12px]">
         <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-full bg-primary" />Protein</span>
