@@ -227,9 +227,18 @@ export default function NewRecipePage() {
   const { mutate } = useSWRConfig()
   const { data: me, mutate: refreshMe } = useMe()
   const [method, setMethod] = useState<Method | null>(null)
-  const [draft, setDraft] = useState<CookbookRecipeIn | null>(null)
+  const [draft, setDraftState] = useState<CookbookRecipeIn | null>(null)
+  // The form keeps its own copy of the draft, and this page stays mounted while hidden: a new
+  // draft gets a fresh form, or a second chat draft would save the first one.
+  const [formKey, setFormKey] = useState(0)
+  const setDraft = (d: CookbookRecipeIn | null) => {
+    setDraftState(d)
+    setFormKey((k) => k + 1)
+  }
   const [result, setResult] = useState<ImportView | null>(null)
   const [fromChat, setFromChat] = useState(false)
+  // The assistant thread a chat draft came from, so the saved recipe can lead back to it.
+  const [chatThread, setChatThread] = useState<string | null>(null)
   const [resuming, setResuming] = useState(false)
   const [resumeError, setResumeError] = useState<string | null>(null)
   const [resumeSteps, setResumeSteps] = useState<ImportStep[]>([])
@@ -243,12 +252,16 @@ export default function NewRecipePage() {
     queueMicrotask(() => {
       if (!active) return
       setMethod(null)
-      setDraft(null)
+      setDraftState(null)
+      setFormKey((k) => k + 1)
       setResult(null)
       setFromChat(false)
+      setChatThread(null)
       const params = new URLSearchParams(window.location.search)
       if (params.get("from") !== "chat") return
       window.history.replaceState(null, "", "/recipes/mine/new")
+      const thread = params.get("thread")
+      setChatThread(thread && /^\d+$/.test(thread) ? thread : null)
       const stored = sessionStorage.getItem(draftKey)
       sessionStorage.removeItem(draftKey)
       if (!stored) return
@@ -258,7 +271,7 @@ export default function NewRecipePage() {
       } catch {
         return
       }
-      setDraft(fromAssistant)
+      setDraftState(fromAssistant)
       setMethod("manual")
       setFromChat(true)
     })
@@ -311,6 +324,8 @@ export default function NewRecipePage() {
     return () => { active = false; stopWaiting.current = null }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- resume once per user
   }, [userId])
+
+  const backToChat = chatThread ? `/assistant?thread=${chatThread}` : null
 
   // The section under the picker is often below the fold on a phone: bring it into view.
   useEffect(() => {
@@ -403,6 +418,11 @@ export default function NewRecipePage() {
                     <MessageCircle className="size-4 text-[#b7860b]" aria-hidden /> From the assistant.
                   </p>
                   <p className="mt-1">Check the amounts; foods marked unknown need a pick or an estimate.</p>
+                  {backToChat && (
+                    <Link href={backToChat} className="mt-2 inline-flex items-center gap-1 font-medium text-primary-text underline underline-offset-2">
+                      <ArrowLeft className="size-3.5" aria-hidden /> Back to the chat
+                    </Link>
+                  )}
                 </div>
               )}
               {result && (
@@ -425,10 +445,11 @@ export default function NewRecipePage() {
                 </div>
               )}
               <CookbookForm
+                key={formKey}
                 initial={draft}
                 onSaved={(saved) => {
                   mutate("/me/recipes")
-                  router.push(`/recipes/mine/${saved.id}`)
+                  router.push(`/recipes/mine/${saved.id}${fromChat && chatThread ? `?chat=${chatThread}` : ""}`)
                 }}
                 onCancel={() => { setMethod(null); setDraft(null); setResult(null); setFromChat(false) }}
               />
