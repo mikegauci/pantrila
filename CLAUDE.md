@@ -33,6 +33,20 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Faster assistant replies: a message that asks for recipes (`assistant.presearch_args`, words only: a meal, "recipe",
+"idea", "something"...; not a how/what question, a recipe id, the model's own recipe, a swap, scaling or a pantry change)
+is searched in code first, with meal type and "N minutes" from its words and the profile's rules as filters, and the
+results go to the model as its own `search_recipes` call (`ToolCall.by_code`), so most recipe asks take one model call
+instead of two. The prompt says to use those results and search again only if they miss. `POST /chat/stream` (SSE, as
+`/plans`: `step` labels, `recipes` cards found, `delta` text, then `reply` or `error`; `/chat` stays for other callers)
+streams the turn (`Assistant.reply(on_event=)`, Responses API `stream=True`); the web chat shows the step label, then the
+reply as it is written with found recipes already titled (`streamChat` in `web/src/lib/api.ts`). Eval times the first
+words of the reply. Before `assistant-2026-10-23T115735Z` vs after `assistant-2026-10-23T121004Z`, 30 cases: right tools,
+pantry, cited and drafts 100% both, 0 unsafe or made-up citations both, 14 of 30 searched in code, model calls per turn
+1.9 -> 1.5, $0.0035 -> $0.0030/turn, p50/p95 5.1/8.8 -> 3.9/8.1 s, first words 3.3/6.4 s (before: the whole reply). A first
+after run that also searched on "I bought tofu. Find me a dinner" skipped `update_pantry` (pantry 75%), so pantry
+messages are left to the model. Live: "I want stir fry with beef for lunch" took one model call, first words at 3.0 s.
+
 Assistant recipe drafts: a second chat draft saved the first one, since the hidden-but-mounted new-recipe page kept its
 form; each draft now gets a fresh form (`formKey`). Save carries the thread (`?from=chat&thread=`), and the saved recipe
 shows "Back to the chat" (`?chat=` on `/recipes/mine/[id]`). A recipe saved from a chat keeps `chat_draft`
@@ -700,7 +714,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   (skip, eating out, leftovers, add back) and `repeat_meal` (several leftovers at once);
   `swapped_report` recomputes warnings and pantry
   use. `SwapError` carries the HTTP status.
-- `src/pantrila/assistant.py`: LangGraph chat agent agent -> tools (max 4 rounds) -> guard;
+- `src/pantrila/assistant.py`: LangGraph chat agent (presearch in code) -> agent -> tools (max 4 rounds) -> guard;
   tools search_recipes, check_pantry, update_pantry, swap_ingredient, scale_recipe; replies
   cite recipes as `[recipe-id]` and the guard appends a note for any cited recipe that breaks
   a hard rule or does not exist.
@@ -758,7 +772,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
   `/plans/latest`, `/plans/latest/grocery`, `/plans/latest/meals/{day}/{meal_type}` (`/options`
   GET, PUT to swap), `POST /chat` (continues `thread_id` or starts a
-  thread; the server supplies the thread's history), `/me/chats` (list, get, delete),
+  thread; the server supplies the thread's history; `POST /chat/stream` is the same as SSE), `/me/chats` (list, get, delete),
   `/me/cooked` (GET log, POST "I cooked this"; `/preview`), `/me/recipes` (cookbook CRUD,
   `/preview`, `/import/link|photos|post|text` (one request), `/import/jobs` POST + `/import/jobs/{id}` GET (the same imports as background jobs), `/import/timing`, `/estimate`, `/{id}/photo` POST/DELETE). Every
   recipe returned carries the hard rules it breaks for the person's current profile and its
