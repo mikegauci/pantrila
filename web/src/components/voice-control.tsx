@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import {
-  VOICE_COMMANDS, useVoiceCommands, useVoiceSupported, type VoiceCommand, type VoiceError,
+  VOICE_COMMANDS, micHelp, useVoiceCommands, useVoiceSupported, type VoiceCommand, type VoiceError,
 } from "@/lib/voice"
 
 const ON_KEY = "pantrila-voice"
@@ -37,6 +37,7 @@ export function VoiceControl({ onCommand }: { onCommand: (c: VoiceCommand) => vo
   const [enabled, setEnabled] = useState(() => read(ON_KEY) === "on" && read(OK_KEY) === "1")
   const [notice, setNotice] = useState(false)
   const [tip, setTip] = useState(() => read(TIP_KEY) === null)
+  const [blocked, setBlocked] = useState(false)
 
   const turn = useCallback((on: boolean) => {
     setEnabled(on)
@@ -45,7 +46,7 @@ export function VoiceControl({ onCommand }: { onCommand: (c: VoiceCommand) => vo
 
   const onError = useCallback((e: VoiceError) => {
     turn(false)
-    if (e === "denied") toast.error("The microphone is blocked. Allow it for this site to use voice commands.")
+    if (e === "denied") setBlocked(true)
     else toast.error("Voice commands stopped. Tap the mic to try again.")
   }, [turn])
 
@@ -132,7 +133,38 @@ export function VoiceControl({ onCommand }: { onCommand: (c: VoiceCommand) => vo
           </div>
         </SheetContent>
       </Sheet>
+
+      <Sheet open={blocked} onOpenChange={setBlocked}>
+        <SheetContent side="bottom" className="gap-3 rounded-t-[20px] p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+          <SheetHeader className="p-0">
+            <SheetTitle>Allow the microphone</SheetTitle>
+            <SheetDescription>Your browser is blocking the mic for Pantrila. To use voice commands:</SheetDescription>
+          </SheetHeader>
+          <MicSteps />
+          <div className="flex gap-2 pt-1">
+            <Button size="lg" className="flex-1" onClick={() => {
+              setBlocked(false)
+              turn(true)
+            }}>
+              <Mic /> Try again
+            </Button>
+            <Button size="lg" variant="outline" onClick={() => setBlocked(false)}>Close</Button>
+          </div>
+        </SheetContent>
+      </Sheet>
     </span>
+  )
+}
+
+function MicSteps() {
+  const { where, steps } = micHelp(navigator.userAgent, navigator.maxTouchPoints > 1)
+  return (
+    <div>
+      <p className="mb-2 text-[13px] font-semibold text-muted-foreground">{where}</p>
+      <ol className="grid list-decimal gap-1.5 pl-5 text-[14px] leading-5">
+        {steps.map((s) => <li key={s}>{s}</li>)}
+      </ol>
+    </div>
   )
 }
 

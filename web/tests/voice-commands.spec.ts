@@ -118,3 +118,37 @@ test("no mic where the browser cannot recognise speech", async ({ page }) => {
   await expect(cooking.getByText("Get your ingredients out")).toBeVisible()
   await expect(cooking.getByRole("button", { name: /voice command/i })).toHaveCount(0)
 })
+
+test("a blocked microphone shows how to allow it", async ({ page }) => {
+  const cooking = await open(page, true)
+  await cooking.getByRole("button", { name: "Turn on voice commands" }).click()
+  await page.getByRole("dialog", { name: "Turn on voice commands?" }).getByRole("button", { name: "Turn on" }).click()
+  await page.evaluate(() => {
+    const rec = (window as unknown as { __rec: { onerror: (e: { error: string }) => void } }).__rec
+    rec.onerror({ error: "not-allowed" })
+  })
+  const help = page.getByRole("dialog", { name: "Allow the microphone" })
+  await expect(help.getByText("Click the icon at the left of the address bar.")).toBeVisible()
+  await help.getByRole("button", { name: "Try again" }).click()
+  await expect(cooking.getByRole("button", { name: "Turn off voice commands" })).toBeVisible()
+})
+
+test.describe("on an iPhone", () => {
+  test.use({
+    userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",
+  })
+
+  test("a blocked microphone shows Safari's steps", async ({ page }) => {
+    const cooking = await open(page, true)
+    await cooking.getByRole("button", { name: "Turn on voice commands" }).click()
+    await page.getByRole("dialog", { name: "Turn on voice commands?" }).getByRole("button", { name: "Turn on" }).click()
+    await page.evaluate(() => {
+      const rec = (window as unknown as { __rec: { onerror: (e: { error: string }) => void } }).__rec
+      rec.onerror({ error: "service-not-allowed" })
+    })
+    const help = page.getByRole("dialog", { name: "Allow the microphone" })
+    await expect(help.getByText("Safari on iPhone or iPad")).toBeVisible()
+    await expect(help.getByText(/Tap aA at the left of the address bar/)).toBeVisible()
+    await expect(help.getByText(/Enable Dictation/)).toBeVisible()
+  })
+})
