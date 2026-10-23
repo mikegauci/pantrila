@@ -285,6 +285,13 @@ export default function AssistantPage() {
     else localStorage.removeItem(lastThreadKey)
   }, [current, lastThreadKey])
 
+  const chatsLeft = me?.limits.chats_left
+  useEffect(() => {
+    if (chatsLeft != null && chatsLeft > 0 && chatsLeft <= 3) {
+      toast.warning(`${chatsLeft} ${chatsLeft === 1 ? "message" : "messages"} left today.`)
+    }
+  }, [chatsLeft])
+
   useEffect(() => {
     // Next keeps this page mounted but hidden between visits (Cache Components use React Activity) and
     // re-runs this effect each time it is shown, so read the URL now rather than from state.
