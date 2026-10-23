@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 import { AiBadge, Panel } from "@/components/bits"
+import { DictateButton, addWords } from "@/components/dictate-button"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useChats } from "@/lib/hooks"
@@ -55,6 +56,7 @@ export function AskPantrila() {
           onChange={(e) => setText(e.target.value)}
           className="h-11 rounded-xl bg-surface"
         />
+        <DictateButton onHeard={(words) => setText((t) => addWords(t, words))} />
         <Button type="submit" size="icon" className="size-11 shrink-0" disabled={!text.trim()} aria-label="Ask">
           <Send />
         </Button>

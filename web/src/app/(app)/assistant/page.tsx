@@ -13,6 +13,7 @@ import { STARTERS } from "@/components/ask-pantrila"
 import { AiBadge, ProblemAlert, RecipeArt } from "@/components/bits"
 import { ChatThreads } from "@/components/chat-threads"
 import { CHAT_DRAFT } from "@/components/cookbook-form"
+import { DictateButton, addWords } from "@/components/dictate-button"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
@@ -485,6 +486,7 @@ export default function AssistantPage() {
             }}
             className="max-h-32 min-h-11 resize-none rounded-xl bg-surface"
           />
+          <DictateButton onHeard={(words) => setText((t) => addWords(t, words))} />
           <Button type="submit" size="icon" className="size-11" disabled={busy || !text.trim()} aria-label="Send">
             <Send />
           </Button>
