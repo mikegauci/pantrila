@@ -188,3 +188,9 @@ the old addresses never stop working.
   Test: a magic link to `hello@pantrila.com` (outside the Supabase team) delivered by Resend. A first try
   failed on a trailing comma in the SMTP host (`lookup smtp.resend.com,: no such host` in the auth log).
   A first email to a new address uses the "Confirm signup" template, later ones the "Magic link" one.
+- 2026-10-23, phase 4 done: `pantrila.com` verified in Google Search Console (TXT
+  `google-site-verification=...` in Vercel DNS). The app was still "Testing" (only test users could sign
+  in with Google) because the OAuth client listed `http://localhost:3000`; that origin was removed and the
+  app published. Branding (name, logo, home, privacy, terms, authorised domain `pantrila.com`) is
+  verified and shown to users. Google still names the Supabase callback host under the app name; a
+  Supabase custom domain (paid add-on) would change that.
