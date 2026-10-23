@@ -889,7 +889,20 @@ def create_app(
                 events.put(None)
 
         threading.Thread(target=work, daemon=True).start()
-        return StreamingResponse(sse(events), media_type="text/event-stream",
+
+        def stream() -> Iterator[str]:
+            while True:
+                try:
+                    item = events.get(timeout=15)
+                except queue.Empty:
+                    yield ": keep-alive\n\n"
+                    continue
+                if item is None:
+                    return
+                kind, data = item
+                yield f"event: {kind}\ndata: {json.dumps(data)}\n\n"
+
+        return StreamingResponse(stream(), media_type="text/event-stream",
                                  headers={"Cache-Control": "no-cache",
                                           "X-Accel-Buffering": "no"})  # fmt: skip
 
@@ -944,16 +957,17 @@ def create_app(
             raise HTTPException(404, "No such chat.")
         return Response(status_code=204)
 
-    def chat_turn(s: Session, body: ChatRequest, thread: SavedThread | None,
-                  operation: PaidOperation, backend: Backend,
-                  on_event: Callable[[str, object], None] | None = None) -> ChatReply:  # fmt: skip
-        """Answer one message and save it to its thread (a new one when `thread` is None)."""
+    @app.post("/chat")
+    def chat(body: ChatRequest, request: Request, s: SessionDep) -> ChatReply:
+        thread = None if body.thread_id is None else get_thread(s, body.thread_id)
+        backend: Backend = request.app.state.backend
         model = config.model()
         bot = Assistant(s.store, s.kitchen, client=backend.client, model=model, source="api")
         original_history = list(thread.history) if thread else []
         history = original_history[-MAX_CHAT_HISTORY:]
+        operation = PaidOperation(s.records, "chat", model)
         try:
-            result = bot.reply(body.message, history, on_event=on_event)
+            result = bot.reply(body.message, history)
         except Exception as exc:
             operation.finish(bot.usage, ok=False)
             log.exception("chat failed")
@@ -992,70 +1006,7 @@ def create_app(
             raise HTTPException(409, "This chat changed in another tab. Reload it and try again.")
         return reply
 
-    @app.post("/chat")
-    def chat(body: ChatRequest, request: Request, s: SessionDep) -> ChatReply:
-        thread = None if body.thread_id is None else get_thread(s, body.thread_id)
-        operation = PaidOperation(s.records, "chat", config.model())
-        return chat_turn(s, body, thread, operation, request.app.state.backend)
-
-    @app.post("/chat/stream")
-    def chat_stream(body: ChatRequest, request: Request, user: UserDep) -> StreamingResponse:
-        """/chat as SSE: `step` ({label}), `recipes` (cards a search found, so citations show
-        while the reply streams), `delta` ({text}), then `reply` (the ChatReply) or `error`."""
-        backend: Backend = request.app.state.backend
-        with backend.session(user.id) as s:
-            thread = None if body.thread_id is None else get_thread(s, body.thread_id)
-            operation = PaidOperation(s.records, "chat", config.model())
-        events: queue.Queue = queue.Queue()
-
-        def work() -> None:
-            try:
-                with backend.session(user.id) as s:
-                    profile = s.kitchen.profile()
-
-                    def on_event(kind: str, data: object) -> None:
-                        if kind == "step":
-                            events.put(("step", {"label": data}))
-                        elif kind == "delta":
-                            events.put(("delta", {"text": data}))
-                        elif kind == "recipes":
-                            found, photos = s.store.get(data), s.store.photos(data)
-                            cards = [recipe_card(found[i], profile, photos.get(i)).model_dump(
-                                mode="json") for i in data if i in found]  # fmt: skip
-                            events.put(("recipes", cards))
-
-                    reply = chat_turn(s, body, thread, operation, backend, on_event)
-                    events.put(("reply", reply.model_dump(mode="json")))
-            except HTTPException as exc:
-                events.put(("error", {"message": exc.detail, "status": exc.status_code}))
-            except Exception:
-                operation.finish(Usage(), ok=False)
-                log.exception("chat stream failed")
-                events.put(("error", {"message": "The assistant could not answer. Try again.",
-                                      "status": 502}))  # fmt: skip
-            finally:
-                events.put(None)
-
-        threading.Thread(target=work, daemon=True).start()
-        return StreamingResponse(sse(events), media_type="text/event-stream",
-                                 headers={"Cache-Control": "no-cache",
-                                          "X-Accel-Buffering": "no"})  # fmt: skip
-
     return app
-
-
-def sse(events: queue.Queue) -> Iterator[str]:
-    """Server-sent events from (kind, data) items until None, with keep-alives while idle."""
-    while True:
-        try:
-            item = events.get(timeout=15)
-        except queue.Empty:
-            yield ": keep-alive\n\n"
-            continue
-        if item is None:
-            return
-        kind, data = item
-        yield f"event: {kind}\ndata: {json.dumps(data)}\n\n"
 
 
 def _json(text: str) -> dict:
