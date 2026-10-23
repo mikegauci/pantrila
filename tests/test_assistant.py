@@ -6,10 +6,10 @@ from types import SimpleNamespace
 import pytest
 from openai.types.responses import ResponseFunctionToolCall
 
-from pantrila.assistant import MAX_TOOL_ROUNDS, TOOLS, Assistant
+from pantrila.assistant import MAX_TOOL_ROUNDS, TOOLS, Assistant, presearch_args
 from pantrila.pantry import MemoryKitchen, make_item
-from pantrila.schema import Allergen, DietTag, Unit, UserProfile
-from tests.conftest import CorpusStore
+from pantrila.schema import Allergen, DietTag, MealType, Unit, UserProfile
+from tests.conftest import CorpusStore, streamed
 
 OMELETTE, CHICKEN, CURRY, SALMON = (
     "french-mushroom-omelette", "greek-lemon-chicken", "indian-chickpea-curry",
@@ -37,7 +37,8 @@ class FakeClient:
 
     def create(self, **kwargs):
         self.calls.append({**kwargs, "input": list(kwargs["input"])})
-        return self.replies.pop(0)
+        reply = self.replies.pop(0)
+        return streamed(reply) if kwargs.get("stream") else reply
 
 
 @pytest.fixture
@@ -203,7 +204,8 @@ def test_write_recipe_resolves_foods_and_checks_the_rules(corpus):
     a, _ = bot(corpus, kitchen, tool_reply("write_recipe", **cake(*CAKE)),
                text_reply("Here is a chocolate cake."))  # fmt: skip
     result = a.reply("Give me a chocolate cake recipe")
-    out = result.tool_calls[0].output
+    assert [c.name for c in result.tool_calls] == ["search_recipes", "write_recipe"]
+    out = result.tool_calls[1].output
     assert "Allergens found: gluten, eggs, milk." in out
     assert "WARNING, does not suit the person: contains milk" in out
     assert "Per serving:" in out and "suits the person" not in out
@@ -303,3 +305,57 @@ def test_assistant_dessert_swap_tool_cannot_bypass_restriction(corpus, kitchen, 
     )
     result = a.reply("Can I swap the onion in this dessert?")
     assert "Automatic dessert swaps are unavailable" in result.tool_calls[0].output
+
+
+@pytest.mark.parametrize(("message", "meal", "minutes"), [
+    ("I want stir fry with beef for lunch", MealType.LUNCH, None),
+    ("Breakfast I can make in 10 minutes?", MealType.BREAKFAST, 10),
+    ("Prawn stir fry for tonight?", MealType.DINNER, None),
+    ("Give me a chocolate cake recipe.", None, None),
+])  # fmt: skip
+def test_recipe_asks_are_searched_in_code(message, meal, minutes):
+    a = presearch_args(message)
+    assert a is not None and a.query == message
+    assert (a.meal_type, a.max_minutes) == (meal, minutes)
+
+
+@pytest.mark.parametrize("message", [
+    "What does 'macros' mean?",
+    "How long should I rest a steak?",
+    "I just bought 6 eggs and a bag of spinach.",
+    "Write me your own recipe for a classic beef lasagne.",
+    "Make it milder and add sweet potato.",
+    "Scale the BBQ chicken traybake [american-bbq-chicken-traybake] to 6 servings.",
+    "Can I swap the onion in this dessert?",
+    "I bought tofu. Find me a dinner that uses it.",
+])  # fmt: skip
+def test_other_messages_are_left_to_the_model(message):
+    assert presearch_args(message) is None
+
+
+def test_presearch_hands_results_to_the_model_as_its_search_call(corpus, kitchen):
+    a, client = bot(corpus, kitchen, text_reply(f"Try [{OMELETTE}]."))
+    result = a.reply("Quick dinner idea?")
+    assert len(client.calls) == 1 and result.cited == [OMELETTE]
+    call, output = client.calls[0]["input"][-2:]
+    assert call["type"] == "function_call" and call["name"] == "search_recipes"
+    assert json.loads(call["arguments"])["meal_type"] == "dinner"
+    assert output == {"type": "function_call_output", "call_id": call["call_id"],
+                      "output": result.tool_calls[0].output}  # fmt: skip
+    assert result.tool_calls[0].by_code and result.usage.tool_calls == 1
+    assert SALMON not in result.tool_calls[0].output  # the person's fish allergy is a filter
+    # Only the messages are kept for the next turn, not the search.
+    assert [m["role"] for m in result.history] == ["user", "assistant"]
+
+
+def test_reply_streams_steps_found_recipes_and_text(corpus, kitchen):
+    a, client = bot(corpus, kitchen,
+                    tool_reply("check_pantry", recipe_id=OMELETTE),
+                    text_reply(f"You have eggs for [{OMELETTE}]."))  # fmt: skip
+    events = []
+    result = a.reply("How do I use my eggs?", on_event=lambda k, d: events.append((k, d)))
+    assert all(c["stream"] is True for c in client.calls)
+    assert events == [("step", "Thinking…"), ("step", "Checking your pantry…"),
+                      ("step", "Writing the reply…"),
+                      ("delta", f"You have eggs for [{OMELETTE}].")]  # fmt: skip
+    assert result.text == f"You have eggs for [{OMELETTE}]." and a.emit is None

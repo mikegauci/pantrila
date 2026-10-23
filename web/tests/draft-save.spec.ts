@@ -35,12 +35,16 @@ test("draft warnings remain visible and the reviewed recipe can be edited and sa
     const reply = { thread_id: 1, text: "Here is a cake.", cited: [], flagged: [], tool_calls: [],
       pantry_changed: false, cost_usd: 0, latency_ms: 1, profile_problems: [], drafts: [initial],
       draft_problems: [["contains milk"]] }
+    if (path === "/chat/stream") {
+      const events = [["step", { label: "Writing your recipe…" }], ["delta", { text: reply.text }], ["reply", reply]]
+      return route.fulfill({ contentType: "text/event-stream",
+        body: events.map(([kind, d]) => `event: ${kind}\ndata: ${JSON.stringify(d)}\n\n`).join("") })
+    }
     const data = path === "/me" ? { id, email: null, avatar_url: null, anonymous: true,
       limits: { chats_left: 50, photos_left: 5, photos_per_day: 5 } }
       : path === "/me/profile" ? { allergies: ["milk"], diets: [], exclude_foods: [], pantry: [],
         days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }
       : path === "/foods" ? [{ key: "butter", name: "butter", aisle: "dairy" }]
-      : path === "/chat" ? reply
       : path === "/me/chats/1" ? { id: 1, title: "Cake", updated_at: now,
         messages: [{ role: "assistant", text: reply.text, reply }] }
       : path === "/me/recipes/preview" ? { ingredients: [], nutrition, allergens: ["milk"],

@@ -18,7 +18,7 @@ from pantrila.photos import MemoryPhotos
 from pantrila.planner import PlanDraft
 from pantrila.records import MemoryRecords
 from pantrila.schema import MealType
-from tests.conftest import CorpusStore
+from tests.conftest import CorpusStore, streamed
 
 OMELETTE, CHICKEN, CURRY, SALMON, NOODLES = (
     "french-mushroom-omelette", "greek-lemon-chicken", "indian-chickpea-curry",
@@ -80,7 +80,9 @@ class FakeClient:
         self.calls.append(kwargs)
         return self.replies.pop(0)
 
-    create = parse
+    def create(self, **kwargs):
+        reply = self.parse(**kwargs)
+        return streamed(reply) if kwargs.get("stream") else reply
 
 
 class MemoryBackend:
@@ -449,6 +451,37 @@ def test_chat_returns_cited_recipes_tools_and_guard_notes(api, backend):
     assert [(m["role"], m["text"]) for m in thread["messages"]] == [
         ("user", "I bought eggs. Ideas?"), ("assistant", body["text"])]  # fmt: skip
     assert thread["messages"][1]["reply"]["flagged"] == [SALMON]
+
+
+def test_chat_stream_sends_steps_cards_text_then_the_saved_reply(api, backend):
+    backend.client.replies = [text_reply(f"Try [{OMELETTE}].")]
+    with api.stream("POST", "/chat/stream", json={"message": "Quick dinner idea?"}) as r:
+        assert r.headers["content-type"].startswith("text/event-stream")
+        events = sse(r.read().decode())
+    kinds = [kind for kind, _ in events]
+    assert kinds == ["step", "recipes", "step", "delta", "reply"]
+    assert [d["label"] for k, d in events if k == "step"] == [
+        "Searching recipes…", "Writing the reply…"]  # fmt: skip
+    assert all(card["id"] and "title" in card for card in events[1][1])
+    assert events[3][1] == {"text": f"Try [{OMELETTE}]."}
+    reply = events[-1][1]
+    assert [c["id"] for c in reply["cited"]] == [OMELETTE]
+    assert reply["tool_calls"][0]["name"] == "search_recipes"
+    assert len(backend.client.calls) == 1  # the search ran in code: one model call
+    thread = api.get(f"/me/chats/{reply['thread_id']}").json()
+    assert [m["role"] for m in thread["messages"]] == ["user", "assistant"]
+    usage = api.get("/me/usage").json()
+    assert [(e["kind"], e["ok"]) for e in usage["events"]] == [("chat", True)]
+
+
+def test_chat_stream_reports_failures_as_an_error_event(api, backend):
+    assert api.post("/chat/stream", json={"message": "Hi", "thread_id": 999}).status_code == 404
+    backend.client.replies = []  # the model call fails
+    with api.stream("POST", "/chat/stream", json={"message": "How do I poach an egg?"}) as r:
+        events = sse(r.read().decode())
+    assert events[-1] == ("error", {"message": "The assistant could not answer. Try again.",
+                                    "status": 502})  # fmt: skip
+    assert api.get("/me/chats").json() == []
 
 
 def test_chat_returns_recipe_drafts_and_old_messages_still_load(api, backend):
