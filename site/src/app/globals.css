@@ -102,9 +102,17 @@
 .mic-pulse {
   animation: mic-pulse 2.2s cubic-bezier(0.25, 0.6, 0.4, 1) infinite;
 }
+/* Reduced motion keeps the pulse but fades it in place instead of growing it. */
+@keyframes mic-pulse-still {
+  from {
+    opacity: 0.45;
+  }
+  to {
+    opacity: 0;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .mic-pulse {
-    animation: none;
-    opacity: 0;
+    animation-name: mic-pulse-still;
   }
 }
