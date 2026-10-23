@@ -207,3 +207,12 @@ class CorpusStore:
 
     def photos(self, ids):
         return {i: self.photo_paths[i] for i in ids if i in self.photo_paths}
+
+
+def streamed(reply) -> list:
+    """A scripted Responses API reply as the events `create(stream=True)` yields."""
+    from types import SimpleNamespace
+
+    deltas = [SimpleNamespace(type="response.output_text.delta", delta=reply.output_text)]
+    return [*(deltas if reply.output_text else []),
+            SimpleNamespace(type="response.completed", response=reply)]  # fmt: skip

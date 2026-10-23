@@ -1,6 +1,7 @@
 import { toast } from "sonner"
 
 import { supabase } from "@/lib/supabase"
+import type { ChatReply, RecipeCard } from "@/lib/types"
 
 const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000").replace(/\/$/, "")
 
@@ -113,20 +114,16 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
 export const send = <T>(path: string, method: string, body?: unknown) =>
   api<T>(path, { method, body: body === undefined ? undefined : JSON.stringify(body) })
 
-/** POST /plans streams server-sent events; call `onEvent` for each one. */
-export async function streamPlan(
+/** Read a server-sent event stream, calling `onEvent` for each event; true once a `terminal` event arrived. */
+async function readEvents(
+  res: Response,
+  terminal: string[],
   onEvent: (event: string, data: unknown) => void,
-  signal?: AbortSignal,
-): Promise<void> {
-  const res = await request("/plans", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${await token()}`, Accept: "text/event-stream" },
-    signal,
-  })
+): Promise<boolean> {
   if (!res.ok || !res.body) throw await errorFrom(res)
   const reader = res.body.pipeThrough(new TextDecoderStream()).getReader()
   let buffer = ""
-  let terminal = false
+  let ended = false
   for (;;) {
     const { value, done } = await reader.read()
     if (done) break
@@ -141,12 +138,59 @@ export async function streamPlan(
         if (line.startsWith("event: ")) event = line.slice(7)
         else if (line.startsWith("data: ")) data += line.slice(6)
       }
-      if (event === "plan" || event === "error") terminal = true
+      if (terminal.includes(event)) ended = true
       if (data || event !== "message") onEvent(event, data ? JSON.parse(data) : null)
     }
   }
-  if (!terminal) throw new ApiError(
+  return ended
+}
+
+/** POST /plans streams server-sent events; call `onEvent` for each one. */
+export async function streamPlan(
+  onEvent: (event: string, data: unknown) => void,
+  signal?: AbortSignal,
+): Promise<void> {
+  const res = await request("/plans", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${await token()}`, Accept: "text/event-stream" },
+    signal,
+  })
+  if (!(await readEvents(res, ["plan", "error"], onEvent))) throw new ApiError(
     502,
     "Planning progress disconnected before a result arrived. Check your latest plan before trying again.",
   )
+}
+
+export type ChatEvent =
+  | { kind: "step"; label: string }
+  | { kind: "recipes"; cards: RecipeCard[] }
+  | { kind: "delta"; text: string }
+
+/** POST /chat/stream: steps, found recipes and the reply's text as it is written, then the saved reply. */
+export async function streamChat(
+  body: { message: string; thread_id: number | null },
+  onEvent: (event: ChatEvent) => void,
+): Promise<ChatReply> {
+  const res = await request("/chat/stream", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${await token()}`,
+      Accept: "text/event-stream",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  })
+  let reply: ChatReply | undefined
+  let failure: ApiError | undefined
+  await readEvents(res, ["reply", "error"], (event, data) => {
+    const d = data as Record<string, unknown>
+    if (event === "step") onEvent({ kind: "step", label: String(d.label) })
+    else if (event === "recipes") onEvent({ kind: "recipes", cards: data as RecipeCard[] })
+    else if (event === "delta") onEvent({ kind: "delta", text: String(d.text) })
+    else if (event === "reply") reply = data as ChatReply
+    else if (event === "error") failure = new ApiError(Number(d.status) || 502, String(d.message))
+  })
+  if (failure) throw failure
+  if (!reply) throw new ApiError(502, "The reply was cut off. Reload the chat to see if it was saved.")
+  return reply
 }
