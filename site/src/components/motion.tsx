@@ -1,10 +1,11 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { LazyMotion, MotionConfig, animate, domAnimation, m, useInView, useReducedMotion } from "motion/react"
+import { LazyMotion, MotionConfig, animate, domAnimation, m, useInView } from "motion/react"
 
 // Motion loads only the DOM animation features, and visitors who ask their system for less
-// motion get fades without movement (MotionConfig "user"). Components use `m.*`, never `motion.*`.
+// motion get fades without movement (MotionConfig "user"). Counters and demo loops still run
+// for them: they change numbers and text in place, with no sliding or spinning. Components use `m.*`, never `motion.*`.
 export function MotionProvider({ children }: { children: React.ReactNode }) {
   return (
     <LazyMotion features={domAnimation} strict>
@@ -66,18 +67,17 @@ export function StaggerItem({ children, className }: { children: React.ReactNode
 export function CountUp({ value, suffix = "" }: { value: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
   const seen = useInView(ref, { once: true, amount: 0.6 })
-  const reduced = useReducedMotion()
   const [shown, setShown] = useState(value)
 
   useEffect(() => {
-    if (!seen || reduced) return
+    if (!seen) return
     const controls = animate(0, value, {
       duration: 1.4,
       ease: EASE_OUT,
       onUpdate: (v) => setShown(Math.round(v)),
     })
     return () => controls.stop()
-  }, [seen, reduced, value])
+  }, [seen, value])
 
   return (
     <span ref={ref} className="tabular-nums">
@@ -88,18 +88,16 @@ export function CountUp({ value, suffix = "" }: { value: number; suffix?: string
 }
 
 // Steps through a demo's phases while it is on screen and loops; each entry is how long that
-// phase holds, in ms. The last phase is the finished picture, which is all that reduced
-// motion shows. Pass a module-level array so the timer is not reset on every render.
+// phase holds, in ms. Pass a module-level array so the timer is not reset on every render.
 export function usePhases(durations: readonly number[], ref: React.RefObject<Element | null>) {
   const visible = useInView(ref, { amount: 0.4 })
-  const reduced = useReducedMotion()
   const [phase, setPhase] = useState(0)
 
   useEffect(() => {
-    if (!visible || reduced) return
+    if (!visible) return
     const timer = window.setTimeout(() => setPhase((p) => (p + 1) % durations.length), durations[phase])
     return () => window.clearTimeout(timer)
-  }, [phase, visible, reduced, durations])
+  }, [phase, visible, durations])
 
-  return reduced ? durations.length - 1 : phase
+  return phase
 }
