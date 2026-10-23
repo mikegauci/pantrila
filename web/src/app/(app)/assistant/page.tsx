@@ -1,6 +1,7 @@
 "use client"
 
-import { BookmarkPlus, Check, History, Loader2, PenLine, Plus, Refrigerator, Repeat, Scale, Search, Send, Sparkles } from "lucide-react"
+import { Popover } from "@base-ui/react/popover"
+import { BookmarkPlus, Check, History, Info, Loader2, PenLine, Plus, Refrigerator, Repeat, Scale, Search, Send, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Fragment, useEffect, useRef, useState } from "react"
@@ -367,7 +368,7 @@ export default function AssistantPage() {
   )
 
   return (
-    <div className="mx-auto flex h-[calc(100dvh-72px-2.5rem-6rem)] max-w-5xl gap-4 md:h-[calc(100dvh-72px-4rem)]">
+    <div className="mx-auto flex h-[calc(100dvh-164px)] max-w-5xl gap-4 md:h-[calc(100dvh-72px-4rem)]">
       <aside className="hidden w-60 shrink-0 flex-col md:flex" aria-label="Chats">
         <Button variant="outline" size="sm" className="mb-3 justify-start" disabled={busy} onClick={() => open(null)}>
           <Plus /> New chat
@@ -376,9 +377,21 @@ export default function AssistantPage() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="mb-3 flex flex-wrap items-center gap-2">
-          <AiBadge>Cooking assistant</AiBadge>
+        <div className="mb-1 flex flex-wrap items-center gap-2 md:mb-3">
+          <div className="hidden md:block"><AiBadge>Cooking assistant</AiBadge></div>
           <div className="ml-auto flex gap-1 md:hidden">
+            <Popover.Root>
+              <Popover.Trigger className={buttonVariants({ variant: "outline", size: "icon-sm" })} aria-label="About the assistant">
+                <Info />
+              </Popover.Trigger>
+              <Popover.Portal>
+                <Popover.Positioner side="bottom" align="end" sideOffset={6} className="isolate z-50">
+                  <Popover.Popup className="max-w-64 rounded-xl border bg-popover p-3 text-[13px] text-popover-foreground shadow-lg outline-none">
+                    Knows your profile and pantry. {me && `${me.limits.chats_left} messages left today.`}
+                  </Popover.Popup>
+                </Popover.Positioner>
+              </Popover.Portal>
+            </Popover.Root>
             <Sheet open={drawer} onOpenChange={setDrawer}>
               <SheetTrigger render={<Button variant="outline" size="sm" />}>
                 <History /> Chats
@@ -394,7 +407,7 @@ export default function AssistantPage() {
               <Plus /> New
             </Button>
           </div>
-          <span className="w-full text-[12px] text-muted-foreground md:w-auto">
+          <span className="hidden text-[12px] text-muted-foreground md:inline">
             Knows your profile and pantry. {me && `${me.limits.chats_left} messages left today.`}
           </span>
         </div>
@@ -432,7 +445,7 @@ export default function AssistantPage() {
 
         <form
           data-tour="chat-composer"
-          className="mt-3 flex items-end gap-2"
+          className="mt-2 flex items-end gap-2 md:mt-3"
           onSubmit={(e) => {
             e.preventDefault()
             ask(text)

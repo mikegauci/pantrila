@@ -172,7 +172,7 @@ class Limits:
 def limits() -> Limits:
     return Limits(
         plans_per_user=int(os.environ.get("PANTRILA_DAILY_PLANS") or 5),
-        chats_per_user=int(os.environ.get("PANTRILA_DAILY_CHATS") or 50),
+        chats_per_user=int(os.environ.get("PANTRILA_DAILY_CHATS") or 10),
         imports_per_user=int(os.environ.get("PANTRILA_DAILY_IMPORTS") or 20),
         photos_per_user=int(os.environ.get("PANTRILA_DAILY_PHOTOS") or 5),
         budget_usd=float(os.environ.get("PANTRILA_DAILY_BUDGET_USD") or 2.0),

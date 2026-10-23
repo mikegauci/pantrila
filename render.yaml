@@ -50,7 +50,7 @@ services:
       - key: PANTRILA_DAILY_PLANS
         value: "5"
       - key: PANTRILA_DAILY_CHATS
-        value: "50"
+        value: "10"
       - key: PANTRILA_DAILY_IMPORTS
         value: "20"
       - key: PANTRILA_DAILY_PHOTOS
