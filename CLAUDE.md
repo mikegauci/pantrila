@@ -33,6 +33,19 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Assistant recipe drafts: a second chat draft saved the first one, since the hidden-but-mounted new-recipe page kept its
+form; each draft now gets a fresh form (`formKey`). Save carries the thread (`?from=chat&thread=`), and the saved recipe
+shows "Back to the chat" (`?chat=` on `/recipes/mine/[id]`). A recipe saved from a chat keeps `chat_draft`
+("<thread>:<FNV hash of the draft as written>", in the recipe JSON, no migration; on `CookbookCard`), and the chat
+shows that draft as "Saved to My recipes" with a link instead of the button. Prompt: every recipe of its own that a
+reply shows gets a write_recipe call, including a changed version of an earlier one. Assistant eval gains multi-turn
+cases (`before`: earlier messages, last turn scored) and `write-then-change-dish` / `write-then-tweak`, 30 cases. Before
+`assistant-2026-10-23T110555Z` vs after `assistant-2026-10-23T110643Z`: both new cases fail -> pass (4/4 reruns), 0
+unsafe or made-up citations both, `chocolate-cake` missed its draft once after (3/3 on rerun; 4/4 before), $0.0035/turn,
+p50/p95 4.6/7.7 s. Also: replies link each recipe they cite or scale to its page and cook mode, no longer show latency
+and cost, and wrap instead of overflowing on phones; Insights drops the AI usage panel and its evals card shows the new
+report.
+
 Landing site animations: `site/` gains Motion (`motion/react`, `LazyMotion` + `m.*` only, `MotionConfig
 reducedMotion="user"`; `src/components/motion.tsx`: `Reveal`, `StaggerList`, `CountUp`, `usePhases`). Hero glow
 drifts, the screenshots rise in, the phone floats and the pair tilts towards a mouse (`hero-art.tsx`); facts count up;
