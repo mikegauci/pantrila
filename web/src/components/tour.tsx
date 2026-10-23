@@ -87,6 +87,8 @@ const STEPS: Step[] = [
 ]
 
 const doneKey = (userId: string) => `pantrila-tour-done:${userId}`
+/** Browser-wide, so a guest (a new anonymous user on every sign-in) is not shown the tour again. */
+const DONE_COOKIE = "pantrila-tour-done=1"
 const PAD = 8
 const GAP = 16
 const CARD_W = 380
@@ -121,14 +123,27 @@ export function TourProvider({ userId, children }: { userId: string | null; chil
   }, [])
 
   const close = useCallback(() => {
-    if (userId) localStorage.setItem(doneKey(userId), "1")
+    try {
+      document.cookie = `${DONE_COOKIE}; path=/; max-age=31536000; samesite=lax`
+      if (userId) localStorage.setItem(doneKey(userId), "1")
+    } catch {
+      // Storage blocked: the tour may show again, which is harmless.
+    }
     setIndex(null)
     const back = returnFocus.current
     requestAnimationFrame(() => back?.focus())
   }, [userId])
 
   useEffect(() => {
-    if (!userId || localStorage.getItem(doneKey(userId))) return
+    if (!userId) return
+    const seen = (() => {
+      try {
+        return document.cookie.split("; ").includes(DONE_COOKIE) || localStorage.getItem(doneKey(userId)) !== null
+      } catch {
+        return false
+      }
+    })()
+    if (seen) return
     const timer = setTimeout(start, AUTO_START_MS)
     return () => clearTimeout(timer)
   }, [userId, start])
