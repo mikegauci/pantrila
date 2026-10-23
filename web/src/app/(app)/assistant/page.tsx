@@ -12,12 +12,11 @@ import { STARTERS } from "@/components/ask-pantrila"
 import { AiBadge, ProblemAlert } from "@/components/bits"
 import { ChatThreads } from "@/components/chat-threads"
 import { CHAT_DRAFT } from "@/components/cookbook-form"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send } from "@/lib/api"
-import { seconds, usd } from "@/lib/format"
-import { useChat, useChats, useMe, useRefreshKitchen } from "@/lib/hooks"
+import { useChat, useChats, useMe, useRecipe, useRefreshKitchen } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
 import type { ChatMessage, ChatReply, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard, ToolCall } from "@/lib/types"
 
@@ -139,6 +138,23 @@ function Rich({ text, recipes }: { text: string; recipes: Map<string, RecipeCard
   )
 }
 
+/** A recipe the reply uses: its title, a link to the recipe and cook mode at the servings the reply gave. */
+function RecipeLinks({ id, servings }: { id: string; servings?: number }) {
+  const { data: recipe } = useRecipe(id)
+  if (!recipe) return null
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[13px]">
+      <Link href={`/recipes/${id}`} className="font-medium text-primary-text underline underline-offset-2">
+        {recipe.title}
+      </Link>
+      <Link href={`/recipes/${id}/cook?servings=${servings ?? recipe.servings}`}
+            className={buttonVariants({ variant: "outline", size: "sm" })}>
+        Cook mode
+      </Link>
+    </div>
+  )
+}
+
 function Bubble({ m }: { m: Message }) {
   const router = useRouter()
   const { session } = useAuth()
@@ -156,6 +172,12 @@ function Bubble({ m }: { m: Message }) {
     router.push("/recipes/mine/new?from=chat")
   }
   const recipes = new Map(r?.cited.map((c) => [c.id, c]))
+  // Recipes the reply uses: cited in the text, or scaled by a tool (its servings are the reply's).
+  const used = new Map<string, number | undefined>()
+  for (const c of r?.tool_calls ?? []) {
+    if (c.name === "scale_recipe") used.set(String(c.arguments.recipe_id), Number(c.arguments.servings))
+  }
+  for (const c of r?.cited ?? []) if (!used.has(c.id)) used.set(c.id, undefined)
   return (
     <div className="grid max-w-[92%] gap-2">
       <ProblemAlert title="Current profile check" items={r?.profile_problems ?? []} />
@@ -169,6 +191,11 @@ function Bubble({ m }: { m: Message }) {
       })}
       <div className={cn("rounded-[20px] rounded-bl-md border bg-surface px-4 py-3", m.error && "border-danger/50 text-danger")}>
         <Rich text={m.text} recipes={recipes} />
+        {!m.error && used.size > 0 && (
+          <div className="mt-3 grid gap-2.5 border-t pt-3">
+            {[...used].map(([id, servings]) => <RecipeLinks key={id} id={id} servings={servings} />)}
+          </div>
+        )}
       </div>
       {r?.drafts?.map((d, i) => (
         <div key={i} className="grid gap-2">
@@ -178,11 +205,8 @@ function Bubble({ m }: { m: Message }) {
           </Button>
         </div>
       ))}
-      {r && (
-        <p className="tabular text-[11px] text-muted-foreground">
-          {seconds(r.latency_ms)} · {usd(r.cost_usd)}
-          {r.flagged.length > 0 && " · safety note added by code"}
-        </p>
+      {r && r.flagged.length > 0 && (
+        <p className="text-[11px] text-muted-foreground">safety note added by code</p>
       )}
     </div>
   )
