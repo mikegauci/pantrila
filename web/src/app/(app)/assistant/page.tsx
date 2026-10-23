@@ -9,7 +9,7 @@ import { useSWRConfig } from "swr"
 
 import { useAuth } from "@/components/auth-provider"
 import { STARTERS } from "@/components/ask-pantrila"
-import { AiBadge, ProblemAlert } from "@/components/bits"
+import { AiBadge, ProblemAlert, RecipeArt } from "@/components/bits"
 import { ChatThreads } from "@/components/chat-threads"
 import { CHAT_DRAFT } from "@/components/cookbook-form"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -98,7 +98,7 @@ function Rich({ text, recipes }: { text: string; recipes: Map<string, RecipeCard
   for (const line of text.split("\n")) {
     const item = line.match(/^\s*(?:[-*]|\d+\.)\s+(.*)$/)
     const trimmed = line.trim()
-    if (!trimmed) continue
+    if (!trimmed || citesOnly(trimmed, recipes)) continue
     const last = blocks.at(-1)
     if (item) {
       if (last?.list) last.lines.push(item[1])
@@ -138,21 +138,38 @@ function Rich({ text, recipes }: { text: string; recipes: Map<string, RecipeCard
   )
 }
 
-/** A recipe the reply uses: its title, a link to the recipe and cook mode at the servings the reply gave. */
-function RecipeLinks({ id, servings }: { id: string; servings?: number }) {
+/** A recipe the reply uses: photo, title, time and kcal, and cook mode at the servings the reply gave. */
+function RecipeCardView({ id, servings }: { id: string; servings?: number }) {
   const { data: recipe } = useRecipe(id)
   if (!recipe) return null
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[13px]">
-      <Link href={`/recipes/${id}`} className="font-medium text-primary-text underline underline-offset-2">
-        {recipe.title}
+    <div className="flex w-44 shrink-0 snap-start flex-col gap-2 rounded-[16px] border bg-surface p-2">
+      <Link href={`/recipes/${id}`} className="group grid gap-2">
+        <RecipeArt meal={recipe.meal_types[0]} cuisine={recipe.cuisine || undefined} photo={recipe.photo_url}
+          sizes="176px" className="aspect-[4/3] w-full" />
+        <span className="line-clamp-2 px-1 text-[13px] font-semibold leading-5 group-hover:text-primary-text">{recipe.title}</span>
       </Link>
+      <p className="tabular px-1 text-[12px] text-muted-foreground">{recipe.total_minutes} min · {Math.round(recipe.nutrition.kcal)} kcal</p>
+      {recipe.problems.length > 0 && <p className="px-1 text-[12px] font-medium text-danger">Not for you</p>}
       <Link href={`/recipes/${id}/cook?servings=${servings ?? recipe.servings}`}
-            className={buttonVariants({ variant: "outline", size: "sm" })}>
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }), "mt-auto w-full")}>
         Let&apos;s cook this!
       </Link>
     </div>
   )
+}
+
+/**
+ * A reply line that only names recipes (a citation, its title and kcal): the recipe cards show it,
+ * so the line goes. Lines with any other words stay.
+ */
+function citesOnly(line: string, recipes: Map<string, RecipeCard>): boolean {
+  const cites = line.match(/\[[a-z0-9-]+\]/g)
+  if (!cites || !cites.every((c) => recipes.has(c.slice(1, -1)))) return false
+  let rest = line.replace(/\*\*/g, "").replace(/\d+\s*kcal/gi, "").toLowerCase()
+  for (const c of cites) rest = rest.split(c).join("")
+  for (const r of recipes.values()) rest = rest.split(r.title.toLowerCase()).join("")
+  return /^[\s·\-–—:,.|]*$/.test(rest)
 }
 
 /**
@@ -207,8 +224,8 @@ function Bubble({ m, thread }: { m: Message; thread: number | null }) {
       <div className={cn("min-w-0 break-words rounded-[20px] rounded-bl-md border bg-surface px-4 py-3", m.error && "border-danger/50 text-danger")}>
         <Rich text={m.text} recipes={recipes} />
         {!m.error && used.size > 0 && (
-          <div className="mt-3 grid gap-2.5 border-t pt-3">
-            {[...used].map(([id, servings]) => <RecipeLinks key={id} id={id} servings={servings} />)}
+          <div className="no-scrollbar -mx-1 mt-3 flex snap-x gap-3 overflow-x-auto border-t px-1 pt-3 pb-1">
+            {[...used].map(([id, servings]) => <RecipeCardView key={id} id={id} servings={servings} />)}
           </div>
         )}
       </div>
