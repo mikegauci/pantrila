@@ -138,6 +138,12 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
   )
   const uses = onStep ? allUses[page - 1] : []
 
+  // A step of the product funnel (pantrila.analytics); best effort, never shown.
+  const source = "recipe_id" in recipe.source ? "corpus" : "mine"
+  useEffect(() => {
+    send("/me/events", "POST", { name: "cooking_mode_opened", source }).catch(() => {})
+  }, [recipe.key, source])
+
   // Keep progress in this browser; "I cooked this" clears it.
   useEffect(() => {
     if (!finished) saveProgress(key, { page, ticked: [...ticked], servings, timers })

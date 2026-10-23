@@ -41,6 +41,12 @@ services:
         sync: false
       - key: SENTRY_DSN # error reports (Sentry, EU); unset turns them off
         sync: false
+      - key: POSTHOG_API_KEY # funnel analytics (PostHog EU); unset turns them off
+        sync: false
+      - key: POSTHOG_PERSONAL_API_KEY # person:write, so account deletion removes the person
+        sync: false
+      - key: POSTHOG_PROJECT_ID
+        sync: false
       - key: PANTRILA_MEDIA_PLATFORMS
         sync: false
       - key: PANTRILA_IMAGE_MODEL

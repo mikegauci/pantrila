@@ -60,6 +60,15 @@ wheels = [
 ]
 
 [[package]]
+name = "backoff"
+version = "2.2.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/47/d7/5bbeb12c44d7c4f2fb5b56abce497eb5ed9f34d85701de869acedd602619/backoff-2.2.1.tar.gz", hash = "sha256:03f829f5bb1923180821643f8753b0502c3b682293992485b0eef2807afa5cba", size = 17001, upload-time = "2022-10-05T19:19:32.061Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/df/73/b6e24bd22e6720ca8ee9a85a0c4a2971af8497d8f3193fa05390cbd46e09/backoff-2.2.1-py3-none-any.whl", hash = "sha256:63579f9a0628e06278f7e47b7d7d5b6ce20dc65c5e96a6f3ca99a6adca0396e8", size = 15148, upload-time = "2022-10-05T19:19:30.546Z" },
+]
+
+[[package]]
 name = "certifi"
 version = "2026.7.22"
 source = { registry = "https://pypi.org/simple" }
@@ -971,6 +980,7 @@ dependencies = [
     { name = "langsmith" },
     { name = "openai" },
     { name = "pillow" },
+    { name = "posthog" },
     { name = "psycopg", extra = ["binary"] },
     { name = "psycopg-pool" },
     { name = "pydantic" },
@@ -997,6 +1007,7 @@ requires-dist = [
     { name = "langsmith", specifier = ">=0.3" },
     { name = "openai", specifier = ">=2.0" },
     { name = "pillow", specifier = ">=13.0.0" },
+    { name = "posthog", specifier = ">=7.75.10" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2" },
     { name = "psycopg-pool", specifier = ">=3.3.3" },
     { name = "pydantic", specifier = ">=2.9" },
@@ -1097,6 +1108,21 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/bf/db/7fc19e6f2dc92a966727031389fc2e08b558f0f25eb7403c1119ad4713cd/pluggy-1.7.0.tar.gz", hash = "sha256:d1eaa46ebb595891b860ab086b4d09c8588af65ebd4361b8e8f4bb8920b90ba8", size = 123304, upload-time = "2026-10-15T09:50:58.343Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/40/9e/2b38731e0fc536806f16490e1a12d7f0dc2a1235aa8cc07bcc75416a7daa/pluggy-1.7.0-py3-none-any.whl", hash = "sha256:7dd7b0d8832ba3cb632c306926ded123429211b83641b35dc5c41ad2d34f9bec", size = 27082, upload-time = "2026-10-15T09:50:56.808Z" },
+]
+
+[[package]]
+name = "posthog"
+version = "7.75.10"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "backoff" },
+    { name = "distro" },
+    { name = "requests" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/39/c9/27f1542f8efb2c91c02c3a0b2f0c7e715e122821827750b364d21d00b126/posthog-7.75.10.tar.gz", hash = "sha256:3c2271508e082125ea0e723122b16141753bb624b3ba7ff0b48e00a758b8272b", size = 807931, upload-time = "2026-10-23T12:44:53.335Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f8/c1/9d025db501fbc4e06ef294075d47b67ae8c1ea0460d25298fe83c9f39ced/posthog-7.75.10-py3-none-any.whl", hash = "sha256:131813b5413e36338a24fc3dc9a55aa11f416e77e3ba3f70152f9d041d90790e", size = 944598, upload-time = "2026-10-23T12:44:51.164Z" },
 ]
 
 [[package]]

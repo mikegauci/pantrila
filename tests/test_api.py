@@ -9,6 +9,7 @@ from fastapi.testclient import TestClient
 from openai.types.responses import ResponseFunctionToolCall
 
 from pantrila import config
+from pantrila.analytics import MemoryActivity, MemoryAnalytics
 from pantrila.api import Session, create_app
 from pantrila.auth import AuthError, User
 from pantrila.chats import MAX_THREADS_PER_USER, MemoryChats
@@ -94,6 +95,7 @@ class MemoryBackend:
         self.client = FakeClient()
         self.photos: MemoryPhotos | None = MemoryPhotos()
         self.admin: FakeAuthAdmin | None = FakeAuthAdmin()
+        self.analytics = MemoryAnalytics()
 
     @contextmanager
     def session(self, user_id):
@@ -101,6 +103,9 @@ class MemoryBackend:
         yield Session(self.store, kitchen, MemoryRecords(user_id, self.shared),
                       MemoryCookbook(user_id, self.shared),
                       MemoryChats(user_id, self.shared))  # fmt: skip
+
+    def activity(self):
+        return MemoryActivity(self.shared.setdefault("activity", {}))
 
     def import_jobs(self):
         return MemoryImportJobs(self.shared.setdefault("import_jobs", {}))
@@ -110,6 +115,7 @@ class MemoryBackend:
         for key in ("plans", "events", "cooked", "chats", "cookbook"):
             self.shared[key] = [row for row in self.shared.get(key, []) if row[0] != user_id]
         self.shared.get("avatars", {}).pop(user_id, None)
+        self.shared.get("activity", {}).pop(user_id, None)
         reservations = self.shared.get("reservations", {})
         for rid in [r for r, row in reservations.items() if row[0] == user_id]:
             del reservations[rid]
@@ -145,7 +151,7 @@ def api(backend, monkeypatch):
     monkeypatch.setenv("PANTRILA_PRICE_INPUT_PER_MTOK", "1")
     monkeypatch.setenv("PANTRILA_PRICE_OUTPUT_PER_MTOK", "10")
     monkeypatch.setenv("PANTRILA_MEDIA_SOURCE", "off")  # never the real video service
-    with TestClient(create_app(backend, verify)) as client:
+    with TestClient(create_app(backend, verify, events=backend.analytics)) as client:
         client.headers["Authorization"] = "Bearer alice"
         yield client
 
@@ -1315,3 +1321,34 @@ def test_sentry_is_off_without_a_dsn_and_never_sends_bodies(monkeypatch):
     monkeypatch.setenv("SENTRY_DSN", "https://key@o1.ingest.de.sentry.io/1")
     assert config.init_sentry() is True
     assert seen["send_default_pii"] is False and seen["max_request_body_size"] == "never"
+
+
+def test_the_funnel_is_sent_from_the_server_by_user_id_only(api, backend, monkeypatch):
+    import pantrila.recipe_import as ri
+
+    monkeypatch.setattr(ri, "fetch_page", lambda url, http=None, resolve=None:
+                        (url, "<p>Toast: 2 slices of bread</p>"))  # fmt: skip
+    api.put("/me/profile", json={"days": 2, "meals": ["breakfast", "dinner"]})
+    api.get("/me")  # a second request the same day is not a second visit
+    backend.client.replies = [imported_reply()]
+    assert api.post("/me/recipes/import/link", json={"url": "https://example.com/t"}).is_success
+    backend.client.replies = [plan_reply(CHICKEN, CURRY)]
+    assert sse(api.post("/plans").text)[-1][0] == "plan"
+    assert api.post("/me/events", json={"name": "cooking_mode_opened", "source": "corpus"}
+                    ).status_code == 204  # fmt: skip
+    assert api.post("/me/events", json={"name": "anything_else"}).status_code == 422
+
+    sent = [(u, e) for u, e, _ in backend.analytics.events]
+    assert sent == [("alice", "signed_up"), ("alice", "app_opened"),
+                    ("alice", "recipe_imported"), ("alice", "plan_created"),
+                    ("alice", "cooking_mode_opened")]  # fmt: skip
+    props = {e: p for _, e, p in backend.analytics.events}
+    assert props["recipe_imported"] == {"kind": "link"} and props["signed_up"]["guest"] is False
+    assert "alice@example.com" not in json.dumps(backend.analytics.events, default=str)
+
+
+def test_deleting_the_account_deletes_the_analytics_person(api, backend):
+    api.get("/me")
+    assert api.delete("/me").status_code == 204
+    assert backend.analytics.forgotten == ["alice"] and backend.analytics.events == []
+    assert backend.shared["activity"] == {}

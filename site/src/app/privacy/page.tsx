@@ -91,6 +91,13 @@ export default function Privacy() {
           browser and your account id, but not your recipes, messages or email. Feedback you send from the app goes
           there too, with the email you add for a reply.
         </li>
+        <li>
+          <strong>PostHog</strong> counts how people use Pantrila, in the EU (Frankfurt), so we can see where it
+          helps and where people get stuck: the day you first used it and the days you came back, and when you
+          import a recipe, make a plan or open cooking mode. It gets your account id and whether you are a guest,
+          never your email, IP address, location, recipes or messages. Pantrila sends this from its server; nothing
+          is stored in your browser for it.
+        </li>
       </ul>
       <p>
         Some of these companies are based in the United States, so your data may be processed there under their

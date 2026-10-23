@@ -443,6 +443,11 @@ class ImportTiming(BaseModel):
     sample_count: int
 
 
+class AppEvent(BaseModel):
+    name: Literal["cooking_mode_opened"]
+    source: Literal["corpus", "mine"] | None = None
+
+
 class AvatarIn(BaseModel):
     image: str = Field(description="Data URL: JPEG, PNG or WebP, < 4 MB.")
 
