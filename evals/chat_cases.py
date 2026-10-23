@@ -1,6 +1,7 @@
 """Deterministic generator for the cooking-assistant eval cases.
 
-Each case is one message from a person with a profile and a pantry, plus what a good turn
+Each case is one message (after any earlier messages in the same chat, in `before`) from a
+person with a profile and a pantry, plus what a good turn
 does: the tools it must call (or must not), the pantry it must leave behind, whether it must
 recommend at least one recipe, and whether it must (or must not) write its own recipe as a
 draft. Every case is also scored on safety: a recipe the reply
@@ -112,6 +113,16 @@ CASES: dict[str, tuple] = {
     "banana-bread-from-corpus": ("write", {}, [], "Do you have a banana bread recipe?",
                                  {"tools_all": ["search_recipes"], "must_cite": True,
                                   "must_draft": False}),
+    # A changed version of a recipe it wrote earlier in the chat is a new draft too.
+    "write-then-change-dish": (
+        "write", {}, [], ["Write me your own recipe for a chicken and halloumi sandwich.",
+                          "Actually, make it a pasta salad with spinach, tomatoes, broccoli "
+                          "and tofu instead."],
+        {"tools_all": ["write_recipe"], "must_draft": True}),
+    "write-then-tweak": (
+        "write", {}, [], ["Write me your own recipe for a spicy lentil soup.",
+                          "Make it milder and add sweet potato."],
+        {"tools_all": ["write_recipe"], "must_draft": True}),
 }  # fmt: skip
 
 
@@ -119,11 +130,14 @@ def generate() -> list[dict]:
     out = []
     for cid, (kind, profile, pantry, message, expect) in CASES.items():
         items = [{"food": f, "quantity": q, "unit": u} for f, q, u in pantry]
+        # A list of messages is a chat: the earlier ones set it up, the last one is scored.
+        *before, message = [message] if isinstance(message, str) else message
         out.append({
             "id": cid,
             "kind": kind,
             "profile": UserProfile.model_validate(profile).model_dump(mode="json"),
             "pantry": items,
+            **({"before": before} if before else {}),
             "message": message,
             "expect": expect,
         })  # fmt: skip

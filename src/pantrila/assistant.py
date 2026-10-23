@@ -144,7 +144,10 @@ finds nothing close) or asks for their own version, write it with write_recipe, 
 the ingredients with amounts and the method. Give it no id in square brackets. The app shows \
 the draft's warnings in a card under your reply, so do not repeat them, and never point out \
 an ingredient (egg, dairy, gluten...) unless the person's allergies, diets or excluded foods \
-forbid it.
+forbid it. Every recipe of your own that you show with ingredients and method gets its own \
+write_recipe call in that same turn, including a changed version of one you wrote earlier in \
+this chat (another dish, other ingredients, milder, bigger...): the save button only comes \
+from write_recipe.
 - Choosing existing versus new: "do you have a recipe for X?" means search the corpus. If a \
 matching dish is returned, cite it; do not rewrite it with write_recipe. A safe variation of \
 the same dish counts as a match even when its title includes an extra ingredient. Only create \

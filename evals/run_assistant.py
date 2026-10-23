@@ -115,9 +115,12 @@ def run_one(case: dict, model: str, effort: str) -> dict:
         store = DbStore(conn, openai_query_embedder(config.embed_model()))
         kitchen = kitchen_for(case)
         try:
-            result = Assistant(store, kitchen, model=model, effort=effort, source="eval").reply(
-                case["message"]
-            )
+            assistant = Assistant(store, kitchen, model=model, effort=effort, source="eval")
+            # Earlier turns set up the chat; only the last turn is scored (and costed).
+            history: list[dict] = []
+            for message in case.get("before", []):
+                history = assistant.reply(message, history).history
+            result = assistant.reply(case["message"], history)
         except Exception as exc:  # a failed turn is a result, not a crash
             return {"case_id": case["id"], "kind": case["kind"], "ok": False,
                     "error": f"{type(exc).__name__}: {exc}"}  # fmt: skip
@@ -173,7 +176,7 @@ def markdown(s: dict, rows: list[dict], meta: dict) -> str:
     lines = [
         f"# Cooking-assistant eval {meta['finished_at']}",
         "",
-        f"{meta['cases']} single-turn cases, model `{meta['model']}` (reasoning "
+        f"{meta['cases']} cases (the last turn of each scored), model `{meta['model']}` (reasoning "
         f"{meta['effort']}), {meta['concurrency']} in parallel.",
         "",
         "| Metric | Value |",
