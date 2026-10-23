@@ -33,6 +33,12 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+My recipes on Home: a section after "Ask Pantrila" (`web/src/components/my-recipes-home.tsx`) shows the latest 4
+cookbook recipes ("N saved", "See all") and two buttons, "Import from a post" and "From a recipe link", which open
+`/recipes/mine/new?method=post|link` on that method (the page reads `?method=` once and drops it). With no recipes
+yet it is a yellow pitch card for importing from TikTok, Instagram, Facebook or a recipe site. Web only, no model
+call, so no eval rerun; new `web/tests/home-my-recipes.spec.ts`.
+
 Microphone help: when the browser blocks the mic, cooking mode opens an "Allow the microphone" sheet (instead of a
 toast) with steps for the browser in use (`micHelp(userAgent, touch)` in `web/src/lib/voice.ts`: Safari, Chrome,
 Firefox or Edge on iPhone/iPad, including turning on Dictation; Chrome on Android; Safari on Mac; Chrome/Edge on

@@ -258,6 +258,14 @@ export default function NewRecipePage() {
       setFromChat(false)
       setChatThread(null)
       const params = new URLSearchParams(window.location.search)
+      // Home links straight to one way of adding a recipe (`?method=post`).
+      const picked = METHODS.find((m) => m.key === params.get("method"))
+      if (picked) {
+        window.history.replaceState(null, "", "/recipes/mine/new")
+        setMethod(picked.key)
+        setDraftState(picked.key === "manual" ? BLANK_RECIPE : null)
+        return
+      }
       if (params.get("from") !== "chat") return
       window.history.replaceState(null, "", "/recipes/mine/new")
       const thread = params.get("thread")

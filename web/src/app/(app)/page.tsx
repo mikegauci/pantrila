@@ -6,6 +6,7 @@ import Link from "next/link"
 import { AskPantrila } from "@/components/ask-pantrila"
 import { EmptyState, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
 import { MacroRing } from "@/components/macro-ring"
+import { MyRecipesHome } from "@/components/my-recipes-home"
 import { buttonVariants } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useAuth } from "@/components/auth-provider"
@@ -39,6 +40,8 @@ export default function HomePage() {
       </div>
 
       <AskPantrila />
+
+      <MyRecipesHome />
 
       {plan && (
         <ProblemAlert
