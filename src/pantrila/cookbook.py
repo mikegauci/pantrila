@@ -202,6 +202,9 @@ class CookbookRecipeIn(BaseModel):
         default=None, max_length=31, description="The creator's handle, without the @."
     )
     recipe_url: str | None = Field(default=None, max_length=2000)
+    # Saved from an assistant draft: "<thread id>:<hash of the draft as written>", so the chat
+    # can show that draft as saved.
+    chat_draft: str | None = Field(default=None, pattern=r"^\d{1,12}:[0-9a-f]{8}$")
 
     @model_validator(mode="after")
     def _sections_in_order(self) -> CookbookRecipeIn:

@@ -2,10 +2,10 @@
 
 import { MeasuredLine } from "@/components/amount"
 import { NutritionSource } from "@/components/nutrition-source"
-import { ArrowLeft, Camera, Check, ChevronDown, Clock, ExternalLink, ImageOff, Loader2, Pencil, Trash2, Users } from "lucide-react"
+import { ArrowLeft, Camera, Check, ChevronDown, Clock, ExternalLink, ImageOff, Loader2, MessageCircle, Pencil, Trash2, Users } from "lucide-react"
 import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useSyncExternalStore } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
@@ -29,6 +29,12 @@ import type { CookbookDetail } from "@/lib/types"
 const SOURCE_LINK = "inline-flex items-center gap-1 font-medium text-primary-text underline-offset-2 hover:underline"
 
 /** "From @creator on TikTok", with whatever parts of the credit are known. */
+const noSubscribe = () => () => {}
+const chatThread = () => {
+  const thread = new URLSearchParams(window.location.search).get("chat")
+  return thread && /^\d+$/.test(thread) ? thread : null
+}
+
 function postCredit(r: CookbookDetail) {
   const by = r.source_author ? ` @${r.source_author}` : " a post"
   return `From${by}${r.source_platform ? ` on ${PLATFORM[r.source_platform]}` : ""}`
@@ -36,6 +42,8 @@ function postCredit(r: CookbookDetail) {
 
 export default function MyRecipePage() {
   const { id } = useParams<{ id: string }>()
+  // Saved from an assistant chat: that thread's id, so the person can go back and keep refining.
+  const chat = useSyncExternalStore(noSubscribe, chatThread, () => null)
   const router = useRouter()
   const { mutate } = useSWRConfig()
   const { data: r, error, isLoading, mutate: refresh } = useCookbookRecipe(id)
@@ -105,9 +113,16 @@ export default function MyRecipePage() {
   return (
     <div className="grid gap-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <Link href="/recipes/mine" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "w-fit")}>
-          <ArrowLeft /> My recipes
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/recipes/mine" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "w-fit")}>
+            <ArrowLeft /> My recipes
+          </Link>
+          {chat && (
+            <Link href={`/assistant?thread=${chat}`} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "w-fit")}>
+              <MessageCircle /> Back to the chat
+            </Link>
+          )}
+        </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={() => setEditing(true)}><Pencil /> Edit</Button>
           <Button variant="outline" size="sm" onClick={remove}><Trash2 /> Delete</Button>

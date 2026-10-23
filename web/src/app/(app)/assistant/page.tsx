@@ -1,6 +1,6 @@
 "use client"
 
-import { BookmarkPlus, History, Loader2, PenLine, Plus, Refrigerator, Repeat, Scale, Search, Send, Sparkles } from "lucide-react"
+import { BookmarkPlus, Check, History, Loader2, PenLine, Plus, Refrigerator, Repeat, Scale, Search, Send, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Fragment, useEffect, useRef, useState } from "react"
@@ -16,7 +16,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send } from "@/lib/api"
-import { useChat, useChats, useMe, useRecipe, useRefreshKitchen } from "@/lib/hooks"
+import { useChat, useChats, useCookbook, useMe, useRecipe, useRefreshKitchen } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
 import type { ChatMessage, ChatReply, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard, ToolCall } from "@/lib/types"
 
@@ -110,11 +110,11 @@ function Rich({ text, recipes }: { text: string; recipes: Map<string, RecipeCard
     }
   }
   return (
-    <div className="grid gap-2.5">
+    <div className="grid min-w-0 gap-2.5">
       {blocks.map((b, bi) => {
         if (b.list) {
           return (
-            <ul key={bi} className="grid list-disc gap-1.5 pl-5 marker:text-muted-foreground">
+            <ul key={bi} className="grid min-w-0 list-disc gap-1.5 pl-5 marker:text-muted-foreground">
               {b.lines.map((l, li) => <li key={li} className="pl-1"><Inline text={l} recipes={recipes} /></li>)}
             </ul>
           )
@@ -155,10 +155,25 @@ function RecipeLinks({ id, servings }: { id: string; servings?: number }) {
   )
 }
 
-function Bubble({ m }: { m: Message }) {
+/**
+ * Which draft of which chat a saved recipe came from: the thread and a hash of the draft as the
+ * assistant wrote it, so a changed version written later in the chat counts as a new draft.
+ */
+function draftTag(thread: number | null, d: CookbookRecipeIn): string | null {
+  if (!thread) return null
+  let h = 0x811c9dc5  // FNV-1a, 32 bits; the tag itself is left out
+  for (const ch of JSON.stringify({ ...d, chat_draft: undefined })) {
+    h ^= ch.charCodeAt(0)
+    h = Math.imul(h, 0x01000193) >>> 0
+  }
+  return `${thread}:${h.toString(16).padStart(8, "0")}`
+}
+
+function Bubble({ m, thread }: { m: Message; thread: number | null }) {
   const router = useRouter()
   const { session } = useAuth()
   const userId = session!.user.id
+  const { data: cookbook } = useCookbook()
   if (m.role === "user") {
     return (
       <div className="ml-auto max-w-[85%] rounded-[20px] rounded-br-md bg-primary px-4 py-2.5 text-primary-foreground">
@@ -168,8 +183,8 @@ function Bubble({ m }: { m: Message }) {
   }
   const r = m.reply
   const save = (d: CookbookRecipeIn) => {
-    sessionStorage.setItem(`${CHAT_DRAFT}:${userId}`, JSON.stringify(d))
-    router.push("/recipes/mine/new?from=chat")
+    sessionStorage.setItem(`${CHAT_DRAFT}:${userId}`, JSON.stringify({ ...d, chat_draft: draftTag(thread, d) }))
+    router.push(`/recipes/mine/new?from=chat${thread ? `&thread=${thread}` : ""}`)
   }
   const recipes = new Map(r?.cited.map((c) => [c.id, c]))
   // Recipes the reply uses: cited in the text, or scaled by a tool (its servings are the reply's).
@@ -179,7 +194,7 @@ function Bubble({ m }: { m: Message }) {
   }
   for (const c of r?.cited ?? []) if (!used.has(c.id)) used.set(c.id, undefined)
   return (
-    <div className="grid max-w-[92%] gap-2">
+    <div className="grid min-w-0 max-w-[92%] gap-2">
       <ProblemAlert title="Current profile check" items={r?.profile_problems ?? []} />
       {r?.tool_calls.map((c, i) => {
         const { icon: Icon, text } = toolSummary(c)
@@ -189,7 +204,7 @@ function Bubble({ m }: { m: Message }) {
           </div>
         )
       })}
-      <div className={cn("rounded-[20px] rounded-bl-md border bg-surface px-4 py-3", m.error && "border-danger/50 text-danger")}>
+      <div className={cn("min-w-0 break-words rounded-[20px] rounded-bl-md border bg-surface px-4 py-3", m.error && "border-danger/50 text-danger")}>
         <Rich text={m.text} recipes={recipes} />
         {!m.error && used.size > 0 && (
           <div className="mt-3 grid gap-2.5 border-t pt-3">
@@ -197,14 +212,24 @@ function Bubble({ m }: { m: Message }) {
           </div>
         )}
       </div>
-      {r?.drafts?.map((d, i) => (
-        <div key={i} className="grid gap-2">
-          <ProblemAlert title={`Check ${d.title}`} items={r.draft_problems?.[i] ?? []} />
-          <Button variant="outline" size="sm" className="w-fit" onClick={() => save(d)}>
-            <BookmarkPlus /> Save “{d.title}” to My recipes
-          </Button>
-        </div>
-      ))}
+      {r?.drafts?.map((d, i) => {
+        const tag = draftTag(thread, d)
+        const saved = tag ? cookbook?.find((c) => c.chat_draft === tag) : undefined
+        return (
+          <div key={i} className="grid gap-2">
+            <ProblemAlert title={`Check ${d.title}`} items={r.draft_problems?.[i] ?? []} />
+            {saved ? (
+              <Link href={`/recipes/mine/${saved.id}`} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "w-fit")}>
+                <Check className="text-primary-text" /> Saved to My recipes as “{saved.title}”
+              </Link>
+            ) : (
+              <Button variant="outline" size="sm" className="w-fit" onClick={() => save(d)}>
+                <BookmarkPlus /> Save “{d.title}” to My recipes
+              </Button>
+            )}
+          </div>
+        )
+      })}
       {r && r.flagged.length > 0 && (
         <p className="text-[11px] text-muted-foreground">safety note added by code</p>
       )}
@@ -347,7 +372,7 @@ export default function AssistantPage() {
           </span>
         </div>
 
-        <div className="flex-1 overflow-y-auto rounded-[20px] border bg-primary-soft p-4 shadow-soft" aria-live="polite">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden rounded-[20px] border bg-primary-soft p-4 shadow-soft" aria-live="polite">
           {current && !thread && !pending.length ? (
             <p className="flex items-center gap-2 text-[13px] text-muted-foreground">
               <Loader2 className="size-4 animate-spin" aria-hidden /> Loading chat…
@@ -363,7 +388,7 @@ export default function AssistantPage() {
             </div>
           ) : (
             <div className="grid gap-4">
-              {messages.map((m, i) => <Bubble key={i} m={m} />)}
+              {messages.map((m, i) => <Bubble key={i} m={m} thread={current} />)}
               {busy && (
                 <p className="flex items-center gap-2 text-[13px] text-muted-foreground">
                   <Loader2 className="size-4 animate-spin" aria-hidden /> Thinking and checking…

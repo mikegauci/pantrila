@@ -355,6 +355,8 @@ export interface CookbookRecipeIn {
   source_author: string | null
   /** The recipe site the post's caption linked to, when the recipe came from there. */
   recipe_url: string | null
+  /** Saved from an assistant draft: "<thread id>:<draft hash>". */
+  chat_draft?: string | null
 }
 
 export interface LineView extends RecipeLine {
@@ -377,6 +379,7 @@ export interface CookbookCard {
   source_platform: SourcePlatform | null
   source_author: string | null
   recipe_url: string | null
+  chat_draft: string | null
   created_at: string
   updated_at: string
   ingredient_count: number

@@ -567,6 +567,13 @@ def test_cookbook_crud_is_per_user_and_derived_in_code(api):
     assert api.get(f"/me/recipes/{r['id']}").status_code == 404
 
 
+def test_a_recipe_saved_from_a_chat_draft_keeps_its_draft_tag(api):
+    assert api.post("/me/recipes", json={**TOAST, "chat_draft": "not a tag"}).status_code == 422
+    rid = api.post("/me/recipes", json={**TOAST, "chat_draft": "12:0a1b2c3d"}).json()["id"]
+    assert api.get(f"/me/recipes/{rid}").json()["chat_draft"] == "12:0a1b2c3d"
+    assert [c["chat_draft"] for c in api.get("/me/recipes").json()] == ["12:0a1b2c3d"]
+
+
 def test_cookbook_refuses_lines_it_cannot_derive(api):
     bad = {**TOAST, "ingredients": [{"name": "dragon fruit", "quantity": 1, "unit": "piece"},
                                     {"name": "butter", "quantity": 1, "unit": "piece",
