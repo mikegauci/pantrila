@@ -33,6 +33,16 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Sentry and feedback: API errors (unhandled and `log.exception`) and 10% of requests as traces go to Sentry EU when
+`SENTRY_DSN` is set (`config.init_sentry`: no PII, no request bodies; `current_user` sets the user id only). The web
+app uses `@sentry/nextjs` 11 (`instrumentation-client.ts`, `instrumentation.ts`, `app/global-error.tsx`;
+`withSentryConfig` from `@sentry/nextjs/config` uploads source maps only with `SENTRY_AUTH_TOKEN`; reports go through
+the `/monitoring` tunnel, which `proxy.ts` skips) when `NEXT_PUBLIC_SENTRY_DSN` is set; no Session Replay, no trace
+headers on API calls (`tracePropagationTargets: []`, the API's CORS allows only its own headers). "Send feedback"
+(account menu and Profile Help, `components/feedback.tsx`) sends `Sentry.captureFeedback` with the page and an
+optional reply email (prefilled with the account's); without a DSN it shows hello@pantrila.com. Privacy page lists
+Sentry. Playwright runs with a fake DSN and intercepts `/monitoring`. No model call, so no eval rerun.
+
 Import jobs in the database: background imports (`POST /me/recipes/import/jobs`) now live in `import_jobs`
 (migration `20261023120000_import_jobs`, RLS) instead of one process's memory (`DbImportJobs`; `MemoryImportJobs`
 for tests). Each server process has an owner token and a 90 s lease on the jobs it runs, renewed every 20 s by
@@ -713,7 +723,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - `src/pantrila/search.py`: hybrid retrieval (pgvector cosine + Postgres full text, merged with
   reciprocal rank fusion) with hard SQL filters for allergens, diets, time, meal, cuisine and
   excluded foods; optional LLM query parser.
-- `src/pantrila/config.py`: settings and prices from the environment; LangSmith helpers
+- `src/pantrila/config.py`: settings and prices from the environment; `init_sentry`; LangSmith helpers
   (`trace_config` names root runs `plan`/`chat` and tags them `api|cli|eval`; `log_feedback`
   attaches deterministic scores to a run; both no-ops with tracing off).
 - `src/pantrila/constraints.py`: deterministic plan checks, the single source of truth for "is

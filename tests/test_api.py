@@ -1303,3 +1303,15 @@ def test_delete_account_needs_the_admin_key_and_no_running_import(api, backend):
     api.app.state.import_jobs.start("alice", None, {"kind": "text", "text": "x" * 20}, None)
     assert api.delete("/me").status_code == 409
     assert backend.admin.deleted == []
+
+
+def test_sentry_is_off_without_a_dsn_and_never_sends_bodies(monkeypatch):
+    import sentry_sdk
+
+    monkeypatch.delenv("SENTRY_DSN", raising=False)
+    assert config.init_sentry() is False
+    seen = {}
+    monkeypatch.setattr(sentry_sdk, "init", lambda **kw: seen.update(kw))
+    monkeypatch.setenv("SENTRY_DSN", "https://key@o1.ingest.de.sentry.io/1")
+    assert config.init_sentry() is True
+    assert seen["send_default_pii"] is False and seen["max_request_body_size"] == "never"

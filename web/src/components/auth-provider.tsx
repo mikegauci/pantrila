@@ -1,5 +1,6 @@
 "use client"
 
+import * as Sentry from "@sentry/nextjs"
 import type { Session } from "@supabase/supabase-js"
 import { createContext, useContext, useEffect, useState } from "react"
 
@@ -19,7 +20,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const auth = supabase().auth
-    const { data } = auth.onAuthStateChange((_event, session) => setState({ session, ready: true }))
+    const { data } = auth.onAuthStateChange((_event, session) => {
+      setState({ session, ready: true })
+      Sentry.setUser(session ? { id: session.user.id } : null)  // the id only, never the email
+    })
     return () => data.subscription.unsubscribe()
   }, [])
 

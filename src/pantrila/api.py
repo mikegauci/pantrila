@@ -43,6 +43,7 @@ from datetime import UTC, datetime
 from datetime import time as dtime
 from typing import Annotated, Any
 
+import sentry_sdk
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
@@ -203,10 +204,12 @@ def current_user(request: Request, authorization: Annotated[str | None, Header()
     if scheme.lower() != "bearer" or not token:
         raise HTTPException(401, "Sign in first.", {"WWW-Authenticate": "Bearer"})
     try:
-        return request.app.state.verify(token)
+        user = request.app.state.verify(token)
     except AuthError as exc:
         raise HTTPException(401, f"Invalid token: {exc}",
                             {"WWW-Authenticate": "Bearer"}) from exc  # fmt: skip
+    sentry_sdk.set_user({"id": user.id})  # error reports name the account, nothing more
+    return user
 
 
 UserDep = Annotated[User, Depends(current_user)]
@@ -1138,4 +1141,5 @@ def _json(text: str) -> dict:
     return value if isinstance(value, dict) else {}
 
 
+config.init_sentry()
 app = create_app()

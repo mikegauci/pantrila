@@ -153,6 +153,27 @@ def supabase_service_key() -> str | None:
     return os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or None
 
 
+def init_sentry() -> bool:
+    """Send API errors (unhandled ones and `log.exception`) and a sample of slow requests to
+    Sentry when SENTRY_DSN is set. No request bodies, cookies or IPs: people are known by their
+    user id alone (set per request in api.current_user)."""
+    dsn = os.environ.get("SENTRY_DSN")
+    if not dsn:
+        return False
+    import sentry_sdk
+
+    sentry_sdk.init(
+        dsn=dsn,
+        environment=os.environ.get("SENTRY_ENVIRONMENT")
+        or ("production" if os.environ.get("RENDER") else "development"),
+        release=os.environ.get("RENDER_GIT_COMMIT") or None,
+        traces_sample_rate=float(os.environ.get("SENTRY_TRACES_SAMPLE_RATE") or 0.1),
+        send_default_pii=False,
+        max_request_body_size="never",
+    )
+    return True
+
+
 def cors_origins() -> list[str]:
     raw = os.environ.get("PANTRILA_CORS_ORIGINS") or "http://localhost:3000"
     return [o.strip().rstrip("/") for o in raw.split(",") if o.strip()]

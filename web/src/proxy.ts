@@ -10,7 +10,7 @@ export function proxy(request: NextRequest) {
   return NextResponse.redirect(new URL(pathname + search, APP_ORIGIN), 308)
 }
 
-// Pages only: built assets and images never need the host check.
+// Pages only: built assets, images and Sentry reports (/monitoring) never need the host check.
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|icon.svg|apple-icon.png).*)"],
+  matcher: ["/((?!_next/static|_next/image|monitoring|favicon.ico|icon.svg|apple-icon.png).*)"],
 }
