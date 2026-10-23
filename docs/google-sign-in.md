@@ -14,18 +14,20 @@ Values used below:
 
 1. Open <https://console.cloud.google.com/>, create or pick a project (for example "Pantrila").
 2. **Google Auth Platform → Branding**: app name `Pantrila`, a support email, your developer
-   contact email. Under **Authorised domains** add `tlnigvzkselebbtetibt.supabase.co` and
-   `pantrila.vercel.app`; `pantrila.com` joins them once it is verified in Google Search Console
-   (phase 4 of `docs/plans/custom-domain.md`), and the home page becomes `https://pantrila.com`.
+   contact email, the logo (`site/public/email/logo.png`), home page `https://pantrila.com`,
+   privacy `https://pantrila.com/privacy`, terms `https://pantrila.com/terms`. Under **Authorised
+   domains** add `pantrila.com` (verified in Google Search Console with a TXT record in Vercel DNS)
+   and `tlnigvzkselebbtetibt.supabase.co`. Then **Verify branding**.
 3. **Audience**: user type **External**, then **Publish app** (status "In production").
-   While it is "Testing", only listed test users can sign in.
+   While it is "Testing", only listed test users can sign in. Google refuses to publish while any
+   client lists a non-HTTPS address, so local work keeps no `http://` origin (it is not needed:
+   sign-in goes through the Supabase callback).
 4. **Data access**: keep only the basic scopes `openid`, `.../auth/userinfo.email`,
    `.../auth/userinfo.profile`. These are non-sensitive, so Google does not review the app.
    Until the branding is verified, Google's consent screen names the Supabase domain instead
    of "Pantrila"; that does not block sign-in.
 5. **Clients → Create client**, type **Web application**, name `Pantrila web`:
-   - Authorised JavaScript origins: `https://app.pantrila.com`, `https://pantrila.vercel.app`,
-     `http://localhost:3000`
+   - Authorised JavaScript origins: `https://app.pantrila.com` (HTTPS only)
    - Authorised redirect URIs: `https://tlnigvzkselebbtetibt.supabase.co/auth/v1/callback`
    Save, then copy the **Client ID** and **Client secret**.
 

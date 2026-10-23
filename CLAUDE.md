@@ -48,6 +48,11 @@ Old address retired, custom domain phase 5: `web/src/proxy.ts` redirects `pantri
 start over there, by the owner's choice. Render `PANTRILA_CORS_ORIGINS` is `https://app.pantrila.com` plus
 localhost. No model call, so no eval rerun.
 
+Google branding, custom domain phase 4: `pantrila.com` verified in Search Console; the OAuth app is published (it had
+stayed in Testing because a client listed `http://localhost:3000`, now removed) and its branding (name, logo,
+pantrila.com home, privacy, terms) is verified, so the Google screen shows Pantrila. All five phases of
+`docs/plans/custom-domain.md` are done. Dashboard settings only, no code change.
+
 Branded auth emails: `scripts/email_templates.py` (layout in `scripts/email_layout.html`) writes the Supabase
 "Confirm signup", "Magic link" and "Change email address" templates and their subjects to `supabase/templates/`
 (README there says where to paste them; the owner pastes them into the dashboard). Table-based HTML with inline
