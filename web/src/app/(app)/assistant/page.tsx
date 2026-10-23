@@ -149,7 +149,7 @@ function RecipeLinks({ id, servings }: { id: string; servings?: number }) {
       </Link>
       <Link href={`/recipes/${id}/cook?servings=${servings ?? recipe.servings}`}
             className={buttonVariants({ variant: "outline", size: "sm" })}>
-        Cook mode
+        Let&apos;s cook this!
       </Link>
     </div>
   )
