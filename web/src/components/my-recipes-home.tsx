@@ -22,7 +22,7 @@ export function MyRecipesHome() {
   const actions = (
     <div className="flex flex-wrap gap-2">
       <Link href="/recipes/mine/new?method=post" className={buttonVariants({ size: "lg" })}>
-        <Share2 /> Import from a post
+        <Share2 /> Import from social media
       </Link>
       <Link href="/recipes/mine/new?method=link" className={buttonVariants({ variant: "outline", size: "lg", className: "bg-surface" })}>
         <Link2 /> From a recipe link

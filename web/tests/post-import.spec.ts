@@ -68,7 +68,7 @@ test("a post imports from its link straight into my recipes and keeps the credit
   await page.getByRole("button", { name: "Try it as a guest" }).click()
   await expect(page).not.toHaveURL(/login/)
   await page.goto("/recipes/mine/new")
-  await page.getByRole("button", { name: /From a post/ }).click()
+  await page.getByRole("button", { name: /From social media/ }).click()
   await page.getByLabel("Post link").fill(post)
   await page.getByRole("button", { name: "Read recipe" }).click()
 
@@ -131,7 +131,7 @@ test("where the service covers the platform, Pantrila says it is listening to th
   await expect(page).not.toHaveURL(/login/)
   await page.goto("/recipes/mine/new")
   const timingLoaded = page.waitForResponse("**/me/recipes/import/timing")
-  await page.getByRole("button", { name: /From a post/ }).click()
+  await page.getByRole("button", { name: /From social media/ }).click()
   await timingLoaded
   await page.getByLabel("Post link").fill(post)
   await expect(page.getByText("Pantrila reads the recipe from your post and credits the creator.")).toBeVisible()
@@ -162,7 +162,7 @@ test("where the service covers the platform, Pantrila says it is listening to th
   // A paused fake clock can stall Supabase's timer-driven auth start on a fresh page load.
   await page.clock.resume()
   await page.goto("/recipes/mine/new")
-  await page.getByRole("button", { name: /From a post/ }).click()
+  await page.getByRole("button", { name: /From social media/ }).click()
   await page.getByLabel("Post link").fill("https://www.tiktok.com/@sam/video/7300000000000000001")
   await expect(page.getByLabel("Caption", { exact: true })).toHaveCount(0)
   await expect(page.getByRole("button", { name: "Paste the caption" })).toHaveCount(0)

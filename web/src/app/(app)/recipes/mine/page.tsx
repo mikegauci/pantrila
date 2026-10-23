@@ -9,7 +9,21 @@ import { buttonVariants } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useCookbook } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
-import type { CookbookCard } from "@/lib/types"
+import type { CookbookCard, RecipeSource } from "@/lib/types"
+
+const ORIGIN: Record<RecipeSource, string> = {
+  post: "social media", link: "links", photo: "photos", video: "videos", text: "pasted text", manual: "typed in",
+}
+
+/** "social media 3, links 2, the assistant 1": where the cards came from. Saved assistant drafts count as the assistant. */
+function origins(cards: CookbookCard[]) {
+  const counts = new Map<string, number>()
+  for (const r of cards) {
+    const key = r.chat_draft ? "the assistant" : ORIGIN[r.source]
+    counts.set(key, (counts.get(key) ?? 0) + 1)
+  }
+  return [...counts].map(([name, n]) => `${name} ${n}`).join(", ")
+}
 
 function Card({ r }: { r: CookbookCard }) {
   const unsafe = r.problems.length > 0
@@ -75,6 +89,9 @@ export default function MyRecipesPage() {
         allergens and diets are worked out from the ingredients, as for every Pantrila recipe; they are
         not used in meal plans.
       </p>
+      {data?.length ? (
+        <p className="text-[13px] text-muted-foreground">Where they came from: {origins(data)}.</p>
+      ) : null}
       {error ? (
         <p role="alert" className="text-danger">{error.message}</p>
       ) : isLoading ? (

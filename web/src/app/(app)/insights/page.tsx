@@ -1,9 +1,6 @@
 "use client"
 
-import { ExternalLink } from "lucide-react"
-
 import { Panel, PanelTitle } from "@/components/bits"
-import { EVALS } from "@/lib/evals"
 import { usePlan } from "@/lib/hooks"
 import { kcalGoal, kcalTargetText } from "@/lib/plan"
 import type { Plan } from "@/lib/types"
@@ -65,31 +62,6 @@ export default function InsightsPage() {
       <Panel>
         <PanelTitle>Nutrition in your plan</PanelTitle>
         {plan ? <DayChart plan={plan} /> : <p className="text-muted-foreground">Plan a week to see energy and macros (protein, carbs and fat) per day.</p>}
-      </Panel>
-
-      <Panel>
-        <PanelTitle>Offline evals</PanelTitle>
-        <p className="mb-4 text-[13px] text-muted-foreground">
-          Every prompt, model or retrieval change is measured on fixed test sets before it ships.
-        </p>
-        <div className="grid gap-4 md:grid-cols-3">
-          {EVALS.map((e) => (
-            <div key={e.name} className="rounded-2xl border p-4">
-              <p className="font-semibold">{e.name}</p>
-              <p className="mb-3 text-[12px] text-muted-foreground">{e.what}</p>
-              <dl className="grid gap-1.5 text-[13px]">
-                {e.metrics.map(([k, v]) => (
-                  <div key={k} className="flex justify-between gap-3">
-                    <dt className="text-muted-foreground">{k}</dt><dd className="tabular font-semibold">{v}</dd>
-                  </div>
-                ))}
-              </dl>
-              <a href={e.report} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-[12px] font-medium text-primary-text underline">
-                Full report <ExternalLink className="size-3" />
-              </a>
-            </div>
-          ))}
-        </div>
       </Panel>
     </div>
   )
