@@ -33,6 +33,17 @@ readable history). Start a fresh Claude Code chat per step; this file carries th
 
 ## Status (update as work lands)
 
+Import jobs in the database: background imports (`POST /me/recipes/import/jobs`) now live in `import_jobs`
+(migration `20261023120000_import_jobs`, RLS) instead of one process's memory (`DbImportJobs`; `MemoryImportJobs`
+for tests). Each server process has an owner token and a 90 s lease on the jobs it runs, renewed every 20 s by
+`keep_jobs`; on a clean shutdown it gives the leases back, and any process takes over lapsed jobs
+(`claim_stale`, `for update skip locked`) and runs them again from the saved request on the same allowance
+reservation (`PaidOperation.resume`), so a deploy no longer kills imports and an import is charged once. Writes
+carry the owner token, so a process that lost a job cannot change it. After 3 runs a job fails with "try again" and
+its allowance is given back. Photos in a request are removed when the job ends; rows go after an hour (privacy page
+says so). No prompt/model change, so no eval rerun; new `tests/test_import_jobs.py` (memory and Postgres) and an API
+take-over test. Apply the migration on Supabase before deploying.
+
 Account deletion: Profile ends with "Delete account" (type "delete" to confirm). `DELETE /me` (`accounts.py`)
 deletes, at once and with no grace period, the person's Storage folders (`user-recipes/<id>/`, `avatars/<id>/`, via
 `PhotoStore.delete_folder`), their rows in every user table (`USER_TABLES`, one transaction; a test checks the list
@@ -759,8 +770,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   then a recipe site it links: a second call on the same import) / `estimate`; `fetch_page` with SSRF
   guards; `jsonld_recipe` (adds `ingredientSections` via `ingredient_groups`), `page_text`; `to_draft` checks every line in code and returns notes;
   `with_named_allergens` adds the allergens of table foods an estimated line names.
-- `src/pantrila/import_jobs.py`: `ImportJobs`, the in-memory registry behind background imports
-  (`app.state.import_jobs`); web side is `web/src/lib/import-jobs.ts`. The new recipe's photo is made in the
+- `src/pantrila/import_jobs.py`: `ImportJobs` behind background imports (`app.state.import_jobs`):
+  `DbImportJobs` on `import_jobs` with per-process leases and take-over after a restart, `MemoryImportJobs`; web side is `web/src/lib/import-jobs.ts`. The new recipe's photo is made in the
   background by `web/src/lib/photo-jobs.ts`.
 - `src/pantrila/social.py`: TikTok/Instagram/Facebook posts. `detect`, short links, `clean_url`
   (tracking query dropped), `fetch_post` (TikTok oEmbed; Instagram/Facebook Open Graph tags;

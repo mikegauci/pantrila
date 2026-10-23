@@ -13,6 +13,7 @@ from pantrila.api import Session, create_app
 from pantrila.auth import AuthError, User
 from pantrila.chats import MAX_THREADS_PER_USER, MemoryChats
 from pantrila.cookbook import MemoryCookbook
+from pantrila.import_jobs import MemoryImportJobs
 from pantrila.pantry import MemoryKitchen
 from pantrila.photos import MemoryPhotos, cookbook_path
 from pantrila.planner import PlanDraft
@@ -100,6 +101,9 @@ class MemoryBackend:
         yield Session(self.store, kitchen, MemoryRecords(user_id, self.shared),
                       MemoryCookbook(user_id, self.shared),
                       MemoryChats(user_id, self.shared))  # fmt: skip
+
+    def import_jobs(self):
+        return MemoryImportJobs(self.shared.setdefault("import_jobs", {}))
 
     def erase(self, user_id):
         self.kitchens.pop(user_id, None)
@@ -747,6 +751,39 @@ def test_sending_the_same_job_id_again_does_not_start_or_charge_twice(api, backe
     assert api.post("/me/recipes/import/jobs", json={**body, "id": "not-an-id"}).status_code == 422
 
 
+def test_an_import_a_stopped_server_left_is_run_again_and_charged_once(api, backend, monkeypatch):
+    import pantrila.recipe_import as ri
+    from pantrila.import_jobs import MemoryImportJobs
+    from pantrila.records import MemoryRecords
+
+    monkeypatch.setattr(ri, "fetch_page", lambda url, http=None, resolve=None:
+                        (url, "<p>Toast: 2 slices of bread</p>"))  # fmt: skip
+    # Another server reserved the allowance and started the job, then went away mid-import.
+    old_server = MemoryImportJobs(backend.shared["import_jobs"])
+    reservation = MemoryRecords("alice", backend.shared).reserve(
+        "import", api_today(), 10, 100.0, 0.05)  # fmt: skip
+    job = old_server.start("alice", "b" * 32, {"kind": "link", "url": "https://example.com/t"},
+                           reservation)  # fmt: skip
+    old_server.step(job, "page")
+    old_server.release()  # a clean shutdown gives the lease back at once
+
+    backend.client.replies = [imported_reply()]
+    assert api.app.state.resume_stale() == 1
+    done = wait_for_job(api, "b" * 32)
+    assert done["status"] == "done" and done["result"]["draft"]["title"] == "Toast"
+    assert done["steps"][0]["key"] == "page"
+    old_server.fail(job, 500, "too late")  # the old server lost the job; its writes do nothing
+    assert wait_for_job(api, "b" * 32)["status"] == "done"
+    assert [e["kind"] for e in api.get("/me/usage").json()["events"]] == ["import"]
+    assert backend.shared["reservations"] == {}
+
+
+def api_today():
+    from pantrila.api import today_start
+
+    return today_start()
+
+
 def test_two_background_imports_at_a_time(api, monkeypatch):
     import threading
 
@@ -1263,6 +1300,6 @@ def test_delete_account_needs_the_admin_key_and_no_running_import(api, backend):
     backend.admin = None
     assert api.delete("/me").status_code == 503
     backend.admin = FakeAuthAdmin()
-    api.app.state.import_jobs.start("alice")
+    api.app.state.import_jobs.start("alice", None, {"kind": "text", "text": "x" * 20}, None)
     assert api.delete("/me").status_code == 409
     assert backend.admin.deleted == []

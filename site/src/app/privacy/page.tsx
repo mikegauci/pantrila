@@ -42,8 +42,9 @@ export default function Privacy() {
         </li>
       </ul>
       <p>
-        Pantrila does not keep the photos, pages, posts or videos you import. They are read once to make the recipe
-        and then dropped. Recipe photos and profile pictures are stored at web addresses that are public but hard to
+        Pantrila does not keep the photos, pages, posts or videos you import. While an import runs, what you sent
+        (the link, text or photos) is held in Pantrila&rsquo;s database so the import can finish even if the server
+        restarts; photos are deleted as soon as the import ends, and the rest within an hour. Recipe photos and profile pictures are stored at web addresses that are public but hard to
         guess.
       </p>
 

@@ -17,6 +17,7 @@ from pantrila import config
 
 # Every table with a user_id column. tests/test_accounts.py checks this against the migrations.
 USER_TABLES = (
+    "import_jobs",
     "usage_reservations",
     "usage_events",
     "cooked_meals",

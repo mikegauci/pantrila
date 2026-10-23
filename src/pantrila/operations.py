@@ -1,5 +1,7 @@
 """One lifecycle for paid work: atomic allowance, partial usage, and exactly-once settlement."""
 
+from __future__ import annotations
+
 import math
 import os
 import statistics
@@ -71,6 +73,14 @@ class PaidOperation:
             raise HTTPException(exc.status, str(exc)) from exc
         self.started = time.perf_counter()
         self.finished = False
+
+    @classmethod
+    def resume(cls, records: Records, kind: Kind, model: str, reservation: str) -> PaidOperation:
+        """Settle work another process reserved (an import job taken over after a restart)."""
+        op = cls.__new__(cls)
+        op.records, op.kind, op.model, op.reservation = records, kind, model, reservation
+        op.started, op.finished = time.perf_counter(), False
+        return op
 
     def finish(self, usage: Usage, ok: bool = True, *, discard_empty: bool = False) -> float:
         ms = (time.perf_counter() - self.started) * 1000

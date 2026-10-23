@@ -123,7 +123,7 @@ from pantrila.cookbook import (
 from pantrila.cooking import grams_used, use_from_pantry
 from pantrila.foods import UnitError, load_foods, measures
 from pantrila.grocery import grocery_list
-from pantrila.import_jobs import ImportJob, ImportJobs
+from pantrila.import_jobs import HEARTBEAT_SECONDS, ImportJob, ImportJobs
 from pantrila.meal_swap import (
     PlanCatalog,
     Source,
@@ -253,8 +253,18 @@ def create_app(
         app.state.backend = backend or DbBackend(config.database_url())
         app.state.verify = verify or verifier(config.supabase_url()).verify
         app.state.media = media or media_source()
-        app.state.import_jobs = ImportJobs()
+        app.state.import_jobs = app.state.backend.import_jobs()
+        app.state.resume_stale = resume_stale
+        stop = threading.Event()
+        keeper = threading.Thread(target=keep_jobs, args=(stop,), daemon=True)
+        keeper.start()
         yield
+        stop.set()
+        keeper.join(timeout=5)
+        try:
+            app.state.import_jobs.release()  # the next server takes over at once
+        except Exception:
+            log.warning("could not release import jobs", exc_info=True)
         app.state.backend.close()
 
     app = FastAPI(title="Pantrila API", version="0.4.0", lifespan=lifespan)
@@ -580,36 +590,66 @@ def create_app(
     @app.post("/me/recipes/import/jobs", status_code=202)
     def start_import(body: ImportJobIn, user: UserDep) -> ImportJobView:
         """Start an import that keeps running if the browser goes away (a locked phone, another
-        tab); poll `GET /me/recipes/import/jobs/{id}` for the result. Sending the same `id`
-        again returns the job it started. The daily allowance is reserved here, so a person
-        over their cap is told at once."""
-        jobs, backend = app.state.import_jobs, app.state.backend
+        tab) or the server restarts; poll `GET /me/recipes/import/jobs/{id}` for the result.
+        Sending the same `id` again returns the job it started. The daily allowance is
+        reserved here, so a person over their cap is told at once."""
+        jobs: ImportJobs = app.state.import_jobs
         if body.id and (existing := jobs.get(user.id, body.id)):
             return job_view(existing)
-        with backend.session(user.id) as s:
+        with app.state.backend.session(user.id) as s:
             operation = PaidOperation(s.records, "import", config.model())
+        request = body.model_dump(exclude={"id"}, exclude_none=True)
         try:
-            job = jobs.start(user.id, body.id)
+            job = jobs.start(user.id, body.id, request, operation.reservation)
         except HTTPException:
             operation.finish(Usage(), ok=False, discard_empty=True)
             raise
-        work = work_for(body.request)
-
-        def run() -> None:
-            try:
-                with backend.session(user.id) as s:
-                    view = import_view(s, work, operation, lambda key: jobs.step(job, key))
-                    jobs.succeed(job, view)
-            except HTTPException as exc:
-                operation.finish(Usage(), ok=False, discard_empty=True)
-                jobs.fail(job, exc.status_code, str(exc.detail))
-            except Exception:
-                operation.finish(Usage(), ok=False, discard_empty=True)
-                log.exception("background import failed")
-                jobs.fail(job, 500, "Reading the recipe failed. Try again.")
-
-        threading.Thread(target=run, daemon=True).start()
+        threading.Thread(target=run_job, args=(job, operation), daemon=True).start()
         return job_view(job)
+
+    def run_job(job: ImportJob, operation: PaidOperation) -> None:
+        jobs: ImportJobs = app.state.import_jobs
+        backend: Backend = app.state.backend
+        try:
+            work = work_for(ImportJobIn.model_validate(job.request).request)
+            with backend.session(job.user_id) as s:
+                view = import_view(s, work, operation, lambda key: jobs.step(job, key))
+                jobs.succeed(job, view)
+        except HTTPException as exc:
+            operation.finish(Usage(), ok=False, discard_empty=True)
+            jobs.fail(job, exc.status_code, str(exc.detail))
+        except Exception:
+            operation.finish(Usage(), ok=False, discard_empty=True)
+            log.exception("background import failed")
+            jobs.fail(job, 500, "Reading the recipe failed. Try again.")
+
+    def resume_stale() -> int:
+        """Run again the jobs a stopped server left behind; returns how many were taken over."""
+        jobs: ImportJobs = app.state.import_jobs
+        claimed, given_up = jobs.claim_stale()
+
+        def operation(job: ImportJob) -> PaidOperation:
+            with app.state.backend.session(job.user_id) as s:
+                return PaidOperation.resume(s.records, "import", config.model(),
+                                            job.reservation or "")  # fmt: skip
+
+        for job in given_up:  # give the allowance back
+            operation(job).finish(Usage(), ok=False, discard_empty=True)
+        for job in claimed:
+            log.info("resuming import job %s (attempt %d)", job.id, job.attempts)
+            threading.Thread(target=run_job, args=(job, operation(job)), daemon=True).start()
+        return len(claimed)
+
+    def keep_jobs(stop: threading.Event) -> None:
+        """Renew this server's leases and take over jobs a stopped server left, until shutdown."""
+        while True:
+            try:
+                app.state.import_jobs.heartbeat()
+                resume_stale()
+            except Exception:
+                log.warning("import job upkeep failed", exc_info=True)
+            if stop.wait(HEARTBEAT_SECONDS):
+                return
 
     @app.get("/me/recipes/import/jobs/{job_id}")
     def import_job(job_id: str, user: UserDep) -> ImportJobView:

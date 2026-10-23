@@ -13,6 +13,7 @@ from pantrila.chats import Chats
 from pantrila.cookbook import (
     Cookbook,
 )
+from pantrila.import_jobs import DbImportJobs, ImportJobs
 from pantrila.pantry import Kitchen
 from pantrila.photos import (
     PhotoStore,
@@ -51,6 +52,10 @@ class Backend(Protocol):
 
     def session(self, user_id: str) -> AbstractContextManager[Session]: ...
 
+    def import_jobs(self) -> ImportJobs:
+        """Where background imports are kept (see pantrila.import_jobs)."""
+        ...
+
     def erase(self, user_id: str) -> None:
         """Delete the person's rows in every user table (see pantrila.accounts)."""
         ...
@@ -87,6 +92,9 @@ class DbBackend:
             PooledRepository(self.pool, DbCookbook, user_id),
             PooledRepository(self.pool, DbChats, user_id),
         )
+
+    def import_jobs(self) -> DbImportJobs:
+        return DbImportJobs(self.pool)
 
     def erase(self, user_id: str) -> None:
         with self.pool.connection() as conn:
