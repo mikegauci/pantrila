@@ -48,6 +48,13 @@ Old address retired, custom domain phase 5: `web/src/proxy.ts` redirects `pantri
 start over there, by the owner's choice. Render `PANTRILA_CORS_ORIGINS` is `https://app.pantrila.com` plus
 localhost. No model call, so no eval rerun.
 
+Branded auth emails: `scripts/email_templates.py` (layout in `scripts/email_layout.html`) writes the Supabase
+"Confirm signup", "Magic link" and "Change email address" templates and their subjects to `supabase/templates/`
+(README there says where to paste them; the owner pastes them into the dashboard). Table-based HTML with inline
+styles in the design-system colours, logo from `https://pantrila.com/email/logo.png` (`site/public/email/`), a
+green button, the expiry note and a plain link fallback. A test checks the committed files match the generator. No
+model call, so no eval rerun.
+
 Sign-in email, custom domain phase 3: Supabase Auth sends through Resend (custom SMTP `smtp.resend.com:465`, sender
 `no-reply@send.pantrila.com`, domain `send.pantrila.com` verified, EU region; 30 emails/hour), so magic links reach
 anyone, not only the Supabase team; checked with a link to `hello@pantrila.com`. `hello@pantrila.com` is a FastComet
@@ -752,7 +759,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   "Pantrila live" LangSmith dashboard via the charts API).
 - `docs/`: `demo-script.md` (video walkthrough), `google-sign-in.md` (Google Cloud + Supabase setup), `screenshots/` (README images, taken from the
   web app at 1280 px wide).
-- `supabase/migrations/`: SQL migrations.
+- `supabase/migrations/`: SQL migrations. `supabase/templates/`: auth email templates written by
+  `scripts/email_templates.py`, pasted into the Supabase dashboard.
 - `evals/`: `retrieval_queries.py` (deterministic query generator) -> `data/retrieval_queries.json`,
   `plan_profiles.py` (16 eval profiles) -> `data/plan_profiles.json`, `chat_cases.py` (24
   assistant cases) -> `data/chat_cases.json`, `import_cases.py` (12 synthetic recipe pages,
@@ -817,6 +825,7 @@ uv run python scripts/reel_media_check.py --actor <id> --input '<json with {url}
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 uv run pantrila photos generate [--only ids] [--limit n] [--force] [--dry-run]  # corpus photos (paid; ~$0.014 each)
 uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # LangSmith dashboard
+uv run python scripts/email_templates.py      # rewrite supabase/templates/ (then paste into Supabase)
 uv run uvicorn pantrila.api:app --env-file .env --reload   # API on :8000 (SUPABASE_URL, DATABASE_URL)
 cd web && npm ci && npm run dev          # :3000; web/.env.local from web/.env.example
 cd web && npm run lint && npm run typecheck && npm run build   # what CI runs for web
