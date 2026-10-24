@@ -31,7 +31,11 @@ for (const size of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) 
     await page.waitForURL("http://127.0.0.1:3100/")
     const tour = page.getByRole("dialog")
     await expect(tour.getByText("Welcome to Pantrila")).toBeVisible()
-    for (let i = 0; i < 6; i++) await tour.getByRole("button", { name: /^(Start|Next)$/ }).click()
+    // Wait for each step before the next click: a click during a step change can be lost on slow CI.
+    for (let i = 0; i < 6; i++) {
+      await tour.getByRole("button", { name: /^(Start|Next)$/ }).click()
+      await expect(tour.getByText(new RegExp(`^Step ${i + 2} of \\d+$`))).toBeVisible()
+    }
     await expect(tour.getByText("Add a recipe four ways")).toBeVisible()
     await expect(page).toHaveURL(/\/recipes\/mine\/new/)
     await tour.getByRole("button", { name: /^(Start|Next)$/ }).click()
