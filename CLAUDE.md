@@ -27,9 +27,22 @@ latency per plan, and clear architecture matter as much as features.
    web on Vercel, Supabase Postgres).
 5. **Portfolio polish**: README with architecture diagram, eval snapshot, LangSmith
    dashboards for quality/cost/latency, demo script and video.
+6. **iPhone and Android apps (Expo)**: React Native app in `mobile/` on the same API and Supabase
+   Auth, shared logic in `packages/core`, EAS builds and store submission. 13 steps (PR 0 for the
+   owner's accounts, then PR 1-12), each its own PR, in
+   [`docs/plans/mobile-app.md`](docs/plans/mobile-app.md).
 
 Work on one step at a time; each step is its own PR (commits within it can be split for a
 readable history). Start a fresh Claude Code chat per step; this file carries the context.
+
+## Mobile apps (current track)
+
+Building the iOS and Android apps with Expo, one PR at a time, in the order given in
+[`docs/plans/mobile-app.md`](docs/plans/mobile-app.md). In a new chat (desktop or phone), say "do the
+next PR of the mobile plan": read that file first, take the first PR its Progress table does not
+mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
+Progress and the handoff log, and adding a Status entry here. Next: **PR 1 (`feat/shared-core`)**;
+the owner can do PR 0 (Apple, Google Play, Expo accounts) alongside it.
 
 ## Status (update as work lands)
 
