@@ -12,7 +12,10 @@ const profile = {
 }
 
 async function mockBackends(page: Page, seen: string[]) {
-  await page.addInitScript((id) => localStorage.setItem(`pantrila-tour-done:${id}`, "1"), GUEST)
+  await page.addInitScript((id) => {
+    localStorage.setItem(`pantrila-tour-done:${id}`, "1")
+    localStorage.setItem(`pantrila-replay:${id}`, "off")
+  }, GUEST)
   await page.route("http://127.0.0.1:54321/**", async (route) => {
     const url = route.request().url()
     seen.push(url)

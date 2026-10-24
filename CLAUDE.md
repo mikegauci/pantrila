@@ -46,6 +46,17 @@ the owner can do PR 0 (Apple, Google Play, Expo accounts) alongside it.
 
 ## Status (update as work lands)
 
+PostHog session replay, opt-in: after the first-run tour the app asks once "Help improve Pantrila?"
+(`web/src/components/replay-consent.tsx`); Profile has a "Record my visits" switch. Only on yes does
+`web/src/lib/replay.ts` load posthog-js 1.438.7 (EU, through the `/ingest` rewrite in `next.config.ts`, skipped by
+`proxy.ts`): replay only (no autocapture, page views, heatmaps, surveys or flags; remote config stays on, which replay
+needs), opted out by default, inputs masked but on-screen text shown (owner's choice), `$geoip_disable`, identified by
+the Supabase user id so replays join the server funnel person. The choice is `localStorage["pantrila-replay:<user>"]`;
+signing out or deleting stops and resets it, and account deletion now also sends `delete_recordings`. Needs
+`NEXT_PUBLIC_POSTHOG_KEY` (the `phc_` project key) on Vercel. Privacy page updated. Playwright builds with a fake key,
+so every spec presets `pantrila-replay:<user>=off`; `replay-consent.spec.ts` uses a desktop Chrome user agent because
+PostHog drops headless browsers as bots. No model call, so no eval rerun.
+
 PostHog funnel: the API sends sign-up -> first import -> first plan -> cooking mode -> return events to PostHog EU
 (`analytics.py`, `POSTHOG_API_KEY`; off when unset), keyed by the Supabase user id only: no browser SDK, no cookies,
 geoip off, no email or content. `current_user` calls `Visits.seen` once per person per day per process; migration

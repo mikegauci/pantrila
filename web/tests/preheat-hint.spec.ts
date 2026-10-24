@@ -20,6 +20,7 @@ const recipe = {
 test("a preheat step in cooking mode shows the bake sentence on hover, not on the recipe page", async ({ page }) => {
   await page.addInitScript((user) => {
     localStorage.setItem(`pantrila-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-replay:${user}`, "off")
     const sentinel = { released: false, release: async () => {}, addEventListener: () => {} }
     Object.defineProperty(navigator, "wakeLock", { value: { request: async () => sentinel } })
   }, id)

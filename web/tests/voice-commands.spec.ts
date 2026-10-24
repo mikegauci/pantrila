@@ -20,6 +20,7 @@ async function open(page: Page, speech: boolean) {
   await page.clock.install()
   await page.addInitScript(({ user, speech }) => {
     localStorage.setItem(`pantrila-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-replay:${user}`, "off")
     if (!speech) {
       for (const name of ["SpeechRecognition", "webkitSpeechRecognition"]) {
         Object.defineProperty(window, name, { value: undefined, configurable: true })

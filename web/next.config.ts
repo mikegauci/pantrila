@@ -18,6 +18,14 @@ const nextConfig: NextConfig = {
   // The signed-in app is client-rendered; validate only segments that opt in with `instant`.
   experimental: { instantInsights: { validationLevel: "manual-warning" } },
   partialPrefetching: true,
+  // Session replay goes to PostHog EU through our own domain, so content blockers let it through.
+  async rewrites() {
+    return [
+      { source: "/ingest/static/:path*", destination: "https://eu-assets.i.posthog.com/static/:path*" },
+      { source: "/ingest/:path*", destination: "https://eu.i.posthog.com/:path*" },
+    ];
+  },
+  skipTrailingSlashRedirect: true,
   turbopack: {
     rules: {
       "*.css": {

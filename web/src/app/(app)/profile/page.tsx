@@ -9,17 +9,20 @@ import { UserAvatar } from "@/components/app-shell"
 import { useAuth } from "@/components/auth-provider"
 import { Panel, PanelTitle } from "@/components/bits"
 import { FeedbackSheet } from "@/components/feedback"
+import { REPLAY_EXPLAINER } from "@/components/replay-consent"
 import { GoogleMark } from "@/components/google-mark"
 import { useTour } from "@/components/tour"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send } from "@/lib/api"
 import { label } from "@/lib/format"
 import { useFoods, useMe, useMeta, useProfile, useRefreshKitchen } from "@/lib/hooks"
 import { toAvatarDataUrl } from "@/lib/images"
+import { replayAvailable, replayChoice, setReplayChoice } from "@/lib/replay"
 import { googlePicture, linkGoogle, supabase } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
 import { hasKcalRange, kcalGoal } from "@/lib/plan"
@@ -66,6 +69,28 @@ function forgetLocal(userId: string) {
       // storage blocked: nothing to forget
     }
   }
+}
+
+function RecordingCard() {
+  const { session } = useAuth()
+  const userId = session?.user.id
+  const [on, setOn] = useState(() => (userId ? replayChoice(userId) === "on" : false))
+  if (!userId || !replayAvailable()) return null
+  return (
+    <Panel>
+      <PanelTitle>Help improve Pantrila</PanelTitle>
+      <label className="flex items-start justify-between gap-4">
+        <span className="text-muted-foreground">
+          <span className="block font-medium text-foreground">Record my visits</span>
+          {REPLAY_EXPLAINER}
+        </span>
+        <Switch checked={on} aria-label="Record my visits" onCheckedChange={(next) => {
+          setOn(next)
+          setReplayChoice(userId, next ? "on" : "off")
+        }} />
+      </label>
+    </Panel>
+  )
 }
 
 function DeleteAccountCard() {
@@ -460,6 +485,7 @@ export default function ProfilePage() {
         </Panel>
 
         <HelpCard />
+        <RecordingCard />
         <DeleteAccountCard />
       </div>
 

@@ -11,7 +11,10 @@ test("the energy target can be a range, prefilled from the single number", async
   const profile = { allergies: [], diets: [], exclude_foods: [], max_minutes: null, days: 3,
     meals: ["breakfast", "dinner"], targets: { kcal: 2000, min_kcal: null, max_kcal: null,
       min_protein_g: null, max_carbs_g: null }, pantry: [], cuisines: [], notes: "" }
-  await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
+  await page.addInitScript((user) => {
+    localStorage.setItem(`pantrila-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-replay:${user}`, "off")
+  }, id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const request = route.request()

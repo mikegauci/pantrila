@@ -24,7 +24,10 @@ const draft: CookbookRecipeIn = {
 
 test("an imported recipe keeps its ingredient groups and method headings through save and edit", async ({ page }) => {
   let saved: CookbookRecipeIn | null = null
-  await page.addInitScript((id) => localStorage.setItem(`pantrila-tour-done:${id}`, "1"), user)
+  await page.addInitScript((id) => {
+    localStorage.setItem(`pantrila-tour-done:${id}`, "1")
+    localStorage.setItem(`pantrila-replay:${id}`, "off")
+  }, user)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(user) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname
@@ -93,7 +96,10 @@ test("cooking mode lists the step's own group: one olive oil, and its seasonings
     steps: ["Whisk together olive oil and seasonings, then rub it over each thigh.", "Heat the olive oil and add the curry powder."],
     step_sections: [{ title: "Chicken", first_step: 1 }, { title: "Broth", first_step: 2 }],
   }
-  await page.addInitScript((id) => localStorage.setItem(`pantrila-tour-done:${id}`, "1"), user)
+  await page.addInitScript((id) => {
+    localStorage.setItem(`pantrila-tour-done:${id}`, "1")
+    localStorage.setItem(`pantrila-replay:${id}`, "off")
+  }, user)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(user) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname

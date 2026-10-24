@@ -6,7 +6,10 @@ const id = "00000000-0000-4000-8000-000000000010"
 
 test("Send feedback in the account menu sends the message to Sentry", async ({ page }) => {
   const envelopes: string[] = []
-  await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
+  await page.addInitScript((user) => {
+    localStorage.setItem(`pantrila-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-replay:${user}`, "off")
+  }, id)
   await page.route("**/monitoring**", async (route) => {
     envelopes.push(route.request().postData() ?? "")
     await route.fulfill({ status: 200, json: {} })

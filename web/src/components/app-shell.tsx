@@ -12,6 +12,7 @@ import { useAuth } from "@/components/auth-provider"
 import { FeedbackSheet } from "@/components/feedback"
 import { GoogleMark } from "@/components/google-mark"
 import { Logo } from "@/components/logo"
+import { ReplayConsent } from "@/components/replay-consent"
 import { TourProvider, useTour } from "@/components/tour"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -246,6 +247,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </main>
       </div>
       <BottomTabs pathname={pathname} />
+      <ReplayConsent />
     </div>
     </TourProvider>
   )
