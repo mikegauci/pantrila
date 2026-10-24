@@ -1,5 +1,5 @@
-// Session replay with PostHog (EU), only for people who said yes. Nothing loads, records or
-// is stored in the browser for it until then; "No" or turning it off in Profile stops it.
+// Session replay with PostHog (EU), on for everyone signed in unless they turn off "Record my
+// visits" in Profile (the privacy page says so); turning it off stops it and resets PostHog.
 // Replays mask everything typed (inputs and text areas) but show the text on screen. They
 // join the person the API already sends funnel events for (the Supabase user id), so
 // deleting the account deletes the recordings too (pantrila.analytics).
@@ -12,12 +12,12 @@ export const replayAvailable = () => Boolean(KEY)
 
 const choiceKey = (userId: string) => `pantrila-replay:${userId}`
 
-export function replayChoice(userId: string): ReplayChoice | null {
+/** On unless the person turned it off. */
+export function replayChoice(userId: string): ReplayChoice {
   try {
-    const v = localStorage.getItem(choiceKey(userId))
-    return v === "on" || v === "off" ? v : null
+    return localStorage.getItem(choiceKey(userId)) === "off" ? "off" : "on"
   } catch {
-    return "off"  // storage blocked: never ask, never record
+    return "off"  // storage blocked: the off switch could not be remembered, so do not record
   }
 }
 

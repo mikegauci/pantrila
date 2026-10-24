@@ -99,8 +99,8 @@ export default function Privacy() {
           is stored in your browser for it.
         </li>
         <li>
-          <strong>PostHog</strong> also keeps recordings of your visits, only if you say yes when Pantrila asks (you
-          can change it in Profile). A recording shows your taps, scrolling and the screens you see, including your
+          <strong>PostHog</strong> also keeps recordings of your visits, unless you turn off &ldquo;Record my
+          visits&rdquo; in Profile. A recording shows your taps, scrolling and the screens you see, including your
           diet and allergy settings and the recipes and chats on screen; anything you type is hidden. Recordings are
           linked to your account id, kept for 30 days, and deleted with your account.
         </li>
@@ -113,8 +113,8 @@ export default function Privacy() {
       <h2>In your browser</h2>
       <p>
         Pantrila keeps your sign-in session and a few preferences (such as °C or °F, whether you finished the tour,
-        and whether you agreed to recordings) in your browser’s local storage. If you agree to recordings, PostHog
-        also keeps an id for them there; if you say no, nothing is recorded or sent. There are no advertising cookies
+        and whether you turned recordings off) in your browser’s local storage. While recordings are on, PostHog
+        also keeps an id for them there; turning them off stops the recording and resets that id. There are no advertising cookies
         and no analytics cookies. As a guest, clearing
         your browser data signs you out for good; add Google from your profile to keep your data.
       </p>
