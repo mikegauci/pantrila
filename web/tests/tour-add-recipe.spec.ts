@@ -7,6 +7,7 @@ const id = "00000000-0000-4000-8000-000000000008"
 for (const size of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
   test(`the tour shows the ways to add a recipe at ${size.width} px`, async ({ page }) => {
     await page.setViewportSize(size)
+    await page.addInitScript((user) => localStorage.setItem(`pantrila-replay:${user}`, "off"), id)
     await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
     await page.route("http://127.0.0.1:8000/**", async (route) => {
       const path = new URL(route.request().url()).pathname

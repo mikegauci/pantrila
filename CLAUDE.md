@@ -47,16 +47,17 @@ the owner can do PR 0 (Apple, Google Play, Expo and RevenueCat accounts) alongsi
 
 ## Status (update as work lands)
 
-PostHog session replay, opt-in: after the first-run tour the app asks once "Help improve Pantrila?"
-(`web/src/components/replay-consent.tsx`); Profile has a "Record my visits" switch. Only on yes does
-`web/src/lib/replay.ts` load posthog-js 1.438.7 (EU, through the `/ingest` rewrite in `next.config.ts`, skipped by
-`proxy.ts`): replay only (no autocapture, page views, heatmaps, surveys or flags; remote config stays on, which replay
-needs), opted out by default, inputs masked but on-screen text shown (owner's choice), `$geoip_disable`, identified by
-the Supabase user id so replays join the server funnel person. The choice is `localStorage["pantrila-replay:<user>"]`;
-signing out or deleting stops and resets it, and account deletion now also sends `delete_recordings`. Needs
-`NEXT_PUBLIC_POSTHOG_KEY` (the `phc_` project key) on Vercel. Privacy page updated. Playwright builds with a fake key,
-so every spec presets `pantrila-replay:<user>=off`; `replay-consent.spec.ts` uses a desktop Chrome user agent because
-PostHog drops headless browsers as bots. No model call, so no eval rerun.
+PostHog session replay, on by default (owner's choice, opt-out): every signed-in visit is recorded unless the
+person turns off "Record my visits" in Profile (`localStorage["pantrila-replay:<user>"]="off"`); there is no prompt.
+`web/src/components/replay-consent.tsx` (`ReplaySession`) starts or stops it with the session; `web/src/lib/replay.ts`
+loads posthog-js 1.438.7 (EU, through the `/ingest` rewrite in `next.config.ts`, skipped by `proxy.ts`): replay only
+(no autocapture, page views, heatmaps, surveys or flags; remote config stays on, which replay needs), inputs masked but
+on-screen text shown (owner's choice), `$geoip_disable`, identified by the Supabase user id so replays join the server
+funnel person. Signing out or deleting stops and resets it; account deletion also sends `delete_recordings`. Needs
+`NEXT_PUBLIC_POSTHOG_KEY` (the `phc_` project key, set on Vercel). Privacy page says recordings are on unless turned
+off. Note for a wider EU launch: ePrivacy expects consent before recording, and recordings show allergies and diet.
+Playwright builds with a fake key, so every spec presets `pantrila-replay:<user>=off`; `replay-consent.spec.ts` uses a
+desktop Chrome user agent because PostHog drops headless browsers as bots. No model call, so no eval rerun.
 
 PostHog funnel: the API sends sign-up -> first import -> first plan -> cooking mode -> return events to PostHog EU
 (`analytics.py`, `POSTHOG_API_KEY`; off when unset), keyed by the Supabase user id only: no browser SDK, no cookies,

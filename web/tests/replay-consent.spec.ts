@@ -28,30 +28,23 @@ async function signIn(page: Page, id: string, ingest: string[]) {
   await page.getByRole("button", { name: "Try it as a guest" }).click()
 }
 
-test("nothing is recorded until the person says yes, and No is remembered", async ({ page }) => {
+test("replay starts on sign-in with no prompt, and Profile turns it off", async ({ page }) => {
+  const id = "00000000-0000-4000-8000-000000000012"
   const ingest: string[] = []
-  await signIn(page, "00000000-0000-4000-8000-000000000011", ingest)
-  const banner = page.getByRole("dialog", { name: "Help improve Pantrila?" })
-  await expect(banner).toBeVisible()
-  await expect(banner).toContainText("Anything you type is hidden")
-  await banner.getByRole("button", { name: "No thanks" }).click()
-  await expect(banner).toBeHidden()
-  await page.reload()
-  await page.waitForTimeout(2500)
-  await expect(banner).toBeHidden()
-  expect(ingest).toEqual([])
-})
-
-test("saying yes starts replay, and Profile can turn it off", async ({ page }) => {
-  const ingest: string[] = []
-  await signIn(page, "00000000-0000-4000-8000-000000000012", ingest)
-  await page.getByRole("button", { name: "Yes, record my visits" }).click()
+  await signIn(page, id, ingest)
   await expect.poll(() => ingest.length).toBeGreaterThan(0)
+  await expect(page.getByRole("dialog")).toHaveCount(0)
+
   await page.getByRole("link", { name: "Profile", exact: true }).first().click()
   const toggle = page.getByRole("switch", { name: "Record my visits" })
   await expect(toggle).toBeChecked()
   await toggle.click()
   await expect(toggle).not.toBeChecked()
-  expect(await page.evaluate(() => localStorage.getItem("pantrila-replay:00000000-0000-4000-8000-000000000012")))
-    .toBe("off")
+  expect(await page.evaluate((user) => localStorage.getItem(`pantrila-replay:${user}`), id)).toBe("off")
+
+  const after = ingest.length
+  await page.reload()
+  await expect(page.getByRole("switch", { name: "Record my visits" })).not.toBeChecked()
+  await page.waitForTimeout(2500)
+  expect(ingest.length).toBe(after)  // off is remembered: nothing loads after a reload
 })
