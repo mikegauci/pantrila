@@ -12,6 +12,14 @@ Decisions (owner, 2026-10-24):
 - Logic that does not draw UI is shared with `web/` through a `packages/core` package.
 - No backend rewrite. API changes only where a native client needs them (a client header for
   analytics, deep-link files, Apple sign-in).
+- Freemium from launch: Free and **Pantrila Pro**, sold through Apple and Google in-app purchases
+  (required for a digital subscription inside the apps), managed by **RevenueCat**. Pro is
+  **€4.99 a month or €29.99 a year, each with a 7-day free trial** (a store "introductory offer",
+  so there is no trial code). ReciMe charges $59.99 a year in the US (checked 2026-10-24), so
+  Pantrila's yearly price is half of it and the monthly price stays under €5. Apple and Google
+  collect EU VAT; web billing (Stripe through RevenueCat) waits until after launch, since selling
+  on the web makes Pantrila responsible for VAT. Pro bought on a phone also unlocks the web app
+  (same user id). Launch market: Malta first, then the EU and the UK, all in English.
 - Feature parity with the web app is the target for 1.0, except: the first-run tour becomes a short
   onboarding, Insights stays web only, and the PostHog session replays stay web only.
 
@@ -32,7 +40,7 @@ section of `CLAUDE.md`. Owner steps (accounts, dashboards, phone checks) are mar
   everyday work; make new native builds only when native code or config changes.
 - **Google Play, new personal developer account**: before the first production release, the app
   must run a **closed test with at least 12 testers opted in for 14 days in a row**. Start this
-  early (PR 11), as it is the longest wait in the plan.
+  early (PR 13), as it is the longest wait in the plan.
 - **Apple rules that shape the app**:
   - Sign in with Apple is required because the app offers Google sign-in (guideline 4.8).
   - Account deletion must be possible in the app (5.1.1(v)); Pantrila already has `DELETE /me`.
@@ -86,7 +94,7 @@ them):
 | Errors | `@sentry/react-native` (Sentry EU, same rules as web: no PII, no replays) |
 | Tests | Jest + React Native Testing Library; Maestro for end-to-end flows |
 
-## PR 0: accounts and dashboards (owner, no code; can run alongside PR 1-3)
+## PR 0: accounts and dashboards (owner, no code; can run alongside PR 1-4)
 
 - [ ] Apple Developer Program ($99/year). Individual is quickest; an organisation account shows a
       company name in the store but needs a D-U-N-S number (days to weeks).
@@ -98,8 +106,15 @@ them):
       **Android OAuth client** (package + SHA-1 of the EAS signing key, from `eas credentials`).
       Add both client ids to Supabase → Auth → Google → "Authorized Client IDs".
 - [ ] Apple: a Services ID and a Sign in with Apple key; Supabase → Auth → Apple enabled with them
-      (steps go in `docs/apple-sign-in.md`, written in PR 3).
+      (steps go in `docs/apple-sign-in.md`, written in PR 4).
 - [ ] Supabase → Auth → URL Configuration: add `pantrila://auth/callback` to the redirect list.
+- [ ] App Store Connect → Business: sign the Paid Applications Agreement, add bank and tax details
+      (needed before any subscription can be tested or sold).
+- [ ] Apple **App Store Small Business Program** and Google Play's 15% service fee tier: enrol, so
+      the store cut is 15% instead of 30%.
+- [ ] Play Console: payments profile (merchant account) linked.
+- [ ] RevenueCat account (free until about $2.5k a month in revenue); a project "Pantrila" with the
+      iOS and Android apps added (App Store Connect API key, Play service account).
 
 ## PR 1: shared `packages/core` (no behaviour change)
 
@@ -146,7 +161,55 @@ Branch `feat/mobile-skeleton`.
       on the phone; `npx expo start` reloads it.
 - [ ] `CLAUDE.md` Commands and Layout gain `mobile/`.
 
-## PR 3: sign-in
+## PR 3: subscription tiers in the API
+
+Branch `feat/subscription-tiers`. Backend only, so every later screen can show the right limits.
+
+- [ ] Migration `entitlements` (RLS on, as every table): `user_id`, `tier` (`free`|`pro`),
+      `status` (`trial`|`active`|`grace`|`expired`), `expires_at`, `store` (`app_store`|
+      `play_store`|`stripe`|`manual`), `product_id`, `updated_at`. No row means Free. Apply on
+      Supabase before deploying.
+- [ ] `POST /webhooks/revenuecat`: checks the `Authorization` header against
+      `REVENUECAT_WEBHOOK_SECRET`, then asks RevenueCat's REST API for the subscriber
+      (`REVENUECAT_API_KEY`) and stores what it says (the webhook body alone is not trusted;
+      repeats and out-of-order events are harmless). RevenueCat's app user id is the Supabase user
+      id.
+- [ ] `PANTRILA_PRO_USERS` (comma-separated user ids) for the owner and App Review test accounts.
+- [ ] Caps per tier in `operations.py`: the existing `PANTRILA_DAILY_*` caps become Pro's, and a
+      Free set is added with a window (day, week or month). Starting point, changeable through env
+      vars without a deploy:
+
+      | Paid feature | Free | Pro (fair use) |
+      | --- | --- | --- |
+      | Meal plans | 1 a week | 5 a day |
+      | Recipe imports (link, post, photo, text) | 5 a month | 20 a day |
+      | Assistant messages | 10 a day | 50 a day |
+      | AI recipe photos | none (meal-type art) | 5 a day |
+
+      Browsing, search, cooking mode with voice, the grocery list, pantry, swaps and My recipes
+      stay free and unlimited (no model cost). The shared daily budget
+      (`PANTRILA_DAILY_BUDGET_USD`) still caps everyone.
+- [ ] A Free cap reached returns 402 with `{ "code": "pro_required", "feature", "resets_at" }`;
+      a Pro fair-use cap stays a 429.
+- [ ] `/me` and `/me/usage` return the tier, status, renewal or end date and what is left of each
+      cap. Web: a "Pro" badge in the account menu, usage on Profile, and at a Free cap a sheet
+      "Get Pantrila Pro in the app" (store links once PR 14 ships; no web checkout).
+- [ ] Account deletion: `entitlements` in `USER_TABLES`; RevenueCat's subscriber is deleted too.
+      The delete screens say a store subscription must be cancelled in the phone's settings (Apple
+      and Google do not let apps cancel it).
+- [ ] PostHog: `trial_started`, `subscribed`, `renewed`, `cancelled`, `expired` from the webhook
+      (allowlist in `analytics.py`), keyed by user id only.
+- [ ] Privacy page lists RevenueCat; terms gain a subscription section (auto-renewal, cancel in the
+      store, trial ends after 7 days, refunds through Apple or Google).
+- [ ] Tests: webhook auth and replay, caps per tier and window, 402 vs 429, the allowlist, account
+      deletion. `.env.example` and `render.yaml` list the new variables.
+- [ ] **(owner)** set `REVENUECAT_WEBHOOK_SECRET` and `REVENUECAT_API_KEY` on Render; point the
+      RevenueCat webhook at `https://api.pantrila.com/webhooks/revenuecat`.
+
+No model call, so no eval rerun. Existing users become Free on deploy; decide before merging
+whether early users get Pro for a while (a `manual` entitlement with an end date).
+
+## PR 4: sign-in
 
 Branch `feat/mobile-sign-in`.
 
@@ -167,24 +230,24 @@ Branch `feat/mobile-sign-in`.
       the native client ids.
 - [ ] Tests for the auth helpers; **(owner)** sign in with each method on both phones.
 
-## PR 4: app shell, Home and Recipes
+## PR 5: app shell, Home and Recipes
 
 Branch `feat/mobile-recipes`.
 
 - [ ] Tabs: Home, Assistant, Recipes, Plan, Grocery (same order as the web nav); Pantry and Profile
       from the account button in the header.
 - [ ] "Waking up the Pantrila server…" notice (same 3 s / 10 min rule) and `/health` ping on start.
-- [ ] Home: greeting, Ask Pantrila card (opens Assistant; the chat itself comes in PR 9), My recipes
+- [ ] Home: greeting, Ask Pantrila card (opens Assistant; the chat itself comes in PR 10), My recipes
       section (latest 4, or the import pitch card).
 - [ ] Recipes: search, Meal / Time / Diet / Cuisine filter chips, safety banner, recipe cards with
       photos (`expo-image`), infinite list.
 - [ ] Recipe page: photo, nutrition, allergen warnings for the person's rules, ingredients with the
       tap-to-change unit picker, method with the °C/°F switch, fan-oven temperatures and fractions
-      (all from `@pantrila/core`), "Start cooking" (opens PR 6's screen; a placeholder until then).
+      (all from `@pantrila/core`), "Start cooking" (opens PR 7's screen; a placeholder until then).
 - [ ] Pull to refresh; empty and error states.
 - [ ] Jest tests for the screens' logic.
 
-## PR 5: meal plan and grocery list
+## PR 6: meal plan and grocery list
 
 Branch `feat/mobile-plan`.
 
@@ -197,7 +260,7 @@ Branch `feat/mobile-plan`.
 - [ ] Grocery list by aisle, ticks kept per user, unlisted cookbook foods apart.
 - [ ] Tests for plan helpers already in core; Jest for the sheets.
 
-## PR 6: cooking mode (native)
+## PR 7: cooking mode (native)
 
 Branch `feat/mobile-cooking`.
 
@@ -216,7 +279,7 @@ Branch `feat/mobile-cooking`.
 - [ ] Sends `cooking_mode_opened` to `POST /me/events`.
 - [ ] **(owner)** cook a recipe on a real phone with voice and a locked-phone timer.
 
-## PR 7: My recipes and imports
+## PR 8: My recipes and imports
 
 Branch `feat/mobile-cookbook`.
 
@@ -231,7 +294,7 @@ Branch `feat/mobile-cookbook`.
 - [ ] Recipe photo made in the background after save; "Making the photo…"; New / Remove photo.
 - [ ] Food estimates for unmatched lines (automatic, as on the web).
 
-## PR 8: share to Pantrila and links into the app
+## PR 9: share to Pantrila and links into the app
 
 Branch `feat/mobile-share`. The feature that makes the app worth installing.
 
@@ -245,7 +308,7 @@ Branch `feat/mobile-share`. The feature that makes the app worth installing.
 - [ ] Analytics: `recipe_imported` already comes from the API; nothing new.
 - [ ] **(owner)** share a real reel from each app on both phones.
 
-## PR 9: assistant chat
+## PR 10: assistant chat
 
 Branch `feat/mobile-assistant`.
 
@@ -256,7 +319,7 @@ Branch `feat/mobile-assistant`.
       recipes" / "Saved to My recipes"; warning cards.
 - [ ] Dictation into the message box (`expo-speech-recognition`).
 
-## PR 10: pantry, profile and the rest
+## PR 11: pantry, profile and the rest
 
 Branch `feat/mobile-profile`.
 
@@ -273,7 +336,36 @@ Branch `feat/mobile-profile`.
 - [ ] Privacy page on `site/` and terms: name the apps, local notifications, speech recognition
       (on-device or Apple/Google), camera and photos.
 
-## PR 11: store readiness and testing
+## PR 12: paywall and free trial
+
+Branch `feat/mobile-paywall`. Must ship before store submission: Apple reviews subscriptions with
+the app.
+
+- [ ] **(owner)** App Store Connect: subscription group "Pantrila Pro" with `pro_monthly` (€4.99)
+      and `pro_yearly` (€29.99), each with a 7-day free trial introductory offer; prices for the
+      other storefronts from Apple's equalisation (check the UK price). Review screenshot of the
+      paywall.
+- [ ] **(owner)** Play Console: subscription `pro` with base plans `monthly` and `yearly` at the
+      same prices and a 7-day free trial offer for new subscribers.
+- [ ] **(owner)** RevenueCat: products, entitlement `pro`, offering `default` with both packages.
+- [ ] `react-native-purchases` (and `react-native-purchases-ui` for RevenueCat's paywall, or our
+      own screen in the design system); `Purchases.logIn(<supabase user id>)` on sign-in,
+      `logOut` on sign-out.
+- [ ] Paywall: shown at a 402 from the API and from Profile → "Pantrila Pro". Lists what Pro gives,
+      the yearly plan first with its saving ("€2.50 a month"), the trial ("7 days free, then
+      €29.99 a year"), and Apple's required parts: price and period, auto-renewal wording, links
+      to the terms and privacy pages, "Restore purchases".
+- [ ] A guest who buys is asked to keep their data with Google or Apple first (the purchase stays
+      with the store account either way, and "Restore purchases" recovers it).
+- [ ] Profile: plan, renewal date, "Manage subscription" (opens the App Store or Play page).
+- [ ] After a purchase the app refreshes `/me` until the webhook has landed (a few seconds), so
+      Pro limits apply at once.
+- [ ] **(owner)** test in the App Store sandbox (TestFlight) and Play license testers: start a
+      trial, cancel, restore on a second phone, expire, and check the web app shows Pro.
+
+No model call, so no eval rerun.
+
+## PR 13: store readiness and testing
 
 Branch `feat/mobile-store`.
 
@@ -282,6 +374,7 @@ Branch `feat/mobile-store`.
       `https://pantrila.com`, privacy URL `https://pantrila.com/privacy`.
 - [ ] Play Console: Data safety form (same answers), content rating, target audience, app access
       (guest sign-in, no login needed), ads: none.
+- [ ] Review notes for both stores name the Pro products and how to reach the paywall.
 - [ ] Permission texts in `app.config.ts` (camera, photos, microphone, speech recognition,
       notifications) in plain words.
 - [ ] Store listing text and screenshots (6.9" and 6.5" iPhone, iPad if supported, Android phone);
@@ -293,7 +386,7 @@ Branch `feat/mobile-store`.
       14 days. TestFlight beta testers in the meantime.
 - [ ] Fix what testers find (follow-up PRs as needed).
 
-## PR 12: launch
+## PR 14: launch
 
 Branch `feat/mobile-launch`.
 
@@ -321,19 +414,22 @@ Branch `feat/mobile-launch`.
 | 0 | (owner) | not started |
 | 1 | `feat/shared-core` | not started |
 | 2 | `feat/mobile-skeleton` | not started |
-| 3 | `feat/mobile-sign-in` | not started |
-| 4 | `feat/mobile-recipes` | not started |
-| 5 | `feat/mobile-plan` | not started |
-| 6 | `feat/mobile-cooking` | not started |
-| 7 | `feat/mobile-cookbook` | not started |
-| 8 | `feat/mobile-share` | not started |
-| 9 | `feat/mobile-assistant` | not started |
-| 10 | `feat/mobile-profile` | not started |
-| 11 | `feat/mobile-store` | not started |
-| 12 | `feat/mobile-launch` | not started |
+| 3 | `feat/subscription-tiers` | not started |
+| 4 | `feat/mobile-sign-in` | not started |
+| 5 | `feat/mobile-recipes` | not started |
+| 6 | `feat/mobile-plan` | not started |
+| 7 | `feat/mobile-cooking` | not started |
+| 8 | `feat/mobile-cookbook` | not started |
+| 9 | `feat/mobile-share` | not started |
+| 10 | `feat/mobile-assistant` | not started |
+| 11 | `feat/mobile-profile` | not started |
+| 12 | `feat/mobile-paywall` | not started |
+| 13 | `feat/mobile-store` | not started |
+| 14 | `feat/mobile-launch` | not started |
 
 ## Handoff log
 
 Add one line per PR: date, PR link, what landed, anything the next PR must know.
 
 - 2026-10-24: plan written (this file).
+- 2026-10-24: freemium added (PR 3 subscription tiers, PR 12 paywall); later PRs renumbered.
