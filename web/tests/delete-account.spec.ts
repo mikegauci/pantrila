@@ -8,6 +8,7 @@ test("deleting the account asks for confirmation, calls DELETE /me and signs out
   let deleted = false
   await page.addInitScript((user) => {
     localStorage.setItem(`pantrila-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-replay:${user}`, "off")
     localStorage.setItem(`pantrila-cook:${user}:corpus:x`, "{}")
   }, id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))

@@ -78,3 +78,24 @@ def test_db_activity_records_each_day_once(conn):
     assert log.record("alice", date(2026, 11, 1)) == [date(2026, 11, 1)]
     assert log.record("alice", date(2026, 11, 1)) is None
     assert log.record("alice", date(2026, 11, 3)) == [date(2026, 11, 1), date(2026, 11, 3)]
+
+
+def test_forgetting_a_person_also_deletes_their_events_and_recordings(monkeypatch):
+    import httpx
+
+    sent = {}
+
+    def post(url, headers, json, timeout):
+        sent.update(url=url, auth=headers["Authorization"], body=json)
+        return httpx.Response(202, request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(httpx, "post", post)
+    sink = an.PostHogAnalytics("phc_test", personal_key="phx_test", project_id="317778")
+    try:
+        sink.client.disabled = True
+        sink.forget("alice")
+    finally:
+        sink.close()
+    assert sent["url"] == "https://eu.posthog.com/api/projects/317778/persons/bulk_delete/"
+    assert sent["body"] == {"distinct_ids": ["alice"], "delete_events": True,
+                            "delete_recordings": True}  # fmt: skip

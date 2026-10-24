@@ -24,7 +24,10 @@ test("an import survives a dropped connection and a page reload", async ({ page 
   let starts = 0
   let saves = 0
   await page.setViewportSize({ width: 390, height: 844 })
-  await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
+  await page.addInitScript((user) => {
+    localStorage.setItem(`pantrila-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-replay:${user}`, "off")
+  }, id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname
@@ -85,6 +88,7 @@ test("a resumed import can be abandoned, and a newer import keeps its saved id",
   await page.setViewportSize({ width: 390, height: 844 })
   await page.addInitScript(([user, storageKey]) => {
     localStorage.setItem(`pantrila-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-replay:${user}`, "off")
     if (!localStorage.getItem(storageKey)) localStorage.setItem(storageKey, JSON.stringify({ id: "old", at: Date.now() }))
   }, [id, key])
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
@@ -120,7 +124,10 @@ test("a resumed import can be abandoned, and a newer import keeps its saved id",
 test("an import with no method opens the form instead of saving", async ({ page }) => {
   let saves = 0
   const noMethod = { ...done, result: { ...done.result, draft: { ...draft, steps: ["Add the method here."] } } }
-  await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
+  await page.addInitScript((user) => {
+    localStorage.setItem(`pantrila-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-replay:${user}`, "off")
+  }, id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname

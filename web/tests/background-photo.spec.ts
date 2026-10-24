@@ -14,6 +14,7 @@ test("a reload while the photo is made keeps the placeholder until the photo lan
   await page.setViewportSize({ width: 390, height: 844 })
   await page.addInitScript((id) => {
     localStorage.setItem(`pantrila-tour-done:${id}`, "1")
+    localStorage.setItem(`pantrila-replay:${id}`, "off")
     if (!sessionStorage.getItem("pantrila-photo-jobs")) {
       sessionStorage.setItem("pantrila-photo-jobs", JSON.stringify({ 5: Date.now() }))
     }

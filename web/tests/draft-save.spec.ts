@@ -14,7 +14,10 @@ const initial = {
 test("draft warnings remain visible and the reviewed recipe can be edited and saved", async ({ page }) => {
   let saved = initial
   let created = false
-  await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
+  await page.addInitScript((user) => {
+    localStorage.setItem(`pantrila-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-replay:${user}`, "off")
+  }, id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname

@@ -38,7 +38,10 @@ async function openPlan(page: Page, requests: { path: string; body: unknown }[])
     targets: { kcal: null, min_protein_g: null, max_carbs_g: null },
     days: days.map((m, i) => ({ day: i + 1, nutrition: nutrition(m.out_kcal ?? 0), meals: [m] })),
   })
-  await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
+  await page.addInitScript((user) => {
+    localStorage.setItem(`pantrila-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-replay:${user}`, "off")
+  }, id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const request = route.request()

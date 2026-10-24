@@ -25,7 +25,10 @@ test("a post imports from its link straight into my recipes and keeps the credit
   const imports: { id?: string; kind?: string; url?: string; caption?: string | null }[] = []
   let saved = draft
   await page.setViewportSize({ width: 390, height: 844 })
-  await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
+  await page.addInitScript((user) => {
+    localStorage.setItem(`pantrila-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-replay:${user}`, "off")
+  }, id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname
@@ -95,7 +98,10 @@ test("where the service covers the platform, Pantrila says it is listening to th
   let released = false
   let steps: { key: string; label: string }[] = []
   await page.clock.install()
-  await page.addInitScript((user) => localStorage.setItem(`pantrila-tour-done:${user}`, "1"), id)
+  await page.addInitScript((user) => {
+    localStorage.setItem(`pantrila-tour-done:${user}`, "1")
+    localStorage.setItem(`pantrila-replay:${user}`, "off")
+  }, id)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(id) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname

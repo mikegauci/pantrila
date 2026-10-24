@@ -21,6 +21,8 @@ export default defineConfig({
       NEXT_PUBLIC_API_URL: "http://127.0.0.1:8000",
       // A fake project: reports go to /monitoring, which specs intercept.
       NEXT_PUBLIC_SENTRY_DSN: "https://public@o1.ingest.de.sentry.io/1",
+      // A fake project: replay requests go to /ingest, which specs intercept.
+      NEXT_PUBLIC_POSTHOG_KEY: "phc_playwright",
     },
   },
 })

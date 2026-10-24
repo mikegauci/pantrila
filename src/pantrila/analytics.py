@@ -7,9 +7,10 @@ PostHog funnels count the first time each event happens, so "first import" is th
 gives `signed_up` (their first day), `app_opened` (once a day, for retention) and
 `returned_within_7_days` (the first later day, if within a week of signing up).
 
-Off unless POSTHOG_API_KEY (the project key) is set. Deleting an account deletes the person
-and their events too when POSTHOG_PERSONAL_API_KEY (scope person:write) and POSTHOG_PROJECT_ID
-are set.
+Off unless POSTHOG_API_KEY (the project key) is set. Deleting an account deletes the person,
+their events and their session recordings (web/src/lib/replay.ts records people who opt in,
+under the same user id) when POSTHOG_PERSONAL_API_KEY (scope person:write) and
+POSTHOG_PROJECT_ID are set.
 """
 
 from __future__ import annotations
@@ -98,7 +99,7 @@ class PostHogAnalytics:
         r = httpx.post(
             f"{self.app_host}/api/projects/{self.project_id}/persons/bulk_delete/",
             headers={"Authorization": f"Bearer {self.personal_key}"},
-            json={"distinct_ids": [user_id], "delete_events": True},
+            json={"distinct_ids": [user_id], "delete_events": True, "delete_recordings": True},
             timeout=20,
         )
         r.raise_for_status()

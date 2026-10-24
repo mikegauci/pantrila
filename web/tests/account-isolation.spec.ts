@@ -18,7 +18,9 @@ test("switching accounts drops cached data and remembered chat state", async ({ 
   const waiting = new Promise<void>((resolve) => { releaseB = resolve })
   await page.addInitScript(({ a, b }) => {
     localStorage.setItem(`pantrila-tour-done:${a}`, "1")
+    localStorage.setItem(`pantrila-replay:${a}`, "off")
     localStorage.setItem(`pantrila-tour-done:${b}`, "1")
+    localStorage.setItem(`pantrila-replay:${b}`, "off")
   }, { a: A, b: B })
   await page.route("http://127.0.0.1:54321/**", async (route) => {
     if (route.request().url().includes("/signup")) {

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function Privacy() {
   const mail = <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
   return (
-    <LegalPage title="Privacy" updated="23 October 2026">
+    <LegalPage title="Privacy" updated="24 October 2026">
       <p>
         Pantrila is an AI cooking and meal-planning assistant at <a href={APP_URL}>app.pantrila.com</a>. Pantrila
         decides how your data is used (it is the “data controller”). Questions or requests: {mail}.
@@ -98,6 +98,12 @@ export default function Privacy() {
           never your email, IP address, location, recipes or messages. Pantrila sends this from its server; nothing
           is stored in your browser for it.
         </li>
+        <li>
+          <strong>PostHog</strong> also keeps recordings of your visits, only if you say yes when Pantrila asks (you
+          can change it in Profile). A recording shows your taps, scrolling and the screens you see, including your
+          diet and allergy settings and the recipes and chats on screen; anything you type is hidden. Recordings are
+          linked to your account id, kept for 30 days, and deleted with your account.
+        </li>
       </ul>
       <p>
         Some of these companies are based in the United States, so your data may be processed there under their
@@ -106,8 +112,10 @@ export default function Privacy() {
 
       <h2>In your browser</h2>
       <p>
-        Pantrila keeps your sign-in session and a few preferences (such as °C or °F, and whether you finished the
-        tour) in your browser’s local storage. There are no advertising or analytics cookies. As a guest, clearing
+        Pantrila keeps your sign-in session and a few preferences (such as °C or °F, whether you finished the tour,
+        and whether you agreed to recordings) in your browser’s local storage. If you agree to recordings, PostHog
+        also keeps an id for them there; if you say no, nothing is recorded or sent. There are no advertising cookies
+        and no analytics cookies. As a guest, clearing
         your browser data signs you out for good; add Google from your profile to keep your data.
       </p>
 

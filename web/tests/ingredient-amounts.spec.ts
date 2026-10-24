@@ -21,7 +21,10 @@ const recipe: CookbookRecipeIn = {
 }
 
 async function openRecipe(page: Page) {
-  await page.addInitScript((id) => localStorage.setItem(`pantrila-tour-done:${id}`, "1"), user)
+  await page.addInitScript((id) => {
+    localStorage.setItem(`pantrila-tour-done:${id}`, "1")
+    localStorage.setItem(`pantrila-replay:${id}`, "off")
+  }, user)
   await page.route("http://127.0.0.1:54321/**", (route) => route.fulfill({ json: session(user) }))
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname
