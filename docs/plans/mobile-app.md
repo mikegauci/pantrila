@@ -96,10 +96,10 @@ them):
 
 ## PR 0: accounts and dashboards (owner, no code; can run alongside PR 1-4)
 
-- [ ] Apple Developer Program ($99/year). Individual is quickest; an organisation account shows a
+- [x] Apple Developer Program ($99/year), paid 2026-10-25 (Apple still processing: no team yet). Individual is quickest; an organisation account shows a
       company name in the store but needs a D-U-N-S number (days to weeks).
-- [ ] Google Play Console ($25 once). Identity checks can take a few days.
-- [ ] Expo account; `npx eas-cli login` on the Mac.
+- [x] Google Play Console ($25 once), paid 2026-10-25. Identity checks can take a few days.
+- [x] Expo account (`mikegauci`); `npx eas-cli login` on the Mac.
 - [ ] App Store Connect: create the app "Pantrila", bundle id `com.pantrila.app`.
 - [ ] Play Console: create the app "Pantrila", package `com.pantrila.app`.
 - [ ] Google Cloud (same project as web sign-in): an **iOS OAuth client** (bundle id) and an
@@ -157,8 +157,12 @@ Branch `feat/mobile-skeleton`.
 - [x] CI `mobile` job: lint, typecheck, Jest, `expo-doctor`; skipped when `mobile/` and
       `packages/` are unchanged, like the other jobs. Add it to the "CI must pass on main" ruleset
       only once it is stable.
-- [ ] **(owner)** `npx eas-cli init` in `mobile/` and put the project id it prints in
-      `app.config.ts` (`EAS_PROJECT_ID`); then `eas build --profile development --platform ios` and `--platform android`; install
+- [x] **(owner)** `npx eas-cli init` in `mobile/` and put the project id it prints in
+      `app.config.ts` (`EAS_PROJECT_ID`): `@mikegauci/pantrila`, `b60bab44-4784-4b21-8ba2-e8aed45df863`.
+- [ ] **(owner)** Android: development build started on EAS (keystore created by EAS); not yet installed on a
+      phone (none to hand).
+- [ ] **(owner)** iPhone: waits for Apple to activate the Developer team (`device:create` said "no team").
+- [ ] **(owner)** then `eas build --profile development --platform ios` and `--platform android`; install
       on the phone; `npx expo start` reloads it.
 - [x] `CLAUDE.md` Commands and Layout gain `mobile/`.
 
@@ -412,9 +416,9 @@ Branch `feat/mobile-launch`.
 
 | PR | Branch | State |
 | --- | --- | --- |
-| 0 | (owner) | not started |
+| 0 | (owner) | in progress (Apple, Play Console and Expo accounts paid; Apple team pending) |
 | 1 | `feat/shared-core` | done |
-| 2 | `feat/mobile-skeleton` | done (owner: `eas init` and the first device builds) |
+| 2 | `feat/mobile-skeleton` | done (EAS project linked; owner: install on an Android phone, iPhone build once Apple activates the team) |
 | 3 | `feat/subscription-tiers` | not started |
 | 4 | `feat/mobile-sign-in` | not started |
 | 5 | `feat/mobile-recipes` | not started |
@@ -455,3 +459,11 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   `types` listed in `tsconfig.json`. `jest-expo` leaves a timer that prints "Jest did not exit one second
   after", but it exits. The owner still runs `npx eas-cli init` (project id into `app.config.ts`) and the
   first development builds.
+- 2026-10-25: PR 2 owner part (`feat/mobile-eas-project`): EAS project `@mikegauci/pantrila`, id
+  `b60bab44-4784-4b21-8ba2-e8aed45df863`, in `mobile/app.config.ts` (dynamic config, so `eas init` cannot write it;
+  `npx expo config --type public` shows `extra.eas.projectId`). Android development build queued on EAS
+  (build `54f04176-a9c9-4192-969a-3b008ab94c5b`, keystore made by EAS, versionCode 1 remote); no Android phone to
+  install it on yet. iPhone skipped: Apple ID login and 2FA work, but `device:create` says the account has no team, so
+  the Developer Program membership is still being processed. The Expo login went through Google, which first needed
+  the expo.dev onboarding finished. Still to do: `device:create` + iOS development build, install both, `npx expo
+  start` shows "Server: Up".

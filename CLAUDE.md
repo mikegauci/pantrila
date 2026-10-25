@@ -44,16 +44,19 @@ next PR of the mobile plan": read that file first, take the first PR its Progres
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
 Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
 (`feat/mobile-skeleton`) are done. Next: **PR 3 (`feat/subscription-tiers`)**. The owner still has PR 0
-(Apple, Google Play and RevenueCat accounts; Expo login done) and PR 2's `npx eas-cli init` and first
-development builds.
+(Apple team pending activation, RevenueCat) and PR 2's first device installs (EAS project linked).
 
 ## Status (update as work lands)
+
+EAS project linked (mobile plan PR 2, owner part): `@mikegauci/pantrila`, id `b60bab44-4784-4b21-8ba2-e8aed45df863`
+in `EAS_PROJECT_ID` (`mobile/app.config.ts`). First Android development build started on EAS (EAS-made keystore); not yet
+installed, as there is no Android phone to hand. iPhone waits for Apple to activate the Developer team. No app code
+change, no model call, so no eval rerun.
 
 Expo app skeleton (mobile plan PR 2): `mobile/` is an Expo SDK 58 app (Expo Router, React 19.3 and React Native
 0.88; one copy of each in the root install, shared with web) in the npm workspaces. `app.config.ts`: Pantrila,
 `com.pantrila.app`, scheme `pantrila`, phones only, portrait, light and dark, icon/adaptive icon/splash rendered from
-`web/brand/` by `web/scripts/icons.mjs` into `mobile/assets/`; `EAS_PROJECT_ID` is empty until the owner runs
-`npx eas-cli init`. `eas.json`: `development` (dev client, internal), `preview`, `production`, with the public API and
+`web/brand/` by `web/scripts/icons.mjs` into `mobile/assets/`; `EAS_PROJECT_ID` is set (see the EAS entry above). `eas.json`: `development` (dev client, internal), `preview`, `production`, with the public API and
 Supabase URLs in `env`. Styling is Uniwind (Tailwind 4 classes) instead of the planned NativeWind: NativeWind 4.2.7
 needs Tailwind 3, which replaced web's Tailwind 4 at the root of the shared install, and lists SDK 57 at most. The
 tokens are copied into `mobile/src/global.css` (light/dark `@variant`s, radii, Plus Jakarta Sans as `font-sans`,
