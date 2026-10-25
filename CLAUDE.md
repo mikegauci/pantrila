@@ -42,11 +42,26 @@ Building the iOS and Android apps with Expo, one PR at a time, in the order give
 [`docs/plans/mobile-app.md`](docs/plans/mobile-app.md). In a new chat (desktop or phone), say "do the
 next PR of the mobile plan": read that file first, take the first PR its Progress table does not
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
-Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) is done. Next:
-**PR 2 (`feat/mobile-skeleton`)**; the owner still has PR 0 (Apple, Google Play, Expo and RevenueCat
-accounts), needed for PR 2's device builds.
+Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
+(`feat/mobile-skeleton`) are done. Next: **PR 3 (`feat/subscription-tiers`)**. The owner still has PR 0
+(Apple, Google Play and RevenueCat accounts; Expo login done) and PR 2's `npx eas-cli init` and first
+development builds.
 
 ## Status (update as work lands)
+
+Expo app skeleton (mobile plan PR 2): `mobile/` is an Expo SDK 58 app (Expo Router, React 19.3 and React Native
+0.88; one copy of each in the root install, shared with web) in the npm workspaces. `app.config.ts`: Pantrila,
+`com.pantrila.app`, scheme `pantrila`, phones only, portrait, light and dark, icon/adaptive icon/splash rendered from
+`web/brand/` by `web/scripts/icons.mjs` into `mobile/assets/`; `EAS_PROJECT_ID` is empty until the owner runs
+`npx eas-cli init`. `eas.json`: `development` (dev client, internal), `preview`, `production`, with the public API and
+Supabase URLs in `env`. Styling is Uniwind (Tailwind 4 classes) instead of the planned NativeWind: NativeWind 4.2.7
+needs Tailwind 3, which replaced web's Tailwind 4 at the root of the shared install, and lists SDK 57 at most. The
+tokens are copied into `mobile/src/global.css` (light/dark `@variant`s, radii, Plus Jakarta Sans as `font-sans`,
+`-medium`, `-semibold`, `-bold`; `web/DESIGN_SYSTEM.md` says to keep three copies in sync). The one screen
+(`src/app/index.tsx`) shows `/health` and `/meta` through `createApi` with `expo/fetch` (`src/lib/api.ts`; core gains
+`health()`); `/meta` says "Sign in first." until sign-in (PR 4). Jest (`jest-expo`, RNTL 14) has one screen test; CI
+gains a `mobile` job (lint, typecheck, Jest, `expo-doctor`). Checked here: `expo export` bundles iOS and Android,
+`expo-doctor` 20/20, web's 41 Playwright specs still pass. No model call, so no eval rerun.
 
 Shared core for the phone app (mobile plan PR 1): the repo root is an npm workspace (`web`, `packages/*`; `site/`
 stays separate) with one root `package-lock.json` (same versions as the old `web/` one). `packages/core`
@@ -876,7 +891,12 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `PANTRILA_DAILY_CHATS`, `PANTRILA_DAILY_IMPORTS`, `PANTRILA_DAILY_PHOTOS`) and in total
   (`PANTRILA_DAILY_BUDGET_USD`).
 - `render.yaml`: Render Blueprint for the API.
-- `package.json` (root): npm workspaces `web` and `packages/*`; one `package-lock.json` at the root.
+- `package.json` (root): npm workspaces `web`, `mobile` and `packages/*`; one `package-lock.json` at the root.
+- `mobile/`: the Expo phone app (see `mobile/README.md` and `mobile/AGENTS.md`: read Expo's versioned docs,
+  not memory). `app.config.ts`, `eas.json`, `metro.config.js` (Uniwind), `src/global.css` (tokens),
+  `src/app/` (Expo Router screens; `_layout.tsx` loads the fonts), `src/lib/api.ts` (`createApi` with
+  `expo/fetch`), `src/__tests__/` (Jest), `src/uniwind-types.d.ts` (written by Metro, committed),
+  `assets/` (from `web/brand/`).
 - `packages/core/`: `@pantrila/core`, code shared by web and the phone app (no React, DOM or React
   Native): `src/types.ts` (API types), `api.ts` (`createApi`, `ApiError`), `sse.ts`, `amounts.ts`,
   `cooking.ts`, `temperature.ts`, `voice.ts`, `sections.ts`, `plan.ts`, `format.ts`, `avatar.ts`;
@@ -961,11 +981,14 @@ uv run pantrila photos generate [--only ids] [--limit n] [--force] [--dry-run]  
 uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # LangSmith dashboard
 uv run python scripts/email_templates.py      # rewrite supabase/templates/ (then paste into Supabase)
 uv run uvicorn pantrila.api:app --env-file .env --reload   # API on :8000 (SUPABASE_URL, DATABASE_URL)
-npm ci                                   # from the root: installs web and packages/* (one lockfile)
+npm ci                                   # from the root: installs web, mobile and packages/* (one lockfile)
 npm test --workspace @pantrila/core      # shared-code unit tests (Vitest); typecheck: npm run typecheck --workspace @pantrila/core
 cd web && npm run dev                    # :3000; web/.env.local from web/.env.example
 cd web && npm run lint && npm run typecheck && npm run build   # what CI runs for web
 cd site && npm ci && npm run dev         # landing site on :3001 (lint, typecheck, build as for web)
+cd mobile && npx expo start              # phone app; open it in the Pantrila development build (not Expo Go)
+cd mobile && npm run lint && npm run typecheck && npm test && npx expo-doctor   # what CI runs for mobile
+cd mobile && npx eas-cli build --profile development --platform android|ios   # device builds on EAS (owner)
 ```
 
 Update this block when commands change.
