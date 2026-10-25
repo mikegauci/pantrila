@@ -219,6 +219,7 @@ __marimo__/
 # Pantrila
 .cache/
 !web/src/lib/
+!mobile/src/lib/
 supabase/.temp/
 
 # Local Claude Code state
