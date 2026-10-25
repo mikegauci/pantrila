@@ -16,6 +16,15 @@ describe("createApi", () => {
     expect(init?.body).toBe('{"food":"eggs"}')
   })
 
+  it("adds the app's own headers to every request, streams too", async () => {
+    const fetch = vi.fn(async (..._: Parameters<typeof globalThis.fetch>) => json({ ok: 1 }))
+    const { api, streamPlan } = createApi({ baseUrl: "https://api.test", getToken: async () => "t", fetch,
+                                            headers: { "X-Pantrila-Client": "ios" } })
+    await api("/me")
+    await streamPlan(() => {}).catch(() => {})
+    for (const [, init] of fetch.mock.calls) expect(init?.headers).toMatchObject({ "X-Pantrila-Client": "ios", Authorization: "Bearer t" })
+  })
+
   it("checks the server without a sign-in", async () => {
     const up = createApi({ baseUrl: "https://api.test", getToken: async () => null, fetch: async () => json({ ok: true }) })
     expect(await up.health()).toBe(true)

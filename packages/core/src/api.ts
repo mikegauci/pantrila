@@ -31,6 +31,8 @@ export interface ApiOptions {
   onSlow?: () => () => void
   /** A fetch whose response body can be read as it arrives (`expo/fetch` on phones). */
   fetch?: typeof fetch
+  /** Sent with every request, e.g. `X-Pantrila-Client: ios` so analytics can tell the apps apart. */
+  headers?: Record<string, string>
   slowMs?: number
 }
 
@@ -61,7 +63,7 @@ export async function errorFrom(res: Response): Promise<ApiError> {
 // Any reply means the server is awake; a later slow request is a long job, not a cold start.
 const AWAKE_MS = 10 * 60 * 1000
 
-export function createApi({ baseUrl, getToken, onSlow, fetch: doFetch = fetch, slowMs = 3000 }: ApiOptions) {
+export function createApi({ baseUrl, getToken, onSlow, fetch: doFetch = fetch, headers = {}, slowMs = 3000 }: ApiOptions) {
   const root = baseUrl.replace(/\/$/, "")
   let lastReply = 0
 
@@ -79,7 +81,7 @@ export function createApi({ baseUrl, getToken, onSlow, fetch: doFetch = fetch, s
       if (onSlow && Date.now() - lastReply >= AWAKE_MS) done = onSlow()
     }, slowMs)
     try {
-      const res = await doFetch(`${root}${path}`, init)
+      const res = await doFetch(`${root}${path}`, { ...init, headers: { ...headers, ...(init.headers as Record<string, string>) } })
       lastReply = Date.now()
       return res
     } catch (e) {

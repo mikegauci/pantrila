@@ -1546,3 +1546,35 @@ def test_delete_account_deletes_the_entitlement_and_the_revenuecat_subscriber(bi
     assert api.delete("/me").status_code == 204
     assert rc.deleted == ["carol"] and backend.admin.deleted == ["carol"]
     assert "carol" not in backend.shared["entitlements"]
+
+
+def test_events_say_which_app_they_came_from(api, backend, monkeypatch):
+    import pantrila.recipe_import as ri
+
+    monkeypatch.setattr(ri, "fetch_page", lambda url, http=None, resolve=None:
+                        (url, "<p>Toast: 2 slices of bread</p>"))  # fmt: skip
+    phone = {"X-Pantrila-Client": "iOS"}
+    api.put("/me/profile", json={"days": 2, "meals": ["breakfast", "dinner"]}, headers=phone)
+    backend.client.replies = [imported_reply()]
+    url = {"url": "https://example.com/t"}
+    assert api.post("/me/recipes/import/link", json=url, headers={"X-Pantrila-Client": "android"}
+                    ).is_success  # fmt: skip
+    backend.client.replies = [plan_reply(CHICKEN, CURRY)]
+    assert sse(api.post("/plans", headers={"X-Pantrila-Client": "web"}).text)[-1][0] == "plan"
+    event = {"name": "cooking_mode_opened", "source": "corpus"}
+    assert api.post("/me/events", json=event, headers={"X-Pantrila-Client": "fridge"}
+                    ).status_code == 204  # fmt: skip
+
+    clients = {e: p.get("client") for _, e, p in backend.analytics.events}
+    assert clients == {"signed_up": "ios", "app_opened": "ios", "recipe_imported": "android",
+                       "plan_created": "web", "cooking_mode_opened": None}  # fmt: skip
+    # The web app can send the header across origins.
+    pre = api.options(
+        "/me",
+        headers={
+            "Origin": "http://localhost:3000",
+            "Access-Control-Request-Method": "GET",
+            "Access-Control-Request-Headers": "x-pantrila-client",
+        },
+    )
+    assert "x-pantrila-client" in pre.headers.get("access-control-allow-headers", "").lower()
