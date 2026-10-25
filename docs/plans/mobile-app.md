@@ -255,18 +255,23 @@ Branch `feat/mobile-sign-in`.
 
 Branch `feat/mobile-recipes`.
 
-- [ ] Tabs: Home, Assistant, Recipes, Plan, Grocery (same order as the web nav); Pantry and Profile
+- [x] Tabs: Home, Assistant, Recipes, Plan, Grocery (same order as the web nav); Pantry and Profile
       from the account button in the header.
-- [ ] "Waking up the Pantrila server…" notice (same 3 s / 10 min rule) and `/health` ping on start.
-- [ ] Home: greeting, Ask Pantrila card (opens Assistant; the chat itself comes in PR 10), My recipes
+- [x] "Waking up the Pantrila server…" notice (same 3 s / 10 min rule) and `/health` ping on start.
+- [x] Home: greeting, Ask Pantrila card (opens Assistant; the chat itself comes in PR 10), My recipes
       section (latest 4, or the import pitch card).
-- [ ] Recipes: search, Meal / Time / Diet / Cuisine filter chips, safety banner, recipe cards with
+- [x] Recipes: search, Meal / Time / Diet / Cuisine filter chips, safety banner, recipe cards with
       photos (`expo-image`), infinite list.
-- [ ] Recipe page: photo, nutrition, allergen warnings for the person's rules, ingredients with the
+- [x] Recipe page: photo, nutrition, allergen warnings for the person's rules, ingredients with the
       tap-to-change unit picker, method with the °C/°F switch, fan-oven temperatures and fractions
       (all from `@pantrila/core`), "Start cooking" (opens PR 7's screen; a placeholder until then).
-- [ ] Pull to refresh; empty and error states.
-- [ ] Jest tests for the screens' logic.
+- [x] Pull to refresh; empty and error states.
+- [x] Jest tests for the screens' logic.
+
+Done notes: `/recipes` gained `offset` for the list's pages (a search stays one page of 36, since each
+further page would count as another search). Assistant, Plan, Grocery, My recipes, importing, cooking mode,
+Pantry and Profile show a "coming to the app" screen until their PRs; ingredient swaps and the recipe card's
+bookmark (save to My recipes) are not on the phone yet (PR 8 is the natural place for the bookmark).
 
 ## PR 6: meal plan and grocery list
 
@@ -482,7 +487,7 @@ Branch `feat/mobile-launch`.
 | 2 | `feat/mobile-skeleton` | done (EAS project linked, Android development build finished; owner: install it on an Android phone, iPhone build once Apple activates the team) |
 | 3 | `feat/subscription-tiers` | done (owner: RevenueCat keys on Render, webhook URL in RevenueCat) |
 | 4 | `feat/mobile-sign-in` | done (owner: Google and Apple dashboards, EAS variables, a new development build, phone checks) |
-| 5 | `feat/mobile-recipes` | not started |
+| 5 | `feat/mobile-recipes` | done (owner: try it on a phone with the next development build) |
 | 6 | `feat/mobile-plan` | not started |
 | 7 | `feat/mobile-cooking` | not started |
 | 8 | `feat/mobile-cookbook` | not started |
@@ -558,3 +563,18 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   `userKey(user.id, ...)` so sign-out forgets it; the tabs replace `index` inside the signed-in `Stack.Protected`;
   `AccountCard` moves to Profile in PR 11. Owner: steps in `docs/google-sign-in.md` section 4 and
   `docs/apple-sign-in.md`, then a new development build (native modules were added).
+- 2026-10-25: PR 5 (`feat/mobile-recipes`): tabs in `src/app/(tabs)/` (`expo-router/js-tabs`; Home, Assistant,
+  Recipes, Plan, Grocery) with the account button in the header (`account.tsx`: Pantry and Profile "soon",
+  `AccountCard`); `/health` ping when the tabs open and the "Waking up the Pantrila server…" notice
+  (`lib/waking.ts` counts `createApi`'s `onSlow` requests, `WakeNotice` shows while any wait). Home: greeting, Ask
+  Pantrila (opens `/assistant?q=` or `?thread=`, for PR 10 to read), My recipes (latest 4 or the import pitch;
+  cards open `/recipes/mine/[id]`, the buttons `/recipes/mine/new?method=post|link`, both placeholders for PR 8).
+  Recipes: search, chip rows, "Only what suits me", `FlatList` pages through `useRecipePages` (API `offset`,
+  24 a page). Recipe page `recipes/[id]`: photo, rule alert, allergens in red for the person's allergies,
+  servings, unit sheet per line (`MeasuredLine`), macro ring (react-native-svg), method with the °C/°F switch
+  (kept per user under `userKey(id, "temp-unit")`), "Start cooking" opens `recipes/[id]/cook?servings=` (PR 7's
+  route, a placeholder now). Icons are `lucide-react-native` (the web's set; `Icon` takes a theme token so dark
+  mode works). New native module: `react-native-svg`, so the next development build needs making anyway. Jest:
+  `jest.config.js` (lucide's CommonJS build), `jest.setup.js` (Uniwind theme and AsyncStorage stand-ins), screen
+  tests through `renderRouter` with a fake API (`src/test/screens.tsx`); 22 tests. For PR 6: put Plan and Grocery
+  in the existing tab files and reuse `bits.tsx`, `MacroRing` and `ChipRow`.

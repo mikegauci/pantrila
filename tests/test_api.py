@@ -225,6 +225,14 @@ def test_recipe_search_applies_the_profile_unless_asked_not_to(api):
     assert [r["id"] for r in breakfast] == [OMELETTE]
 
 
+def test_the_recipe_list_comes_in_pages(api):
+    every = [r["id"] for r in api.get("/recipes", params={"safe": "false"}).json()["recipes"]]
+    page = {"safe": "false", "limit": 2}
+    pages = [api.get("/recipes", params={**page, "offset": n}).json()["recipes"]
+             for n in range(0, len(every) + 2, 2)]  # fmt: skip
+    assert [r["id"] for page in pages for r in page] == every and pages[-1] == []
+
+
 def test_recipe_detail_marks_pantry_ingredients_and_problems(api):
     api.put("/me/profile", json={"allergies": ["eggs"]})
     api.post("/me/pantry", json={"food": "mushroom"})

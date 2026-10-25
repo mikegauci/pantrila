@@ -2,6 +2,7 @@ import { createApi } from "@pantrila/core/api"
 import { fetch as expoFetch } from "expo/fetch"
 
 import { accessToken } from "@/lib/supabase"
+import { slowRequest } from "@/lib/waking"
 
 export { ApiError } from "@pantrila/core/api"
 
@@ -10,6 +11,7 @@ export { ApiError } from "@pantrila/core/api"
 export const client = createApi({
   baseUrl: process.env.EXPO_PUBLIC_API_URL ?? "https://api.pantrila.com",
   getToken: accessToken,
+  onSlow: slowRequest,
   fetch: expoFetch as unknown as typeof fetch,
 })
 
