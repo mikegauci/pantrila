@@ -8,16 +8,16 @@ import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
 import { niceFractions } from "@pantrila/core/amounts"
+import { postCredit, siteOf } from "@pantrila/core/cookbook"
 import { leftText } from "@pantrila/core/subscription"
 import { label } from "@pantrila/core/format"
 import { groupLines, groupSteps } from "@pantrila/core/sections"
 import { hasTemp, showTemps } from "@pantrila/core/temperature"
-import type { CookbookDetail } from "@pantrila/core/types"
 
 import { MeasuredLine } from "@/components/amount"
 import { NutritionSource } from "@/components/nutrition-source"
 import { AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
-import { CookbookForm, PLATFORM, RECIPE_SOURCE, siteOf } from "@/components/cookbook-form"
+import { CookbookForm, RECIPE_SOURCE } from "@/components/cookbook-form"
 import { StartCooking } from "@/components/cooking-mode"
 import { MacroRing } from "@/components/macro-ring"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -32,16 +32,10 @@ import { cn } from "@/lib/utils"
 
 const SOURCE_LINK = "inline-flex items-center gap-1 font-medium text-primary-text underline-offset-2 hover:underline"
 
-/** "From @creator on TikTok", with whatever parts of the credit are known. */
 const noSubscribe = () => () => {}
 const chatThread = () => {
   const thread = new URLSearchParams(window.location.search).get("chat")
   return thread && /^\d+$/.test(thread) ? thread : null
-}
-
-function postCredit(r: CookbookDetail) {
-  const by = r.source_author ? ` @${r.source_author}` : " a post"
-  return `From${by}${r.source_platform ? ` on ${PLATFORM[r.source_platform]}` : ""}`
 }
 
 export default function MyRecipePage() {

@@ -6,12 +6,15 @@ import { toast } from "sonner"
 import { type ScopedMutator, useSWRConfig } from "swr"
 
 import { convertAmount } from "@pantrila/core/amounts"
+import { ALLERGENS, BLANK_RECIPE, matchFood, PLATFORM, SOURCE_TEXT, UNITS } from "@pantrila/core/cookbook"
 import { label, MEAL_ORDER } from "@pantrila/core/format"
 import { groupLines, stepsToText, textToSteps } from "@pantrila/core/sections"
 import type {
   Allergen, CookbookDetail, CookbookPreview, CookbookRecipeIn, EstimateView, Food, FoodEstimate,
   RecipeLine, RecipeSource, SourcePlatform, Unit,
 } from "@pantrila/core/types"
+
+export { BLANK_RECIPE, needsReview, PLATFORM, siteOf } from "@pantrila/core/cookbook"
 
 import { NutritionSource } from "@/components/nutrition-source"
 import { AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert } from "@/components/bits"
@@ -27,12 +30,12 @@ import { makePhoto } from "@/lib/photo-jobs"
 import { cn } from "@/lib/utils"
 
 export const RECIPE_SOURCE: Record<RecipeSource, { icon: typeof Camera; text: string }> = {
-  photo: { icon: Camera, text: "From a photo" },
-  link: { icon: Link2, text: "From a link" },
-  post: { icon: Share2, text: "From social media" },
-  text: { icon: ClipboardPaste, text: "Pasted text" },
-  video: { icon: Clapperboard, text: "From a video" },
-  manual: { icon: PenLine, text: "Typed in" },
+  photo: { icon: Camera, text: SOURCE_TEXT.photo },
+  link: { icon: Link2, text: SOURCE_TEXT.link },
+  post: { icon: Share2, text: SOURCE_TEXT.post },
+  text: { icon: ClipboardPaste, text: SOURCE_TEXT.text },
+  video: { icon: Clapperboard, text: SOURCE_TEXT.video },
+  manual: { icon: PenLine, text: SOURCE_TEXT.manual },
 }
 
 /** Saves a new recipe; its photo is then made while the person reads it (its page shows it arriving),
@@ -59,67 +62,8 @@ export async function saveNewRecipe(recipe: CookbookRecipeIn, mutate: ScopedMuta
   return saved
 }
 
-const NO_METHOD_STEP = "Add the method here."  // recipe_import.NO_METHOD_STEP
-
-/** An imported draft that cannot be saved as it is: a food left unknown, or no method. */
-export const needsReview = (d: CookbookRecipeIn) =>
-  d.ingredients.some((l) => !l.food && !l.estimate) || d.steps.includes(NO_METHOD_STEP)
-
-export const PLATFORM: Record<SourcePlatform, string> = {
-  tiktok: "TikTok", instagram: "Instagram", facebook: "Facebook",
-}
-
-/** A link's site for display: "bbcgoodfood.com". */
-export const siteOf = (url: string) => {
-  try {
-    return new URL(url).hostname.replace(/^www\./, "")
-  } catch {
-    return url
-  }
-}
-
-const UNITS: Unit[] = ["g", "kg", "ml", "l", "tsp", "tbsp", "cup", "piece", "pinch"]
-
-export const BLANK_RECIPE: CookbookRecipeIn = {
-  title: "", summary: "", cuisine: "", meal_types: ["dinner"], total_minutes: 30, servings: 2,
-  ingredients: [{ name: "", quantity: 1, unit: "g", food: null, estimate: null }],
-  steps: [], source: "manual", source_url: null, source_platform: null, source_author: null,
-  recipe_url: null,
-}
-
 /** sessionStorage key: a recipe the assistant wrote, handed to the new-recipe page (read once). */
 export const CHAT_DRAFT = "pantrila-chat-draft"
-
-const toKey = (text: string) => text.trim().toLowerCase().replaceAll("-", " ").split(/\s+/).join("_")
-
-/** Words that describe a food's state, not which food it is (mirrors `PREP_WORDS` in pantry.py). */
-const PREP_WORDS = new Set([
-  "melted", "softened", "chopped", "diced", "sliced", "minced", "grated", "shredded",
-  "sifted", "packed", "plain", "unsweetened", "large", "medium", "small",
-])
-const ALIASES: Record<string, string> = {
-  all_purpose_flour: "plain_flour", whole_wheat_flour: "wholemeal_flour",
-  wholewheat_flour: "wholemeal_flour", white_chocolate_chips: "white_chocolate",
-  chocolate_chips: "dark_chocolate",
-}
-
-/** The table food a typed name means, if it is one exactly (or its plural/singular). */
-function matchFood(text: string, keys: Set<string>): string | null {
-  const k = toKey(text)
-  const bare = k.split("_").filter((w) => !PREP_WORDS.has(w)).join("_")
-  for (const n of new Set([k, bare])) {
-    for (const c of [n, `${n}s`, n.replace(/es$/, ""), n.replace(/s$/, "")]) {
-      if (keys.has(c)) return c
-      if (ALIASES[c]) return ALIASES[c]
-    }
-  }
-  return null
-}
-
-const ALLERGENS: Allergen[] = [
-  "celery", "gluten", "crustaceans", "eggs", "fish", "lupin", "milk", "molluscs", "mustard",
-  "tree_nuts", "peanuts", "sesame", "soy", "sulphites",
-]
 
 /** An AI estimate, with allergens the person can correct from the label of what they buy. */
 function EstimateNote({

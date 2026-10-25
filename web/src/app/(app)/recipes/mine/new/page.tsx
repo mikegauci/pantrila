@@ -7,6 +7,7 @@ import { type FocusEvent, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
+import { POST_LINK, postPlatform } from "@pantrila/core/cookbook"
 import { seconds, usd } from "@pantrila/core/format"
 import { leftText } from "@pantrila/core/subscription"
 import type { CookbookRecipeIn, ImportView } from "@pantrila/core/types"
@@ -156,23 +157,6 @@ function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
       {error && <p role="alert" className="text-[13px] text-danger">{error}</p>}
     </form>
   )
-}
-
-/** Mirrors `social.detect` on the server: links Pantrila reads as a post's caption. */
-const POST_LINK = new RegExp(
-  "^(https?://)?(" +
-    "(vm|vt)\\.tiktok\\.com/|((www|m)\\.)?tiktok\\.com/(@[\\w.]+/(video|photo)/\\d|t/)" +
-    "|((www|m)\\.)?instagram\\.com/([\\w.]+/)?(p|reels?|tv)/" +
-    "|((www|m|web)\\.)?(facebook|fb)\\.com/(?!login|checkpoint|$)|fb\\.watch/" +
-  ")",
-  "i",
-)
-
-function postPlatform(link: string): string | null {
-  if (/tiktok\.com/i.test(link)) return "tiktok"
-  if (/instagram\.com/i.test(link)) return "instagram"
-  if (/(facebook|fb)\.(com|watch)/i.test(link)) return "facebook"
-  return null
 }
 
 function PostImport({ onDone }: { onDone: (v: ImportView) => void }) {

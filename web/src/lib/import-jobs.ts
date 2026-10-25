@@ -1,6 +1,9 @@
+import type { ImportStep } from "@pantrila/core/cookbook"
 import type { ImportView } from "@pantrila/core/types"
 
 import { ApiError, api, send } from "@/lib/api"
+
+export type { ImportStep }
 
 /**
  * Imports run as jobs on the server, so a locked phone or a tab in the background does not
@@ -13,11 +16,6 @@ export type ImportRequest =
   | { kind: "text"; text: string }
   | { kind: "photos"; images: string[] }
 
-/** A step the import took ("Reading the caption"); the last one is under way. */
-export interface ImportStep {
-  key: string
-  label: string
-}
 
 interface JobView {
   id: string
