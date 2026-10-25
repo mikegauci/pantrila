@@ -10,7 +10,8 @@ export function proxy(request: NextRequest) {
   return NextResponse.redirect(new URL(pathname + search, APP_ORIGIN), 308)
 }
 
-// Pages only: built assets, images, Sentry reports (/monitoring) and replay (/ingest) skip the host check.
+// Pages only: built assets, images, Sentry reports (/monitoring), replay (/ingest) and the phone
+// app's link files (/.well-known, which Apple and Google fetch without following redirects) skip the host check.
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|monitoring|ingest|favicon.ico|icon.svg|apple-icon.png).*)"],
+  matcher: ["/((?!_next/static|_next/image|monitoring|ingest|\\.well-known|favicon.ico|icon.svg|apple-icon.png).*)"],
 }
