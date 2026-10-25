@@ -12,6 +12,7 @@ tucked in at its top right. The hat itself is centred; the sparkles do not count
 | `app-icon.svg`, `app-icon-1024.png` | App Store / Play Store master: square, full bleed, no transparency (iOS rounds the corners) |
 | `android-foreground.svg` / `-432.png` | Android adaptive icon foreground, mark inside the 66 dp safe zone; also works as the one-colour themed icon |
 | `android-background.svg` / `-432.png` | Android adaptive icon background |
+| `../../mobile/assets/*.png` | The phone app's icon, adaptive layers (1024 px) and splash mark, rendered from the files above |
 
 The header logo (`../src/components/logo.tsx`) draws the same mark inline.
 After editing an SVG, run `node scripts/icons.mjs` from `web/` to re-render the PNGs and the .ico.
