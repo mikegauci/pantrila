@@ -277,14 +277,19 @@ bookmark (save to My recipes) are not on the phone yet (PR 8 is the natural plac
 
 Branch `feat/mobile-plan`.
 
-- [ ] Plan screen: create a plan (SSE through `expo/fetch`: step labels, then the plan; keep-alives
+- [x] Plan screen: create a plan (SSE through `expo/fetch`: step labels, then the plan; keep-alives
       and early end handled like the web), days with meals, energy and macro bars, the energy range
       band.
-- [ ] Meal menu: swap (sheet with Pantrila's recipes / My recipes, search, filters, Show more), add
+- [x] Meal menu: swap (sheet with Pantrila's recipes / My recipes, search, filters, Show more), add
       back, eat out (Light / Normal / Big / not counted), leftovers, skip, repeat on other days,
       start cooking with leftover servings.
-- [ ] Grocery list by aisle, ticks kept per user, unlisted cookbook foods apart.
-- [ ] Tests for plan helpers already in core; Jest for the sheets.
+- [x] Grocery list by aisle, ticks kept per user, unlisted cookbook foods apart.
+- [x] Tests for plan helpers already in core; Jest for the sheets.
+
+Done notes: core gains `cookHref`, `leftoverDays` (plan.ts) and `grocery.ts` (`byAisle`, `aisleName`), which the web
+now uses too. The meal menu, swap and repeat are one sheet whose content changes (`MealSheet`), since iOS will not
+open a second modal while one closes. A Free plan used up shows the server's 402 message; the in-app Pro offer is PR 12.
+"Start cooking" opens PR 7's routes (`recipes/[id]/cook`, `recipes/mine/[id]/cook`), placeholders until then.
 
 ## PR 7: cooking mode (native)
 
@@ -488,7 +493,7 @@ Branch `feat/mobile-launch`.
 | 3 | `feat/subscription-tiers` | done (owner: RevenueCat keys on Render, webhook URL in RevenueCat) |
 | 4 | `feat/mobile-sign-in` | done (owner: Google and Apple dashboards, EAS variables, a new development build, phone checks) |
 | 5 | `feat/mobile-recipes` | done (owner: try it on a phone with the next development build) |
-| 6 | `feat/mobile-plan` | not started |
+| 6 | `feat/mobile-plan` | done (owner: try it on a phone with the next development build) |
 | 7 | `feat/mobile-cooking` | not started |
 | 8 | `feat/mobile-cookbook` | not started |
 | 9 | `feat/mobile-share` | not started |
@@ -578,3 +583,16 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   `jest.config.js` (lucide's CommonJS build), `jest.setup.js` (Uniwind theme and AsyncStorage stand-ins), screen
   tests through `renderRouter` with a fake API (`src/test/screens.tsx`); 22 tests. For PR 6: put Plan and Grocery
   in the existing tab files and reuse `bits.tsx`, `MacroRing` and `ChipRow`.
+- 2026-10-25: PR 6 (`feat/mobile-plan`): Plan tab (`app/(tabs)/plan.tsx`): "Plan my week" streams `POST /plans`
+  through core's `streamPlan` (step labels, then the plan; keep-alives and an early end are core's), the allowance
+  line (`leftText`), the plan's note and warnings, a panel per day (today ringed) with `MealRow`s and `DayTargets`
+  (`plan-bars.tsx`: energy against one number or a range band, protein, carbs), and "How this plan was made".
+  `MealSheet` (`components/meal-sheet.tsx`) is the menu: swap (`swap-meal.tsx`: Pantrila's / My recipes, search,
+  30 min, pantry, Show more to 24), repeat (`repeat-meal.tsx`), start cooking with every serving (`cookHref`), add
+  back, eat out (Light / Normal / Big / not counted), leftovers of the 4 latest earlier meals, skip; a meal with
+  leftovers stays cooked. Grocery tab: by aisle, people stepper, ticks per user and plan under
+  `userKey(id, "grocery:<plan>")` (`lib/grocery.ts`), "Also for your recipes" (estimated foods), "From your pantry".
+  New shared bits: `Sheet` (iOS page sheet, Android full screen), `Stepper`, `Stat`, `toast` + `Toaster` (the
+  web's Sonner). Core: `cookHref`, `leftoverDays`, `grocery.ts` (web uses them now). 31 Jest tests, 55 core tests, 42
+  Playwright specs. For PR 7: cooking mode goes in `recipes/[id]/cook.tsx` and `recipes/mine/[id]/cook.tsx`, which
+  get `?servings=` and `&later=`.
