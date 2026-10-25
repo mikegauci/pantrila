@@ -331,7 +331,7 @@ export function CookingMode({ recipe }: { recipe: CookRecipe }) {
                 </div>
                 {later > 0 && (
                   <p className="-mt-3 text-[13px] text-muted-foreground">
-                    {later} of these serving{later === 1 ? " is" : "s are"} for later in your plan: keep {later === 1 ? "it" : "them"} as leftovers.
+                    {later} of these servings {later === 1 ? "is" : "are"} for later in your plan: keep {later === 1 ? "it" : "them"} as leftovers.
                   </p>
                 )}
                 <div className="rounded-[20px] border bg-surface p-4 sm:p-5">{checklist}</div>
