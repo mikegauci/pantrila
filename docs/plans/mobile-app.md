@@ -295,20 +295,28 @@ open a second modal while one closes. A Free plan used up shows the server's 402
 
 Branch `feat/mobile-cooking`.
 
-- [ ] Full-screen steps, get-ready page, ingredient checklist, "for this step" chips, group
+- [x] Full-screen steps, get-ready page, ingredient checklist, "for this step" chips, group
       headings, preheat hint, servings and "N of these servings are for later".
-- [ ] Screen stays on (`expo-keep-awake`).
-- [ ] Timers parsed from step text (core); each running timer schedules a **local notification**,
+- [x] Screen stays on (`expo-keep-awake`).
+- [x] Timers parsed from step text (core); each running timer schedules a **local notification**,
       so it rings with the phone locked or the app closed; pausing or stopping cancels it. Chime in
       the app. Ask for notification permission the first time a timer starts.
-- [ ] Voice: "next", "back", "start timer", "stop timer", "start" on the get-ready page, through
+- [x] Voice: "next", "back", "start timer", "stop timer", "start" on the get-ready page, through
       `expo-speech-recognition` and core's `voiceCommand`; on-device recognition when available (the
       privacy notice then says speech stays on the phone; otherwise it names Apple or Google);
       a help sheet when the mic or speech permission is denied (opens Settings).
-- [ ] Progress kept on the phone for 12 h (same key shape as the web).
-- [ ] "I cooked this" with the pantry preview (`/me/cooked/preview`, `/me/cooked`).
-- [ ] Sends `cooking_mode_opened` to `POST /me/events`.
+- [x] Progress kept on the phone for 12 h (same key shape as the web).
+- [x] "I cooked this" with the pantry preview (`/me/cooked/preview`, `/me/cooked`).
+- [x] Sends `cooking_mode_opened` to `POST /me/events`.
 - [ ] **(owner)** cook a recipe on a real phone with voice and a locked-phone timer.
+
+Done notes: Android schedules timer notifications with `setExactAndAllowWhileIdle` (expo-notifications'
+`bestEffort`); no exact-alarm permission is declared, since Google Play keeps `USE_EXACT_ALARM` for alarm apps. If
+the owner's phone rings late, add `SCHEDULE_EXACT_ALARM` and ask for it the first time a timer starts. Ring and chime
+are WAV files written by `scripts/cooking_sounds.py` (the web's notes; a test checks them). Progress keys keep the
+web's shape (`pantrila-cook:<user>:<recipe>`), so sign-out now forgets that prefix as well as `userKey`. The web's
+"1 of these serving is" now reads "servings is". Not yet: "Resume cooking" and "You cooked this N times" on the
+recipe page.
 
 ## PR 8: My recipes and imports
 
@@ -494,7 +502,7 @@ Branch `feat/mobile-launch`.
 | 4 | `feat/mobile-sign-in` | done (owner: Google and Apple dashboards, EAS variables, a new development build, phone checks) |
 | 5 | `feat/mobile-recipes` | done (owner: try it on a phone with the next development build) |
 | 6 | `feat/mobile-plan` | done (owner: try it on a phone with the next development build) |
-| 7 | `feat/mobile-cooking` | not started |
+| 7 | `feat/mobile-cooking` | done (owner: cook on a real phone with voice and a locked-phone timer) |
 | 8 | `feat/mobile-cookbook` | not started |
 | 9 | `feat/mobile-share` | not started |
 | 10 | `feat/mobile-assistant` | not started |
@@ -596,3 +604,19 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   web's Sonner). Core: `cookHref`, `leftoverDays`, `grocery.ts` (web uses them now). 31 Jest tests, 55 core tests, 42
   Playwright specs. For PR 7: cooking mode goes in `recipes/[id]/cook.tsx` and `recipes/mine/[id]/cook.tsx`, which
   get `?servings=` and `&later=`.
+- 2026-10-25: PR 7 (`feat/mobile-cooking`): `CookingScreen` (`components/cooking-mode.tsx`, parts in
+  `cooking-parts.tsx`) on `recipes/[id]/cook` and `recipes/mine/[id]/cook` (full-screen modal, no swipe to leave):
+  get-ready page with servings (from `?servings=`), "N of these servings are for later" (`&later=`), the grouped
+  checklist, one step at a time with its heading, the preheat hint (tap), "for this step" chips (core `stepUses`),
+  timers (core `stepTimers`), the ingredient-list sheet, "I cooked this" with the pantry preview, and
+  `cooking_mode_opened`. Screen on with `useKeepAwake`. `lib/timer-alerts.ts`: one local notification per running
+  timer (`pantrila-timer-<id>`, replaced or cancelled as it changes; quiet while cooking mode is on screen, which
+  rings itself), permission asked at the first timer; Android channel `timers`. `lib/cooking.ts`: progress in
+  AsyncStorage for 12 h, `ring` / `chime` (expo-audio, plays in silent mode, plus a vibration). Voice:
+  `lib/voice.ts` (`expo-speech-recognition` behind core's `VoiceListener`, on-device when the phone supports it;
+  iOS restarts after each phrase, Android stays continuous) and `components/voice-control.tsx` (notice that names
+  "stays on the phone" or Apple/Google, command list, "Allow the microphone" with Open Settings). `lib/stored.ts`
+  keeps small per-user settings. New native modules `expo-keep-awake`, `expo-notifications`, `expo-audio`,
+  `expo-speech-recognition` (plugins and permission texts in `app.config.ts`), so the next development build
+  needs making. `jest.setup.js` stands in for all four; 36 Jest tests. For PR 8: the cookbook recipe page's "Start
+  cooking" opens `/recipes/mine/<id>/cook`, already built.

@@ -43,12 +43,26 @@ Building the iOS and Android apps with Expo, one PR at a time, in the order give
 next PR of the mobile plan": read that file first, take the first PR its Progress table does not
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
 Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
-(`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`), PR 4 (`feat/mobile-sign-in`), PR 5 (`feat/mobile-recipes`) and PR 6 (`feat/mobile-plan`) are done.
-Next: **PR 7 (`feat/mobile-cooking`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
+(`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`), PR 4 (`feat/mobile-sign-in`), PR 5 (`feat/mobile-recipes`), PR 6 (`feat/mobile-plan`) and PR 7
+(`feat/mobile-cooking`) are done. Next: **PR 8 (`feat/mobile-cookbook`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
 installs (Android development build finished), PR 3's Render variables and RevenueCat webhook, and PR 4's Google,
 Apple and Supabase settings plus a new development build.
 
 ## Status (update as work lands)
+
+Phone cooking mode (mobile plan PR 7): `recipes/[id]/cook` and `recipes/mine/[id]/cook` open a full-screen cooking
+mode like the web's: get-ready page with servings (and leftovers "for later" from the plan), grouped checklist, one
+step at a time with group heading, preheat hint, "for this step" chips, timers, the ingredient sheet and "I cooked
+this" with the pantry preview; progress stays on the phone for 12 h under the web's key shape (sign-out forgets
+it). The screen stays on (`expo-keep-awake`). Each running timer schedules a local notification
+(`expo-notifications`, asked at the first timer) so it rings with the phone locked or the app closed; pausing,
+changing or dismissing replaces or cancels it, and on screen the app rings itself (`expo-audio`, WAVs from
+`scripts/cooking_sounds.py`, plus a vibration). Voice commands go through `expo-speech-recognition` and core's
+`voiceCommand`, on-device when the phone can (the notice then says speech stays on the phone, else names Apple or
+Google), with an "Allow the microphone" sheet that opens Settings. Sends `cooking_mode_opened`. Android timers use
+exact-while-idle without the exact-alarm permission; the owner's phone check decides if that is enough. Web: "1 of
+these serving is" now reads "servings is". 36 Jest tests, 1 new Python test; four new native modules, so the next
+development build needs making. No model call, so no eval rerun.
 
 Phone meal plan and grocery list (mobile plan PR 6): the Plan tab makes a plan through `POST /plans` (core's
 `streamPlan` on `expo/fetch`: the planner's steps, then the plan), shows the allowance left, the plan's note and
@@ -967,8 +981,10 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `src/lib/supabase.ts` + `secure-session.ts` (session storage), `src/lib/auth.ts` (Google, Apple, guest, email
   link, linking, sign-out), `src/components/` (`bits.tsx` like the web's, `Icon`, `RecipeCard`, `ChipRow`,
   `MeasuredLine`, `MacroRing`, `WakeNotice`, `Soon`, `Sheet`, `Toaster` (`lib/toast.ts`), `MealSheet` with
-  `SwapMeal`/`RepeatMeal`, `MealRow`, `DayTargets`, `AuthProvider`, `AccountCard`, `Choice`; `lib/grocery.ts` keeps the
-  list's ticks), `src/__tests__/`
+  `SwapMeal`/`RepeatMeal`, `MealRow`, `DayTargets`, `CookingScreen` (`cooking-mode.tsx`, `cooking-parts.tsx`),
+  `VoiceControl`, `AuthProvider`, `AccountCard`, `Choice`; `lib/grocery.ts` keeps the list's ticks, `lib/cooking.ts`
+  progress and sounds, `lib/timer-alerts.ts` timer notifications, `lib/voice.ts` speech, `lib/stored.ts` per-user
+  settings), `src/__tests__/`
   (Jest; `src/test/` has the fake API and fixtures; `jest.config.js`, `jest.setup.js`), `src/uniwind-types.d.ts`
   (written by Metro, committed), `assets/` (from `web/brand/`).
 - `packages/core/`: `@pantrila/core`, code shared by web and the phone app (no React, DOM or React
@@ -1054,6 +1070,7 @@ uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 uv run pantrila photos generate [--only ids] [--limit n] [--force] [--dry-run]  # corpus photos (paid; ~$0.014 each)
 uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # LangSmith dashboard
 uv run python scripts/email_templates.py      # rewrite supabase/templates/ (then paste into Supabase)
+uv run python scripts/cooking_sounds.py       # rewrite mobile/assets/sounds/ (timer ring, voice chime)
 uv run uvicorn pantrila.api:app --env-file .env --reload   # API on :8000 (SUPABASE_URL, DATABASE_URL)
 npm ci                                   # from the root: installs web, mobile and packages/* (one lockfile)
 npm test --workspace @pantrila/core      # shared-code unit tests (Vitest); typecheck: npm run typecheck --workspace @pantrila/core
