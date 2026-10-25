@@ -371,12 +371,20 @@ text import; a shared video says to share the post's link instead (the server re
 
 Branch `feat/mobile-assistant`.
 
-- [ ] Threads list (drawer), New chat, delete; `?q=` from Home's card.
-- [ ] `POST /chat/stream` through `expo/fetch`: step label, recipe cards as found, reply text as it
+- [x] Threads list (drawer), New chat, delete; `?q=` from Home's card.
+- [x] `POST /chat/stream` through `expo/fetch`: step label, recipe cards as found, reply text as it
       arrives, then the final reply; error state.
-- [ ] Recipe cards and links to recipe pages and cooking mode; draft recipes with "Save to My
+- [x] Recipe cards and links to recipe pages and cooking mode; draft recipes with "Save to My
       recipes" / "Saved to My recipes"; warning cards.
-- [ ] Dictation into the message box (`expo-speech-recognition`).
+- [x] Dictation into the message box (`expo-speech-recognition`).
+- [ ] **(owner)** chat on a real phone with the next development build, including dictation and saving a draft.
+
+Done notes: the web's reply reading (citations, bold, lists, headings, lines that only cite, the recipes a reply uses,
+tool summaries, draft tags, the reply in flight) moved to `@pantrila/core/chat`, which the web's Assistant page and
+Home card now use too, with `STARTERS` and `addWords`. The chats are a sheet ("Chats") rather than a side drawer, as
+the phone's other lists are. A chat draft reaches the form through `lib/chat-draft.ts` (held in memory, like a share)
+and `recipes/mine/new?from=chat&draft=<id>&thread=<id>`. Dictation reuses PR 7's `phoneListener` without cooking
+mode's command words, so no new native module.
 
 ## PR 11: pantry, profile and the rest
 
@@ -525,7 +533,7 @@ Branch `feat/mobile-launch`.
 | 7 | `feat/mobile-cooking` | done (owner: cook on a real phone with voice and a locked-phone timer) |
 | 8 | `feat/mobile-cookbook` | done (owner: import on a real phone with the next development build) |
 | 9 | `feat/mobile-share` | done (owner: Vercel variables and a redeploy, iOS extension provisioning, shares on real phones) |
-| 10 | `feat/mobile-assistant` | not started |
+| 10 | `feat/mobile-assistant` | done (owner: chat on a real phone with the next development build) |
 | 11 | `feat/mobile-profile` | not started |
 | 12 | `feat/mobile-paywall` | not started |
 | 13 | `feat/mobile-store` | not started |
@@ -667,3 +675,14 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   and `proxy.ts` skips `/.well-known`. 51 Jest tests (6 new), 42 Playwright specs. New native module and
   extension, so the next development build needs making. For PR 10: nothing here touches chat; a chat draft can
   reach `recipes/mine/new` the way a share does (hold it in a store like `lib/share.ts`).
+- 2026-10-25: PR 10 (`feat/mobile-assistant`): the Assistant tab (`app/(tabs)/assistant.tsx`) streams `POST /chat/stream`
+  through core's `streamChat` on `expo/fetch` (the step label, then the reply as it is written with found recipes
+  already titled, then the saved reply put straight into the SWR cache), keeps the last chat under
+  `userKey(id, "chat-thread")`, and reads Home's `?q=` (asked in a new chat) and `?thread=`, then clears them so the
+  same question can be asked again. `components/chat.tsx`: `Bubble` (profile check, tool summaries, text with
+  citation links, recipe cards with "Let's cook this!" at the reply's servings, drafts with their warnings and "Save
+  to My recipes" or "Saved to My recipes as …"), `Rich`, `ChatThreads` (in a `Sheet`; delete asks first). Errors
+  (a Free day's 402, a 409 that reloads the chat) show in the chat. `components/dictate-button.tsx` types speech into
+  the box (also on Home's card). Core gains `chat.ts` (used by the web too). 57 Jest tests (6 new), 66 core tests, 42
+  Playwright specs. No new native module. For PR 11: Pantry and Profile replace the "soon" rows in `account.tsx`;
+  `useRefreshKitchen` already refreshes the pantry after a chat changes it.
