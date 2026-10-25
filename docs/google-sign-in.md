@@ -34,7 +34,8 @@ Values used below:
 ## 2. Supabase dashboard (project `pantrila`)
 
 1. **Authentication → Sign In / Providers → Google**: turn it on, paste the Client ID and
-   Client secret, save. Leave "Skip nonce checks" off.
+   Client secret, save. For the phone app, see section 4: it adds client ids here and turns
+   "Skip nonce checks" on.
 2. **Authentication → Sign In / Providers**, under the user sign-up settings: turn on
    **Allow manual linking**, then tap **Save changes** at the bottom of that User Signups
    section (it has its own save button; until it is saved, guests see "Manual linking is
@@ -44,7 +45,7 @@ Values used below:
    `https://app.pantrila.com/auth/callback`, `https://pantrila.vercel.app/auth/callback` and
    `http://localhost:3000/auth/callback`, and that the Site URL is `https://app.pantrila.com`.
    Add the old `https://pantrio-azure.vercel.app/auth/callback` too if people still use that
-   address.
+   address. For the phone app's email links, also add `pantrila://auth/callback`.
    Vercel preview URLs are not listed, so Google sign-in on a preview deploy falls back to the
    Site URL.
 
@@ -62,3 +63,32 @@ On the live app:
 
 Signing in with Google using the owner's email joins the existing magic-link account,
 because Supabase links identities that share a verified email.
+
+## 4. The phone app (Expo, `mobile/`)
+
+The app does not go through the browser: Google's own sign-in sheet
+(`@react-native-google-signin/google-signin`) returns an id token, and the app hands it to
+Supabase (`signInWithIdToken`, or `linkIdentity` for a guest), see `mobile/src/lib/auth.ts`.
+Google needs to know the app, and Supabase needs to accept tokens made for it.
+
+1. **Google Cloud → Clients → Create client**, type **iOS**, name `Pantrila iOS`, bundle ID
+   `com.pantrila.app`. Copy its **Client ID** (`...apps.googleusercontent.com`).
+2. **Create client**, type **Android**, name `Pantrila Android`, package `com.pantrila.app`, and
+   the **SHA-1** of the signing key. EAS made and keeps the key: `npx eas-cli credentials
+   --platform android` in `mobile/` shows its SHA-1 fingerprint. Add a second Android client for
+   the Play Store's app signing key once the app is on Google Play (Play Console → App integrity
+   shows it). Android clients have no id to copy: Google matches the package and fingerprint.
+3. **EAS environment variables** (all environments; they are public, "Plain text" is fine), in
+   `mobile/`:
+   `npx eas-cli env:create --name EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID --value <the Web client's id>`
+   and the same for `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` with the iOS client's id. The web client
+   id makes Google address the id token to the web client on Android. For `npx expo start`, put the
+   same two lines in `mobile/.env.local`. The iOS id also sets the URL scheme Google's sheet
+   returns to (`app.config.ts`), so **make a new development build** after setting it.
+4. **Supabase → Google provider**: in **Client IDs** (authorised client ids), list the Web client
+   id and the iOS client id, comma separated. Turn **Skip nonce checks** on: Google's iOS SDK puts
+   a nonce in the token that the app cannot see, so Supabase could not check it. This only affects
+   id-token sign-ins; the web app's redirect sign-in is unchanged.
+5. Check on each phone: Continue with Google signs in; as a guest, Profile → Keep your data with
+   Google keeps the same data; a Google account that already has Pantrila shows the "already has
+   its own Pantrila account" message and the guest stays signed in.
