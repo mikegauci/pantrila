@@ -112,7 +112,7 @@ describe("email links", () => {
 
 it("forgets only the signed-out person's things on the phone", async () => {
   await AsyncStorage.multiSet([[userKey("alice", "cook"), "1"], [userKey("alice", "draft"), "2"], [userKey("bob", "cook"), "3"],
-                               ["pantrila-temp-unit", "c"]])
+                               ["pantrila-cook:alice:corpus:r1", "4"], ["pantrila-temp-unit", "c"]])
   await forgetLocal("alice")
   expect([...(await AsyncStorage.getAllKeys())].sort()).toEqual(["pantrila-temp-unit", userKey("bob", "cook")])
 })

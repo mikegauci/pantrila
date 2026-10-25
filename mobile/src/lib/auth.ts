@@ -5,6 +5,8 @@ import * as AppleAuthentication from "expo-apple-authentication"
 import * as Crypto from "expo-crypto"
 import { Platform } from "react-native"
 
+import { progressKey } from "@pantrila/core/cooking"
+
 import { supabase } from "@/lib/supabase"
 
 /**
@@ -187,10 +189,11 @@ export async function finishEmailLink(url: string): Promise<string | null> {
 /** AsyncStorage keys for one person's things on this phone (drafts, cooking progress...). */
 export const userKey = (userId: string, name: string) => `pantrila:${userId}:${name}`
 
-/** Forget what this phone kept for the person. Their session goes with Supabase's signOut. */
+/** Forget what this phone kept for the person, including cooking progress (kept under the web's
+ * key shape, `progressKey`). Their session goes with Supabase's signOut. */
 export async function forgetLocal(userId: string): Promise<void> {
-  const prefix = userKey(userId, "")
-  const keys = (await AsyncStorage.getAllKeys()).filter((k) => k.startsWith(prefix))
+  const prefixes = [userKey(userId, ""), progressKey(userId, "")]
+  const keys = (await AsyncStorage.getAllKeys()).filter((k) => prefixes.some((p) => k.startsWith(p)))
   if (keys.length) await AsyncStorage.multiRemove(keys)
 }
 

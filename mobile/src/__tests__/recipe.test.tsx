@@ -11,7 +11,7 @@ jest.mock("@/lib/auth", () => ({
   firstName: () => null,
   userKey: (id: string, name: string) => `pantrila:${id}:${name}`,
 }))
-jest.mock("@/lib/api", () => ({ api: jest.fn(), health: jest.fn(async () => true) }))
+jest.mock("@/lib/api", () => ({ api: jest.fn(), send: jest.fn(async () => ({})), health: jest.fn(async () => true) }))
 
 beforeEach(() => {
   ;(api as jest.Mock).mockImplementation(fakeApi({

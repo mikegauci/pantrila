@@ -42,6 +42,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     "expo-router",
     "expo-secure-store",
     "expo-apple-authentication",
+    // Cooking timers ring through local notifications; voice commands need the mic and speech.
+    "expo-notifications",
+    [
+      "expo-speech-recognition",
+      {
+        microphonePermission: "Pantrila listens for “next”, “back” and timer commands while you cook with the mic on.",
+        speechRecognitionPermission: "Pantrila turns what you say into cooking commands. It never records or stores your voice.",
+        androidSpeechServicePackages: ["com.google.android.googlequicksearchbox", "com.google.android.tts"],
+      },
+    ],
     // iOS only (Android needs no plugin); without options the plugin expects Firebase files instead.
     ...(GOOGLE_IOS_CLIENT_ID
       ? [["@react-native-google-signin/google-signin", { iosUrlScheme: googleUrlScheme(GOOGLE_IOS_CLIENT_ID) }] as [string, object]]
