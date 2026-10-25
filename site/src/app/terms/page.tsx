@@ -13,8 +13,10 @@ export default function Terms() {
   return (
     <LegalPage title="Terms" updated="25 October 2026">
       <p>
-        These terms cover your use of Pantrila, the website at pantrila.com and the app at app.pantrila.com. By using
-        Pantrila you agree to them.
+        These terms cover your use of Pantrila: the website at pantrila.com, the app at app.pantrila.com and the
+        Pantrila apps for iPhone and Android. By using Pantrila you agree to them. When you get the apps from the App
+        Store or Google Play, that store&rsquo;s own terms also apply to the download and to purchases; Apple and
+        Google are not responsible for Pantrila or its support.
       </p>
 
       <h2>What Pantrila is</h2>
@@ -37,6 +39,8 @@ export default function Terms() {
         <li>
           Nutrition values are estimates from public food data and ingredient weights. AI answers and imported recipes
           can be wrong; use your own judgement when cooking, especially with food safety and temperatures.
+          Voice commands and timers help but can mishear or be silenced by your phone&rsquo;s settings; keep an eye
+          on what is cooking.
         </li>
       </ul>
 
@@ -78,7 +82,8 @@ export default function Terms() {
           republish recipes you do not have the right to share.
         </li>
         <li>
-          Guest accounts live in your browser. If you clear it before adding Google, the account cannot be recovered.
+          Guest accounts live in your browser or on your phone. If you clear the browser, delete the app or sign out
+          before adding Google (or Apple, in the iPhone app), the account cannot be recovered.
         </li>
       </ul>
 

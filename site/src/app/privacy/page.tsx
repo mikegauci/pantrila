@@ -13,7 +13,8 @@ export default function Privacy() {
   return (
     <LegalPage title="Privacy" updated="25 October 2026">
       <p>
-        Pantrila is an AI cooking and meal-planning assistant at <a href={APP_URL}>app.pantrila.com</a>. Pantrila
+        Pantrila is an AI cooking and meal-planning assistant at <a href={APP_URL}>app.pantrila.com</a> and in the
+        Pantrila apps for iPhone and Android; this policy covers all three. Pantrila
         decides how your data is used (it is the “data controller”). Questions or requests: {mail}.
       </p>
       <p>
@@ -25,7 +26,9 @@ export default function Privacy() {
       <ul>
         <li>
           <strong>Your account.</strong> If you continue with Google: your email address, name and profile picture from
-          Google. If you sign in with an email link: your email address. As a guest: an anonymous account id only.
+          Google. If you continue with Apple (iPhone app): the email address Apple shares (it can be a private relay
+          address) and your name the first time. If you sign in with an email link: your email address. As a guest:
+          an anonymous account id only.
         </li>
         <li>
           <strong>Your food profile.</strong> Diet, allergies, foods you avoid, nutrition targets and the number of
@@ -94,27 +97,33 @@ export default function Privacy() {
           It tells Pantrila when your subscription changes. Your RevenueCat record is deleted with your account.
         </li>
         <li>
-          <strong>Google</strong> signs you in if you choose Google.
+          <strong>Google</strong> signs you in if you choose Google, and <strong>Apple</strong> if you choose Apple.
+        </li>
+        <li>
+          <strong>Apple or Google speech recognition</strong> turns what you say into words when you use voice
+          commands in cooking mode or the microphone in the assistant on a phone that cannot do it on the phone
+          itself. The app tells you which before you start.
         </li>
         <li>
           <strong>Resend</strong> delivers sign-in emails if you choose email sign-in.
         </li>
         <li>
           <strong>Sentry</strong> receives error reports, in the EU (Frankfurt): what went wrong, the page, your
-          browser and your account id, but not your recipes, messages or email. Feedback you send from the app goes
+          browser or phone model and your account id, but not your recipes, messages or email. Feedback you send from the app goes
           there too, with the email you add for a reply.
         </li>
         <li>
           <strong>PostHog</strong> counts how people use Pantrila, in the EU (Frankfurt), so we can see where it
           helps and where people get stuck: the day you first used it and the days you came back, and when you
           import a recipe, make a plan or open cooking mode, and when a Pantrila Pro trial or subscription starts,
-          renews, is cancelled or ends. It gets your account id and whether you are a guest,
+          renews, is cancelled or ends. It gets your account id, whether you are a guest and which app you used
+          (iPhone, Android or the web),
           never your email, IP address, location, recipes or messages. Pantrila sends this from its server; nothing
           is stored in your browser for it.
         </li>
         <li>
-          <strong>PostHog</strong> also keeps recordings of your visits, unless you turn off &ldquo;Record my
-          visits&rdquo; in Profile. A recording shows your taps, scrolling and the screens you see, including your
+          <strong>PostHog</strong> also keeps recordings of your visits to the web app (not the phone apps), unless you
+          turn off &ldquo;Record my visits&rdquo; in Profile. A recording shows your taps, scrolling and the screens you see, including your
           diet and allergy settings and the recipes and chats on screen; anything you type is hidden. Recordings are
           linked to your account id, kept for 30 days, and deleted with your account.
         </li>
@@ -122,6 +131,36 @@ export default function Privacy() {
       <p>
         Some of these companies are based in the United States, so your data may be processed there under their
         standard data protection terms.
+      </p>
+
+      <h2>On your phone</h2>
+      <p>
+        The apps ask before they use any of these, and you can change your answer in your phone&rsquo;s settings:
+      </p>
+      <ul>
+        <li>
+          <strong>Camera and photos.</strong> Only the photos you take or pick, to read a recipe from them or as your
+          profile picture. They are shrunk on the phone first; the originals never leave it.
+        </li>
+        <li>
+          <strong>Microphone and speech recognition.</strong> Only while voice commands or the microphone button are
+          on. Speech is turned into words on the phone when it can do that, otherwise by Apple or Google; Pantrila
+          receives the words, never a recording of your voice, and keeps none of them except what you send as a
+          message.
+        </li>
+        <li>
+          <strong>Notifications.</strong> Cooking timers ring through notifications that the phone schedules itself.
+          Pantrila sends no push notifications and needs no notification address.
+        </li>
+        <li>
+          <strong>Share to Pantrila.</strong> What you share from another app (a link, text or up to 4 photos) is
+          read only to import that recipe.
+        </li>
+      </ul>
+      <p>
+        The apps keep your sign-in encrypted on the phone and a few preferences and unfinished work (such as
+        cooking progress, grocery ticks and an import in progress) in the app&rsquo;s own storage. Signing out
+        forgets them.
       </p>
 
       <h2>In your browser</h2>
@@ -136,14 +175,16 @@ export default function Privacy() {
       <h2>How long</h2>
       <p>
         Your data stays until you delete it. You can delete recipes, chats, pantry items and photos yourself in the
-        app at any time, or your whole account from Profile, Delete account: that removes everything Pantrila holds
+        app at any time, or your whole account from Profile, Delete account (in the phone apps: Account, Delete
+        account): that removes everything Pantrila holds
         about you, including your sign-in, straight away. It does not cancel a Pantrila Pro subscription: cancel that
         in your phone&rsquo;s settings (App Store or Google Play) first.
       </p>
 
       <h2>Your rights</h2>
       <p>
-        You can delete your account yourself in the app (Profile, Delete account). You can also ask for a copy of
+        You can delete your account yourself in the app (Profile, Delete account; in the phone apps, Account,
+        Delete account). You can also ask for a copy of
         your data, to correct it, to delete it, or to object to how it is used. Write to {mail} from the email linked to your account and you will get an answer within a month.
         A guest account has no email, so add Google from your profile first. You can also complain to your data
         protection authority.
