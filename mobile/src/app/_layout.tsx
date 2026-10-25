@@ -9,10 +9,12 @@ import { useFonts } from "expo-font"
 import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
 import { StatusBar } from "expo-status-bar"
+import { ShareIntentProvider } from "expo-share-intent"
 import { useEffect } from "react"
 import { useCSSVariable } from "uniwind"
 
 import { AuthProvider, useAuth } from "@/components/auth-provider"
+import { ShareHandler } from "@/components/share-handler"
 import { Toaster } from "@/components/toaster"
 
 SplashScreen.preventAutoHideAsync()
@@ -31,13 +33,17 @@ export default function RootLayout() {
   const fonts = loaded || Boolean(error)
 
   if (!fonts) return null
+  // The share sheet's provider comes first, as expo-share-intent asks.
   return (
-    <AuthProvider>
-      <StatusBar style="auto" />
-      <Screens />
-      {/* Above every screen but cooking mode, a full-screen modal with its own. */}
-      <Toaster />
-    </AuthProvider>
+    <ShareIntentProvider>
+      <AuthProvider>
+        <StatusBar style="auto" />
+        <Screens />
+        <ShareHandler />
+        {/* Above every screen but cooking mode, a full-screen modal with its own. */}
+        <Toaster />
+      </AuthProvider>
+    </ShareIntentProvider>
   )
 }
 

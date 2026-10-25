@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Choice } from "@/components/choice"
 import { supabaseReady } from "@/lib/supabase"
 import { appleReady, googleReady, sendEmailLink, signInAsGuest, signInWith, type Provider } from "@/lib/auth"
+import { useSharedRecipe } from "@/lib/share"
 
 type Busy = Provider | "guest" | "email" | null
 
@@ -17,6 +18,7 @@ export default function Welcome() {
   const [emailOpen, setEmailOpen] = useState(false)
   const [email, setEmail] = useState("")
   const [sent, setSent] = useState(false)
+  const shared = useSharedRecipe()
 
   useEffect(() => {
     appleReady().then(setApple, () => setApple(false))
@@ -41,6 +43,11 @@ export default function Welcome() {
             Set your diet and allergies, add what is in your kitchen and plan a week of meals.
           </Text>
 
+          {shared && (
+            <Text accessibilityRole="alert" className="font-sans mt-4 rounded-xl bg-yellow-soft p-3 text-sm text-foreground">
+              Sign in to import the recipe you shared. It will open once you are in.
+            </Text>
+          )}
           {!supabaseReady() && (
             <Text accessibilityRole="alert" className="font-sans mt-4 rounded-xl bg-danger-soft p-3 text-sm text-danger">
               Sign-in is not set up in this build: set EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY (mobile/.env.local, or an EAS

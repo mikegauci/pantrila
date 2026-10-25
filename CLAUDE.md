@@ -44,11 +44,25 @@ next PR of the mobile plan": read that file first, take the first PR its Progres
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
 Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
 (`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`), PR 4 (`feat/mobile-sign-in`), PR 5 (`feat/mobile-recipes`), PR 6 (`feat/mobile-plan`), PR 7
-(`feat/mobile-cooking`) and PR 8 (`feat/mobile-cookbook`) are done. Next: **PR 9 (`feat/mobile-share`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
+(`feat/mobile-cooking`), PR 8 (`feat/mobile-cookbook`) and PR 9 (`feat/mobile-share`) are done. Next: **PR 10
+(`feat/mobile-assistant`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
 installs (Android development build finished), PR 3's Render variables and RevenueCat webhook, and PR 4's Google,
-Apple and Supabase settings plus a new development build.
+Apple and Supabase settings plus a new development build, and PR 9's `APPLE_TEAM_ID` / `ANDROID_CERT_SHA256` on Vercel
+(`docs/share-and-links.md`).
 
 ## Status (update as work lands)
+
+Share to Pantrila and app links (mobile plan PR 9): the phone app is in the share sheet ("Save to Pantrila" on iOS,
+an extension from `expo-share-intent`; Pantrila on Android) for links, text and up to 4 photos. `ShareHandler` (root
+layout) turns a share into an import (`lib/share.ts`) and opens `recipes/mine/new`, which starts it at once: a post
+link (core's `POST_LINK`) or another link, photos (shrunk on the phone) or text; a shared video says to share the
+post's link. Signed out, the share waits ("Sign in to import the recipe you shared") and runs after sign-in.
+`+native-intent.tsx` routes iOS's share link. `https://app.pantrila.com/recipes/...` and `/plan` open in the app
+(`associatedDomains`, an Android `autoVerify` filter); the web serves `/.well-known/apple-app-site-association` and
+`/.well-known/assetlinks.json` from `APPLE_TEAM_ID` and `ANDROID_CERT_SHA256` (404 until set; `web/src/lib/app-links.ts`)
+and `proxy.ts` skips `/.well-known`. Owner steps in `docs/share-and-links.md`. 51 Jest tests (6 new), all 42
+Playwright specs pass; a new native module and extension, so the next development build needs making. No API or
+model change, so no eval rerun.
 
 Phone cookbook and imports (mobile plan PR 8): `recipes/mine` lists the person's recipes ("Where they came from");
 `recipes/mine/[id]` shows the photo (made in the background after saving, "Making the photo…", New / Remove), the
@@ -992,7 +1006,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `src/lib/api.ts` (`createApi` with `expo/fetch`, the session's token and `waking.ts`), `src/lib/hooks.ts`
   (SWR hooks, `useRecipePages`), `src/lib/recipes.ts` (filters), `src/lib/temperature.ts` (°C/°F per user),
   `src/lib/import-jobs.ts` (import jobs, saved per user), `src/lib/photo-jobs.ts` (background recipe photos,
-  `saveNewRecipe`), `src/lib/images.ts` (photos to import), `src/lib/supabase.ts` + `secure-session.ts` (session storage), `src/lib/auth.ts` (Google, Apple, guest, email
+  `saveNewRecipe`), `src/lib/images.ts` (photos to import), `src/lib/share.ts` + `src/components/share-handler.tsx` (the share
+  sheet; `src/app/+native-intent.tsx` routes iOS's share link), `src/lib/supabase.ts` + `secure-session.ts` (session storage), `src/lib/auth.ts` (Google, Apple, guest, email
   link, linking, sign-out), `src/components/` (`bits.tsx` like the web's, `Icon`, `RecipeCard`, `ChipRow`,
   `MeasuredLine`, `MacroRing`, `WakeNotice`, `Soon`, `Sheet`, `OptionSheet`, `Toaster` (`lib/toast.ts`, in the root
   layout), `CookbookForm`, `ImportProgress`, `StartCooking`, `MealSheet` with
@@ -1015,7 +1030,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   (generated corpus, one file per recipe), `corpus_manifest.json` (generation runs and cost).
 - `scripts/`: `generate_corpus.py`, `build_usda_table.py`, `langsmith_dashboard.py` (rebuilds the
   "Pantrila live" LangSmith dashboard via the charts API).
-- `docs/`: `demo-script.md` (video walkthrough), `google-sign-in.md` (Google Cloud + Supabase setup), `screenshots/` (README images, taken from the
+- `docs/`: `demo-script.md` (video walkthrough), `google-sign-in.md` (Google Cloud + Supabase setup),
+  `share-and-links.md` (share sheet and app links, owner steps), `screenshots/` (README images, taken from the
   web app at 1280 px wide).
 - `supabase/migrations/`: SQL migrations. `supabase/templates/`: auth email templates written by
   `scripts/email_templates.py`, pasted into the Supabase dashboard.
@@ -1043,7 +1059,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `@pantrila/core/voice` (words to commands) and `src/lib/voice.ts` (browser listener). The assistant's
   thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrila.tsx`. `RecipeArt` (`src/components/bits.tsx`)
   shows the recipe photo with `next/image` (host allowed from `NEXT_PUBLIC_SUPABASE_URL` in
-  `next.config.ts`) or the meal-type art when there is none. `src/proxy.ts` only redirects the retired Vercel addresses. Read `web/AGENTS.md`: this Next.js differs from
+  `next.config.ts`) or the meal-type art when there is none. `src/proxy.ts` only redirects the retired Vercel addresses. `src/app/.well-known/` serves the phone app's link
+  files (`src/lib/app-links.ts`). Read `web/AGENTS.md`: this Next.js differs from
   older versions (e.g. `proxy.ts` replaces middleware; check `node_modules/next/dist/docs/`).
 
 ## Commands
@@ -1127,7 +1144,7 @@ Update this block when commands change.
   suffixes. **Never use a `claude/` branch** (owner's rule, for every session and tool): if the
   session or harness assigns one (such as `claude/<random-words>`), ignore it and create the
   `feat/` or `fix/` branch from up-to-date `main` instead; push and open the PR from that branch.
-  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-share` for PR 9).
+  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-assistant` for PR 10).
 - Commit messages use plain descriptive text. `feat/` and `fix/` are branch prefixes only;
   do not prefix commit messages with them.
 - PR titles say specifically what the PR does (for example "Add hybrid recipe search with

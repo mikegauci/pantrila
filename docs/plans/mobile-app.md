@@ -347,15 +347,25 @@ transparent, so this is left as is.
 
 Branch `feat/mobile-share`. The feature that makes the app worth installing.
 
-- [ ] `expo-share-intent`: Pantrila appears in the share sheet of Instagram, TikTok, Facebook,
+- [x] `expo-share-intent`: Pantrila appears in the share sheet of Instagram, TikTok, Facebook,
       Safari and Chrome. A shared post or recipe link opens the app and starts the import job; a
       shared photo starts a photo import.
-- [ ] Universal links (iOS) and app links (Android) for `https://app.pantrila.com/recipes/...` and
+- [x] Universal links (iOS) and app links (Android) for `https://app.pantrila.com/recipes/...` and
       `/plan`: `web/public/.well-known/apple-app-site-association` and `assetlinks.json` (with the
       EAS signing SHA-256); `web/src/proxy.ts` must not redirect them.
-- [ ] Signed-out share: sign in first, then continue the import.
-- [ ] Analytics: `recipe_imported` already comes from the API; nothing new.
+- [x] Signed-out share: sign in first, then continue the import.
+- [x] Analytics: `recipe_imported` already comes from the API; nothing new.
+- [ ] **(owner)** `APPLE_TEAM_ID` and `ANDROID_CERT_SHA256` on Vercel, a redeploy, the share extension's
+      provisioning on the first iOS build (steps in `docs/share-and-links.md`).
 - [ ] **(owner)** share a real reel from each app on both phones.
+
+Done notes: the two link files are route handlers (`web/src/app/.well-known/*/route.ts`, `web/src/lib/app-links.ts`)
+instead of files in `web/public/`, since they need the owner's Apple Team ID and signing fingerprints: they read
+`APPLE_TEAM_ID` and `ANDROID_CERT_SHA256` and are a 404 until those are set. The iOS share extension is called
+"Save to Pantrila": the plugin names the Xcode target after it, and "Pantrila" is the app's own target, which made the
+plugin skip the extension (checked with `expo prebuild`). A shared link is a post import when it matches core's
+`POST_LINK`, else a link import; up to 4 shared photos are a photo import; shared text of 20 characters or more is a
+text import; a shared video says to share the post's link instead (the server reads posts from their link).
 
 ## PR 10: assistant chat
 
@@ -514,7 +524,7 @@ Branch `feat/mobile-launch`.
 | 6 | `feat/mobile-plan` | done (owner: try it on a phone with the next development build) |
 | 7 | `feat/mobile-cooking` | done (owner: cook on a real phone with voice and a locked-phone timer) |
 | 8 | `feat/mobile-cookbook` | done (owner: import on a real phone with the next development build) |
-| 9 | `feat/mobile-share` | not started |
+| 9 | `feat/mobile-share` | done (owner: Vercel variables and a redeploy, iOS extension provisioning, shares on real phones) |
 | 10 | `feat/mobile-assistant` | not started |
 | 11 | `feat/mobile-profile` | not started |
 | 12 | `feat/mobile-paywall` | not started |
@@ -645,3 +655,15 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   start a shared post's import with `importRecipe(userId, { kind: "post", url })` and open `/recipes/mine/new` (it
   resumes the saved job); for PR 10: a chat draft can open the form through a new param on `recipes/mine/new`, and
   the saved recipe's `?chat=` leads back.
+- 2026-10-25: PR 9 (`feat/mobile-share`): `expo-share-intent` 9 (SDK 58) with an iOS share extension ("Save to
+  Pantrila", target `SavetoPantrila`, bundle `com.pantrila.app.share-extension`, App Group `group.com.pantrila.app`)
+  for links, text and up to 4 images, and Android `SEND`/`SEND_MULTIPLE` filters (`text/*`, `image/*`).
+  `ShareIntentProvider` wraps the root layout; `ShareHandler` turns a share into an import (`lib/share.ts`:
+  `fromShareIntent`, `holdShare`, `useSharedRecipe`) and opens `recipes/mine/new`, which starts it at once (the method's
+  field filled in, photos shrunk by `shrinkPhoto`). Signed out, the share waits and the welcome screen says so; it
+  is imported after sign-in. `+native-intent.tsx` sends iOS's `pantrila://dataUrl=…` to the new-recipe screen.
+  Universal and app links: `ios.associatedDomains` `applinks:app.pantrila.com`, an Android `autoVerify` filter for
+  `/recipes/` and `/plan`; the web serves both link files from `APPLE_TEAM_ID` / `ANDROID_CERT_SHA256` (404 unset),
+  and `proxy.ts` skips `/.well-known`. 51 Jest tests (6 new), 42 Playwright specs. New native module and
+  extension, so the next development build needs making. For PR 10: nothing here touches chat; a chat draft can
+  reach `recipes/mine/new` the way a share does (hold it in a store like `lib/share.ts`).

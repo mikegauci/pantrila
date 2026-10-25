@@ -26,6 +26,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     bundleIdentifier: "com.pantrila.app",
     supportsTablet: false,
     usesAppleSignIn: true,
+    // Universal links: app.pantrila.com recipe and plan pages open here (web/src/lib/app-links.ts).
+    associatedDomains: ["applinks:app.pantrila.com"],
     config: { usesNonExemptEncryption: false },
   },
   android: {
@@ -37,6 +39,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: BRAND_GREEN,
     },
     predictiveBackGestureEnabled: false,
+    // App links: the same pages as on iOS, checked against app.pantrila.com/.well-known/assetlinks.json.
+    intentFilters: [{
+      action: "VIEW",
+      autoVerify: true,
+      data: [
+        { scheme: "https", host: "app.pantrila.com", pathPrefix: "/recipes/" },
+        { scheme: "https", host: "app.pantrila.com", path: "/plan" },
+      ],
+      category: ["BROWSABLE", "DEFAULT"],
+    }],
   },
   plugins: [
     "expo-router",
@@ -50,6 +62,23 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         microphonePermission: "Pantrila listens for “next”, “back” and timer commands while you cook with the mic on.",
         speechRecognitionPermission: "Pantrila turns what you say into cooking commands. It never records or stores your voice.",
         androidSpeechServicePackages: ["com.google.android.googlequicksearchbox", "com.google.android.tts"],
+      },
+    ],
+    // "Share to Pantrila" from Instagram, TikTok, Facebook, Safari, Chrome and the photo library: a
+    // link, text or up to 4 photos (an iOS share extension and Android intent filters).
+    [
+      "expo-share-intent",
+      {
+        iosActivationRules: {
+          NSExtensionActivationSupportsWebURLWithMaxCount: 1,
+          NSExtensionActivationSupportsWebPageWithMaxCount: 1,
+          NSExtensionActivationSupportsText: true,
+          NSExtensionActivationSupportsImageWithMaxCount: 4,
+        },
+        // Its own name: "Pantrila" is the app's Xcode target, which the plugin would then skip.
+        iosShareExtensionName: "Save to Pantrila",
+        androidIntentFilters: ["text/*", "image/*"],
+        androidMultiIntentFilters: ["image/*"],
       },
     ],
     // Recipe photos to import: taken with the camera or picked from the library, never stored.
