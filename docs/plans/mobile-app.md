@@ -390,18 +390,36 @@ mode's command words, so no new native module.
 
 Branch `feat/mobile-profile`.
 
-- [ ] Pantry: list, add (food matching with suggestions), amounts, remove.
-- [ ] Profile: diet, allergies, excluded foods, nutrition targets (one number / a range), people,
+- [x] Pantry: list, add (food matching with suggestions), amounts, remove.
+- [x] Profile: diet, allergies, excluded foods, nutrition targets (one number / a range), people,
       avatar upload (crop square, JPEG; Google picture fallback), keep data with Google or Apple.
-- [ ] "Send feedback" with `@sentry/react-native` `captureFeedback`; Sentry errors on with the user
+- [x] "Send feedback" with `@sentry/react-native` `captureFeedback`; Sentry errors on with the user
       id only.
-- [ ] Delete account (type "delete"), clears local data and signs out.
-- [ ] Short onboarding (three cards: plan, import from a post, cook hands-free) instead of the web
+- [x] Delete account (type "delete"), clears local data and signs out.
+- [x] Short onboarding (three cards: plan, import from a post, cook hands-free) instead of the web
       tour.
-- [ ] API: an `X-Pantrila-Client: ios|android|web` header read by `analytics.py`, so PostHog splits
+- [x] API: an `X-Pantrila-Client: ios|android|web` header read by `analytics.py`, so PostHog splits
       the funnel by platform (property only; the web keeps working without it). New Python test.
-- [ ] Privacy page on `site/` and terms: name the apps, local notifications, speech recognition
+- [x] Privacy page on `site/` and terms: name the apps, local notifications, speech recognition
       (on-device or Apple/Google), camera and photos.
+- [ ] **(owner)** Sentry: a React Native project (EU), its DSN as `EXPO_PUBLIC_SENTRY_DSN` and
+      `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` (secret) as EAS environment variables, then a new
+      development build (a native module was added).
+
+Done notes: the account button opens Account, which links Pantry and Profile and holds the plan card (Free or
+Pro and what is left), "Keep your data" with Google or Apple (the existing `AccountCard`) and sign-out, Help
+("Show the intro again", "Send feedback") and Delete account; Profile holds the picture and the food settings, as
+the web's Profile page does. There is no "people" setting in the profile (the API's `Profile` has none): the
+grocery list's people stepper (PR 6) is it. Tapping a pantry food fills the form with it, and adding it again
+replaces its amount (`POST /me/pantry` puts). The picture is picked with the picker's square crop, then cut to the
+middle square and shrunk to 512 px JPEG by `expo-image-manipulator` (the API makes the 256 px WebP). Sentry
+uploads source maps and debug files at build time only when `SENTRY_AUTH_TOKEN` is set (`disableAutoUpload`
+otherwise), so builds without it pass; Metro uses `getSentryExpoConfig` for the debug ids. The intro's "done" key is
+`pantrila-intro-done:<user>`, outside `userKey`, so signing in again does not show it again; deleting the account
+forgets it. The web does not send `X-Pantrila-Client` yet: the API now allows the header across origins, and the
+web can start sending `web` once this API is live (sending it before would fail the browser's CORS check).
+
+No model call, so no eval rerun.
 
 ## PR 12: paywall and free trial
 
@@ -534,7 +552,7 @@ Branch `feat/mobile-launch`.
 | 8 | `feat/mobile-cookbook` | done (owner: import on a real phone with the next development build) |
 | 9 | `feat/mobile-share` | done (owner: Vercel variables and a redeploy, iOS extension provisioning, shares on real phones) |
 | 10 | `feat/mobile-assistant` | done (owner: chat on a real phone with the next development build) |
-| 11 | `feat/mobile-profile` | not started |
+| 11 | `feat/mobile-profile` | done (owner: Sentry project and EAS variables, a new development build) |
 | 12 | `feat/mobile-paywall` | not started |
 | 13 | `feat/mobile-store` | not started |
 | 14 | `feat/mobile-launch` | not started |
@@ -686,3 +704,19 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   the box (also on Home's card). Core gains `chat.ts` (used by the web too). 57 Jest tests (6 new), 66 core tests, 42
   Playwright specs. No new native module. For PR 11: Pantry and Profile replace the "soon" rows in `account.tsx`;
   `useRefreshKitchen` already refreshes the pantry after a chat changes it.
+- 2026-10-25: PR 11 (`feat/mobile-profile`): `app/pantry.tsx` (by aisle, add with foods from `/foods` offered as you
+  type, "Did you mean" from a 422's suggestions, tap a food to change its amount, remove), `app/profile.tsx` (picture
+  through `pickAvatar` in `lib/images.ts`, examples, allergies, diet with its help line, foods never eaten matched to
+  the table, energy as one number or a range (±10% kept when switching), protein and carbs, days (stepper), longest
+  recipe, meals, cuisines, tastes; one "Save profile" footer), `app/account.tsx` (Pantry and Profile rows, plan card,
+  `AccountCard`, Help, `DeleteAccount`), `app/intro.tsx` (three cards, opened once per person by `useFirstIntro` in the
+  tabs layout; `lib/intro.ts`). `UserAvatar` (`components/avatar.tsx`: upload, else Google picture, else emoji) is the
+  header button. `components/form.tsx` holds `INPUT`, `Field` (moved out of the recipe form), `Toggle`, `Segmented`;
+  `Button` gains `danger`. `lib/sentry.ts`: `Sentry.init` (off without `EXPO_PUBLIC_SENTRY_DSN`, no PII, no trace
+  headers), `wrapRoot` around the root layout, `identify` (user id only, from `AuthProvider`), `sendFeedback`
+  (`captureFeedback` with the screen, then `flush`). The phone sends `X-Pantrila-Client: ios|android` through core
+  `createApi`'s new `headers` option; the API adds `client` to every PostHog event it can tie to a request (visits,
+  imports including background jobs, plans, `/me/events`). Privacy and terms name the apps. 64 Jest tests (7 new), 67
+  core tests, 1 new Python test. New native module `@sentry/react-native`, so the next development build needs making.
+  For PR 12: the plan card in `account.tsx` is where "Pantrila Pro" and "Manage subscription" go; a guest's
+  "keep your data" is `linkWith` in `lib/auth.ts`.
