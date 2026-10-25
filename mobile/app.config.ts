@@ -52,6 +52,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         androidSpeechServicePackages: ["com.google.android.googlequicksearchbox", "com.google.android.tts"],
       },
     ],
+    // Recipe photos to import: taken with the camera or picked from the library, never stored.
+    [
+      "expo-image-picker",
+      {
+        photosPermission: "Pantrila reads a recipe from the photos you pick, such as a cookbook page or a screenshot.",
+        cameraPermission: "Pantrila reads a recipe from a photo you take of a cookbook page or a recipe card.",
+        microphonePermission: false,
+      },
+    ],
     // iOS only (Android needs no plugin); without options the plugin expects Firebase files instead.
     ...(GOOGLE_IOS_CLIENT_ID
       ? [["@react-native-google-signin/google-signin", { iosUrlScheme: googleUrlScheme(GOOGLE_IOS_CLIENT_ID) }] as [string, object]]

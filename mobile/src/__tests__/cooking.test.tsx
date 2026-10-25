@@ -90,7 +90,8 @@ it("rings a timer, with a notification for a locked phone that pausing cancels",
   jest.setSystemTime(Date.now() + 20 * 60 * 1000 + 1000)
   await act(async () => { jest.advanceTimersByTime(600) })
   expect(await screen.findByText("Time's up")).toBeTruthy()
-  expect(await screen.findByText("Timer done: step 3, 20 min")).toBeTruthy()
+  // Cooking mode draws its own toasts (it covers the root layout's), so the test app shows both.
+  expect((await screen.findAllByText("Timer done: step 3, 20 min")).length).toBeGreaterThan(0)
 })
 
 it("follows voice commands once the person agrees, and says speech stays on the phone", async () => {

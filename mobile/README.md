@@ -37,7 +37,8 @@ header's account button opens `account.tsx`. Recipe pages are `recipes/[id]` (Pa
 `recipes/mine/[id]` (the cookbook), at the same paths as the web. Sheets (`src/components/sheet.tsx`) are one modal each; a flow with several steps changes the sheet's
 content rather than opening another (iOS will not stack them). Screens still to come show `Soon`
 (`src/components/soon.tsx`) with the PR that brings them. Data comes through SWR hooks in
-`src/lib/hooks.ts`; anything kept on the phone for one person goes under `userKey(user.id, ...)`.
+`src/lib/hooks.ts`; anything kept on the phone for one person goes under `userKey(user.id, ...)`. Toasts
+(`toast` from `src/lib/toast.ts`) show through the root layout's `Toaster`; cooking mode, a full-screen modal, has its own.
 
 Cooking mode needs native modules a development build carries: `expo-keep-awake`, `expo-notifications` (timers
 that ring with the phone locked), `expo-audio` (the ring and chime in `assets/sounds/`, written by

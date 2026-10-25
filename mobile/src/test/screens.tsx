@@ -14,9 +14,10 @@ import CookMine from "@/app/recipes/mine/[id]/cook"
 import MyRecipe from "@/app/recipes/mine/[id]/index"
 import MyRecipes from "@/app/recipes/mine/index"
 import NewRecipe from "@/app/recipes/mine/new"
+import { Toaster } from "@/components/toaster"
 
 /** The signed-in app's routes (no fonts, splash or sign-in guard) at `url`, each test with a fresh
- * SWR cache. */
+ * SWR cache, with the root layout's toasts. */
 export function showApp(url: string) {
   return renderRouter(
     {
@@ -39,6 +40,7 @@ export function showApp(url: string) {
       wrapper: ({ children }: { children: React.ReactNode }) => (
         <SWRConfig value={{ provider: () => new Map(), shouldRetryOnError: false, dedupingInterval: 0 }}>
           {children}
+          <Toaster />
         </SWRConfig>
       ),
     } as Parameters<typeof renderRouter>[1],

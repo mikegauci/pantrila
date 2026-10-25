@@ -2,7 +2,7 @@ import { Image } from "expo-image"
 import {
   Apple, CakeSlice, CookingPot, EggFried, Minus, Plus, Salad, Sparkles, TriangleAlert, type LucideIcon,
 } from "lucide-react-native"
-import { Pressable, Text, View } from "react-native"
+import { ActivityIndicator, Pressable, Text, View } from "react-native"
 
 import { label } from "@pantrila/core/format"
 import type { Allergen, DietTag, MealType } from "@pantrila/core/types"
@@ -161,5 +161,36 @@ export function Stepper({ name, value, text, min, max, onChange }: {
       <Text className="w-[88px] text-center font-sans-semibold text-[13px] text-foreground">{text}</Text>
       {step(Plus, `More ${name.toLowerCase()}`, Math.min(max, value + 1))}
     </View>
+  )
+}
+
+const BUTTON = {
+  primary: ["bg-primary", "text-primary-foreground", "primary-foreground"],
+  outline: ["border border-border bg-surface", "text-foreground", "foreground"],
+  ghost: ["", "text-foreground", "foreground"],
+} as const
+
+/** The web's Button: primary, outline or ghost, at the web's `lg` (48) or `sm` (36) height. A busy
+ * button shows a spinner and cannot be pressed. */
+export function Button({ text, onPress, icon, variant = "primary", size = "lg", disabled, busy, label: name, className = "" }: {
+  text: string
+  onPress: () => void
+  icon?: LucideIcon
+  variant?: keyof typeof BUTTON
+  size?: "lg" | "sm"
+  disabled?: boolean
+  busy?: boolean
+  label?: string
+  className?: string
+}) {
+  const [box, ink, tone] = BUTTON[variant]
+  const off = disabled || busy
+  return (
+    <Pressable accessibilityRole="button" accessibilityLabel={name} accessibilityState={{ disabled: !!off, busy: !!busy }}
+               disabled={off} onPress={onPress}
+               className={`flex-row items-center justify-center gap-2 rounded-xl ${size === "lg" ? "h-12 px-4" : "h-9 px-3"} ${box} ${off ? "opacity-60" : ""} ${className}`}>
+      {busy ? <ActivityIndicator size="small" /> : icon && <Icon icon={icon} tone={tone} size={size === "lg" ? 18 : 16} />}
+      <Text className={`font-sans-semibold ${size === "lg" ? "text-base" : "text-sm"} ${ink}`}>{text}</Text>
+    </Pressable>
   )
 }

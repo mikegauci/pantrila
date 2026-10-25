@@ -1,7 +1,7 @@
-import { Link, Stack, useLocalSearchParams } from "expo-router"
-import { Check, ChefHat, Clock, ShoppingBasket, Users } from "lucide-react-native"
+import { Stack, useLocalSearchParams } from "expo-router"
+import { Check, Clock, ShoppingBasket, Users } from "lucide-react-native"
 import { useState } from "react"
-import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Text, View } from "react-native"
+import { ActivityIndicator, RefreshControl, ScrollView, Text, View } from "react-native"
 
 import { niceFractions } from "@pantrila/core/amounts"
 import { label } from "@pantrila/core/format"
@@ -12,6 +12,7 @@ import { AllergenBadge, DietBadge, ErrorState, Panel, PanelTitle, ProblemAlert, 
 import { Icon } from "@/components/icon"
 import { MacroRing } from "@/components/macro-ring"
 import { MeasuredLine } from "@/components/measured-line"
+import { StartCooking } from "@/components/start-cooking"
 import { TemperatureToggle } from "@/components/temperature-toggle"
 import { useProfile, useRecipe } from "@/lib/hooks"
 import { useTempUnit } from "@/lib/temperature"
@@ -139,16 +140,5 @@ function Fact({ icon, text }: { icon: typeof Clock; text: string }) {
       <Icon icon={icon} tone="muted-foreground" size={16} />
       <Text className="font-sans text-[13px] text-muted-foreground">{text}</Text>
     </View>
-  )
-}
-
-function StartCooking({ href }: { href: React.ComponentProps<typeof Link>["href"] }) {
-  return (
-    <Link href={href} asChild>
-      <Pressable accessibilityRole="button" className="h-12 flex-row items-center justify-center gap-2 rounded-xl bg-primary">
-        <Icon icon={ChefHat} tone="primary-foreground" size={18} />
-        <Text className="font-sans-semibold text-base text-primary-foreground">Start cooking</Text>
-      </Pressable>
-    </Link>
   )
 }
