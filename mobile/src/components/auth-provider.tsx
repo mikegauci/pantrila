@@ -2,6 +2,7 @@ import type { Session } from "@supabase/supabase-js"
 import { createContext, useContext, useEffect, useState } from "react"
 import { SWRConfig } from "swr"
 
+import { identify } from "@/lib/sentry"
 import { supabase, supabaseReady } from "@/lib/supabase"
 
 interface AuthState {
@@ -18,7 +19,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!supabaseReady()) return
-    const { data } = supabase().auth.onAuthStateChange((_event, session) => setState({ session, ready: true }))
+    const { data } = supabase().auth.onAuthStateChange((_event, session) => {
+      identify(session?.user.id ?? null)  // error reports name the account by its id, nothing more
+      setState({ session, ready: true })
+    })
     return () => data.subscription.unsubscribe()
   }, [])
 

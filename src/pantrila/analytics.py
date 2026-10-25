@@ -12,6 +12,10 @@ Off unless POSTHOG_API_KEY (the project key) is set. Deleting an account deletes
 their events and their session recordings (web/src/lib/replay.ts records people who opt in,
 under the same user id) when POSTHOG_PERSONAL_API_KEY (scope person:write) and
 POSTHOG_PROJECT_ID are set.
+
+The phone apps send `X-Pantrila-Client: ios|android` (the web may send `web`), so each event
+carries a `client` property and PostHog can split the funnel by platform. Without the header
+(today's web app, scripts) the property is left out.
 """
 
 from __future__ import annotations
@@ -38,9 +42,22 @@ Event = Literal[
     "cancelled",
     "expired",
 ]
+Client = Literal["ios", "android", "web"]
+CLIENTS: tuple[Client, ...] = ("ios", "android", "web")
+CLIENT_HEADER = "X-Pantrila-Client"
 RETURN_DAYS = 7
 EU_INGEST = "https://eu.i.posthog.com"
 EU_APP = "https://eu.posthog.com"
+
+
+def client_of(header: str | None) -> Client | None:
+    """The app a request came from, from its `X-Pantrila-Client` header; None if unknown."""
+    value = (header or "").strip().lower()
+    return value if value in CLIENTS else None  # type: ignore[return-value]
+
+
+def with_client(properties: dict[str, Any], client: Client | None) -> dict[str, Any]:
+    return {**properties, "client": client} if client else properties
 
 
 class Analytics(Protocol):
@@ -177,7 +194,7 @@ class Visits:
         self._seen: set[tuple[str, date]] = set()
         self._lock = threading.Lock()
 
-    def seen(self, user_id: str, guest: bool) -> None:
+    def seen(self, user_id: str, guest: bool, client: Client | None = None) -> None:
         today = datetime.now(UTC).date()
         with self._lock:
             if (user_id, today) in self._seen:
@@ -192,7 +209,7 @@ class Visits:
             return
         if days is None:
             return
-        props = {"guest": guest, "$set": {"guest": guest}}
+        props = with_client({"guest": guest, "$set": {"guest": guest}}, client)
         if len(days) == 1:
             self.sink.capture(user_id, "signed_up", props)
         self.sink.capture(user_id, "app_opened", props)

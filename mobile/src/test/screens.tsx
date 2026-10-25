@@ -8,6 +8,9 @@ import Home from "@/app/(tabs)/index"
 import Plan from "@/app/(tabs)/plan"
 import Recipes from "@/app/(tabs)/recipes"
 import Account from "@/app/account"
+import Intro from "@/app/intro"
+import Pantry from "@/app/pantry"
+import ProfileScreen from "@/app/profile"
 import Cook from "@/app/recipes/[id]/cook"
 import RecipePage from "@/app/recipes/[id]/index"
 import CookMine from "@/app/recipes/mine/[id]/cook"
@@ -34,6 +37,9 @@ export function showApp(url: string) {
       "recipes/mine/[id]/cook": CookMine,
       "recipes/mine/new": NewRecipe,
       account: Account,
+      pantry: Pantry,
+      profile: ProfileScreen,
+      intro: Intro,
     },
     {
       initialUrl: url,

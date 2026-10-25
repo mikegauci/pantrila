@@ -57,6 +57,7 @@ jest.mock("expo-image-manipulator", () => ({
     manipulate: jest.fn(() => {
       const context = {
         resize: jest.fn(() => context),
+        crop: jest.fn(() => context),
         renderAsync: jest.fn(async () => ({ width: 1200, height: 900, saveAsync: jest.fn(async () => ({ base64: "SlBFRw==" })) })),
       }
       return context
@@ -80,3 +81,19 @@ jest.mock("expo-share-intent", () => {
     },
   }
 })
+
+// Sentry: tests check what is reported; nothing is sent.
+jest.mock("@sentry/react-native", () => ({
+  init: jest.fn(),
+  wrap: (component) => component,
+  setUser: jest.fn(),
+  captureFeedback: jest.fn(),
+  flush: jest.fn(async () => true),
+}))
+
+// The first-run intro pushes a route when the tabs open; its own test turns it back on.
+jest.mock("@/lib/intro", () => ({
+  useFirstIntro: () => {},
+  introDone: jest.fn(async () => {}),
+  forgetIntro: jest.fn(async () => {}),
+}))

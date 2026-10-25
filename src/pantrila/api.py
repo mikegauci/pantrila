@@ -55,7 +55,16 @@ from fastapi.responses import JSONResponse, StreamingResponse
 
 from pantrila import config
 from pantrila.accounts import storage_folders
-from pantrila.analytics import Analytics, Event, Visits, analytics
+from pantrila.analytics import (
+    CLIENT_HEADER,
+    Analytics,
+    Client,
+    Event,
+    Visits,
+    analytics,
+    client_of,
+    with_client,
+)
 from pantrila.api_models import (
     AllowanceView,
     AppEvent,
@@ -250,6 +259,11 @@ def subscription_event(event: dict) -> Event | None:
 # --- App ----------------------------------------------------------------------------------
 
 
+def app_client(request: Request) -> Client | None:
+    """iOS, Android or the web, from the `X-Pantrila-Client` header (for analytics only)."""
+    return client_of(request.headers.get(CLIENT_HEADER))
+
+
 def current_user(request: Request, authorization: Annotated[str | None, Header()] = None) -> User:
     scheme, _, token = (authorization or "").partition(" ")
     if scheme.lower() != "bearer" or not token:
@@ -260,7 +274,8 @@ def current_user(request: Request, authorization: Annotated[str | None, Header()
         raise HTTPException(401, f"Invalid token: {exc}",
                             {"WWW-Authenticate": "Bearer"}) from exc  # fmt: skip
     sentry_sdk.set_user({"id": user.id})  # error reports name the account, nothing more
-    request.app.state.visits.seen(user.id, user.anonymous)  # once a day: sign-up, return
+    # once a day: sign-up, return
+    request.app.state.visits.seen(user.id, user.anonymous, app_client(request))
     return user
 
 
@@ -343,7 +358,7 @@ def create_app(
         CORSMiddleware,
         allow_origins=config.cors_origins(),
         allow_methods=["*"],
-        allow_headers=["Authorization", "Content-Type"],
+        allow_headers=["Authorization", "Content-Type", CLIENT_HEADER],
     )
 
     def get_recipe(s: Session, recipe_id: str) -> Recipe:
@@ -410,7 +425,8 @@ def create_app(
     @app.post("/me/events", status_code=204)
     def app_event(body: AppEvent, request: Request, user: UserDep) -> Response:
         """Funnel steps only the browser sees (opening cooking mode)."""
-        request.app.state.analytics.capture(user.id, body.name, {"source": body.source})
+        props = with_client({"source": body.source}, app_client(request))
+        request.app.state.analytics.capture(user.id, body.name, props)
         return Response(status_code=204)
 
     @app.delete("/me", status_code=204)
@@ -687,23 +703,30 @@ def create_app(
                                problems=problems_for(body, d, s.kitchen.profile()))  # fmt: skip
 
     @app.post("/me/recipes/import/link")
-    def import_link(body: LinkImport, user: UserDep, s: SessionDep) -> ImportView:
-        return imported(user.id, "link", import_view(s, work_for(body), paid_importing(s, user)))
+    def import_link(body: LinkImport, request: Request, user: UserDep, s: SessionDep
+                    ) -> ImportView:  # fmt: skip
+        view = import_view(s, work_for(body), paid_importing(s, user))
+        return imported(user.id, "link", view, app_client(request))
 
     @app.post("/me/recipes/import/post")
-    def import_post(body: PostImport, user: UserDep, s: SessionDep) -> ImportView:
+    def import_post(body: PostImport, request: Request, user: UserDep, s: SessionDep
+                    ) -> ImportView:  # fmt: skip
         """A TikTok, Instagram or Facebook post: its caption, else a recipe site it links."""
-        return imported(user.id, "post", import_view(s, work_for(body), paid_importing(s, user)))
+        view = import_view(s, work_for(body), paid_importing(s, user))
+        return imported(user.id, "post", view, app_client(request))
 
     @app.post("/me/recipes/import/text")
-    def import_text(body: TextImport, user: UserDep, s: SessionDep) -> ImportView:
-        return imported(user.id, "text", import_view(s, work_for(body), paid_importing(s, user)))
+    def import_text(body: TextImport, request: Request, user: UserDep, s: SessionDep
+                    ) -> ImportView:  # fmt: skip
+        view = import_view(s, work_for(body), paid_importing(s, user))
+        return imported(user.id, "text", view, app_client(request))
 
     def paid_importing(s: Session, user: User) -> PaidOperation:
         return paid(s, user.id, "import", config.model())
 
-    def imported(user_id: str, kind: str, view: ImportView) -> ImportView:
-        app.state.analytics.capture(user_id, "recipe_imported", {"kind": kind})
+    def imported(user_id: str, kind: str, view: ImportView, client: Client | None = None
+                 ) -> ImportView:  # fmt: skip
+        app.state.analytics.capture(user_id, "recipe_imported", with_client({"kind": kind}, client))
         return view
 
     def work_for(req: LinkImport | PostImport | TextImport | PhotoImport
@@ -723,9 +746,10 @@ def create_app(
         return ImportTiming(estimated_seconds=seconds, sample_count=count)
 
     @app.post("/me/recipes/import/photos")
-    def import_photos(body: PhotoImport, user: UserDep, s: SessionDep) -> ImportView:
-        return imported(user.id, "photos",
-                        import_view(s, work_for(body), paid_importing(s, user)))  # fmt: skip
+    def import_photos(body: PhotoImport, request: Request, user: UserDep, s: SessionDep
+                      ) -> ImportView:  # fmt: skip
+        view = import_view(s, work_for(body), paid_importing(s, user))
+        return imported(user.id, "photos", view, app_client(request))
 
     def job_view(job: ImportJob) -> ImportJobView:
         error = ImportJobError(status=job.error[0], message=job.error[1]) if job.error else None
@@ -734,33 +758,34 @@ def create_app(
                              error=error)  # fmt: skip
 
     @app.post("/me/recipes/import/jobs", status_code=202)
-    def start_import(body: ImportJobIn, user: UserDep) -> ImportJobView:
+    def start_import(body: ImportJobIn, request: Request, user: UserDep) -> ImportJobView:
         """Start an import that keeps running if the browser goes away (a locked phone, another
         tab) or the server restarts; poll `GET /me/recipes/import/jobs/{id}` for the result.
         Sending the same `id` again returns the job it started. The daily allowance is
         reserved here, so a person over their cap is told at once."""
         jobs: ImportJobs = app.state.import_jobs
+        client = app_client(request)
         if body.id and (existing := jobs.get(user.id, body.id)):
             return job_view(existing)
         with app.state.backend.session(user.id) as s:
             operation = paid_importing(s, user)
-        request = body.model_dump(exclude={"id"}, exclude_none=True)
+        saved = body.model_dump(exclude={"id"}, exclude_none=True)
         try:
-            job = jobs.start(user.id, body.id, request, operation.reservation)
+            job = jobs.start(user.id, body.id, saved, operation.reservation)
         except HTTPException:
             operation.finish(Usage(), ok=False, discard_empty=True)
             raise
-        threading.Thread(target=run_job, args=(job, operation), daemon=True).start()
+        threading.Thread(target=run_job, args=(job, operation, client), daemon=True).start()
         return job_view(job)
 
-    def run_job(job: ImportJob, operation: PaidOperation) -> None:
+    def run_job(job: ImportJob, operation: PaidOperation, client: Client | None = None) -> None:
         jobs: ImportJobs = app.state.import_jobs
         backend: Backend = app.state.backend
         try:
             work = work_for(ImportJobIn.model_validate(job.request).request)
             with backend.session(job.user_id) as s:
                 view = import_view(s, work, operation, lambda key: jobs.step(job, key))
-                jobs.succeed(job, imported(job.user_id, job.request["kind"], view))
+                jobs.succeed(job, imported(job.user_id, job.request["kind"], view, client))
         except HTTPException as exc:
             operation.finish(Usage(), ok=False, discard_empty=True)
             jobs.fail(job, exc.status_code, str(exc.detail))
@@ -1081,6 +1106,7 @@ def create_app(
         with backend.session(user.id) as s:
             operation = paid(s, user.id, "plan", config.model())
         events: queue.Queue = queue.Queue()
+        client = app_client(request)
 
         def work() -> None:
             model = config.model()
@@ -1098,7 +1124,7 @@ def create_app(
                         return
                     operation.finish(result.usage)
                     saved = s.records.save_plan(result.plan, plan_report(result, model))
-                    days = {"days": len(result.plan.days)}
+                    days = with_client({"days": len(result.plan.days)}, client)
                     request.app.state.analytics.capture(user.id, "plan_created", days)
                     view = plan_view(saved, PlanCatalog(s.store, s.cookbook), s.kitchen.profile())
                     events.put(("plan", view.model_dump(mode="json")))

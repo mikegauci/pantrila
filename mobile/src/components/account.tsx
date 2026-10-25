@@ -6,7 +6,7 @@ import { Choice } from "@/components/choice"
 import { appleReady, googleReady, linkWith, signOut, type Provider } from "@/lib/auth"
 
 /** Who is signed in; a guest can keep their data with Google or Apple (same user id), and anyone
- * can sign out. Profile takes this over in PR 11. */
+ * can sign out. On the Account screen. */
 export function AccountCard() {
   const { session } = useAuth()
   const [apple, setApple] = useState(false)

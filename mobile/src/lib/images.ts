@@ -42,3 +42,31 @@ export async function pickPhotos(from: "camera" | "library", limit: number): Pro
   if (result.canceled) return []
   return Promise.all(result.assets.slice(0, limit).map(shrinkPhoto))
 }
+
+const AVATAR = 512
+
+/** A profile picture: picked (cropped square where the phone offers it), then cut to the middle
+ * square and shrunk to at most 512 px as a JPEG data URL, as the web does. Null if cancelled. */
+export async function pickAvatar(from: "camera" | "library"): Promise<string | null> {
+  const asked = from === "camera"
+    ? await ImagePicker.requestCameraPermissionsAsync()
+    : await ImagePicker.requestMediaLibraryPermissionsAsync()
+  if (!asked.granted) {
+    throw new PhotoAccessError(from === "camera"
+      ? "Pantrila needs the camera to take your picture. Allow it in Settings."
+      : "Pantrila needs your photos to pick a picture. Allow it in Settings.")
+  }
+  const options: ImagePicker.ImagePickerOptions = { mediaTypes: ["images"], quality: 1, allowsEditing: true, aspect: [1, 1] }
+  const result = from === "camera" ? await ImagePicker.launchCameraAsync(options) : await ImagePicker.launchImageLibraryAsync(options)
+  const photo = result.canceled ? null : result.assets[0]
+  if (!photo) return null
+  const image = await ImageManipulator.manipulate(photo.uri).renderAsync()
+  const side = Math.min(image.width, image.height)
+  const out = await ImageManipulator.manipulate(image)
+    .crop({ originX: (image.width - side) / 2, originY: (image.height - side) / 2, width: side, height: side })
+    .resize({ width: Math.min(AVATAR, side) })
+    .renderAsync()
+    .then((square) => square.saveAsync({ format: SaveFormat.JPEG, compress: 0.9, base64: true }))
+  if (!out.base64) throw new Error("Could not read that picture.")
+  return `data:image/jpeg;base64,${out.base64}`
+}

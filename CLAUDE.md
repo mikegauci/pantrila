@@ -44,13 +44,29 @@ next PR of the mobile plan": read that file first, take the first PR its Progres
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
 Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
 (`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`), PR 4 (`feat/mobile-sign-in`), PR 5 (`feat/mobile-recipes`), PR 6 (`feat/mobile-plan`), PR 7
-(`feat/mobile-cooking`), PR 8 (`feat/mobile-cookbook`), PR 9 (`feat/mobile-share`) and PR 10 (`feat/mobile-assistant`) are done. Next: **PR 11
-(`feat/mobile-profile`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
+(`feat/mobile-cooking`), PR 8 (`feat/mobile-cookbook`), PR 9 (`feat/mobile-share`), PR 10 (`feat/mobile-assistant`) and PR 11 (`feat/mobile-profile`)
+are done. Next: **PR 12 (`feat/mobile-paywall`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
 installs (Android development build finished), PR 3's Render variables and RevenueCat webhook, and PR 4's Google,
 Apple and Supabase settings plus a new development build, and PR 9's `APPLE_TEAM_ID` / `ANDROID_CERT_SHA256` on Vercel
-(`docs/share-and-links.md`).
+(`docs/share-and-links.md`), and PR 11's Sentry project with `EXPO_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT` and
+`SENTRY_AUTH_TOKEN` on EAS.
 
 ## Status (update as work lands)
+
+Phone pantry, profile and account (mobile plan PR 11): the header's account button (the person's upload, else their
+Google picture, else the emoji; `components/avatar.tsx`) opens Account: Pantry and Profile, "Your plan" (Free or Pro,
+what is left), keep a guest's data with Google or Apple, sign out, Help ("Show the intro again", "Send feedback") and
+Delete account (type "delete": `DELETE /me`, then the phone forgets its data and signs out locally). `app/pantry.tsx`
+is the web's Pantry (foods offered as you type, "Did you mean", tap a food to change its amount); `app/profile.tsx`
+the web's Profile (picture taken or picked, square, 512 px JPEG; allergies, diet, foods never eaten, energy as one
+number or a range, protein, carbs, days, meals, cuisines, tastes). Three-card intro (`app/intro.tsx`) once per person
+(`pantrila-intro-done:<user>`). `@sentry/react-native` (`lib/sentry.ts`): errors and feedback to Sentry EU when
+`EXPO_PUBLIC_SENTRY_DSN` is set, user id only, source maps uploaded only with `SENTRY_AUTH_TOKEN`. API: the phone
+sends `X-Pantrila-Client: ios|android` (core `createApi({ headers })`), and `analytics.py` adds `client` to PostHog
+events (visits, imports and import jobs, plans, `/me/events`); CORS allows the header, the web does not send it yet.
+Privacy and terms name the apps, camera and photos, speech recognition and local notifications. 64 Jest tests (7
+new), 67 core tests, 1 new Python test; a new native module, so the next development build needs making. No model
+call, so no eval rerun.
 
 Phone assistant chat (mobile plan PR 10): the Assistant tab is the web's chat. It streams `POST /chat/stream` through
 core's `streamChat` on `expo/fetch` (step label, then the reply as it is written with found recipes titled, then the
@@ -946,7 +962,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - `src/pantrila/entitlements.py`: Pantrila Pro (`Entitlement`, `tier_of`, `from_subscriber`, `RevenueCatApi`,
   `DbEntitlements`/`MemoryEntitlements`); caps per tier are `operations.allowance`.
 - `src/pantrila/analytics.py`: PostHog funnel events from the API (`Analytics`, `PostHogAnalytics`,
-  `MemoryAnalytics`), `Visits` (once-a-day sign-up/open/return from `user_activity`).
+  `MemoryAnalytics`), `Visits` (once-a-day sign-up/open/return from `user_activity`), `client_of` (the
+  `X-Pantrila-Client` header: ios, android or web, sent as each event's `client`).
 - `src/pantrila/auth.py`: verifies Supabase Auth access tokens (ES256 via the project JWKS,
   audience `authenticated`, issuer `SUPABASE_URL/auth/v1`); returns the user id.
 - `src/pantrila/records.py`: saved plans (`save_plan`, `latest_plan`, `update_plan` for a swap)
@@ -1014,14 +1031,16 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   not memory). `app.config.ts`, `eas.json`, `metro.config.js` (Uniwind), `src/global.css` (tokens),
   `src/app/` (Expo Router screens; `_layout.tsx` loads the fonts and guards `welcome` / the signed-in screens
   with `Stack.Protected`; `(tabs)/` holds Home, Assistant, Recipes, Plan, Grocery; `recipes/[id]`,
-  `recipes/mine/*` and `account.tsx` open over them; `auth/callback.tsx` finishes email links),
-  `src/lib/api.ts` (`createApi` with `expo/fetch`, the session's token and `waking.ts`), `src/lib/hooks.ts`
+  `recipes/mine/*`, `account.tsx`, `pantry.tsx`, `profile.tsx` and `intro.tsx` (first-run cards, `lib/intro.ts`) open over them; `auth/callback.tsx` finishes email links),
+  `src/lib/api.ts` (`createApi` with `expo/fetch`, the session's token, `X-Pantrila-Client` and `waking.ts`), `src/lib/sentry.ts`
+  (errors and feedback), `src/lib/hooks.ts`
   (SWR hooks, `useRecipePages`), `src/lib/recipes.ts` (filters), `src/lib/temperature.ts` (°C/°F per user),
   `src/lib/import-jobs.ts` (import jobs, saved per user), `src/lib/photo-jobs.ts` (background recipe photos,
   `saveNewRecipe`), `src/lib/images.ts` (photos to import), `src/lib/share.ts` + `src/components/share-handler.tsx` (the share
   sheet; `src/app/+native-intent.tsx` routes iOS's share link), `src/lib/chat-draft.ts` (an assistant draft on its way to
   the form), `src/lib/supabase.ts` + `secure-session.ts` (session storage), `src/lib/auth.ts` (Google, Apple, guest, email
-  link, linking, sign-out), `src/components/` (`bits.tsx` like the web's, `Icon`, `RecipeCard`, `ChipRow`,
+  link, linking, sign-out), `src/components/` (`bits.tsx` like the web's, `form.tsx` (`Field`, `Toggle`, `Segmented`),
+  `UserAvatar`, `FeedbackSheet`, `DeleteAccount`, `Icon`, `RecipeCard`, `ChipRow`,
   `MeasuredLine`, `MacroRing`, `WakeNotice`, `Soon`, `Sheet`, `OptionSheet`, `Toaster` (`lib/toast.ts`, in the root
   layout), `CookbookForm`, `ImportProgress`, `StartCooking`, `Bubble`/`ChatThreads` (`chat.tsx`), `DictateButton`, `MealSheet` with
   `SwapMeal`/`RepeatMeal`, `MealRow`, `DayTargets`, `CookingScreen` (`cooking-mode.tsx`, `cooking-parts.tsx`),
@@ -1157,7 +1176,7 @@ Update this block when commands change.
   suffixes. **Never use a `claude/` branch** (owner's rule, for every session and tool): if the
   session or harness assigns one (such as `claude/<random-words>`), ignore it and create the
   `feat/` or `fix/` branch from up-to-date `main` instead; push and open the PR from that branch.
-  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-profile` for PR 11).
+  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-paywall` for PR 12).
 - Commit messages use plain descriptive text. `feat/` and `fix/` are branch prefixes only;
   do not prefix commit messages with them.
 - PR titles say specifically what the PR does (for example "Add hybrid recipe search with
