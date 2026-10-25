@@ -2,15 +2,18 @@ import { Link } from "expo-router"
 import { ArrowRight, BookOpen, Link2, Share2 } from "lucide-react-native"
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native"
 
+import { useAuth } from "@/components/auth-provider"
 import { Panel, RecipeArt } from "@/components/bits"
 import { Icon } from "@/components/icon"
 import { useCookbook } from "@/lib/hooks"
+import { usePendingImport } from "@/lib/import-jobs"
 
 const SHOWN = 4
 
 /** Home card: the person's latest cookbook recipes and the two imports worth pushing. */
 export function MyRecipesHome() {
   const { data: list, isLoading } = useCookbook()
+  const importing = usePendingImport(useAuth().session?.user.id ?? "")
   // A reply that is not a list must not take Home down with it.
   const data = Array.isArray(list) ? list : undefined
   const recent = data?.slice(0, SHOWN) ?? []
@@ -32,6 +35,16 @@ export function MyRecipesHome() {
           </Link>
         )}
       </View>
+
+      {importing && (
+        <Link href="/recipes/mine/new" asChild>
+          <Pressable accessibilityRole="link" className="mb-3 flex-row items-center gap-2 rounded-2xl bg-yellow-soft p-3">
+            <ActivityIndicator size="small" color="#b7860b" />
+            <Text className="flex-1 font-sans-semibold text-[13px] text-foreground">Finishing your import…</Text>
+            <Icon icon={ArrowRight} size={16} />
+          </Pressable>
+        </Link>
+      )}
 
       {isLoading ? (
         <ActivityIndicator className="my-6" />

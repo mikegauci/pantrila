@@ -3,7 +3,8 @@
 import { ArrowLeft, BookOpen, Clock, Flame, Plus, TriangleAlert } from "lucide-react"
 import Link from "next/link"
 
-import type { CookbookCard, RecipeSource } from "@pantrila/core/types"
+import { origins } from "@pantrila/core/cookbook"
+import type { CookbookCard } from "@pantrila/core/types"
 
 import { DietBadge, EmptyState, Panel, RecipeArt } from "@/components/bits"
 import { RECIPE_SOURCE } from "@/components/cookbook-form"
@@ -11,20 +12,6 @@ import { buttonVariants } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useCookbook } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
-
-const ORIGIN: Record<RecipeSource, string> = {
-  post: "social media", link: "links", photo: "photos", video: "videos", text: "pasted text", manual: "typed in",
-}
-
-/** "social media 3, links 2, the assistant 1": where the cards came from. Saved assistant drafts count as the assistant. */
-function origins(cards: CookbookCard[]) {
-  const counts = new Map<string, number>()
-  for (const r of cards) {
-    const key = r.chat_draft ? "the assistant" : ORIGIN[r.source]
-    counts.set(key, (counts.get(key) ?? 0) + 1)
-  }
-  return [...counts].map(([name, n]) => `${name} ${n}`).join(", ")
-}
 
 function Card({ r }: { r: CookbookCard }) {
   const unsafe = r.problems.length > 0

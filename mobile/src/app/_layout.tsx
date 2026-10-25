@@ -13,6 +13,7 @@ import { useEffect } from "react"
 import { useCSSVariable } from "uniwind"
 
 import { AuthProvider, useAuth } from "@/components/auth-provider"
+import { Toaster } from "@/components/toaster"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -34,6 +35,8 @@ export default function RootLayout() {
     <AuthProvider>
       <StatusBar style="auto" />
       <Screens />
+      {/* Above every screen but cooking mode, a full-screen modal with its own. */}
+      <Toaster />
     </AuthProvider>
   )
 }

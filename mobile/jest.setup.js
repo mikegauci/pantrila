@@ -43,3 +43,23 @@ jest.mock("expo-speech-recognition", () => {
     },
   }
 })
+
+// Photos to import: tests set what the picker returns; the manipulator hands back a fixed JPEG.
+jest.mock("expo-image-picker", () => ({
+  requestCameraPermissionsAsync: jest.fn(async () => ({ granted: true })),
+  requestMediaLibraryPermissionsAsync: jest.fn(async () => ({ granted: true })),
+  launchCameraAsync: jest.fn(async () => ({ canceled: true, assets: null })),
+  launchImageLibraryAsync: jest.fn(async () => ({ canceled: true, assets: null })),
+}))
+jest.mock("expo-image-manipulator", () => ({
+  SaveFormat: { JPEG: "jpeg" },
+  ImageManipulator: {
+    manipulate: jest.fn(() => {
+      const context = {
+        resize: jest.fn(() => context),
+        renderAsync: jest.fn(async () => ({ saveAsync: jest.fn(async () => ({ base64: "SlBFRw==" })) })),
+      }
+      return context
+    }),
+  },
+}))

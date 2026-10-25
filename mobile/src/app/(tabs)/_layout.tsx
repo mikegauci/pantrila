@@ -5,7 +5,6 @@ import { View } from "react-native"
 import { useCSSVariable } from "uniwind"
 
 import { AccountButton } from "@/components/account-button"
-import { Toaster } from "@/components/toaster"
 import { WakeNotice } from "@/components/wake-notice"
 import { health } from "@/lib/api"
 
@@ -55,7 +54,6 @@ export default function TabsLayout() {
         ))}
       </Tabs>
       <WakeNotice />
-      <Toaster />
     </View>
   )
 }

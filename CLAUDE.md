@@ -43,12 +43,25 @@ Building the iOS and Android apps with Expo, one PR at a time, in the order give
 next PR of the mobile plan": read that file first, take the first PR its Progress table does not
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
 Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
-(`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`), PR 4 (`feat/mobile-sign-in`), PR 5 (`feat/mobile-recipes`), PR 6 (`feat/mobile-plan`) and PR 7
-(`feat/mobile-cooking`) are done. Next: **PR 8 (`feat/mobile-cookbook`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
+(`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`), PR 4 (`feat/mobile-sign-in`), PR 5 (`feat/mobile-recipes`), PR 6 (`feat/mobile-plan`), PR 7
+(`feat/mobile-cooking`) and PR 8 (`feat/mobile-cookbook`) are done. Next: **PR 9 (`feat/mobile-share`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
 installs (Android development build finished), PR 3's Render variables and RevenueCat webhook, and PR 4's Google,
 Apple and Supabase settings plus a new development build.
 
 ## Status (update as work lands)
+
+Phone cookbook and imports (mobile plan PR 8): `recipes/mine` lists the person's recipes ("Where they came from");
+`recipes/mine/[id]` shows the photo (made in the background after saving, "Making the photo…", New / Remove), the
+creator's credit and site, rule alerts, grouped ingredients, nutrition, the method under its headings, Notes, Edit
+(the web's form: groups, `## Heading` lines, notes, credit, unit sheet that converts, food chips, automatic AI
+estimates, live preview) and Delete, and "Back to the chat" for `?chat=`. `recipes/mine/new` imports a post, a link,
+photos (camera or library through `expo-image-picker`, shrunk to 1600 px JPEG by `expo-image-manipulator`) or pasted
+text (a fifth way, phone only) as background jobs: the id is saved under `userKey(id, "import-job")` before the
+request, the steps show live, and a job left running is picked up again ("Finishing your import…", also on Home). A
+draft is saved straight away unless `needsReview`. Core gains `cookbook.ts` (source texts, credit, `matchFood`,
+`needsReview`, `POST_LINK`, `importRows`...), now used by the web too (all 42 Playwright specs pass). Toasts moved to
+the root layout so pushed screens show them. 45 Jest tests (9 new), 61 core tests; two new native modules, so the
+next development build needs making. No API or model change, so no eval rerun.
 
 Phone cooking mode (mobile plan PR 7): `recipes/[id]/cook` and `recipes/mine/[id]/cook` open a full-screen cooking
 mode like the web's: get-ready page with servings (and leftovers "for later" from the plan), grouped checklist, one
@@ -978,9 +991,11 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `recipes/mine/*` and `account.tsx` open over them; `auth/callback.tsx` finishes email links),
   `src/lib/api.ts` (`createApi` with `expo/fetch`, the session's token and `waking.ts`), `src/lib/hooks.ts`
   (SWR hooks, `useRecipePages`), `src/lib/recipes.ts` (filters), `src/lib/temperature.ts` (°C/°F per user),
-  `src/lib/supabase.ts` + `secure-session.ts` (session storage), `src/lib/auth.ts` (Google, Apple, guest, email
+  `src/lib/import-jobs.ts` (import jobs, saved per user), `src/lib/photo-jobs.ts` (background recipe photos,
+  `saveNewRecipe`), `src/lib/images.ts` (photos to import), `src/lib/supabase.ts` + `secure-session.ts` (session storage), `src/lib/auth.ts` (Google, Apple, guest, email
   link, linking, sign-out), `src/components/` (`bits.tsx` like the web's, `Icon`, `RecipeCard`, `ChipRow`,
-  `MeasuredLine`, `MacroRing`, `WakeNotice`, `Soon`, `Sheet`, `Toaster` (`lib/toast.ts`), `MealSheet` with
+  `MeasuredLine`, `MacroRing`, `WakeNotice`, `Soon`, `Sheet`, `OptionSheet`, `Toaster` (`lib/toast.ts`, in the root
+  layout), `CookbookForm`, `ImportProgress`, `StartCooking`, `MealSheet` with
   `SwapMeal`/`RepeatMeal`, `MealRow`, `DayTargets`, `CookingScreen` (`cooking-mode.tsx`, `cooking-parts.tsx`),
   `VoiceControl`, `AuthProvider`, `AccountCard`, `Choice`; `lib/grocery.ts` keeps the list's ticks, `lib/cooking.ts`
   progress and sounds, `lib/timer-alerts.ts` timer notifications, `lib/voice.ts` speech, `lib/stored.ts` per-user
@@ -989,7 +1004,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   (written by Metro, committed), `assets/` (from `web/brand/`).
 - `packages/core/`: `@pantrila/core`, code shared by web and the phone app (no React, DOM or React
   Native): `src/types.ts` (API types), `api.ts` (`createApi`, `ApiError`), `sse.ts`, `amounts.ts`,
-  `cooking.ts`, `temperature.ts`, `voice.ts`, `sections.ts`, `plan.ts`, `grocery.ts`, `format.ts`, `avatar.ts`;
+  `cooking.ts`, `cookbook.ts`, `temperature.ts`, `voice.ts`, `sections.ts`, `plan.ts`, `grocery.ts`, `format.ts`, `avatar.ts`;
   Vitest tests in `test/`. Imported as `@pantrila/core/<module>`.
 - `site/`: the pantrila.com landing site (Next.js, static, no API or sign-in): `src/app/page.tsx` (sections),
   `privacy/`, `terms/`, `src/lib.ts` (addresses and contact), `src/components/` (header/footer, screenshot
@@ -1112,7 +1127,7 @@ Update this block when commands change.
   suffixes. **Never use a `claude/` branch** (owner's rule, for every session and tool): if the
   session or harness assigns one (such as `claude/<random-words>`), ignore it and create the
   `feat/` or `fix/` branch from up-to-date `main` instead; push and open the PR from that branch.
-  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-cookbook` for PR 8).
+  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-share` for PR 9).
 - Commit messages use plain descriptive text. `feat/` and `fix/` are branch prefixes only;
   do not prefix commit messages with them.
 - PR titles say specifically what the PR does (for example "Add hybrid recipe search with

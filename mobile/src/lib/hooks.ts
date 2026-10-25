@@ -2,7 +2,7 @@ import useSWR, { useSWRConfig, type SWRConfiguration } from "swr"
 import useSWRInfinite from "swr/infinite"
 
 import type {
-  ChatThreadSummary, CookbookCard, CookbookDetail, GroceryList, Me, Meta, Plan, Profile, RecipeDetail, RecipeList,
+  ChatThreadSummary, CookbookCard, CookbookDetail, Food, GroceryList, Me, Meta, Plan, Profile, RecipeDetail, RecipeList,
 } from "@pantrila/core/types"
 
 import { api, ApiError } from "@/lib/api"
@@ -17,6 +17,7 @@ const STATIC = { revalidateOnFocus: false, revalidateIfStale: false, dedupingInt
 
 export const useMe = () => useApi<Me>("/me")
 export const useMeta = () => useApi<Meta>("/meta", STATIC)
+export const useFoods = () => useApi<Food[]>("/foods", STATIC)
 export const useProfile = () => useApi<Profile>("/me/profile")
 export const useRecipe = (id: string | null) => useApi<RecipeDetail>(id ? `/recipes/${id}` : null)
 export const useChats = () => useApi<ChatThreadSummary[]>("/me/chats")

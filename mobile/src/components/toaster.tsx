@@ -4,7 +4,7 @@ import { Text, View } from "react-native"
 import { Icon } from "@/components/icon"
 import { useToast } from "@/lib/toast"
 
-/** Shows `toast.success` / `toast.error` messages above the tab bar. */
+/** Shows `toast.success` / `toast.error` messages above the tab bar (and over pushed screens). */
 export function Toaster() {
   const t = useToast()
   if (!t) return null

@@ -3,20 +3,9 @@
 import { CircleCheck, Loader2 } from "lucide-react"
 import { useEffect, useState } from "react"
 
-import type { ImportStep } from "@/lib/import-jobs"
+import { clock, type ImportStep, importRows as rows } from "@pantrila/core/cookbook"
+
 import { cn } from "@/lib/utils"
-
-/** The steps of an import that already ran (ticked) and the one under way (spinning). A step
- * the import comes back to ("Matching ingredients" after the video) moves to the end. */
-function rows(steps: ImportStep[]): { step: ImportStep; done: boolean }[] {
-  if (!steps.length) return [{ step: { key: "start", label: "Starting the import" }, done: false }]
-  const current = steps[steps.length - 1]
-  const earlier = steps.slice(0, -1).filter((s, i, all) =>
-    s.key !== current.key && all.findIndex((o) => o.key === s.key) === i)
-  return [...earlier.map((step) => ({ step, done: true })), { step: current, done: false }]
-}
-
-const clock = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`
 
 /**
  * What the import is doing, from the steps the server reports at each poll, with time spent

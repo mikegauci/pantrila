@@ -322,16 +322,26 @@ recipe page.
 
 Branch `feat/mobile-cookbook`.
 
-- [ ] My recipes list and recipe page (groups, notes, credit to the creator, "Back to the chat"),
+- [x] My recipes list and recipe page (groups, notes, credit to the creator, "Back to the chat"),
       edit form (lines, groups, steps with `## Heading`, notes), delete.
-- [ ] Imports as background jobs (`POST /me/recipes/import/jobs`, poll the job): from a link, a
+- [x] Imports as background jobs (`POST /me/recipes/import/jobs`, poll the job): from a link, a
       post, typed text, photos. The job id is saved before the request, so an import survives the
       app being closed or the phone locked; on reopen the app shows "Finishing your import…".
-- [ ] Live import steps (`import-progress`), auto-save, the review form only when `needsReview`.
-- [ ] Photos: camera or library (`expo-image-picker`), shrunk to JPEG on the phone
+- [x] Live import steps (`import-progress`), auto-save, the review form only when `needsReview`.
+- [x] Photos: camera or library (`expo-image-picker`), shrunk to JPEG on the phone
       (`expo-image-manipulator`) as the web does.
-- [ ] Recipe photo made in the background after save; "Making the photo…"; New / Remove photo.
-- [ ] Food estimates for unmatched lines (automatic, as on the web).
+- [x] Recipe photo made in the background after save; "Making the photo…"; New / Remove photo.
+- [x] Food estimates for unmatched lines (automatic, as on the web).
+- [ ] **(owner)** import a post, a link and a cookbook photo on a real phone with the next development build.
+
+Done notes: "typed text" is a fifth way in on the phone ("Paste text", `kind: "text"`), since copying a recipe from
+Notes or a message is common there; the web keeps its four. Home shows "Finishing your import…" when a job from an
+earlier visit is still saved, and the new-recipe screen picks it up. If the app is closed while a photo is being made,
+the server still finishes it; pulling the recipe down shows it (the web polls; the phone does not keep photo jobs
+across launches). The Free tier has no Pro sheet on the phone yet (PR 12): a 402 shows its message in place.
+`expo-image-picker` and `expo-image-manipulator` are native modules, so the next development build needs making. A
+transparent screenshot turns black as JPEG on the phone (the web paints white first); phone screenshots are not
+transparent, so this is left as is.
 
 ## PR 9: share to Pantrila and links into the app
 
@@ -503,7 +513,7 @@ Branch `feat/mobile-launch`.
 | 5 | `feat/mobile-recipes` | done (owner: try it on a phone with the next development build) |
 | 6 | `feat/mobile-plan` | done (owner: try it on a phone with the next development build) |
 | 7 | `feat/mobile-cooking` | done (owner: cook on a real phone with voice and a locked-phone timer) |
-| 8 | `feat/mobile-cookbook` | not started |
+| 8 | `feat/mobile-cookbook` | done (owner: import on a real phone with the next development build) |
 | 9 | `feat/mobile-share` | not started |
 | 10 | `feat/mobile-assistant` | not started |
 | 11 | `feat/mobile-profile` | not started |
@@ -620,3 +630,18 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   `expo-speech-recognition` (plugins and permission texts in `app.config.ts`), so the next development build
   needs making. `jest.setup.js` stands in for all four; 36 Jest tests. For PR 8: the cookbook recipe page's "Start
   cooking" opens `/recipes/mine/<id>/cook`, already built.
+- 2026-10-25: PR 8 (`feat/mobile-cookbook`): `recipes/mine` (list with "Where they came from"), `recipes/mine/[id]`
+  (photo with "Making the photo…", New / Remove photo, credit to the creator and site, rule alerts, grouped
+  ingredients with unit sheets, nutrition, method under its headings with °C/°F, Notes that open, Edit and Delete,
+  "Back to the chat" for `?chat=<thread>`) and `recipes/mine/new` (post, link, photos, pasted text or the form;
+  `?method=post|link` from Home). `components/cookbook-form.tsx` is the web's form (groups, `## Heading` method, notes,
+  credit fields, unit sheet that converts, food chips, automatic AI estimates, live preview). `lib/import-jobs.ts`
+  (jobs in AsyncStorage under `userKey(id, "import-job")`, polling that wakes on `AppState` active),
+  `lib/photo-jobs.ts` (`makePhoto`, `usePhotoPending`, `saveNewRecipe`), `lib/images.ts` (camera or library, longest side
+  1600 px, JPEG 0.85 as data URLs). Core gains `cookbook.ts` (`SOURCE_TEXT`, `PLATFORM`, `siteOf`, `postCredit`,
+  `origins`, `BLANK_RECIPE`, `needsReview`, `matchFood`, `POST_LINK`, `importRows`, `clock`), used by the web too. The
+  Toaster moved from the tabs to the root layout, so pushed screens show toasts; cooking mode keeps its own. Shared
+  bits: `Button`, `OptionSheet`, `StartCooking`. 45 Jest tests (9 new), 61 core tests, 42 Playwright specs. For PR 9:
+  start a shared post's import with `importRecipe(userId, { kind: "post", url })` and open `/recipes/mine/new` (it
+  resumes the saved job); for PR 10: a chat draft can open the form through a new param on `recipes/mine/new`, and
+  the saved recipe's `?chat=` leads back.
