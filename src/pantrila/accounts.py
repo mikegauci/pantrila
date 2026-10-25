@@ -3,8 +3,9 @@
 GDPR gives people the right to erasure and Apple requires in-app deletion, so DELETE /me
 removes it all at once, with no grace period: the person's rows in every user table (one
 transaction), their files in Storage (recipe photos and profile pictures, found by their
-folder so earlier orphans go too), their Supabase Auth user and their analytics person in
-PostHog (pantrila.analytics). Each step can run
+folder so earlier orphans go too), their RevenueCat subscriber (pantrila.entitlements; a store
+subscription itself can only be cancelled in the phone's settings), their Supabase Auth user and
+their analytics person in PostHog (pantrila.analytics). Each step can run
 again, so a failure part way is fixed by trying again.
 """
 
@@ -18,6 +19,8 @@ from pantrila import config
 
 # Every table with a user_id column. tests/test_accounts.py checks this against the migrations.
 USER_TABLES = (
+    "entitlements",
+    "subscription_events",
     "import_jobs",
     "user_activity",
     "usage_reservations",

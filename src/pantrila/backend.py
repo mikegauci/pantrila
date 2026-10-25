@@ -14,6 +14,7 @@ from pantrila.chats import Chats
 from pantrila.cookbook import (
     Cookbook,
 )
+from pantrila.entitlements import Entitlements
 from pantrila.import_jobs import DbImportJobs, ImportJobs
 from pantrila.pantry import Kitchen
 from pantrila.photos import (
@@ -44,6 +45,7 @@ class Session:
     records: Records
     cookbook: Cookbook
     chats: Chats
+    entitlements: Entitlements
 
 
 class Backend(Protocol):
@@ -87,6 +89,7 @@ class DbBackend:
     def session(self, user_id: str) -> Iterator[Session]:
         from pantrila.chats import DbChats
         from pantrila.cookbook import DbCookbook
+        from pantrila.entitlements import DbEntitlements
         from pantrila.pantry import DbKitchen
         from pantrila.records import DbRecords
 
@@ -96,6 +99,7 @@ class DbBackend:
             PooledRepository(self.pool, DbRecords, user_id),
             PooledRepository(self.pool, DbCookbook, user_id),
             PooledRepository(self.pool, DbChats, user_id),
+            PooledRepository(self.pool, DbEntitlements, user_id),
         )
 
     def import_jobs(self) -> DbImportJobs:

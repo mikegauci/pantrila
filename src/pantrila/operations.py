@@ -6,11 +6,14 @@ import math
 import os
 import statistics
 import time
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
+from typing import Literal
 
 from fastapi import HTTPException
 
 from pantrila import config
+from pantrila.entitlements import Tier
 from pantrila.planner import Usage
 from pantrila.records import Kind, QuotaExceeded, Records, UsageEvent
 
@@ -46,6 +49,7 @@ def reel_import_timing(events: list[UsageEvent]) -> tuple[int, int]:
 
 
 def daily_cap(kind: Kind) -> int:
+    """Pro's caps (fair use), which are also everyone's for kinds Free does not limit."""
     lim = config.limits()
     return {
         "plan": lim.plans_per_user,
@@ -54,22 +58,88 @@ def daily_cap(kind: Kind) -> int:
         "photo": lim.photos_per_user,
         "search": int(os.environ.get("PANTRILA_DAILY_SEARCHES") or 100),
         "reel": int(os.environ.get("PANTRILA_DAILY_REEL_FETCHES") or 10),
+        "estimate": int(os.environ.get("PANTRILA_DAILY_ESTIMATES") or 20),
     }[kind]
 
 
+Window = Literal["day", "week", "month"]
+Feature = Literal["plan", "chat", "import", "photo"]
+# Free's caps: (env name, default count, default window). Days, weeks (from Monday) and months
+# start at midnight UTC. PANTRILA_FREE_<NAME> and PANTRILA_FREE_<NAME>_WINDOW change them.
+FREE: dict[str, tuple[str, int, Window]] = {
+    "plan": ("PLANS", 1, "week"),
+    "chat": ("CHATS", 10, "day"),
+    "import": ("IMPORTS", 5, "month"),
+    "photo": ("PHOTOS", 0, "day"),
+}
+NOUNS = {"plan": "meal plan", "chat": "assistant message", "import": "recipe import",
+         "photo": "AI recipe photo"}  # fmt: skip
+
+
+@dataclass(frozen=True)
+class Allowance:
+    limit: int
+    window: Window
+
+    def start(self, now: datetime) -> datetime:
+        day = now.astimezone(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
+        if self.window == "week":
+            return day - timedelta(days=day.weekday())
+        if self.window == "month":
+            return day.replace(day=1)
+        return day
+
+    def resets_at(self, now: datetime) -> datetime:
+        start = self.start(now)
+        if self.window == "month":
+            return (start + timedelta(days=32)).replace(day=1)
+        return start + timedelta(days=7 if self.window == "week" else 1)
+
+
+def allowance(kind: Kind, tier: Tier) -> Allowance:
+    if tier == "free" and kind in FREE:
+        name, count, window = FREE[kind]
+        chosen = os.environ.get(f"PANTRILA_FREE_{name}_WINDOW")
+        return Allowance(int(os.environ.get(f"PANTRILA_FREE_{name}") or count),
+                         chosen if chosen in ("day", "week", "month") else window)  # type: ignore[arg-type]  # fmt: skip
+    return Allowance(daily_cap(kind), "day")
+
+
+class ProRequired(HTTPException):
+    """A Free cap is reached: 402 with `code: pro_required`, the feature and when it resets."""
+
+    def __init__(self, feature: str, allow: Allowance, now: datetime):
+        noun, n = NOUNS[feature], allow.limit
+        if n == 0:
+            message = f"{noun[0].upper()}{noun[1:]}s come with Pantrila Pro."
+        else:
+            per = {"day": "a day", "week": "a week", "month": "a month"}[allow.window]
+            used = "it is" if n == 1 else "they are"
+            message = (f"Pantrila Free includes {n} {noun}{'' if n == 1 else 's'} {per}, and "
+                       f"{used} used. Pantrila Pro gives you more.")  # fmt: skip
+        super().__init__(402, message)
+        self.feature, self.resets_at = feature, allow.resets_at(now)
+
+
 class PaidOperation:
-    def __init__(self, records: Records, kind: Kind, model: str):
+    """Reserve the allowance for one paid call. `tier` only matters for Free's features (plans,
+    chats, imports, photos); searches, reel runs and estimates have one cap for everyone."""
+
+    def __init__(self, records: Records, kind: Kind, model: str, tier: Tier = "free"):
         self.records, self.kind, self.model = records, kind, model
-        since = datetime.now(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
+        now = datetime.now(UTC)
+        allow = allowance(kind, tier)
         try:
             self.reservation = records.reserve(
                 kind,
-                since,
-                daily_cap(kind),
+                allow.start(now),
+                allow.limit,
                 config.limits().budget_usd,
                 config.reservation_usd(kind),
             )
         except QuotaExceeded as exc:
+            if exc.status == 429 and tier == "free" and kind in FREE:
+                raise ProRequired(kind, allow, now) from exc
             raise HTTPException(exc.status, str(exc)) from exc
         self.started = time.perf_counter()
         self.finished = False

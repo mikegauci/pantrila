@@ -181,11 +181,12 @@ def cors_origins() -> list[str]:
 
 @dataclass(frozen=True)
 class Limits:
-    """Daily caps that keep a public demo cheap. Days start at midnight UTC."""
+    """Pro's daily caps (fair use; Free's are in pantrila.operations.FREE) and the total daily
+    budget. Days start at midnight UTC."""
 
     plans_per_user: int
     chats_per_user: int
-    imports_per_user: int  # recipe imports from photos or links, and food estimates
+    imports_per_user: int  # recipe imports from photos, links, posts or text
     photos_per_user: int  # generated photos for cookbook recipes
     budget_usd: float  # all users together
 
@@ -193,7 +194,7 @@ class Limits:
 def limits() -> Limits:
     return Limits(
         plans_per_user=int(os.environ.get("PANTRILA_DAILY_PLANS") or 5),
-        chats_per_user=int(os.environ.get("PANTRILA_DAILY_CHATS") or 10),
+        chats_per_user=int(os.environ.get("PANTRILA_DAILY_CHATS") or 50),
         imports_per_user=int(os.environ.get("PANTRILA_DAILY_IMPORTS") or 20),
         photos_per_user=int(os.environ.get("PANTRILA_DAILY_PHOTOS") or 5),
         budget_usd=float(os.environ.get("PANTRILA_DAILY_BUDGET_USD") or 2.0),
@@ -217,6 +218,7 @@ def reservation_usd(kind: str) -> float:
         "photo": 0.10,
         "search": 0.002,
         "reel": 0.02,
+        "estimate": 0.05,
     }
     return max(
         0.000001, float(os.environ.get(f"PANTRILA_RESERVE_{kind.upper()}_USD") or defaults[kind])

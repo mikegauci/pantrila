@@ -14,6 +14,7 @@ from pantrila.api import Session, create_app
 from pantrila.auth import AuthError, User
 from pantrila.chats import MAX_THREADS_PER_USER, MemoryChats
 from pantrila.cookbook import MemoryCookbook
+from pantrila.entitlements import MemoryEntitlements
 from pantrila.import_jobs import MemoryImportJobs
 from pantrila.pantry import MemoryKitchen
 from pantrila.photos import MemoryPhotos, cookbook_path
@@ -102,7 +103,8 @@ class MemoryBackend:
         kitchen = self.kitchens.setdefault(user_id, MemoryKitchen())
         yield Session(self.store, kitchen, MemoryRecords(user_id, self.shared),
                       MemoryCookbook(user_id, self.shared),
-                      MemoryChats(user_id, self.shared))  # fmt: skip
+                      MemoryChats(user_id, self.shared),
+                      MemoryEntitlements(user_id, self.shared))  # fmt: skip
 
     def activity(self):
         return MemoryActivity(self.shared.setdefault("activity", {}))
@@ -116,6 +118,7 @@ class MemoryBackend:
             self.shared[key] = [row for row in self.shared.get(key, []) if row[0] != user_id]
         self.shared.get("avatars", {}).pop(user_id, None)
         self.shared.get("activity", {}).pop(user_id, None)
+        self.shared.get("entitlements", {}).pop(user_id, None)
         reservations = self.shared.get("reservations", {})
         for rid in [r for r, row in reservations.items() if row[0] == user_id]:
             del reservations[rid]
@@ -136,7 +139,7 @@ class FakeAuthAdmin:
 
 
 def verify(token: str) -> User:
-    if token not in {"alice", "bob"}:
+    if token not in {"alice", "bob", "carol"}:
         raise AuthError("bad signature")
     return User(id=token, email=f"{token}@example.com")
 
@@ -151,6 +154,7 @@ def api(backend, monkeypatch):
     monkeypatch.setenv("PANTRILA_PRICE_INPUT_PER_MTOK", "1")
     monkeypatch.setenv("PANTRILA_PRICE_OUTPUT_PER_MTOK", "10")
     monkeypatch.setenv("PANTRILA_MEDIA_SOURCE", "off")  # never the real video service
+    monkeypatch.setenv("PANTRILA_PRO_USERS", "alice,bob")  # Pro's caps; carol is on Free
     with TestClient(create_app(backend, verify, events=backend.analytics)) as client:
         client.headers["Authorization"] = "Bearer alice"
         yield client
@@ -268,7 +272,7 @@ def test_plan_streams_steps_saves_the_plan_and_logs_usage(api, backend):
     assert latest["id"] == plan["id"]
     usage = api.get("/me/usage").json()
     assert [(e["kind"], e["ok"]) for e in usage["events"]] == [("plan", True)]
-    assert usage["limits"]["plans_left"] == usage["limits"]["plans_per_day"] - 1
+    assert usage["limits"]["plans"]["left"] == usage["limits"]["plans"]["limit"] - 1
 
     grocery = api.get("/plans/latest/grocery", params={"people": 2}).json()
     assert grocery["people"] == 2
@@ -676,7 +680,7 @@ def test_link_import_returns_a_draft_logs_usage_and_saves_nothing(api, backend, 
     assert api.get("/me/recipes").json() == []
     usage = api.get("/me/usage").json()
     assert [e["kind"] for e in usage["events"]] == ["import"]
-    assert usage["limits"]["imports_left"] == usage["limits"]["imports_per_day"] - 1
+    assert usage["limits"]["imports"]["left"] == usage["limits"]["imports"]["limit"] - 1
 
 
 def wait_for_job(api, job_id: str) -> dict:
@@ -867,13 +871,15 @@ def test_video_upload_endpoint_is_removed(api):
     assert api.post("/me/recipes/import/video", json={}).status_code == 404
 
 
-def test_imports_are_capped_per_day(api, backend, monkeypatch):
+def test_imports_and_estimates_are_capped_apart(api, backend, monkeypatch):
     monkeypatch.setenv("PANTRILA_DAILY_IMPORTS", "1")
+    monkeypatch.setenv("PANTRILA_DAILY_ESTIMATES", "0")
     png = "data:image/png;base64,iVBORw0KGgo="
     backend.client.replies = [imported_reply()]
     assert api.post("/me/recipes/import/photos", json={"images": [png]}).status_code == 200
+    assert api.post("/me/recipes/import/photos", json={"images": [png]}).status_code == 429
     r = api.post("/me/recipes/estimate", json={"names": ["gochujang"]})
-    assert r.status_code == 429
+    assert r.status_code == 429  # its own cap, the same on Free and Pro
 
 
 # --- Photos ---
@@ -927,7 +933,7 @@ def test_cookbook_photo_is_generated_stored_replaced_and_deleted(api, backend, p
     usage = api.get("/me/usage").json()
     event = usage["events"][0]
     assert event["kind"] == "photo" and event["cost_usd"] == pytest.approx(0.013)
-    assert usage["limits"]["photos_left"] == usage["limits"]["photos_per_day"] - 1
+    assert usage["limits"]["photos"]["left"] == usage["limits"]["photos"]["limit"] - 1
     assert api.get("/me/recipes").json()[0]["photo_url"] == url
 
     second = api.post(f"/me/recipes/{rid}/photo").json()["photo_url"]
@@ -1025,7 +1031,7 @@ def test_concurrent_chat_requests_cannot_share_the_last_allowance(api, backend, 
         try:
             assert entered.wait(5)
             assert api.post("/chat", json={"message": "Hi again"}).status_code == 429
-            assert api.get("/me").json()["limits"]["chats_left"] == 0
+            assert api.get("/me").json()["limits"]["chats"]["left"] == 0
         finally:
             release.set()
         assert first.result().status_code == 200
@@ -1352,3 +1358,183 @@ def test_deleting_the_account_deletes_the_analytics_person(api, backend):
     assert api.delete("/me").status_code == 204
     assert backend.analytics.forgotten == ["alice"] and backend.analytics.events == []
     assert backend.shared["activity"] == {}
+
+
+# --- Subscription tiers (Free and Pantrila Pro) ---
+
+CAROL = {"Authorization": "Bearer carol"}  # not in PANTRILA_PRO_USERS, so on Free
+HOOK = {"Authorization": "hook-secret"}
+
+
+class FakeRevenueCat:
+    """RevenueCat's REST API: what it says about each subscriber is the truth."""
+
+    def __init__(self):
+        self.subscribers: dict[str, dict] = {}
+        self.deleted: list[str] = []
+        self.reads: list[str] = []
+
+    def subscriber(self, app_user_id):
+        self.reads.append(app_user_id)
+        return self.subscribers.get(app_user_id, {"entitlements": {}, "subscriptions": {}})
+
+    def delete(self, app_user_id):
+        self.deleted.append(app_user_id)
+
+    def close(self):
+        pass
+
+
+def pro_subscriber(days=7, period="trial") -> dict:
+    from datetime import UTC, datetime, timedelta
+
+    expires = (datetime.now(UTC) + timedelta(days=days)).isoformat()
+    pro = {"expires_date": expires, "product_identifier": "pro_yearly"}
+    return {
+        "entitlements": {"pro": pro},
+        "subscriptions": {"pro_yearly": {"store": "play_store", "period_type": period}},
+    }
+
+
+def rc_event(kind="INITIAL_PURCHASE", user="carol", event_id="evt-1", **extra) -> dict:
+    return {"event": {"id": event_id, "type": kind, "app_user_id": user, "store": "PLAY_STORE",
+                      "product_id": "pro_yearly", "period_type": "TRIAL", **extra},
+            "api_version": "1.0"}  # fmt: skip
+
+
+@pytest.fixture
+def billing(backend, monkeypatch):
+    monkeypatch.setenv("PANTRILA_PRICE_INPUT_PER_MTOK", "1")
+    monkeypatch.setenv("PANTRILA_PRICE_OUTPUT_PER_MTOK", "10")
+    monkeypatch.setenv("PANTRILA_MEDIA_SOURCE", "off")
+    monkeypatch.setenv("PANTRILA_PRO_USERS", "alice,bob")
+    monkeypatch.setenv("REVENUECAT_WEBHOOK_SECRET", "hook-secret")
+    rc = FakeRevenueCat()
+    with TestClient(create_app(backend, verify, events=backend.analytics, billing=rc)) as client:
+        client.headers["Authorization"] = "Bearer carol"
+        yield client, rc
+
+
+def test_free_caps_are_402_with_the_feature_and_pro_caps_stay_429(api, backend, monkeypatch):
+    me = api.get("/me", headers=CAROL).json()
+    assert me["subscription"] == {"tier": "free", "status": None, "expires_at": None,
+                                  "will_renew": False, "store": None}  # fmt: skip
+    assert (me["limits"]["plans"]["limit"], me["limits"]["plans"]["window"]) == (1, "week")
+    assert me["limits"]["imports"]["window"] == "month" and me["limits"]["photos"]["limit"] == 0
+
+    backend.client.replies = [plan_reply(CHICKEN, CURRY)]
+    api.put("/me/profile", json={"days": 2, "meals": ["breakfast", "dinner"]}, headers=CAROL)
+    assert sse(api.post("/plans", headers=CAROL).text)[-1][0] == "plan"
+    r = api.post("/plans", headers=CAROL)
+    body = r.json()
+    assert r.status_code == 402 and body["code"] == "pro_required" and body["feature"] == "plan"
+    assert "1 meal plan a week" in body["detail"] and body["resets_at"].endswith("+00:00")
+    assert api.get("/me/usage", headers=CAROL).json()["limits"]["plans"]["left"] == 0
+
+    monkeypatch.setenv("PANTRILA_FREE_CHATS", "0")
+    assert api.post("/chat", json={"message": "Hi"}, headers=CAROL).status_code == 402
+    assert api.post("/chat/stream", json={"message": "Hi"}, headers=CAROL).status_code == 402
+    job = {"kind": "text", "text": "Toast: 2 slices of bread"}
+    monkeypatch.setenv("PANTRILA_FREE_IMPORTS", "0")
+    assert api.post("/me/recipes/import/jobs", json=job, headers=CAROL).status_code == 402
+    assert api.post("/me/recipes/import/text", json={"text": job["text"]}, headers=CAROL
+                    ).json()["feature"] == "import"  # fmt: skip
+    rid = api.post("/me/recipes", json=TOAST, headers=CAROL).json()["id"]
+    assert api.post(f"/me/recipes/{rid}/photo", headers=CAROL).json()["feature"] == "photo"
+
+    monkeypatch.setenv("PANTRILA_DAILY_CHATS", "0")  # Pro's fair-use cap
+    assert api.post("/chat", json={"message": "Hi"}).status_code == 429
+    assert api.get("/me").json()["subscription"]["tier"] == "pro"  # alice: PANTRILA_PRO_USERS
+
+
+def test_webhook_needs_its_secret_and_reads_revenuecat_not_the_body(billing, backend):
+    api, rc = billing
+    assert api.post("/webhooks/revenuecat", json=rc_event()).status_code == 401
+    assert api.post("/webhooks/revenuecat", json=rc_event(),
+                    headers={"Authorization": "wrong"}).status_code == 401  # fmt: skip
+    # The body says carol bought Pro, but RevenueCat does not know it: nothing changes.
+    assert api.post("/webhooks/revenuecat", json=rc_event(), headers=HOOK).status_code == 200
+    assert rc.reads == ["carol"] and api.get("/me").json()["subscription"]["tier"] == "free"
+
+    rc.subscribers["carol"] = pro_subscriber()
+    assert api.post("/webhooks/revenuecat", json=rc_event(event_id="evt-2"),
+                    headers=HOOK).status_code == 200  # fmt: skip
+    me = api.get("/me").json()
+    assert me["subscription"]["tier"] == "pro" and me["subscription"]["status"] == "trial"
+    assert me["subscription"]["store"] == "play_store" and me["subscription"]["will_renew"]
+    assert me["limits"]["plans"] == {**me["limits"]["plans"], "limit": 5, "window": "day"}
+    assert api.post("/webhooks/revenuecat", json={"event": {"type": "TEST"}},
+                    headers=HOOK).json() == {"ok": True}  # fmt: skip
+
+
+def test_webhook_replays_and_out_of_order_events_are_harmless(billing, backend):
+    api, rc = billing
+    rc.subscribers["carol"] = pro_subscriber(period="normal")
+    renewal = rc_event("RENEWAL", event_id="evt-9", period_type="NORMAL")
+    for _ in range(2):  # RevenueCat delivers again when it is unsure
+        assert api.post("/webhooks/revenuecat", json=renewal, headers=HOOK).status_code == 200
+    # An old INITIAL_PURCHASE arrives late: RevenueCat still says active, so active it stays.
+    assert api.post("/webhooks/revenuecat", json=rc_event(event_id="evt-1"),
+                    headers=HOOK).status_code == 200  # fmt: skip
+    assert api.get("/me").json()["subscription"]["status"] == "active"
+    sent = [(u, e) for u, e, _ in backend.analytics.events if u == "carol"
+            and e not in ("signed_up", "app_opened")]  # fmt: skip
+    assert sent == [("carol", "renewed"), ("carol", "trial_started")]
+
+    rc.subscribers["carol"] = pro_subscriber(days=-1)  # it ran out
+    expired = rc_event("EXPIRATION", event_id="evt-10", period_type="NORMAL")
+    assert api.post("/webhooks/revenuecat", json=expired, headers=HOOK).status_code == 200
+    sub = api.get("/me").json()["subscription"]
+    assert (sub["tier"], sub["status"]) == ("free", "expired")
+    props = [p for u, e, p in backend.analytics.events if e == "expired"]
+    assert props == [{"store": "play_store", "product_id": "pro_yearly", "period_type": "normal"}]
+
+
+def test_subscription_events_sent_to_posthog():
+    from pantrila.api import subscription_event
+
+    assert subscription_event({"type": "INITIAL_PURCHASE", "period_type": "TRIAL"}) == (
+        "trial_started"
+    )
+    assert subscription_event({"type": "INITIAL_PURCHASE", "period_type": "NORMAL"}) == (
+        "subscribed"
+    )
+    assert subscription_event({"type": "RENEWAL", "is_trial_conversion": True}) == "subscribed"
+    assert subscription_event({"type": "RENEWAL"}) == "renewed"
+    assert subscription_event({"type": "CANCELLATION"}) == "cancelled"
+    assert subscription_event({"type": "EXPIRATION"}) == "expired"
+    assert subscription_event({"type": "BILLING_ISSUE"}) is None
+
+
+def test_webhook_keeps_a_hand_given_pro_and_is_off_without_setup(billing, backend):
+    from datetime import UTC, datetime, timedelta
+
+    from pantrila.entitlements import Entitlement
+
+    api, rc = billing
+    until = datetime.now(UTC) + timedelta(days=30)
+    rows = backend.shared.setdefault("entitlements", {})
+    rows["carol"] = Entitlement("pro", "active", until, "manual")
+    assert api.post("/webhooks/revenuecat", json=rc_event("CANCELLATION"),
+                    headers=HOOK).status_code == 200  # fmt: skip
+    sub = api.get("/me").json()["subscription"]
+    assert (sub["tier"], sub["store"], sub["will_renew"]) == ("pro", "manual", False)
+
+    rc.subscribers["carol"] = {}
+    rc.subscriber = lambda _: (_ for _ in ()).throw(RuntimeError("RevenueCat down"))
+    assert api.post("/webhooks/revenuecat", json=rc_event(event_id="evt-3"),
+                    headers=HOOK).status_code == 502  # RevenueCat retries  # fmt: skip
+
+
+def test_webhook_is_off_without_its_keys(api):
+    assert api.post("/webhooks/revenuecat", json=rc_event(), headers=HOOK).status_code == 503
+
+
+def test_delete_account_deletes_the_entitlement_and_the_revenuecat_subscriber(billing, backend):
+    api, rc = billing
+    rc.subscribers["carol"] = pro_subscriber()
+    api.post("/webhooks/revenuecat", json=rc_event(), headers=HOOK)
+    assert api.get("/me").json()["subscription"]["tier"] == "pro"
+    assert api.delete("/me").status_code == 204
+    assert rc.deleted == ["carol"] and backend.admin.deleted == ["carol"]
+    assert "carol" not in backend.shared["entitlements"]

@@ -14,6 +14,7 @@ from pantrila.cookbook import (
     Source,
     StepSection,
 )
+from pantrila.entitlements import Status, Store, Tier
 from pantrila.recipe_import import (
     MAX_IMAGES,
     MAX_PAGE_CHARS,
@@ -175,15 +176,30 @@ class Meta(BaseModel):
     )
 
 
+class AllowanceView(BaseModel):
+    limit: int = Field(description="How many per window; 0: not in this plan.")
+    left: int
+    window: Literal["day", "week", "month"]
+    resets_at: datetime = Field(description="When the window starts again (midnight UTC).")
+
+
 class LimitsView(BaseModel):
-    plans_per_day: int
-    plans_left: int
-    chats_per_day: int
-    chats_left: int
-    imports_per_day: int
-    imports_left: int
-    photos_per_day: int
-    photos_left: int
+    """What is left of each paid feature for the person's tier."""
+
+    plans: AllowanceView
+    chats: AllowanceView
+    imports: AllowanceView
+    photos: AllowanceView
+
+
+class SubscriptionView(BaseModel):
+    tier: Tier
+    status: Status | None = Field(description="Null: never had Pro.")
+    expires_at: datetime | None = Field(
+        description="Renews (will_renew) or ends then; null with Pro: no end date."
+    )
+    will_renew: bool
+    store: Store | None = Field(description="Where Pro was bought; manual: given by Pantrila.")
 
 
 class Me(BaseModel):
@@ -191,6 +207,7 @@ class Me(BaseModel):
     email: str | None
     anonymous: bool
     avatar_url: str | None = Field(description="Uploaded profile picture; null: show the emoji.")
+    subscription: SubscriptionView
     limits: LimitsView
 
 
@@ -513,4 +530,5 @@ class UsageEventView(BaseModel):
 
 class UsageView(BaseModel):
     events: list[UsageEventView]
+    subscription: SubscriptionView
     limits: LimitsView
