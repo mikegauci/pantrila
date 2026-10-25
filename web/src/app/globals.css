@@ -71,7 +71,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Tokens from web/DESIGN_SYSTEM.md; keep the two in sync. shadcn names map onto them. */
+/* Tokens from web/DESIGN_SYSTEM.md; keep it and mobile/src/global.css in sync. shadcn names map onto them. */
 :root {
   --background: #f7f8f3;
   --surface: #ffffff;

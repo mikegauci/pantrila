@@ -16,6 +16,13 @@ describe("createApi", () => {
     expect(init?.body).toBe('{"food":"eggs"}')
   })
 
+  it("checks the server without a sign-in", async () => {
+    const up = createApi({ baseUrl: "https://api.test", getToken: async () => null, fetch: async () => json({ ok: true }) })
+    expect(await up.health()).toBe(true)
+    const down = createApi({ baseUrl: "https://api.test", getToken: async () => null, fetch: async () => { throw new TypeError("offline") } })
+    expect(await down.health()).toBe(false)
+  })
+
   it("needs a signed-in user", async () => {
     const { api } = createApi({ baseUrl: "https://api.test", getToken: async () => null, fetch: vi.fn() })
     await expect(api("/me")).rejects.toMatchObject({ status: 401, message: "Sign in first." })

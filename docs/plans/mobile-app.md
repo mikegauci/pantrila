@@ -80,7 +80,7 @@ them):
 | Need | Library |
 | --- | --- |
 | Screens and links | `expo-router` |
-| Styling | NativeWind (Tailwind classes) with the tokens from `web/src/app/globals.css` |
+| Styling | Uniwind (Tailwind 4 classes, as on web) with the tokens from `web/src/app/globals.css` (NativeWind 4 needs Tailwind 3, which clashed with web's Tailwind 4 in the shared install; changed in PR 2) |
 | Data | `swr` (as on the web) |
 | Supabase session | `@supabase/supabase-js` + `@react-native-async-storage/async-storage`, key in `expo-secure-store` |
 | Google sign-in | `@react-native-google-signin/google-signin` -> `supabase.auth.signInWithIdToken` |
@@ -142,24 +142,25 @@ Done when: web works exactly as before and imports the moved code from `@pantril
 
 Branch `feat/mobile-skeleton`.
 
-- [ ] `npx create-expo-app@latest mobile` (TypeScript, Expo Router), added to the workspaces.
-- [ ] `app.config.ts`: name Pantrila, `com.pantrila.app`, scheme `pantrila`, light and dark mode,
+- [x] `npx create-expo-app@latest mobile` (TypeScript, Expo Router), added to the workspaces.
+- [x] `app.config.ts`: name Pantrila, `com.pantrila.app`, scheme `pantrila`, light and dark mode,
       portrait on phones, `EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_SUPABASE_URL`,
-      `EXPO_PUBLIC_SUPABASE_ANON_KEY`, `EXPO_PUBLIC_SENTRY_DSN` (`mobile/.env.example`).
-- [ ] Icon, Android adaptive icon and splash from `web/brand/` (extend `web/scripts/icons.mjs` or
+      `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (named as on web), `EXPO_PUBLIC_SENTRY_DSN` (`mobile/.env.example`).
+- [x] Icon, Android adaptive icon and splash from `web/brand/` (extend `web/scripts/icons.mjs` or
       add `mobile/scripts/icons.mjs`).
-- [ ] NativeWind with the design-system tokens (colours, radii, font) from `globals.css`; a note in
+- [x] Uniwind (was NativeWind, see Styling above) with the design-system tokens (colours, radii, font) from `globals.css`; a note in
       `web/DESIGN_SYSTEM.md` that the tokens now live in two places and must stay in sync.
-- [ ] `eas.json`: `development` (dev client, internal), `preview` (internal testers), `production`
-      (store). EAS project id in `app.config.ts`.
-- [ ] One screen that calls `/health` and `/meta` through `@pantrila/core`'s API.
-- [ ] Jest + React Native Testing Library set up with one test; `npx expo-doctor` clean.
-- [ ] CI `mobile` job: lint, typecheck, Jest, `expo-doctor`; skipped when `mobile/` and
+- [x] `eas.json`: `development` (dev client, internal), `preview` (internal testers), `production`
+      (store). EAS project id in `app.config.ts` (the owner step below fills it).
+- [x] One screen that calls `/health` and `/meta` through `@pantrila/core`'s API.
+- [x] Jest + React Native Testing Library set up with one test; `npx expo-doctor` clean.
+- [x] CI `mobile` job: lint, typecheck, Jest, `expo-doctor`; skipped when `mobile/` and
       `packages/` are unchanged, like the other jobs. Add it to the "CI must pass on main" ruleset
       only once it is stable.
-- [ ] **(owner)** `eas build --profile development --platform ios` and `--platform android`; install
+- [ ] **(owner)** `npx eas-cli init` in `mobile/` and put the project id it prints in
+      `app.config.ts` (`EAS_PROJECT_ID`); then `eas build --profile development --platform ios` and `--platform android`; install
       on the phone; `npx expo start` reloads it.
-- [ ] `CLAUDE.md` Commands and Layout gain `mobile/`.
+- [x] `CLAUDE.md` Commands and Layout gain `mobile/`.
 
 ## PR 3: subscription tiers in the API
 
@@ -413,7 +414,7 @@ Branch `feat/mobile-launch`.
 | --- | --- | --- |
 | 0 | (owner) | not started |
 | 1 | `feat/shared-core` | done |
-| 2 | `feat/mobile-skeleton` | not started |
+| 2 | `feat/mobile-skeleton` | done (owner: `eas init` and the first device builds) |
 | 3 | `feat/subscription-tiers` | not started |
 | 4 | `feat/mobile-sign-in` | not started |
 | 5 | `feat/mobile-recipes` | not started |
@@ -440,3 +441,17 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   client with `createApi({ baseUrl, getToken, onSlow, fetch })` passing `fetch` from `expo/fetch` for streaming; core
   uses `TextDecoder` and `ReadableStream.getReader`, no `TextDecoderStream`. `avatarFor` returns Tailwind class names,
   so NativeWind needs `packages/core/src` in its content paths too.
+- 2026-10-25: PR 2 (`feat/mobile-skeleton`): Expo SDK 58 app in `mobile/` (Expo Router, React 19.3 and
+  React Native 0.88, one copy each in the shared install), `app.config.ts` (`com.pantrila.app`, scheme
+  `pantrila`, phones only, portrait, light and dark), `eas.json` (development, preview, production; public
+  URLs in `env`), icons and splash from `web/brand/` through `web/scripts/icons.mjs`, Uniwind instead of
+  NativeWind (Tailwind 4 like web; NativeWind 4.2.7 needs Tailwind 3, which took web's place at the root of
+  the install, and does not list SDK 58), tokens and Plus Jakarta Sans (four weights, `font-sans-*`) in
+  `mobile/src/global.css`, one screen calling `/health` and `/meta` through `createApi` with `expo/fetch`
+  (core gains `health()`), Jest + RNTL 14 (`render` is async there), CI `mobile` job. For PR 3/4: `/meta`
+  shows "Sign in first." until sign-in lands; `getToken` in `mobile/src/lib/api.ts` is the place to wire the
+  Supabase session; the publishable key goes in as an EAS environment variable
+  (`EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) and `mobile/.env.local`. TypeScript 6 in `mobile/` needs
+  `types` listed in `tsconfig.json`. `jest-expo` leaves a timer that prints "Jest did not exit one second
+  after", but it exits. The owner still runs `npx eas-cli init` (project id into `app.config.ts`) and the
+  first development builds.

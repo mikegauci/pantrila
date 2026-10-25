@@ -7,7 +7,9 @@ Pantrila is an AI cooking and meal-planning assistant. Its UI follows the look o
 [free Figma version](https://www.figma.com/community/file/1482928954965781621/free-version-nutrigo-health-nutrition-diet-admin-dashboard)).
 
 This file goes in the app repo as `web/DESIGN_SYSTEM.md`. Copy its tokens into
-`web/src/app/globals.css` (Tailwind v4 `@theme`) and keep the two in sync.
+`web/src/app/globals.css` (Tailwind v4 `@theme`) and keep the two in sync. The phone app has a
+third copy in `mobile/src/global.css` (Uniwind, same Tailwind class names and token values, light and
+dark in `@variant` blocks): a token change goes into all three.
 
 ## What is confirmed vs inferred
 

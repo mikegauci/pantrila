@@ -1,0 +1,74 @@
+@import "tailwindcss";
+@import "uniwind";
+
+/* Class names in shared code (the avatar tints). */
+@source "../../packages/core/src";
+
+/* Design tokens from web/src/app/globals.css and web/DESIGN_SYSTEM.md: the same names and
+ * values, so a class means the same on web and phone. Keep the two files in sync. */
+@layer theme {
+  :root {
+    @variant light {
+      --color-background: #f7f8f3;
+      --color-surface: #ffffff;
+      --color-surface-muted: #f1f3ec;
+      --color-foreground: #1d2a1f;
+      --color-muted-foreground: #6b756b;
+      --color-border: #e6e9e0;
+      --color-primary: #3fa34d;
+      --color-primary-text: #2e8a3b;
+      --color-primary-foreground: #ffffff;
+      --color-primary-soft: #e4f4e5;
+      --color-yellow: #f9c74f;
+      --color-yellow-soft: #fef4d6;
+      --color-orange: #f8961e;
+      --color-orange-soft: #feebd4;
+      --color-success: #2e9e4f;
+      --color-warning: #e9a11b;
+      --color-danger: #e5484d;
+      --color-danger-soft: #fdecec;
+      --color-fibre: #7cc6b0;
+      --color-ring: #3fa34d;
+    }
+    @variant dark {
+      --color-background: #121511;
+      --color-surface: #1b1f1a;
+      --color-surface-muted: #232823;
+      --color-foreground: #eef2ea;
+      --color-muted-foreground: #9aa59a;
+      --color-border: #2e342d;
+      --color-primary: #5bc06a;
+      --color-primary-text: #5bc06a;
+      --color-primary-foreground: #0e1a10;
+      --color-primary-soft: #1f3a23;
+      --color-yellow: #f9c74f;
+      --color-yellow-soft: #3a321a;
+      --color-orange: #ffa94d;
+      --color-orange-soft: #3d2a15;
+      --color-success: #5bc06a;
+      --color-warning: #f5b83d;
+      --color-danger: #ff6b6f;
+      --color-danger-soft: #3a1f20;
+      --color-fibre: #7cc6b0;
+      --color-ring: #5bc06a;
+    }
+  }
+}
+
+@theme {
+  /* Web's radius scale from --radius: 0.75rem (rem is 16 px here too). */
+  --radius-sm: 0.45rem;
+  --radius-md: 0.6rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1.05rem;
+  --radius-2xl: 1.35rem;
+  --radius-3xl: 1.65rem;
+  --radius-4xl: 1.95rem;
+
+  /* Plus Jakarta Sans, as on web. A phone needs one font family per weight, loaded in
+   * src/app/_layout.tsx: font-sans, font-sans-medium, font-sans-semibold, font-sans-bold. */
+  --font-sans: "PlusJakartaSans_400Regular";
+  --font-sans-medium: "PlusJakartaSans_500Medium";
+  --font-sans-semibold: "PlusJakartaSans_600SemiBold";
+  --font-sans-bold: "PlusJakartaSans_700Bold";
+}

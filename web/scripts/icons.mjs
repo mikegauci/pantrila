@@ -1,5 +1,5 @@
 // Renders the favicon, Apple touch icon and app-store PNGs from the SVGs in
-// src/app and brand/. Run from web/: node scripts/icons.mjs
+// src/app and brand/, and the phone app's icons in ../mobile/assets. Run from web/: node scripts/icons.mjs
 import { readFileSync, writeFileSync } from "node:fs"
 import sharp from "sharp"
 
@@ -42,3 +42,10 @@ writeFileSync("src/app/apple-icon.png", await png("brand/app-icon.svg", 180, { f
 writeFileSync("brand/app-icon-1024.png", await png("brand/app-icon.svg", 1024, { flatten: true }))
 writeFileSync("brand/android-foreground-432.png", await png("brand/android-foreground.svg", 432))
 writeFileSync("brand/android-background-432.png", await png("brand/android-background.svg", 432))
+
+// The phone app (mobile/assets): store icon and Android adaptive layers at 1024 px. The white
+// foreground doubles as the one-colour themed icon and as the splash mark (on green).
+const mobile = "../mobile/assets"
+writeFileSync(`${mobile}/icon.png`, await png("brand/app-icon.svg", 1024, { flatten: true }))
+writeFileSync(`${mobile}/android-foreground.png`, await png("brand/android-foreground.svg", 1024))
+writeFileSync(`${mobile}/android-background.png`, await png("brand/android-background.svg", 1024))
