@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router"
-import { Camera, ChevronDown, ClipboardPaste, Images, Link2, PenLine, Share2, Sparkles, X } from "lucide-react-native"
+import { ArrowLeft, Camera, ChevronDown, ClipboardPaste, Images, Link2, MessageCircle, PenLine, Share2, Sparkles, X } from "lucide-react-native"
 import { useEffect, useRef, useState } from "react"
 import { Image, KeyboardAvoidingView, Linking, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native"
 import { useSWRConfig } from "swr"
@@ -15,6 +15,7 @@ import { CookbookForm } from "@/components/cookbook-form"
 import { Icon } from "@/components/icon"
 import { ImportProgress } from "@/components/import-progress"
 import { ApiError } from "@/lib/api"
+import { chatDraft } from "@/lib/chat-draft"
 import { useApi, useMe, useMeta } from "@/lib/hooks"
 import { PhotoAccessError, pickPhotos, shrinkPhoto } from "@/lib/images"
 import {
@@ -203,15 +204,20 @@ function TextImport({ onDone, shared }: { onDone: (v: ImportView) => void; share
 /** Add a recipe: from a post, a link, photos or pasted text (read by AI as a background job,
  * then saved straight away unless something needs the person), or typed into the form.
  * `?method=post|link` (from Home) opens that way at once; a share from another app (`lib/share.ts`)
- * starts its import here. An import still running when the app
+ * starts its import here, and a recipe the assistant wrote (`?from=chat&draft=`, `lib/chat-draft.ts`)
+ * opens in the form. An import still running when the app
  * was closed is picked up again here ("Finishing your import…"). */
 export default function NewRecipe() {
   const userId = useAuth().session!.user.id
-  const params = useLocalSearchParams<{ method?: string }>()
+  const params = useLocalSearchParams<{ method?: string; from?: string; draft?: string; thread?: string }>()
+  // A recipe the assistant wrote, and the chat it came from so the saved recipe can lead back.
+  const [fromChat] = useState(() => (params.from === "chat" ? chatDraft(params.draft) : null))
+  const chatThread = fromChat && params.thread && /^\d+$/.test(params.thread) ? params.thread : null
   const { mutate } = useSWRConfig()
   const { data: me, mutate: refreshMe } = useMe()
-  const [method, setMethod] = useState<Method | null>(() => METHODS.find((m) => m.key === params.method)?.key ?? null)
-  const [draft, setDraft] = useState<CookbookRecipeIn | null>(method === "manual" ? BLANK_RECIPE : null)
+  const [method, setMethod] = useState<Method | null>(
+    () => (fromChat ? "manual" : METHODS.find((m) => m.key === params.method)?.key ?? null))
+  const [draft, setDraft] = useState<CookbookRecipeIn | null>(fromChat ?? (method === "manual" ? BLANK_RECIPE : null))
   // A new draft gets a fresh form: the form keeps its own copy.
   const [formKey, setFormKey] = useState(0)
   const [result, setResult] = useState<ImportView | null>(null)
@@ -352,6 +358,24 @@ export default function NewRecipe() {
 
         {draft && (
           <>
+            {fromChat && draft === fromChat && (
+              <View className="gap-1 rounded-2xl bg-yellow-soft p-4">
+                <View className="flex-row items-center gap-2">
+                  <MessageCircle size={16} color="#b7860b" />
+                  <Text className="font-sans-semibold text-[13px] text-foreground">From the assistant.</Text>
+                </View>
+                <Text className="font-sans text-[13px] text-foreground">
+                  Check the amounts; foods marked unknown need a pick or an estimate.
+                </Text>
+                {chatThread && (
+                  <Pressable accessibilityRole="link" onPress={() => router.navigate({ pathname: "/assistant", params: { thread: chatThread } })}
+                             className="mt-1 flex-row items-center gap-1 self-start">
+                    <Icon icon={ArrowLeft} tone="primary-text" size={14} />
+                    <Text className="font-sans-medium text-[13px] text-primary-text underline">Back to the chat</Text>
+                  </Pressable>
+                )}
+              </View>
+            )}
             {result && (
               <View className="rounded-2xl bg-yellow-soft p-4">
                 <View className="flex-row flex-wrap items-center gap-2">
@@ -382,7 +406,10 @@ export default function NewRecipe() {
             <CookbookForm
               key={formKey}
               initial={draft}
-              onSaved={(saved) => router.replace({ pathname: "/recipes/mine/[id]", params: { id: String(saved.id) } })}
+              onSaved={(saved) => router.replace({
+                pathname: "/recipes/mine/[id]",
+                params: { id: String(saved.id), ...(draft === fromChat && chatThread ? { chat: chatThread } : {}) },
+              })}
               onCancel={() => { setMethod(null); setDraft(null); setResult(null) }}
             />
           </>

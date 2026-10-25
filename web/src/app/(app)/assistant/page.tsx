@@ -8,15 +8,18 @@ import { Fragment, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
-import type { ChatMessage, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard, ToolCall } from "@pantrila/core/types"
+import {
+  addWords, chatBlocks, draftTag, headingOf, inlineParts, type LiveReply, STARTERS, startReply, type ToolIcon, toolSummary, usedRecipes,
+  withEvent,
+} from "@pantrila/core/chat"
+import type { ChatMessage, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard } from "@pantrila/core/types"
 import { leftText } from "@pantrila/core/subscription"
 
 import { useAuth } from "@/components/auth-provider"
-import { STARTERS } from "@/components/ask-pantrila"
 import { AiBadge, ProblemAlert, RecipeArt } from "@/components/bits"
 import { ChatThreads } from "@/components/chat-threads"
 import { CHAT_DRAFT } from "@/components/cookbook-form"
-import { DictateButton, addWords } from "@/components/dictate-button"
+import { DictateButton } from "@/components/dictate-button"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
@@ -32,52 +35,17 @@ interface Message extends ChatMessage {
 
 const LAST_THREAD = "pantrila-chat-thread"
 
-function toolSummary(c: ToolCall): { icon: typeof Search; text: string } {
-  const a = c.arguments as Record<string, string | number | null>
-  const lines = c.output.split("\n").filter(Boolean)
-  switch (c.name) {
-    case "search_recipes":
-      return { icon: Search, text: c.output === "no recipes match"
-        ? `Searched “${a.query}”: nothing passed your filters`
-        : `Searched “${a.query}”: ${lines.length} recipe${lines.length === 1 ? "" : "s"} matched your filters` }
-    case "check_pantry":
-      return { icon: Refrigerator, text: a.recipe_id ? `Checked your pantry against ${a.recipe_id}` : "Checked your pantry" }
-    case "update_pantry":
-      return { icon: Refrigerator, text: `Updated your pantry: ${lines.join("; ")}` }
-    case "swap_ingredient":
-      return { icon: Repeat, text: `Checked swaps for ${a.food} in ${a.recipe_id}` }
-    case "scale_recipe":
-      return { icon: Scale, text: `Scaled ${a.recipe_id} to ${a.servings} servings` }
-    case "write_recipe":
-      return { icon: PenLine, text: `Wrote “${a.title}” and checked it against your rules` }
-    default:
-      return { icon: Sparkles, text: c.name }
-  }
-}
-
-/** Words only, lower case, so "**Prawn and Rice:** " and "Prawn and Rice" compare equal. */
-function plainTitle(s: string) {
-  return s.replace(/\*\*/g, "").replace(/[\s:–—-]+$/, "").trim().toLowerCase()
-}
-
-/** The model often writes a recipe's title just before its link. The link shows the title, so that text goes. */
-function withoutTitles(parts: string[], recipes: Map<string, RecipeCard>): string[] {
-  return parts.map((part, i) => {
-    const cite = parts[i + 1]?.match(/^\[([a-z0-9-]+)\]$/)
-    const r = cite && recipes.get(cite[1])
-    return r && plainTitle(part) === plainTitle(r.title) ? "" : part
-  })
+const TOOL_ICON: Record<ToolIcon, typeof Search> = {
+  search: Search, pantry: Refrigerator, swap: Repeat, scale: Scale, write: PenLine, other: Sparkles,
 }
 
 /** A line's text: **bold** and [recipe-id] citations, each citation a link titled as its recipe. */
 function Inline({ text, recipes }: { text: string; recipes: Map<string, RecipeCard> }) {
-  const parts = withoutTitles(text.split(/(\[[a-z0-9]+(?:-[a-z0-9]+)*\]|\*\*[^*]+\*\*)/g), recipes)
   return (
     <>
-      {parts.map((part, i) => {
-        const cite = part.match(/^\[([a-z0-9-]+)\]$/)
-        if (cite) {
-          const r = recipes.get(cite[1])
+      {inlineParts(text, recipes).map((part, i) => {
+        if (part.kind === "cite") {
+          const r = part.recipe
           return r ? (
             <Fragment key={i}>
               <Link href={`/recipes/${r.id}`}
@@ -86,37 +54,20 @@ function Inline({ text, recipes }: { text: string; recipes: Map<string, RecipeCa
               </Link>
               <span className="text-muted-foreground"> · {Math.round(r.nutrition.kcal)} kcal</span>
             </Fragment>
-          ) : <span key={i} className="text-muted-foreground">{part}</span>
+          ) : <span key={i} className="text-muted-foreground">{part.text}</span>
         }
-        if (part.startsWith("**") && part.endsWith("**")) return <strong key={i}>{part.slice(2, -2)}</strong>
-        return <Fragment key={i}>{part}</Fragment>
+        if (part.kind === "bold") return <strong key={i}>{part.text}</strong>
+        return <Fragment key={i}>{part.text}</Fragment>
       })}
     </>
   )
 }
 
-type Block = { list: boolean; lines: string[] }
-
 /** Paragraphs and bulleted lists, with headings as bold lines and blank lines as paragraph breaks. */
 function Rich({ text, recipes }: { text: string; recipes: Map<string, RecipeCard> }) {
-  const blocks: Block[] = []
-  for (const line of text.split("\n")) {
-    const item = line.match(/^\s*(?:[-*]|\d+\.)\s+(.*)$/)
-    const trimmed = line.trim()
-    if (!trimmed || citesOnly(trimmed, recipes)) continue
-    const last = blocks.at(-1)
-    if (item) {
-      if (last?.list) last.lines.push(item[1])
-      else blocks.push({ list: true, lines: [item[1]] })
-    } else if (last && !last.list) {
-      last.lines.push(trimmed)
-    } else {
-      blocks.push({ list: false, lines: [trimmed] })
-    }
-  }
   return (
     <div className="grid min-w-0 gap-2.5">
-      {blocks.map((b, bi) => {
+      {chatBlocks(text, recipes).map((b, bi) => {
         if (b.list) {
           return (
             <ul key={bi} className="grid min-w-0 list-disc gap-1.5 pl-5 marker:text-muted-foreground">
@@ -127,12 +78,11 @@ function Rich({ text, recipes }: { text: string; recipes: Map<string, RecipeCard
         return (
           <p key={bi}>
             {b.lines.map((l, li) => {
-              // A markdown heading ("#### Ingredients") shows as a bold line.
-              const heading = l.match(/^#{1,6}\s+(.*)$/)
+              const heading = headingOf(l)
               return (
                 <Fragment key={li}>
                   {li > 0 && <br />}
-                  {heading ? <strong>{heading[1].replace(/\*\*/g, "")}</strong> : <Inline text={l} recipes={recipes} />}
+                  {heading ? <strong>{heading}</strong> : <Inline text={l} recipes={recipes} />}
                 </Fragment>
               )
             })}
@@ -164,33 +114,6 @@ function RecipeCardView({ id, servings }: { id: string; servings?: number }) {
   )
 }
 
-/**
- * A reply line that only names recipes (a citation, its title and kcal): the recipe cards show it,
- * so the line goes. Lines with any other words stay.
- */
-function citesOnly(line: string, recipes: Map<string, RecipeCard>): boolean {
-  const cites = line.match(/\[[a-z0-9-]+\]/g)
-  if (!cites || !cites.every((c) => recipes.has(c.slice(1, -1)))) return false
-  let rest = line.replace(/\*\*/g, "").replace(/\d+\s*kcal/gi, "").toLowerCase()
-  for (const c of cites) rest = rest.split(c).join("")
-  for (const r of recipes.values()) rest = rest.split(r.title.toLowerCase()).join("")
-  return /^[\s·\-–—:,.|]*$/.test(rest)
-}
-
-/**
- * Which draft of which chat a saved recipe came from: the thread and a hash of the draft as the
- * assistant wrote it, so a changed version written later in the chat counts as a new draft.
- */
-function draftTag(thread: number | null, d: CookbookRecipeIn): string | null {
-  if (!thread) return null
-  let h = 0x811c9dc5  // FNV-1a, 32 bits; the tag itself is left out
-  for (const ch of JSON.stringify({ ...d, chat_draft: undefined })) {
-    h ^= ch.charCodeAt(0)
-    h = Math.imul(h, 0x01000193) >>> 0
-  }
-  return `${thread}:${h.toString(16).padStart(8, "0")}`
-}
-
 function Bubble({ m, thread }: { m: Message; thread: number | null }) {
   const router = useRouter()
   const { session } = useAuth()
@@ -209,17 +132,13 @@ function Bubble({ m, thread }: { m: Message; thread: number | null }) {
     router.push(`/recipes/mine/new?from=chat${thread ? `&thread=${thread}` : ""}`)
   }
   const recipes = new Map(r?.cited.map((c) => [c.id, c]))
-  // Recipes the reply uses: cited in the text, or scaled by a tool (its servings are the reply's).
-  const used = new Map<string, number | undefined>()
-  for (const c of r?.tool_calls ?? []) {
-    if (c.name === "scale_recipe") used.set(String(c.arguments.recipe_id), Number(c.arguments.servings))
-  }
-  for (const c of r?.cited ?? []) if (!used.has(c.id)) used.set(c.id, undefined)
+  const used = usedRecipes(r)
   return (
     <div className="grid min-w-0 max-w-[92%] gap-2">
       <ProblemAlert title="Current profile check" items={r?.profile_problems ?? []} />
       {r?.tool_calls.map((c, i) => {
-        const { icon: Icon, text } = toolSummary(c)
+        const { icon, text } = toolSummary(c)
+        const Icon = TOOL_ICON[icon]
         return (
           <div key={i} className="flex items-start gap-2 rounded-xl border border-dashed bg-surface-muted px-3 py-2 text-[12px] text-muted-foreground">
             <Icon className="mt-0.5 size-3.5 shrink-0" aria-hidden /> {text}
@@ -272,7 +191,7 @@ export default function AssistantPage() {
   const [text, setText] = useState("")
   const [busy, setBusy] = useState(false)
   // The reply in flight: what the assistant is doing, its text so far and the recipes it found.
-  const [live, setLive] = useState<{ label: string; text: string; cards: Map<string, RecipeCard> }>()
+  const [live, setLive] = useState<LiveReply>()
   const [drawer, setDrawer] = useState(false)
   const { data: me, mutate: refreshMe } = useMe()
   const { data: threads, mutate: refreshThreads } = useChats()
@@ -342,15 +261,9 @@ export default function AssistantPage() {
     setBusy(true)
     const asked: Message = { role: "user", text: message }
     setPending([asked])
-    setLive({ label: "Thinking…", text: "", cards: new Map() })
+    setLive(startReply())
     try {
-      const reply = await streamChat({ message, thread_id: thread }, (e) => setLive((l) => {
-        if (!l) return l
-        // A new step after some text means that text led into a tool call; the reply comes after it.
-        if (e.kind === "step") return { ...l, label: e.label, text: "" }
-        if (e.kind === "delta") return { ...l, text: l.text + e.text }
-        return { ...l, cards: new Map([...l.cards, ...e.cards.map((c) => [c.id, c] as const)]) }
-      }))
+      const reply = await streamChat({ message, thread_id: thread }, (e) => setLive((l) => l && withEvent(l, e)))
       const answered: Message = { role: "assistant", text: reply.text, reply }
       // The server saved both messages; put them in the cache instead of fetching the thread again.
       await mutate<ChatThread>(`/me/chats/${reply.thread_id}`, (t) => ({

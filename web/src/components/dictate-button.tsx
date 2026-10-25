@@ -7,11 +7,6 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { browserListener, useVoiceSupported } from "@/lib/voice"
 
-/** Adds spoken words to a message, with a space between the parts. */
-export function addWords(message: string, heard: string) {
-  return [message, heard.trim()].filter(Boolean).join(" ")
-}
-
 /** Mic beside Send: what the person says is typed into the message box. Hidden where the browser
  * cannot recognise speech. Listening stops on a second tap, when the page is hidden or on leaving. */
 export function DictateButton({ onHeard }: { onHeard: (words: string) => void }) {

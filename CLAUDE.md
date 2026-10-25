@@ -44,13 +44,25 @@ next PR of the mobile plan": read that file first, take the first PR its Progres
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
 Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
 (`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`), PR 4 (`feat/mobile-sign-in`), PR 5 (`feat/mobile-recipes`), PR 6 (`feat/mobile-plan`), PR 7
-(`feat/mobile-cooking`), PR 8 (`feat/mobile-cookbook`) and PR 9 (`feat/mobile-share`) are done. Next: **PR 10
-(`feat/mobile-assistant`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
+(`feat/mobile-cooking`), PR 8 (`feat/mobile-cookbook`), PR 9 (`feat/mobile-share`) and PR 10 (`feat/mobile-assistant`) are done. Next: **PR 11
+(`feat/mobile-profile`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
 installs (Android development build finished), PR 3's Render variables and RevenueCat webhook, and PR 4's Google,
 Apple and Supabase settings plus a new development build, and PR 9's `APPLE_TEAM_ID` / `ANDROID_CERT_SHA256` on Vercel
 (`docs/share-and-links.md`).
 
 ## Status (update as work lands)
+
+Phone assistant chat (mobile plan PR 10): the Assistant tab is the web's chat. It streams `POST /chat/stream` through
+core's `streamChat` on `expo/fetch` (step label, then the reply as it is written with found recipes titled, then the
+saved reply), lists saved chats in a "Chats" sheet (New chat, delete with a confirm), remembers the last chat per user
+(`userKey(id, "chat-thread")`) and asks Home's `?q=` in a new chat or opens `?thread=`. Replies show the profile check,
+tool summaries, citations as links, recipe cards with "Let's cook this!" at the reply's servings, and each recipe the
+assistant wrote with its warnings and "Save to My recipes" (the draft goes to `recipes/mine/new?from=chat` through
+`lib/chat-draft.ts`; saved, it reads "Saved to My recipes as …" and the recipe leads back with `?chat=`). A mic beside
+Send types speech into the box (`components/dictate-button.tsx`, PR 7's `phoneListener`; also on Home's card). The
+web's reply reading moved to `@pantrila/core/chat` (citations, lists, lines that only cite, draft tags, the reply in
+flight), now used by the web too (all 42 Playwright specs pass). 57 Jest tests (6 new), 66 core tests. No new native
+module. No API or model change, so no eval rerun.
 
 Share to Pantrila and app links (mobile plan PR 9): the phone app is in the share sheet ("Save to Pantrila" on iOS,
 an extension from `expo-share-intent`; Pantrila on Android) for links, text and up to 4 photos. `ShareHandler` (root
@@ -1007,10 +1019,11 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   (SWR hooks, `useRecipePages`), `src/lib/recipes.ts` (filters), `src/lib/temperature.ts` (°C/°F per user),
   `src/lib/import-jobs.ts` (import jobs, saved per user), `src/lib/photo-jobs.ts` (background recipe photos,
   `saveNewRecipe`), `src/lib/images.ts` (photos to import), `src/lib/share.ts` + `src/components/share-handler.tsx` (the share
-  sheet; `src/app/+native-intent.tsx` routes iOS's share link), `src/lib/supabase.ts` + `secure-session.ts` (session storage), `src/lib/auth.ts` (Google, Apple, guest, email
+  sheet; `src/app/+native-intent.tsx` routes iOS's share link), `src/lib/chat-draft.ts` (an assistant draft on its way to
+  the form), `src/lib/supabase.ts` + `secure-session.ts` (session storage), `src/lib/auth.ts` (Google, Apple, guest, email
   link, linking, sign-out), `src/components/` (`bits.tsx` like the web's, `Icon`, `RecipeCard`, `ChipRow`,
   `MeasuredLine`, `MacroRing`, `WakeNotice`, `Soon`, `Sheet`, `OptionSheet`, `Toaster` (`lib/toast.ts`, in the root
-  layout), `CookbookForm`, `ImportProgress`, `StartCooking`, `MealSheet` with
+  layout), `CookbookForm`, `ImportProgress`, `StartCooking`, `Bubble`/`ChatThreads` (`chat.tsx`), `DictateButton`, `MealSheet` with
   `SwapMeal`/`RepeatMeal`, `MealRow`, `DayTargets`, `CookingScreen` (`cooking-mode.tsx`, `cooking-parts.tsx`),
   `VoiceControl`, `AuthProvider`, `AccountCard`, `Choice`; `lib/grocery.ts` keeps the list's ticks, `lib/cooking.ts`
   progress and sounds, `lib/timer-alerts.ts` timer notifications, `lib/voice.ts` speech, `lib/stored.ts` per-user
@@ -1019,7 +1032,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   (written by Metro, committed), `assets/` (from `web/brand/`).
 - `packages/core/`: `@pantrila/core`, code shared by web and the phone app (no React, DOM or React
   Native): `src/types.ts` (API types), `api.ts` (`createApi`, `ApiError`), `sse.ts`, `amounts.ts`,
-  `cooking.ts`, `cookbook.ts`, `temperature.ts`, `voice.ts`, `sections.ts`, `plan.ts`, `grocery.ts`, `format.ts`, `avatar.ts`;
+  `cooking.ts`, `cookbook.ts`, `chat.ts`, `temperature.ts`, `voice.ts`, `sections.ts`, `plan.ts`, `grocery.ts`, `format.ts`, `avatar.ts`;
   Vitest tests in `test/`. Imported as `@pantrila/core/<module>`.
 - `site/`: the pantrila.com landing site (Next.js, static, no API or sign-in): `src/app/page.tsx` (sections),
   `privacy/`, `terms/`, `src/lib.ts` (addresses and contact), `src/components/` (header/footer, screenshot
@@ -1144,7 +1157,7 @@ Update this block when commands change.
   suffixes. **Never use a `claude/` branch** (owner's rule, for every session and tool): if the
   session or harness assigns one (such as `claude/<random-words>`), ignore it and create the
   `feat/` or `fix/` branch from up-to-date `main` instead; push and open the PR from that branch.
-  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-assistant` for PR 10).
+  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-profile` for PR 11).
 - Commit messages use plain descriptive text. `feat/` and `fix/` are branch prefixes only;
   do not prefix commit messages with them.
 - PR titles say specifically what the PR does (for example "Add hybrid recipe search with

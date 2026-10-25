@@ -5,17 +5,13 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
+import { addWords, STARTERS } from "@pantrila/core/chat"
+
 import { AiBadge, Panel } from "@/components/bits"
-import { DictateButton, addWords } from "@/components/dictate-button"
+import { DictateButton } from "@/components/dictate-button"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useChats } from "@/lib/hooks"
-
-export const STARTERS = [
-  "What can I cook tonight with what I have?",
-  "I just bought eggs, spinach and feta.",
-  "Find a quick high-protein breakfast.",
-]
 
 /** Home card: a question typed or picked here opens a new chat on the Assistant page. */
 export function AskPantrila() {

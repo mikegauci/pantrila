@@ -41,7 +41,13 @@ export async function allowVoice(): Promise<boolean> {
 /** Listens until `stop`. iOS ends a session after each phrase, so it starts again; Android keeps
  * one continuous session (each restart there beeps). Ending five times within a second each
  * means it cannot listen, so it gives up instead of looping. */
-export function phoneListener(onHeard: (text: string) => void, onError: (e: VoiceError) => void): VoiceListener {
+const COMMANDS = ["next", "back", "start timer", "stop timer", "start cooking"]
+
+export function phoneListener(
+  onHeard: (text: string) => void,
+  onError: (e: VoiceError) => void,
+  phrases: string[] = COMMANDS,  // words to listen out for: cooking mode's commands by default
+): VoiceListener {
   let on = false
   let quickEnds = 0
   let startedAt = 0
@@ -55,7 +61,7 @@ export function phoneListener(onHeard: (text: string) => void, onError: (e: Voic
       maxAlternatives: 1,
       continuous: Platform.OS === "android",
       requiresOnDeviceRecognition: onDevice(),
-      contextualStrings: ["next", "back", "start timer", "stop timer", "start cooking"],
+      contextualStrings: phrases,
       iosCategory: { category: "playAndRecord", categoryOptions: ["defaultToSpeaker", "allowBluetooth"], mode: "measurement" },
     })
   }
