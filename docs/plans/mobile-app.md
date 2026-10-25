@@ -229,22 +229,27 @@ check the value on Render). Early users: nobody gets Pro by default; to give som
 
 Branch `feat/mobile-sign-in`.
 
-- [ ] Supabase client with AsyncStorage session storage (encrypted with a key in
+- [x] Supabase client with AsyncStorage session storage (encrypted with a key in
       `expo-secure-store`, as Supabase's Expo guide shows), auto refresh paused in the background.
-- [ ] Welcome screen like the web login: Continue with Google, Continue with Apple (iOS; Android
-      shows it only if it works with the web flow, else hides it), "Try it as a guest", "Prefer
+- [x] Welcome screen like the web login: Continue with Google, Continue with Apple (iOS; Android
+      hides it: it would need Apple's web flow), "Try it as a guest", "Prefer
       email? Sign in with a link".
-- [ ] Google: native sheet -> `signInWithIdToken({ provider: "google", token })`.
-- [ ] Apple: `expo-apple-authentication` -> `signInWithIdToken({ provider: "apple", token, nonce })`.
-- [ ] Magic link: `signInWithOtp` with `emailRedirectTo: "pantrila://auth/callback"`; the
+- [x] Google: native sheet -> `signInWithIdToken({ provider: "google", token })`.
+- [x] Apple: `expo-apple-authentication` -> `signInWithIdToken({ provider: "apple", token, nonce })`.
+- [x] Magic link: `signInWithOtp` with `emailRedirectTo: "pantrila://auth/callback"`; the
       `auth/callback` route exchanges the code.
-- [ ] Guest -> keep data with Google or Apple (`linkIdentity` with the id token; same user id); the
+- [x] Guest -> keep data with Google or Apple (`linkIdentity` with the id token; same user id); the
       "account already exists" message as on the web.
-- [ ] Sign out; switching accounts clears SWR caches and stored state keyed by user id (as the web's
+- [x] Sign out; switching accounts clears SWR caches and stored state keyed by user id (as the web's
       account isolation does).
-- [ ] `docs/apple-sign-in.md` (Apple Developer + Supabase steps) and `docs/google-sign-in.md` gains
+- [x] `docs/apple-sign-in.md` (Apple Developer + Supabase steps) and `docs/google-sign-in.md` gains
       the native client ids.
-- [ ] Tests for the auth helpers; **(owner)** sign in with each method on both phones.
+- [x] Tests for the auth helpers (`mobile/src/__tests__/auth.test.ts`, `welcome.test.tsx`).
+- [ ] **(owner)** Google Cloud iOS and Android clients, EAS variables, Supabase client ids and
+      "Skip nonce checks" (`docs/google-sign-in.md` section 4); Apple provider in Supabase
+      (`docs/apple-sign-in.md`); `pantrila://auth/callback` in Supabase's redirect URLs;
+      `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` as an EAS variable; a new development build.
+- [ ] **(owner)** sign in with each method on both phones.
 
 ## PR 5: app shell, Home and Recipes
 
@@ -476,7 +481,7 @@ Branch `feat/mobile-launch`.
 | 1 | `feat/shared-core` | done |
 | 2 | `feat/mobile-skeleton` | done (EAS project linked, Android development build finished; owner: install it on an Android phone, iPhone build once Apple activates the team) |
 | 3 | `feat/subscription-tiers` | done (owner: RevenueCat keys on Render, webhook URL in RevenueCat) |
-| 4 | `feat/mobile-sign-in` | not started |
+| 4 | `feat/mobile-sign-in` | done (owner: Google and Apple dashboards, EAS variables, a new development build, phone checks) |
 | 5 | `feat/mobile-recipes` | not started |
 | 6 | `feat/mobile-plan` | not started |
 | 7 | `feat/mobile-cooking` | not started |
@@ -540,3 +545,16 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   logs into RevenueCat with the Supabase user id, entitlement id `pro`. Owner: set `REVENUECAT_WEBHOOK_SECRET`,
   `REVENUECAT_API_KEY` and `PANTRILA_PRO_USERS` on Render and point RevenueCat's webhook at
   `https://api.pantrila.com/webhooks/revenuecat` (Authorization header value = the secret).
+- 2026-10-25: PR 4 (`feat/mobile-sign-in`): Supabase client on the phone (`mobile/src/lib/supabase.ts`: PKCE,
+  session encrypted by `LargeSecureStore`, key in `expo-secure-store`, auto refresh only while the app is active;
+  without `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` the welcome screen says so instead of crashing), `src/lib/auth.ts`
+  (Google sheet -> `signInWithIdToken`, Apple with a SHA-256 nonce and the first-time name saved as `full_name`,
+  `linkIdentity` for guests, email links to `pantrila://auth/callback` exchanged in `src/app/auth/callback.tsx`,
+  `authMessage` in the web's words, `userKey`/`forgetLocal` for per-user phone storage), `AuthProvider` with a fresh
+  SWR cache per user, `Stack.Protected` routes (`welcome` signed out, `index` signed in), Home's `AccountCard`
+  (keep your data with Google or Apple, sign out with a warning for guests). The Google plugin is added only when
+  `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` is set (without options it expects Firebase files); Apple is iPhone only. 11 Jest
+  tests; `expo export` bundles iOS and Android, `expo-doctor` 20/20. For PR 5: put new phone storage under
+  `userKey(user.id, ...)` so sign-out forgets it; the tabs replace `index` inside the signed-in `Stack.Protected`;
+  `AccountCard` moves to Profile in PR 11. Owner: steps in `docs/google-sign-in.md` section 4 and
+  `docs/apple-sign-in.md`, then a new development build (native modules were added).

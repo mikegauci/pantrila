@@ -11,6 +11,8 @@ import * as SplashScreen from "expo-splash-screen"
 import { StatusBar } from "expo-status-bar"
 import { useEffect } from "react"
 
+import { AuthProvider, useAuth } from "@/components/auth-provider"
+
 SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
@@ -21,17 +23,35 @@ export default function RootLayout() {
     PlusJakartaSans_600SemiBold,
     PlusJakartaSans_700Bold,
   })
-  const ready = loaded || Boolean(error)
+  const fonts = loaded || Boolean(error)
+
+  if (!fonts) return null
+  return (
+    <AuthProvider>
+      <StatusBar style="auto" />
+      <Screens />
+    </AuthProvider>
+  )
+}
+
+/** Signed out: the welcome screen. Signed in: the app. The email link's callback works either way. */
+function Screens() {
+  const { session, ready } = useAuth()
 
   useEffect(() => {
-    if (ready) SplashScreen.hideAsync()
+    if (ready) SplashScreen.hideAsync()  // the splash stays up until the stored session is read
   }, [ready])
 
   if (!ready) return null
   return (
-    <>
-      <StatusBar style="auto" />
-      <Stack screenOptions={{ headerShown: false }} />
-    </>
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Protected guard={!!session}>
+        <Stack.Screen name="index" />
+      </Stack.Protected>
+      <Stack.Protected guard={!session}>
+        <Stack.Screen name="welcome" />
+      </Stack.Protected>
+      <Stack.Screen name="auth/callback" />
+    </Stack>
   )
 }

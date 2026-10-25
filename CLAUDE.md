@@ -43,11 +43,25 @@ Building the iOS and Android apps with Expo, one PR at a time, in the order give
 next PR of the mobile plan": read that file first, take the first PR its Progress table does not
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
 Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
-(`feat/mobile-skeleton`) and PR 3 (`feat/subscription-tiers`) are done. Next: **PR 4 (`feat/mobile-sign-in`)**.
-The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device installs (Android
-development build finished) and PR 3's Render variables and RevenueCat webhook.
+(`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`) and PR 4 (`feat/mobile-sign-in`) are done. Next: **PR 5
+(`feat/mobile-recipes`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
+installs (Android development build finished), PR 3's Render variables and RevenueCat webhook, and PR 4's Google,
+Apple and Supabase settings plus a new development build.
 
 ## Status (update as work lands)
+
+Phone sign-in (mobile plan PR 4): the Expo app signs in like the web: Continue with Google (Google's native sheet,
+`@react-native-google-signin/google-signin`, id token to `signInWithIdToken`), Continue with Apple (iPhone only,
+`expo-apple-authentication` with a SHA-256 nonce; the name Apple sends once is saved), "Try it as a guest", and an
+email link that opens `pantrila://auth/callback` (PKCE code exchanged on the phone). A guest keeps their data with
+Google or Apple (`linkIdentity` with the id token; "already has its own Pantrila account" as on the web). The session
+is stored encrypted (`LargeSecureStore`: AES key in `expo-secure-store`, data in AsyncStorage) and refreshed only
+in the foreground; each user gets a fresh SWR cache, and sign-out forgets their `userKey` storage. Routes:
+`Stack.Protected` with `welcome` (signed out) and `index` (signed in, with `AccountCard`). New public EAS variables
+`EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` and `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` (buttons hidden without them).
+`docs/apple-sign-in.md` is new; `docs/google-sign-in.md` gains the phone clients and "Skip nonce checks" (needed for
+Google's iOS SDK). 11 Jest tests; iOS and Android bundles export; `expo-doctor` 20/20. Not yet tried on a phone (needs
+the owner's dashboard steps and a new development build). No model call, so no eval rerun.
 
 Subscription tiers (mobile plan PR 3): Free and Pantrila Pro in the API. Migration `20261025120000_entitlements`
 (applied on Supabase): `entitlements` (one row per person who has or had Pro; no row is Free; `store='manual'` rows
@@ -920,8 +934,11 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - `package.json` (root): npm workspaces `web`, `mobile` and `packages/*`; one `package-lock.json` at the root.
 - `mobile/`: the Expo phone app (see `mobile/README.md` and `mobile/AGENTS.md`: read Expo's versioned docs,
   not memory). `app.config.ts`, `eas.json`, `metro.config.js` (Uniwind), `src/global.css` (tokens),
-  `src/app/` (Expo Router screens; `_layout.tsx` loads the fonts), `src/lib/api.ts` (`createApi` with
-  `expo/fetch`), `src/__tests__/` (Jest), `src/uniwind-types.d.ts` (written by Metro, committed),
+  `src/app/` (Expo Router screens; `_layout.tsx` loads the fonts and guards `welcome` / `index` with
+  `Stack.Protected`; `auth/callback.tsx` finishes email links), `src/lib/api.ts` (`createApi` with
+  `expo/fetch` and the session's token), `src/lib/supabase.ts` + `secure-session.ts` (session storage),
+  `src/lib/auth.ts` (Google, Apple, guest, email link, linking, sign-out), `src/components/` (`AuthProvider`,
+  `AccountCard`, `Choice`), `src/__tests__/` (Jest), `src/uniwind-types.d.ts` (written by Metro, committed),
   `assets/` (from `web/brand/`).
 - `packages/core/`: `@pantrila/core`, code shared by web and the phone app (no React, DOM or React
   Native): `src/types.ts` (API types), `api.ts` (`createApi`, `ApiError`), `sse.ts`, `amounts.ts`,

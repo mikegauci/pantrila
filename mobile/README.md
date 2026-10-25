@@ -23,6 +23,10 @@ npx eas-cli device:create                # once per iPhone (needs the Apple Deve
 npx eas-cli build --profile development --platform ios       # then turn on Developer Mode on the iPhone
 ```
 
+Sign-in needs `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and the Google buttons need
+`EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` and `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` (`.env.example`; EAS environment
+variables for builds). Dashboard steps: `docs/google-sign-in.md` (section 4) and `docs/apple-sign-in.md`.
+
 Profiles in `eas.json`: `development` (dev client, internal), `preview` (internal testers),
 `production` (stores).
 

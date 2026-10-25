@@ -4,18 +4,23 @@ import useSWR from "swr"
 
 import type { Meta } from "@pantrila/core/types"
 
+import { AccountCard } from "@/components/account"
+import { useAuth } from "@/components/auth-provider"
 import { api, health } from "@/lib/api"
+import { firstName } from "@/lib/auth"
 
-/** The skeleton's one screen: is the API there, and does the shared client reach it. */
+/** The signed-in app's first screen until the tabs land (PR 5): the API is there, the shared
+ * client reaches it with this account's token, and the account itself. */
 export default function Home() {
   const insets = useSafeAreaInsets()
+  const name = firstName(useAuth().session?.user)
   const server = useSWR("health", health)
   const meta = useSWR<Meta, Error>("/meta", (path: string) => api<Meta>(path))
 
   return (
     <ScrollView className="flex-1 bg-background" contentContainerStyle={{ paddingTop: insets.top + 24 }}>
       <View className="gap-4 px-4 pb-8">
-        <Text className="font-sans-bold text-3xl text-foreground">Pantrila</Text>
+        <Text className="font-sans-bold text-3xl text-foreground">{name ? `Hello, ${name}` : "Pantrila"}</Text>
         <Text className="font-sans text-base text-muted-foreground">
           The phone app is on its way. This screen checks that it can reach the Pantrila server.
         </Text>
@@ -32,6 +37,7 @@ export default function Home() {
             : meta.error?.message ?? "Loading…"}
           tone={meta.data ? "good" : "muted"}
         />
+        <AccountCard />
       </View>
     </ScrollView>
   )
