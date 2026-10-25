@@ -7,7 +7,7 @@ import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
 import { label } from "@pantrila/core/format"
-import { cookPortions, EATING_OUT_SIZES, leftoverSources, leftoversOf, mealHref } from "@pantrila/core/plan"
+import { cookHref, EATING_OUT_SIZES, leftoverSources, leftoversOf } from "@pantrila/core/plan"
 import type { MealType, Plan, PlanMeal, SlotKind } from "@pantrila/core/types"
 
 import { RepeatMealSheet } from "@/components/repeat-meal"
@@ -38,10 +38,7 @@ export function MealMenu({ plan, day, meal, onSwap }: {
   const router = useRouter()
   const [busy, setBusy] = useState(false)
   const [repeating, setRepeating] = useState(false)
-  const href = mealHref(meal)
-  const portions = cookPortions(plan, day, meal.meal_type)
-  // Cooking mode takes whole servings; round up so the leftovers are never short.
-  const cookServings = Math.max(1, Math.ceil(portions.total - 1e-9))
+  const cook = cookHref(plan, day, meal)
   const slot = `day ${day} ${meal.meal_type}`
   const sources = leftoverSources(plan, day).reverse().slice(0, MAX_LEFTOVER_CHOICES)
   const dependents = leftoversOf(plan, day, meal.meal_type)
@@ -81,12 +78,11 @@ export function MealMenu({ plan, day, meal, onSwap }: {
             <CopyPlus /> Repeat on other days
           </DropdownMenuItem>
         )}
-        {meal.kind === "recipe" && href && (
-          <DropdownMenuItem onClick={() => router.push(
-            `${href}/cook?servings=${cookServings}${portions.later ? `&later=${Math.ceil(portions.later - 1e-9)}` : ""}`)}>
+        {cook && (
+          <DropdownMenuItem onClick={() => router.push(cook.href)}>
             <ChefHat /> Start cooking
             <span className="tabular ml-auto text-[12px] text-muted-foreground">
-              {cookServings} serving{cookServings === 1 ? "" : "s"}
+              {cook.servings} serving{cook.servings === 1 ? "" : "s"}
             </span>
           </DropdownMenuItem>
         )}

@@ -1,8 +1,8 @@
 import { Image } from "expo-image"
 import {
-  Apple, CakeSlice, CookingPot, EggFried, Salad, Sparkles, TriangleAlert, type LucideIcon,
+  Apple, CakeSlice, CookingPot, EggFried, Minus, Plus, Salad, Sparkles, TriangleAlert, type LucideIcon,
 } from "lucide-react-native"
-import { Text, View } from "react-native"
+import { Pressable, Text, View } from "react-native"
 
 import { label } from "@pantrila/core/format"
 import type { Allergen, DietTag, MealType } from "@pantrila/core/types"
@@ -131,6 +131,35 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
           Try again
         </Text>
       )}
+    </View>
+  )
+}
+
+export function Stat({ label: name, value, hint }: { label: string; value: string | number; hint?: string }) {
+  return (
+    <View className="min-w-[40%] flex-1">
+      <Text className="font-sans-medium text-xs text-muted-foreground">{name}</Text>
+      <Text className="font-sans-bold text-[26px] leading-9 text-foreground">{value}</Text>
+      {hint && <Text className="font-sans text-xs text-muted-foreground">{hint}</Text>}
+    </View>
+  )
+}
+
+/** − n things + : servings on a recipe, people on the grocery list. */
+export function Stepper({ name, value, text, min, max, onChange }: {
+  name: string; value: number; text: string; min: number; max: number; onChange: (n: number) => void
+}) {
+  const step = (icon: LucideIcon, label: string, to: number) => (
+    <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={() => onChange(to)} hitSlop={6}
+               className="size-8 items-center justify-center rounded-lg border border-border bg-surface">
+      <Icon icon={icon} size={16} />
+    </Pressable>
+  )
+  return (
+    <View accessibilityLabel={name} className="flex-row items-center gap-1">
+      {step(Minus, `Fewer ${name.toLowerCase()}`, Math.max(min, value - 1))}
+      <Text className="w-[88px] text-center font-sans-semibold text-[13px] text-foreground">{text}</Text>
+      {step(Plus, `More ${name.toLowerCase()}`, Math.min(max, value + 1))}
     </View>
   )
 }

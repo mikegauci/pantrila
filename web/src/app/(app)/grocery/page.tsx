@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useState } from "react"
 
 import { label } from "@pantrila/core/format"
-import type { GroceryItem } from "@pantrila/core/types"
+import { aisleName, byAisle } from "@pantrila/core/grocery"
 
 import { useAuth } from "@/components/auth-provider"
 import { EmptyState, Panel, PanelTitle } from "@/components/bits"
@@ -14,18 +14,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useGrocery, usePlan } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
-
-const AISLES: Record<string, string> = { nuts_seeds: "Nuts and seeds", oils_condiments: "Oils and condiments" }
-
-function byAisle(items: GroceryItem[]) {
-  const groups: [string, GroceryItem[]][] = []
-  for (const i of items) {
-    const last = groups.at(-1)
-    if (last && last[0] === i.aisle) last[1].push(i)
-    else groups.push([i.aisle, [i]])
-  }
-  return groups
-}
 
 export default function GroceryPage() {
   const { session } = useAuth()
@@ -91,7 +79,7 @@ export default function GroceryPage() {
             </p>
             {byAisle(data.items).map(([aisle, items]) => (
               <section key={aisle}>
-                <h3 className="mb-2 text-[15px] font-semibold">{AISLES[aisle] ?? label(aisle)}</h3>
+                <h3 className="mb-2 text-[15px] font-semibold">{aisleName(aisle)}</h3>
                 <ul>
                   {items.map((i) => (
                     <li key={i.food} className="flex items-center gap-3 border-b py-2.5 last:border-0">

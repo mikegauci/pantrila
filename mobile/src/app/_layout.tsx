@@ -61,7 +61,8 @@ function Screens() {
         <Stack.Screen name="recipes/[id]/index" options={{ headerShown: true, title: "Recipe" }} />
         <Stack.Screen name="recipes/[id]/cook" options={{ headerShown: true, title: "Cooking mode" }} />
         <Stack.Screen name="recipes/mine/index" options={{ headerShown: true, title: "My recipes" }} />
-        <Stack.Screen name="recipes/mine/[id]" options={{ headerShown: true, title: "My recipe" }} />
+        <Stack.Screen name="recipes/mine/[id]/index" options={{ headerShown: true, title: "My recipe" }} />
+        <Stack.Screen name="recipes/mine/[id]/cook" options={{ headerShown: true, title: "Cooking mode" }} />
         <Stack.Screen name="recipes/mine/new" options={{ headerShown: true, title: "Add a recipe" }} />
         <Stack.Screen name="account" options={{ headerShown: true, title: "Account", presentation: "modal" }} />
       </Stack.Protected>

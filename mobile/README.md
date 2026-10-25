@@ -34,7 +34,8 @@ Profiles in `eas.json`: `development` (dev client, internal), `preview` (interna
 
 `src/app/(tabs)/` holds the tabs (Home, Assistant, Recipes, Plan, Grocery, in the web's order); the
 header's account button opens `account.tsx`. Recipe pages are `recipes/[id]` (Pantrila's) and
-`recipes/mine/[id]` (the cookbook), at the same paths as the web. Screens still to come show `Soon`
+`recipes/mine/[id]` (the cookbook), at the same paths as the web. Sheets (`src/components/sheet.tsx`) are one modal each; a flow with several steps changes the sheet's
+content rather than opening another (iOS will not stack them). Screens still to come show `Soon`
 (`src/components/soon.tsx`) with the PR that brings them. Data comes through SWR hooks in
 `src/lib/hooks.ts`; anything kept on the phone for one person goes under `userKey(user.id, ...)`.
 

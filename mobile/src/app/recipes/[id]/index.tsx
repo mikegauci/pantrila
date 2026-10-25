@@ -1,5 +1,5 @@
 import { Link, Stack, useLocalSearchParams } from "expo-router"
-import { Check, ChefHat, Clock, Minus, Plus, ShoppingBasket, Users } from "lucide-react-native"
+import { Check, ChefHat, Clock, ShoppingBasket, Users } from "lucide-react-native"
 import { useState } from "react"
 import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Text, View } from "react-native"
 
@@ -8,7 +8,7 @@ import { label } from "@pantrila/core/format"
 import { hasTemp, showTemps } from "@pantrila/core/temperature"
 import type { Ingredient } from "@pantrila/core/types"
 
-import { AllergenBadge, DietBadge, ErrorState, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
+import { AllergenBadge, DietBadge, ErrorState, Panel, PanelTitle, ProblemAlert, RecipeArt, Stepper } from "@/components/bits"
 import { Icon } from "@/components/icon"
 import { MacroRing } from "@/components/macro-ring"
 import { MeasuredLine } from "@/components/measured-line"
@@ -87,13 +87,8 @@ export default function RecipePage() {
               You have {have} of {r.ingredients.length} in your pantry
             </Text>
           </View>
-          <View accessibilityLabel="Servings" className="flex-row items-center gap-1">
-            <Step icon={Minus} label="Fewer servings" onPress={() => setServings(Math.max(1, n - 1))} />
-            <Text className="w-[88px] text-center font-sans-semibold text-[13px] text-foreground">
-              {n} serving{n === 1 ? "" : "s"}
-            </Text>
-            <Step icon={Plus} label="More servings" onPress={() => setServings(Math.min(24, n + 1))} />
-          </View>
+          <Stepper name="Servings" value={n} min={1} max={24} onChange={setServings}
+                   text={`${n} serving${n === 1 ? "" : "s"}`} />
         </View>
         {r.ingredients.map((ing, i) => <IngredientRow key={`${ing.food}-${i}`} ing={ing} scale={scale} />)}
       </Panel>
@@ -144,15 +139,6 @@ function Fact({ icon, text }: { icon: typeof Clock; text: string }) {
       <Icon icon={icon} tone="muted-foreground" size={16} />
       <Text className="font-sans text-[13px] text-muted-foreground">{text}</Text>
     </View>
-  )
-}
-
-function Step({ icon, label: name, onPress }: { icon: typeof Plus; label: string; onPress: () => void }) {
-  return (
-    <Pressable accessibilityRole="button" accessibilityLabel={name} onPress={onPress} hitSlop={6}
-               className="size-8 items-center justify-center rounded-lg border border-border bg-surface">
-      <Icon icon={icon} size={16} />
-    </Pressable>
   )
 }
 

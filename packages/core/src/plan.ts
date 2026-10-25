@@ -80,6 +80,24 @@ export function cookPortions(plan: Plan, day: number, meal: MealType): { total: 
   return { total: (own?.portions ?? 0) + later, later }
 }
 
+/** Where "Start cooking" goes for a cooked meal: its recipe's cooking mode with every serving to
+ * cook (its own plus its leftovers, rounded up so they are never short) and how many are for
+ * later. Null when the meal is not cooked here. */
+export function cookHref(plan: Plan, day: number, m: PlanMeal): { href: string; servings: number } | null {
+  const href = mealHref(m)
+  if (m.kind !== "recipe" || !href) return null
+  const portions = cookPortions(plan, day, m.meal_type)
+  const servings = Math.max(1, Math.ceil(portions.total - 1e-9))
+  const later = portions.later ? `&later=${Math.ceil(portions.later - 1e-9)}` : ""
+  return { href: `${href}/cook?servings=${servings}${later}`, servings }
+}
+
+/** Meals that eat the leftovers of the meal at (day, meal): the days they are on. */
+export function leftoverDays(plan: Plan, day: number, meal: MealType): number[] {
+  return plan.days.filter((d) => d.meals.some((m) => m.kind === "leftovers" && m.from_day === day && m.from_meal === meal))
+    .map((d) => d.day)
+}
+
 /** True when energy is a range (min and/or max) rather than one number. */
 export const hasKcalRange = (t: NutritionTargets) => Boolean(t.min_kcal || t.max_kcal)
 

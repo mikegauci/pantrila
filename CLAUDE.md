@@ -43,12 +43,23 @@ Building the iOS and Android apps with Expo, one PR at a time, in the order give
 next PR of the mobile plan": read that file first, take the first PR its Progress table does not
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
 Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
-(`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`), PR 4 (`feat/mobile-sign-in`) and PR 5 (`feat/mobile-recipes`) are done. Next:
-**PR 6 (`feat/mobile-plan`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
+(`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`), PR 4 (`feat/mobile-sign-in`), PR 5 (`feat/mobile-recipes`) and PR 6 (`feat/mobile-plan`) are done.
+Next: **PR 7 (`feat/mobile-cooking`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
 installs (Android development build finished), PR 3's Render variables and RevenueCat webhook, and PR 4's Google,
 Apple and Supabase settings plus a new development build.
 
 ## Status (update as work lands)
+
+Phone meal plan and grocery list (mobile plan PR 6): the Plan tab makes a plan through `POST /plans` (core's
+`streamPlan` on `expo/fetch`: the planner's steps, then the plan), shows the allowance left, the plan's note and
+warnings, each day's meals and its energy (one number or the range band), protein and carbs, and how the plan was
+made. Each meal's menu (`MealSheet`, one sheet whose content changes) swaps it (Pantrila's or My recipes, search,
+"30 min or less", "Uses my pantry", Show more), repeats it on later days, starts cooking with every serving and the
+leftovers' count, adds its recipe back, eats out (Light / Normal / Big / not counted), uses leftovers of an earlier
+meal or skips it, all through the existing plan routes. Grocery tab: by aisle, people stepper, ticks kept per
+user and plan on the phone, estimated foods of the person's recipes apart, what the pantry covers. Core gains
+`cookHref`, `leftoverDays` and `grocery.ts` (`byAisle`, `aisleName`), now used by the web too (all 42 Playwright
+specs pass). 31 Jest tests (9 new), 55 core tests. No API or model change, so no eval rerun.
 
 Phone app shell, Home and Recipes (mobile plan PR 5): the signed-in app is five tabs (`mobile/src/app/(tabs)/`,
 `expo-router/js-tabs`: Home, Assistant, Recipes, Plan, Grocery, the web's order) with an account button in the
@@ -955,12 +966,14 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   (SWR hooks, `useRecipePages`), `src/lib/recipes.ts` (filters), `src/lib/temperature.ts` (°C/°F per user),
   `src/lib/supabase.ts` + `secure-session.ts` (session storage), `src/lib/auth.ts` (Google, Apple, guest, email
   link, linking, sign-out), `src/components/` (`bits.tsx` like the web's, `Icon`, `RecipeCard`, `ChipRow`,
-  `MeasuredLine`, `MacroRing`, `WakeNotice`, `Soon`, `AuthProvider`, `AccountCard`, `Choice`), `src/__tests__/`
+  `MeasuredLine`, `MacroRing`, `WakeNotice`, `Soon`, `Sheet`, `Toaster` (`lib/toast.ts`), `MealSheet` with
+  `SwapMeal`/`RepeatMeal`, `MealRow`, `DayTargets`, `AuthProvider`, `AccountCard`, `Choice`; `lib/grocery.ts` keeps the
+  list's ticks), `src/__tests__/`
   (Jest; `src/test/` has the fake API and fixtures; `jest.config.js`, `jest.setup.js`), `src/uniwind-types.d.ts`
   (written by Metro, committed), `assets/` (from `web/brand/`).
 - `packages/core/`: `@pantrila/core`, code shared by web and the phone app (no React, DOM or React
   Native): `src/types.ts` (API types), `api.ts` (`createApi`, `ApiError`), `sse.ts`, `amounts.ts`,
-  `cooking.ts`, `temperature.ts`, `voice.ts`, `sections.ts`, `plan.ts`, `format.ts`, `avatar.ts`;
+  `cooking.ts`, `temperature.ts`, `voice.ts`, `sections.ts`, `plan.ts`, `grocery.ts`, `format.ts`, `avatar.ts`;
   Vitest tests in `test/`. Imported as `@pantrila/core/<module>`.
 - `site/`: the pantrila.com landing site (Next.js, static, no API or sign-in): `src/app/page.tsx` (sections),
   `privacy/`, `terms/`, `src/lib.ts` (addresses and contact), `src/components/` (header/footer, screenshot

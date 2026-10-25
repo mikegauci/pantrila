@@ -8,7 +8,7 @@ import { useSWRConfig } from "swr"
 
 import { label, MEAL_ORDER, planDayIndex, seconds, usd } from "@pantrila/core/format"
 import { leftText } from "@pantrila/core/subscription"
-import { hasKcalRange, kcalMet, kcalTargetText, mealHref } from "@pantrila/core/plan"
+import { hasKcalRange, kcalMet, kcalTargetText, leftoverDays, mealHref } from "@pantrila/core/plan"
 import type { Nutrition, NutritionTargets, Plan, PlanMeal } from "@pantrila/core/types"
 
 import { AiBadge, EmptyState, Panel, PanelTitle, ProblemAlert, RecipeArt, Stat } from "@/components/bits"
@@ -161,8 +161,7 @@ function Week({ plan }: { plan: Plan }) {
             {[...d.meals].sort((a, b) => MEAL_ORDER.indexOf(a.meal_type) - MEAL_ORDER.indexOf(b.meal_type)).map((m) => (
               <li key={m.meal_type} className="flex items-center gap-1">
                 <MealRow m={m} bad={bad.has(`${d.day}-${m.meal_type}`)}
-                  laterDays={plan.days.filter((x) => x.meals.some((y) => y.kind === "leftovers"
-                    && y.from_day === d.day && y.from_meal === m.meal_type)).map((x) => x.day)} />
+                  laterDays={leftoverDays(plan, d.day, m.meal_type)} />
                 <MealMenu plan={plan} day={d.day} meal={m} onSwap={() => setSwap({ day: d.day, meal: m.meal_type })} />
               </li>
             ))}

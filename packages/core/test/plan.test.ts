@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { cookPortions, kcalGoal, kcalMet, kcalTargetText, leftoverSources, leftoversOf, mealKcal, repeatChoices } from "../src/plan"
+import { cookHref, cookPortions, kcalGoal, kcalMet, kcalTargetText, leftoverSources, leftoverDays, leftoversOf, mealKcal, repeatChoices } from "../src/plan"
 import type { MealType, NutritionTargets, Plan, PlanMeal, RecipeCard } from "../src/types"
 
 const nutrition = { kcal: 500, protein_g: 30, carbs_g: 50, fat_g: 20, fibre_g: 5 }
@@ -55,6 +55,16 @@ describe("meals", () => {
     expect(leftoverSources(plan, 3).map((s) => `${s.day} ${s.meal}`)).toEqual(["1 lunch", "1 dinner"])
     expect(leftoversOf(plan, 1, "dinner")).toEqual(["day 2 lunch"])
     expect(cookPortions(plan, 1, "dinner")).toEqual({ total: 2, later: 1 })
+    expect(leftoverDays(plan, 1, "dinner")).toEqual([2])
+  })
+
+  it("starts cooking with the leftovers' servings, only for a cooked meal", () => {
+    expect(cookHref(plan, 1, plan.days[0].meals[1])).toEqual({ href: "/recipes/dinner-r/cook?servings=2&later=1", servings: 2 })
+    expect(cookHref(plan, 1, plan.days[0].meals[0])).toEqual({ href: "/recipes/lunch-r/cook?servings=1", servings: 1 })
+    const mine = meal("dinner", { cookbook_id: 7, portions: 1.5 })
+    const withMine = { ...plan, days: [...plan.days.slice(0, 2), { ...plan.days[2], meals: [plan.days[2].meals[0], mine] }] }
+    expect(cookHref(withMine, 3, mine)?.href).toBe("/recipes/mine/7/cook?servings=2")
+    expect(cookHref(plan, 2, plan.days[1].meals[0])).toBeNull()  // leftovers are not cooked again
   })
 
   it("offers later meals to repeat on", () => {
