@@ -159,8 +159,10 @@ Branch `feat/mobile-skeleton`.
       only once it is stable.
 - [x] **(owner)** `npx eas-cli init` in `mobile/` and put the project id it prints in
       `app.config.ts` (`EAS_PROJECT_ID`): `@mikegauci/pantrila`, `b60bab44-4784-4b21-8ba2-e8aed45df863`.
-- [ ] **(owner)** Android: development build started on EAS (keystore created by EAS); not yet installed on a
-      phone (none to hand).
+- [ ] **(owner)** Android: development build finished on EAS (build `54f04176-a9c9-4192-969a-3b008ab94c5b`,
+      keystore created by EAS; APK
+      https://expo.dev/artifacts/eas/T1kt9jzEW5Evw4BQdJRkGQwfnGwy50zvWMYDsxkOrQI.apk); not yet installed on a phone
+      (none to hand).
 - [ ] **(owner)** iPhone: waits for Apple to activate the Developer team (`device:create` said "no team").
 - [ ] **(owner)** then `eas build --profile development --platform ios` and `--platform android`; install
       on the phone; `npx expo start` reloads it.
@@ -170,17 +172,17 @@ Branch `feat/mobile-skeleton`.
 
 Branch `feat/subscription-tiers`. Backend only, so every later screen can show the right limits.
 
-- [ ] Migration `entitlements` (RLS on, as every table): `user_id`, `tier` (`free`|`pro`),
+- [x] Migration `entitlements` (RLS on, as every table): `user_id`, `tier` (`free`|`pro`),
       `status` (`trial`|`active`|`grace`|`expired`), `expires_at`, `store` (`app_store`|
       `play_store`|`stripe`|`manual`), `product_id`, `updated_at`. No row means Free. Apply on
       Supabase before deploying.
-- [ ] `POST /webhooks/revenuecat`: checks the `Authorization` header against
+- [x] `POST /webhooks/revenuecat`: checks the `Authorization` header against
       `REVENUECAT_WEBHOOK_SECRET`, then asks RevenueCat's REST API for the subscriber
       (`REVENUECAT_API_KEY`) and stores what it says (the webhook body alone is not trusted;
       repeats and out-of-order events are harmless). RevenueCat's app user id is the Supabase user
       id.
-- [ ] `PANTRILA_PRO_USERS` (comma-separated user ids) for the owner and App Review test accounts.
-- [ ] Caps per tier in `operations.py`: the existing `PANTRILA_DAILY_*` caps become Pro's, and a
+- [x] `PANTRILA_PRO_USERS` (comma-separated user ids) for the owner and App Review test accounts.
+- [x] Caps per tier in `operations.py`: the existing `PANTRILA_DAILY_*` caps become Pro's, and a
       Free set is added with a window (day, week or month). Starting point, changeable through env
       vars without a deploy:
 
@@ -194,25 +196,34 @@ Branch `feat/subscription-tiers`. Backend only, so every later screen can show t
       Browsing, search, cooking mode with voice, the grocery list, pantry, swaps and My recipes
       stay free and unlimited (no model cost). The shared daily budget
       (`PANTRILA_DAILY_BUDGET_USD`) still caps everyone.
-- [ ] A Free cap reached returns 402 with `{ "code": "pro_required", "feature", "resets_at" }`;
+- [x] A Free cap reached returns 402 with `{ "code": "pro_required", "feature", "resets_at" }`;
       a Pro fair-use cap stays a 429.
-- [ ] `/me` and `/me/usage` return the tier, status, renewal or end date and what is left of each
+- [x] `/me` and `/me/usage` return the tier, status, renewal or end date and what is left of each
       cap. Web: a "Pro" badge in the account menu, usage on Profile, and at a Free cap a sheet
       "Get Pantrila Pro in the app" (store links once PR 14 ships; no web checkout).
-- [ ] Account deletion: `entitlements` in `USER_TABLES`; RevenueCat's subscriber is deleted too.
+- [x] Account deletion: `entitlements` in `USER_TABLES`; RevenueCat's subscriber is deleted too.
       The delete screens say a store subscription must be cancelled in the phone's settings (Apple
       and Google do not let apps cancel it).
-- [ ] PostHog: `trial_started`, `subscribed`, `renewed`, `cancelled`, `expired` from the webhook
+- [x] PostHog: `trial_started`, `subscribed`, `renewed`, `cancelled`, `expired` from the webhook
       (allowlist in `analytics.py`), keyed by user id only.
-- [ ] Privacy page lists RevenueCat; terms gain a subscription section (auto-renewal, cancel in the
+- [x] Privacy page lists RevenueCat; terms gain a subscription section (auto-renewal, cancel in the
       store, trial ends after 7 days, refunds through Apple or Google).
-- [ ] Tests: webhook auth and replay, caps per tier and window, 402 vs 429, the allowlist, account
+- [x] Tests: webhook auth and replay, caps per tier and window, 402 vs 429, the allowlist, account
       deletion. `.env.example` and `render.yaml` list the new variables.
 - [ ] **(owner)** set `REVENUECAT_WEBHOOK_SECRET` and `REVENUECAT_API_KEY` on Render; point the
       RevenueCat webhook at `https://api.pantrila.com/webhooks/revenuecat`.
 
 No model call, so no eval rerun. Existing users become Free on deploy; decide before merging
 whether early users get Pro for a while (a `manual` entitlement with an end date).
+
+As built: migration `20261025120000_entitlements` (applied on Supabase 2026-10-25) also adds
+`will_renew`, a `subscription_events` table (webhook event ids, so a repeat sends no second PostHog
+event) and a usage kind `estimate`: food estimates in the recipe form no longer count as imports
+(`PANTRILA_DAILY_ESTIMATES`, 20 a day for everyone). Free caps are `PANTRILA_FREE_PLANS|CHATS|IMPORTS|PHOTOS`
+and `..._WINDOW`; Pro's chat cap default rose from 10 to 50 (`PANTRILA_DAILY_CHATS`, also in `render.yaml`;
+check the value on Render). Early users: nobody gets Pro by default; to give someone Pro until a date run
+`insert into entitlements (user_id, tier, status, expires_at, store) values ('<id>', 'pro', 'active',
+'2027-01-01', 'manual')` (a webhook never takes a manual Pro away while it lasts).
 
 ## PR 4: sign-in
 
@@ -418,8 +429,8 @@ Branch `feat/mobile-launch`.
 | --- | --- | --- |
 | 0 | (owner) | in progress (Apple, Play Console and Expo accounts paid; Apple team pending) |
 | 1 | `feat/shared-core` | done |
-| 2 | `feat/mobile-skeleton` | done (EAS project linked; owner: install on an Android phone, iPhone build once Apple activates the team) |
-| 3 | `feat/subscription-tiers` | not started |
+| 2 | `feat/mobile-skeleton` | done (EAS project linked, Android development build finished; owner: install it on an Android phone, iPhone build once Apple activates the team) |
+| 3 | `feat/subscription-tiers` | done (owner: RevenueCat keys on Render, webhook URL in RevenueCat) |
 | 4 | `feat/mobile-sign-in` | not started |
 | 5 | `feat/mobile-recipes` | not started |
 | 6 | `feat/mobile-plan` | not started |
@@ -459,6 +470,10 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   `types` listed in `tsconfig.json`. `jest-expo` leaves a timer that prints "Jest did not exit one second
   after", but it exits. The owner still runs `npx eas-cli init` (project id into `app.config.ts`) and the
   first development builds.
+- 2026-10-25: PR 2 owner part, later: the Android development build finished (build
+  `54f04176-a9c9-4192-969a-3b008ab94c5b`, APK
+  https://expo.dev/artifacts/eas/T1kt9jzEW5Evw4BQdJRkGQwfnGwy50zvWMYDsxkOrQI.apk); still not installed (no Android phone
+  to hand).
 - 2026-10-25: PR 2 owner part (`feat/mobile-eas-project`): EAS project `@mikegauci/pantrila`, id
   `b60bab44-4784-4b21-8ba2-e8aed45df863`, in `mobile/app.config.ts` (dynamic config, so `eas init` cannot write it;
   `npx expo config --type public` shows `extra.eas.projectId`). Android development build queued on EAS
@@ -467,3 +482,16 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   the Developer Program membership is still being processed. The Expo login went through Google, which first needed
   the expo.dev onboarding finished. Still to do: `device:create` + iOS development build, install both, `npx expo
   start` shows "Server: Up".
+- 2026-10-25: PR 3 (`feat/subscription-tiers`): `entitlements.py` (Free or Pro from `entitlements` rows,
+  `PANTRILA_PRO_USERS`, RevenueCat REST subscriber -> trial/active/grace/expired), `POST /webhooks/revenuecat`
+  (Authorization header = `REVENUECAT_WEBHOOK_SECRET`, then reads each named user from RevenueCat with
+  `REVENUECAT_API_KEY`; `TEST` events answer ok; anonymous `$RCAnonymousID` users are skipped), caps per tier in
+  `operations.py` (`allowance(kind, tier)`, `ProRequired` 402 with `code`, `feature`, `resets_at`), `/me` and
+  `/me/usage` gain `subscription` and the new `limits` shape (`plans|chats|imports|photos: {limit, left, window,
+  resets_at}`), account deletion deletes the RevenueCat subscriber before the sign-in, PostHog subscription events.
+  Web: Pro badge in the account menu, "Your plan" card on Profile, `ProSheet` ("Get Pantrila Pro in the app") opened
+  by `askForPro(e)` at a 402, no automatic AI photo on Free. Core: `ApiError.pro`, `@pantrila/core/subscription`
+  (`leftText`, `subscriptionText`). For PR 4 and later: show limits with `leftText`; a 402 has `error.pro`; PR 12
+  logs into RevenueCat with the Supabase user id, entitlement id `pro`. Owner: set `REVENUECAT_WEBHOOK_SECRET`,
+  `REVENUECAT_API_KEY` and `PANTRILA_PRO_USERS` on Render and point RevenueCat's webhook at
+  `https://api.pantrila.com/webhooks/revenuecat` (Authorization header value = the secret).

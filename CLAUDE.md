@@ -43,14 +43,35 @@ Building the iOS and Android apps with Expo, one PR at a time, in the order give
 next PR of the mobile plan": read that file first, take the first PR its Progress table does not
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
 Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
-(`feat/mobile-skeleton`) are done. Next: **PR 3 (`feat/subscription-tiers`)**. The owner still has PR 0
-(Apple team pending activation, RevenueCat) and PR 2's first device installs (EAS project linked).
+(`feat/mobile-skeleton`) and PR 3 (`feat/subscription-tiers`) are done. Next: **PR 4 (`feat/mobile-sign-in`)**.
+The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device installs (Android
+development build finished) and PR 3's Render variables and RevenueCat webhook.
 
 ## Status (update as work lands)
 
+Subscription tiers (mobile plan PR 3): Free and Pantrila Pro in the API. Migration `20261025120000_entitlements`
+(applied on Supabase): `entitlements` (one row per person who has or had Pro; no row is Free; `store='manual'` rows
+are given by hand and never removed by a webhook), `subscription_events` (handled webhook ids) and usage kind
+`estimate` (food estimates no longer count as imports; `PANTRILA_DAILY_ESTIMATES`). `entitlements.py`: `tier_of`
+(`PANTRILA_PRO_USERS`, else an active row), `from_subscriber` (RevenueCat REST v1 subscriber, entitlement `pro`:
+trial, active, grace, expired; `will_renew`). `POST /webhooks/revenuecat` checks `REVENUECAT_WEBHOOK_SECRET`, then
+reads each named user from RevenueCat (`REVENUECAT_API_KEY`) and stores that, so replays and out-of-order events are
+harmless; PostHog gets `trial_started`, `subscribed`, `renewed`, `cancelled`, `expired` once per event id.
+`operations.allowance(kind, tier)`: Free 1 plan a week, 5 imports a month, 10 chats a day, no AI photos
+(`PANTRILA_FREE_*` and `_WINDOW`), Pro the `PANTRILA_DAILY_*` caps (chats now 50); a Free cap is a 402
+`{detail, code: "pro_required", feature, resets_at}`, a Pro cap a 429. `/me` and `/me/usage` gain `subscription`, and
+`limits` is now `plans|chats|imports|photos: {limit, left, window, resets_at}`. Account deletion also deletes the
+RevenueCat subscriber. Web: Pro badge in the account menu, "Your plan" card on Profile, "Get Pantrila Pro in the app"
+sheet (`components/pro-sheet.tsx`, opened by `askForPro` in `lib/pro.ts`) at a 402, no automatic photo on Free, and
+the delete card says to cancel a store subscription first; core gains `ApiError.pro` and `subscription.ts`. Privacy
+lists RevenueCat; terms gain a Free/Pro section. Owner: `REVENUECAT_WEBHOOK_SECRET`, `REVENUECAT_API_KEY`,
+`PANTRILA_PRO_USERS` on Render, the RevenueCat webhook URL. No model call, so no eval rerun.
+
 EAS project linked (mobile plan PR 2, owner part): `@mikegauci/pantrila`, id `b60bab44-4784-4b21-8ba2-e8aed45df863`
-in `EAS_PROJECT_ID` (`mobile/app.config.ts`). First Android development build started on EAS (EAS-made keystore); not yet
-installed, as there is no Android phone to hand. iPhone waits for Apple to activate the Developer team. No app code
+in `EAS_PROJECT_ID` (`mobile/app.config.ts`). First Android development build finished on EAS (build
+`54f04176-a9c9-4192-969a-3b008ab94c5b`, EAS-made keystore, APK
+https://expo.dev/artifacts/eas/T1kt9jzEW5Evw4BQdJRkGQwfnGwy50zvWMYDsxkOrQI.apk); not yet installed, as there is no
+Android phone to hand. iPhone waits for Apple to activate the Developer team. No app code
 change, no model call, so no eval rerun.
 
 Expo app skeleton (mobile plan PR 2): `mobile/` is an Expo SDK 58 app (Expo Router, React 19.3 and React Native
@@ -830,6 +851,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   a hard rule or does not exist.
 - `src/pantrila/accounts.py`: account deletion (`USER_TABLES`, `erase_rows`, `storage_folders`,
   `SupabaseAuthAdmin` deletes the Auth user); `Backend.erase` and `Backend.admin` wire it in.
+- `src/pantrila/entitlements.py`: Pantrila Pro (`Entitlement`, `tier_of`, `from_subscriber`, `RevenueCatApi`,
+  `DbEntitlements`/`MemoryEntitlements`); caps per tier are `operations.allowance`.
 - `src/pantrila/analytics.py`: PostHog funnel events from the API (`Analytics`, `PostHogAnalytics`,
   `MemoryAnalytics`), `Visits` (once-a-day sign-up/open/return from `user_activity`).
 - `src/pantrila/auth.py`: verifies Supabase Auth access tokens (ES256 via the project JWKS,
@@ -882,7 +905,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   without an amount stay). The cooking log is in `records.py` (`Cooked`, `cooked_meals`).
 - `src/pantrila/api.py`: FastAPI app (`create_app(backend, verify)`; tests pass an in-memory
   backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
-  `/me/usage`, `/me/avatar` (PUT/DELETE), `DELETE /me` (the whole account), `POST /me/events` (funnel steps from the browser), `/recipes` (search or browse, profile rules as filters unless `safe=false`),
+  `/me/usage`, `/webhooks/revenuecat`, `/me/avatar` (PUT/DELETE), `DELETE /me` (the whole account), `POST /me/events` (funnel steps from the browser), `/recipes` (search or browse, profile rules as filters unless `safe=false`),
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
   `/plans/latest`, `/plans/latest/grocery`, `/plans/latest/meals/{day}/{meal_type}` (`/options`
   GET, PUT to swap), `POST /chat` (continues `thread_id` or starts a
@@ -890,9 +913,9 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `/me/cooked` (GET log, POST "I cooked this"; `/preview`), `/me/recipes` (cookbook CRUD,
   `/preview`, `/import/link|photos|post|text` (one request), `/import/jobs` POST + `/import/jobs/{id}` GET (the same imports as background jobs), `/import/timing`, `/estimate`, `/{id}/photo` POST/DELETE). Every
   recipe returned carries the hard rules it breaks for the person's current profile and its
-  `photo_url` (or null). Paid calls are capped per user per day (`PANTRILA_DAILY_PLANS`,
-  `PANTRILA_DAILY_CHATS`, `PANTRILA_DAILY_IMPORTS`, `PANTRILA_DAILY_PHOTOS`) and in total
-  (`PANTRILA_DAILY_BUDGET_USD`).
+  `photo_url` (or null). Paid calls are capped per user and tier (Pro: `PANTRILA_DAILY_PLANS`,
+  `PANTRILA_DAILY_CHATS`, `PANTRILA_DAILY_IMPORTS`, `PANTRILA_DAILY_PHOTOS`; Free: `PANTRILA_FREE_*`)
+  and in total (`PANTRILA_DAILY_BUDGET_USD`).
 - `render.yaml`: Render Blueprint for the API.
 - `package.json` (root): npm workspaces `web`, `mobile` and `packages/*`; one `package-lock.json` at the root.
 - `mobile/`: the Expo phone app (see `mobile/README.md` and `mobile/AGENTS.md`: read Expo's versioned docs,
