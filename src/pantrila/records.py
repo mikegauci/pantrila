@@ -20,7 +20,7 @@ import psycopg
 from pantrila.planner import Usage
 from pantrila.schema import MealPlan
 
-Kind = Literal["plan", "chat", "import", "photo", "search", "reel"]
+Kind = Literal["plan", "chat", "import", "photo", "search", "reel", "estimate"]
 MAX_COOKED_PER_USER = 500  # older cooking log entries are dropped
 
 

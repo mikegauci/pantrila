@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function Privacy() {
   const mail = <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
   return (
-    <LegalPage title="Privacy" updated="24 October 2026">
+    <LegalPage title="Privacy" updated="25 October 2026">
       <p>
         Pantrila is an AI cooking and meal-planning assistant at <a href={APP_URL}>app.pantrila.com</a>. Pantrila
         decides how your data is used (it is the “data controller”). Questions or requests: {mail}.
@@ -37,8 +37,12 @@ export default function Privacy() {
           recipes and their photos, your profile picture, and the meals you mark as cooked (the latest 500).
         </li>
         <li>
-          <strong>Usage counts.</strong> When you use an AI feature, its kind, time and cost, to enforce daily
-          allowances.
+          <strong>Usage counts.</strong> When you use an AI feature, its kind, time and cost, to enforce the
+          allowances of your plan.
+        </li>
+        <li>
+          <strong>Your plan.</strong> Whether you have Pantrila Pro, through which store, which subscription, whether it
+          is a free trial and when it renews or ends. Pantrila never sees your card or payment details.
         </li>
       </ul>
       <p>
@@ -81,6 +85,15 @@ export default function Privacy() {
           post link only.
         </li>
         <li>
+          <strong>Apple and Google</strong> sell Pantrila Pro in their app stores and handle payment, renewals,
+          cancellations and refunds under their own privacy terms.
+        </li>
+        <li>
+          <strong>RevenueCat</strong> keeps track of Pantrila Pro subscriptions bought in the apps: your account id, the
+          store, the subscription and its purchase, renewal and end dates, never your name, email or payment details.
+          It tells Pantrila when your subscription changes. Your RevenueCat record is deleted with your account.
+        </li>
+        <li>
           <strong>Google</strong> signs you in if you choose Google.
         </li>
         <li>
@@ -94,7 +107,8 @@ export default function Privacy() {
         <li>
           <strong>PostHog</strong> counts how people use Pantrila, in the EU (Frankfurt), so we can see where it
           helps and where people get stuck: the day you first used it and the days you came back, and when you
-          import a recipe, make a plan or open cooking mode. It gets your account id and whether you are a guest,
+          import a recipe, make a plan or open cooking mode, and when a Pantrila Pro trial or subscription starts,
+          renews, is cancelled or ends. It gets your account id and whether you are a guest,
           never your email, IP address, location, recipes or messages. Pantrila sends this from its server; nothing
           is stored in your browser for it.
         </li>
@@ -123,7 +137,8 @@ export default function Privacy() {
       <p>
         Your data stays until you delete it. You can delete recipes, chats, pantry items and photos yourself in the
         app at any time, or your whole account from Profile, Delete account: that removes everything Pantrila holds
-        about you, including your sign-in, straight away.
+        about you, including your sign-in, straight away. It does not cancel a Pantrila Pro subscription: cancel that
+        in your phone&rsquo;s settings (App Store or Google Play) first.
       </p>
 
       <h2>Your rights</h2>

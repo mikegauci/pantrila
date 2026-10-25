@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const user = "00000000-0000-4000-8000-000000000017"
 const recipe = {
@@ -31,7 +31,7 @@ test("a reload while the photo is made keeps the placeholder until the photo lan
       ingredients: recipe.ingredients.map((line) => ({ ...line, grams: 100, in_pantry: false })),
     }
     const data = path === "/me" ? { id: user, email: null, avatar_url: null, anonymous: true,
-      limits: { photos_left: 4, photos_per_day: 5 } }
+      ...account({ photos: 4 }) }
       : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [],
         days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }
       : path === "/me/recipes/5" ? detail

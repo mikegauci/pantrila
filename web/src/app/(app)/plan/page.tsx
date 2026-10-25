@@ -7,6 +7,7 @@ import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
 import { label, MEAL_ORDER, planDayIndex, seconds, usd } from "@pantrila/core/format"
+import { leftText } from "@pantrila/core/subscription"
 import { hasKcalRange, kcalMet, kcalTargetText, mealHref } from "@pantrila/core/plan"
 import type { Nutrition, NutritionTargets, Plan, PlanMeal } from "@pantrila/core/types"
 
@@ -16,6 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { MealMenu } from "@/components/meal-menu"
 import { SwapMealSheet, type SwapTarget } from "@/components/swap-meal"
 import { ApiError, streamPlan } from "@/lib/api"
+import { askForPro } from "@/lib/pro"
 import { useMe, usePlan, useProfile } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
 
@@ -197,6 +199,7 @@ export default function PlanPage() {
         if (event === "error") setError((data as { message: string }).message)
       }, abort.current.signal)
     } catch (e) {
+      askForPro(e)
       setError(e instanceof ApiError ? e.message : "Could not reach Pantrila. Try again.")
     } finally {
       setSteps(null)
@@ -205,7 +208,9 @@ export default function PlanPage() {
   }
 
   const running = steps !== null
-  const left = me?.limits.plans_left
+  const plans = me?.limits.plans
+  // Pro's fair-use cap stops the button; on Free a click opens the Pro sheet instead.
+  const stopped = plans?.left === 0 && me?.subscription.tier === "pro"
 
   return (
     <div className="grid gap-5">
@@ -217,10 +222,10 @@ export default function PlanPage() {
           <p className="text-[13px] text-muted-foreground">
             Uses your <Link href="/profile" className="underline">profile</Link> and{" "}
             <Link href="/pantry" className="underline">pantry</Link>. Takes 10 to 90 seconds.
-            {left != null && ` ${left} of ${me?.limits.plans_per_day} plans left today.`}
+            {plans && ` ${leftText("plan", plans)}.`}
           </p>
         </div>
-        <Button size="lg" onClick={generate} disabled={running || left === 0} data-tour="plan-generate">
+        <Button size="lg" onClick={generate} disabled={running || stopped} data-tour="plan-generate">
           {running ? <Loader2 className="animate-spin" /> : <Sparkles />}
           {running ? "Planning…" : plan ? "Plan a new week" : "Plan my week"}
         </Button>

@@ -36,6 +36,15 @@ describe("createApi", () => {
     expect(error).toMatchObject({ status: 422, message: "Not safe", problems: ["contains peanuts"], suggestions: ["tofu"] })
   })
 
+  it("reads a Free cap's 402", async () => {
+    const fetch = async () => json({ detail: "Pantrila Free includes 1 meal plan a week.", code: "pro_required", feature: "plan", resets_at: "2026-10-26T00:00:00+00:00" }, 402)
+    const { api } = createApi({ baseUrl: "https://api.test", getToken: async () => "t", fetch })
+    const error = await api("/plans").catch((e) => e)
+    expect(error).toMatchObject({ status: 402, pro: { feature: "plan", resets_at: "2026-10-26T00:00:00+00:00" } })
+    const other = await createApi({ baseUrl: "https://api.test", getToken: async () => "t", fetch: async () => json({ detail: "x" }, 429) }).api("/x").catch((e: ApiError) => e)
+    expect((other as ApiError).pro).toBeNull()
+  })
+
   it("explains a dropped connection", async () => {
     const fetch = async () => { throw new TypeError("Load failed") }
     const { api } = createApi({ baseUrl: "https://api.test", getToken: async () => "t", fetch })

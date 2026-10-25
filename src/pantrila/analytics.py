@@ -1,4 +1,5 @@
-"""Product analytics: the sign-up -> first import -> first plan -> cooking mode -> return funnel.
+"""Product analytics: the sign-up -> first import -> first plan -> cooking mode -> return funnel,
+and Pantrila Pro's trial -> subscription -> renewal or cancellation.
 
 Events are sent from the API only, to PostHog's EU cloud, keyed by the Supabase user id: no
 browser SDK, no cookies, no IP or location (geoip off), no email, no recipe or message text.
@@ -30,6 +31,12 @@ Event = Literal[
     "recipe_imported",
     "plan_created",
     "cooking_mode_opened",
+    # Pantrila Pro, from the RevenueCat webhook (pantrila.entitlements)
+    "trial_started",
+    "subscribed",
+    "renewed",
+    "cancelled",
+    "expired",
 ]
 RETURN_DAYS = 7
 EU_INGEST = "https://eu.i.posthog.com"

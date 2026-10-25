@@ -9,3 +9,17 @@ export function session(id: string) {
   }
 }
 
+
+const allowance = (limit: number, left = limit) =>
+  ({ limit, left, window: "day", resets_at: "2030-01-01T00:00:00+00:00" })
+
+/** `/me`'s plan and allowances as the API sends them, for a Pro account by default. */
+export function account(left: { plans?: number; chats?: number; imports?: number; photos?: number } = {},
+                        tier: "free" | "pro" = "pro") {
+  return {
+    subscription: { tier, status: tier === "pro" ? "active" : null, expires_at: null, will_renew: false,
+                    store: tier === "pro" ? "manual" : null },
+    limits: { plans: allowance(5, left.plans), chats: allowance(50, left.chats),
+              imports: allowance(20, left.imports), photos: allowance(5, left.photos) },
+  }
+}

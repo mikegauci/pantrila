@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const id = "00000000-0000-4000-8000-000000000017"
 const post = "https://www.instagram.com/reel/C1abc/"
@@ -41,7 +41,7 @@ test("an import survives a dropped connection and a page reload", async ({ page 
       return route.fulfill({ json: finished ? done : running })
     }
     const data = path === "/me" ? { id, email: null, avatar_url: null, anonymous: true,
-      limits: { imports_left: 9, imports_per_day: 10, photos_left: 5, photos_per_day: 5 } }
+      ...account({ imports: 9, photos: 5 }) }
       : path === "/meta" ? { allergens: [], diets: [], meal_types: ["dinner"], units: ["g"], cuisines: [], reel_platforms: [] }
       : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [],
         days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }
@@ -98,7 +98,7 @@ test("a resumed import can be abandoned, and a newer import keeps its saved id",
       return route.fulfill({ json: finished ? done : running })
     }
     const data = path === "/me" ? { id, email: null, avatar_url: null, anonymous: true,
-      limits: { imports_left: 9, imports_per_day: 10, photos_left: 5, photos_per_day: 5 } }
+      ...account({ imports: 9, photos: 5 }) }
       : path === "/meta" ? { allergens: [], diets: [], meal_types: ["dinner"], units: ["g"], cuisines: [], reel_platforms: [] }
       : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [],
         days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }
@@ -135,7 +135,7 @@ test("an import with no method opens the form instead of saving", async ({ page 
     if (path.startsWith("/me/recipes/import/jobs/")) return route.fulfill({ json: noMethod })
     if (path === "/me/recipes" && route.request().method() === "POST") saves += 1
     const data = path === "/me" ? { id, email: null, avatar_url: null, anonymous: true,
-      limits: { imports_left: 9, imports_per_day: 10, photos_left: 5, photos_per_day: 5 } }
+      ...account({ imports: 9, photos: 5 }) }
       : path === "/meta" ? { allergens: [], diets: [], meal_types: ["dinner"], units: ["g"], cuisines: [], reel_platforms: [] }
       : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [],
         days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }

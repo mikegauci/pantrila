@@ -8,6 +8,7 @@ import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
 import { seconds, usd } from "@pantrila/core/format"
+import { leftText } from "@pantrila/core/subscription"
 import type { CookbookRecipeIn, ImportView } from "@pantrila/core/types"
 
 import { useAuth } from "@/components/auth-provider"
@@ -18,6 +19,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ApiError } from "@/lib/api"
+import { askForPro } from "@/lib/pro"
 import { useApi, useMe, useMeta } from "@/lib/hooks"
 import {
   forgetImport, type ImportStep, importRecipe, pendingImport, wasStartedHere, watchImport,
@@ -64,6 +66,7 @@ function PhotoImport({ onDone }: { onDone: (v: ImportView) => void }) {
     try {
       onDone(await importRecipe(userId, { kind: "photos", images: photos }, setSteps))
     } catch (e) {
+      askForPro(e)
       setError(e instanceof Error ? e.message : "Could not read the photos.")
     } finally {
       setBusy(false)
@@ -130,6 +133,7 @@ function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
         try {
           onDone(await importRecipe(userId, { kind: "link", url: url.trim() }, setSteps))
         } catch (err) {
+          askForPro(err)
           setError(err instanceof Error ? err.message : "Could not import that link.")
         } finally {
           setBusy(false)
@@ -191,6 +195,7 @@ function PostImport({ onDone }: { onDone: (v: ImportView) => void }) {
     try {
       onDone(await importRecipe(userId, { kind: "post", url: link }, setSteps))
     } catch (err) {
+      askForPro(err)
       setError(err instanceof Error ? err.message : "Could not read that post.")
     } finally {
       setBusy(false)
@@ -301,7 +306,7 @@ export default function NewRecipePage() {
     if (needsReview(v.draft)) return review(v)
     setSaving(true)
     try {
-      const saved = await saveNewRecipe(v.draft, mutate)
+      const saved = await saveNewRecipe(v.draft, mutate, me?.limits.photos.left !== 0)
       toast.success(`Saved ${saved.title}`)
       router.push(`/recipes/mine/${saved.id}`)
     } catch (e) {
@@ -413,7 +418,7 @@ export default function NewRecipePage() {
               {method === "post" && <PostImport onDone={imported} />}
               {me && (
                 <p className="mt-3 text-[12px] text-muted-foreground">
-                  {me.limits.imports_left} of {me.limits.imports_per_day} AI imports left today.
+                  {leftText("import", me.limits.imports)}.
                 </p>
               )}
             </Panel>

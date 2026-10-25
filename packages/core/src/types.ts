@@ -130,15 +130,35 @@ export interface Meta {
   reel_platforms?: string[]
 }
 
+/** Paid features capped per tier (Free or Pantrila Pro). */
+export type Feature = "plan" | "chat" | "import" | "photo"
+export type Window = "day" | "week" | "month"
+
+export interface Allowance {
+  /** How many per window; 0: not in this plan (AI photos on Free). */
+  limit: number
+  left: number
+  window: Window
+  /** When the window starts again (midnight UTC). */
+  resets_at: string
+}
+
 export interface Limits {
-  plans_per_day: number
-  plans_left: number
-  chats_per_day: number
-  chats_left: number
-  imports_per_day: number
-  imports_left: number
-  photos_per_day: number
-  photos_left: number
+  plans: Allowance
+  chats: Allowance
+  imports: Allowance
+  photos: Allowance
+}
+
+export interface Subscription {
+  tier: "free" | "pro"
+  /** Null: never had Pro. */
+  status: "trial" | "active" | "grace" | "expired" | null
+  /** Renews (will_renew) or ends then; null with Pro: no end date. */
+  expires_at: string | null
+  will_renew: boolean
+  /** Where Pro was bought; manual: given by Pantrila. */
+  store: "app_store" | "play_store" | "stripe" | "manual" | null
 }
 
 export interface Me {
@@ -146,6 +166,7 @@ export interface Me {
   email: string | null
   anonymous: boolean
   avatar_url: string | null
+  subscription: Subscription
   limits: Limits
 }
 
@@ -282,7 +303,7 @@ export interface ChatThread {
 }
 
 export interface UsageEvent {
-  kind: "plan" | "chat" | "import" | "photo" | "search" | "reel"
+  kind: "plan" | "chat" | "import" | "photo" | "search" | "reel" | "estimate"
   model: string
   created_at: string
   latency_ms: number
@@ -296,6 +317,7 @@ export interface UsageEvent {
 
 export interface Usage {
   events: UsageEvent[]
+  subscription: Subscription
   limits: Limits
 }
 

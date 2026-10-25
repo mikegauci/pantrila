@@ -2,7 +2,7 @@ import { expect, type Page, test } from "@playwright/test"
 
 import type { CookbookRecipeIn } from "@pantrila/core/types"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const user = "00000000-0000-4000-8000-000000000018"
 const nutrition = { kcal: 420, protein_g: 30, carbs_g: 50, fat_g: 12, fibre_g: 2 }
@@ -29,7 +29,7 @@ async function openRecipe(page: Page) {
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname
     const data = path === "/me" ? { id: user, email: null, avatar_url: null, anonymous: true,
-      limits: { imports_left: 9, imports_per_day: 10, photos_left: 5, photos_per_day: 5 } }
+      ...account({ imports: 9, photos: 5 }) }
       : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [],
         days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }
       : path === "/me/recipes/7" ? { ...recipe, id: 7, recipe, created_at: new Date().toISOString(),

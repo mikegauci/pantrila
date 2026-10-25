@@ -1,8 +1,14 @@
 import { readEvents } from "./sse"
-import type { ChatReply, RecipeCard } from "./types"
+import type { ChatReply, Feature, RecipeCard } from "./types"
 
 /** The Pantrila API for one app. Each app supplies its own address, sign-in token, fetch and
  * slow-request notice; everything else (errors, streaming) is the same on web and phone. */
+
+/** A Free cap was reached (HTTP 402): the feature and when its window starts again. */
+export interface ProRequired {
+  feature: Feature
+  resets_at: string
+}
 
 export class ApiError extends Error {
   constructor(
@@ -10,6 +16,7 @@ export class ApiError extends Error {
     message: string,
     public suggestions: string[] = [],
     public problems: string[] = [],
+    public pro: ProRequired | null = null,
   ) {
     super(message)
   }
@@ -36,6 +43,7 @@ export async function errorFrom(res: Response): Promise<ApiError> {
   let detail = res.statusText || `Request failed (HTTP ${res.status})`
   let suggestions: string[] = []
   let problems: string[] = []
+  let pro: ProRequired | null = null
   try {
     const body = await res.json()
     if (typeof body.detail === "string") detail = body.detail
@@ -45,8 +53,9 @@ export async function errorFrom(res: Response): Promise<ApiError> {
       problems = body.detail.problems
     }
     suggestions = body.suggestions ?? []
+    if (body.code === "pro_required") pro = { feature: body.feature, resets_at: body.resets_at }
   } catch {}
-  return new ApiError(res.status, detail, suggestions, problems)
+  return new ApiError(res.status, detail, suggestions, problems, pro)
 }
 
 // Any reply means the server is awake; a later slow request is a long job, not a cold start.

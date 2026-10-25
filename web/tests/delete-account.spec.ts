@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const id = "00000000-0000-4000-8000-000000000009"
 
@@ -24,7 +24,7 @@ test("deleting the account asks for confirmation, calls DELETE /me and signs out
       pantry: [], cuisines: [], notes: "" }
     const data = path === "/me/profile" ? profile
       : path === "/meta" ? { allergens: [], diets: [], cuisines: [], meal_types: ["dinner"], units: ["g"] }
-      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, limits: {} }
+      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, ...account() }
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })
   })

@@ -58,13 +58,33 @@ services:
       - key: PANTRILA_DAILY_PLANS
         value: "5"
       - key: PANTRILA_DAILY_CHATS
-        value: "10"
+        value: "50"
       - key: PANTRILA_DAILY_IMPORTS
         value: "20"
       - key: PANTRILA_DAILY_PHOTOS
         value: "5"
       - key: PANTRILA_DAILY_BUDGET_USD
         value: "2"
+      - key: PANTRILA_DAILY_ESTIMATES
+        value: "20"
+      - key: PANTRILA_FREE_PLANS # Free's caps; Pro's are PANTRILA_DAILY_*
+        value: "1"
+      - key: PANTRILA_FREE_PLANS_WINDOW
+        value: week
+      - key: PANTRILA_FREE_IMPORTS
+        value: "5"
+      - key: PANTRILA_FREE_IMPORTS_WINDOW
+        value: month
+      - key: PANTRILA_FREE_CHATS
+        value: "10"
+      - key: PANTRILA_FREE_PHOTOS
+        value: "0"
+      - key: PANTRILA_PRO_USERS # owner and App Review accounts, comma separated
+        sync: false
+      - key: REVENUECAT_WEBHOOK_SECRET # same value as the webhook's Authorization header
+        sync: false
+      - key: REVENUECAT_API_KEY # secret REST API key (v1)
+        sync: false
       - key: LANGSMITH_API_KEY
         sync: false
       - key: LANGSMITH_ENDPOINT

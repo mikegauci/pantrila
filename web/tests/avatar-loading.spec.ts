@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const id = "00000000-0000-4000-8000-000000000007"
 const picture = "https://pictures.example.test/me.png"
@@ -20,7 +20,7 @@ async function signIn(page: Page, avatarUrl: string | null) {
     const path = new URL(route.request().url()).pathname
     if (path === "/plans/latest") return route.fulfill({ status: 404, json: {} })
     const data = path === "/me"
-      ? { id, email: null, anonymous: true, avatar_url: avatarUrl, limits: { chats_left: 50 } }
+      ? { id, email: null, anonymous: true, avatar_url: avatarUrl, ...account({ chats: 50 }) }
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })
   })

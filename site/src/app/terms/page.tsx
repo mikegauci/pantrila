@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Terms() {
   return (
-    <LegalPage title="Terms" updated="22 October 2026">
+    <LegalPage title="Terms" updated="25 October 2026">
       <p>
         These terms cover your use of Pantrila, the website at pantrila.com and the app at app.pantrila.com. By using
         Pantrila you agree to them.
@@ -19,8 +19,8 @@ export default function Terms() {
 
       <h2>What Pantrila is</h2>
       <p>
-        Pantrila is a free cooking and meal-planning assistant that uses AI. Features, daily allowances and the service
-        itself may change or stop. It is offered as it is, without promises that it will always be available or free of
+        Pantrila is a cooking and meal-planning assistant that uses AI. It is free to use, with optional paid Pantrila
+        Pro for larger allowances. Features, allowances and the service itself may change or stop. It is offered as it is, without promises that it will always be available or free of
         mistakes.
       </p>
 
@@ -37,6 +37,33 @@ export default function Terms() {
         <li>
           Nutrition values are estimates from public food data and ingredient weights. AI answers and imported recipes
           can be wrong; use your own judgement when cooking, especially with food safety and temperatures.
+        </li>
+      </ul>
+
+      <h2>Pantrila Free and Pantrila Pro</h2>
+      <ul>
+        <li>
+          Pantrila Free has limited AI allowances (for example one meal plan a week and five recipe imports a month).
+          Browsing, search, cooking mode, your pantry, grocery list and cookbook are free and unlimited.
+        </li>
+        <li>
+          <strong>Pantrila Pro</strong> costs €4.99 a month or €29.99 a year (prices in other currencies are set by the
+          store). It gives larger daily allowances for fair personal use and AI recipe photos. It is sold in the
+          Pantrila iPhone and Android apps through the App Store or Google Play, and works on the web with the same
+          account.
+        </li>
+        <li>
+          <strong>Free trial.</strong> New subscribers get 7 days free. Unless you cancel at least 24 hours before the
+          trial ends, it becomes a paid subscription and the store charges you.
+        </li>
+        <li>
+          <strong>Renewal.</strong> Pro renews automatically each month or year at the then-current price until you
+          cancel. Cancel any time in your phone&rsquo;s settings (App Store or Google Play subscriptions); Pro stays
+          on until the end of the period you paid for. Deleting your Pantrila account does not cancel it.
+        </li>
+        <li>
+          <strong>Payments and refunds</strong> are handled by Apple or Google under their terms; ask them for a
+          refund. Your rights as a consumer under the law are not affected.
         </li>
       </ul>
 
@@ -57,7 +84,7 @@ export default function Terms() {
 
       <h2>Fair use</h2>
       <p>
-        Do not misuse Pantrila: no attempts to break or overload it, get around daily allowances, use it to collect
+        Do not misuse Pantrila: no attempts to break or overload it, get around allowances, use it to collect
         other people’s data, or use it for anything unlawful. Accounts that do may be limited or removed.
       </p>
 

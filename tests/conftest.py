@@ -171,6 +171,7 @@ def conn():
             "drop table if exists recipe_embeddings, recipe_ingredients, recipes, pantry_items,"
             " user_profiles, meal_plans, usage_events, user_recipes, chat_threads, recipe_photos,"
             " user_avatars, usage_reservations, cooked_meals, import_jobs, user_activity,"
+            " entitlements, subscription_events,"
             " pantrio_migrations"
             " cascade"
         )

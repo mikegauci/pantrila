@@ -14,6 +14,7 @@ import { useAuth } from "@/components/auth-provider"
 import { FeedbackSheet } from "@/components/feedback"
 import { GoogleMark } from "@/components/google-mark"
 import { Logo } from "@/components/logo"
+import { ProBadge, ProSheet } from "@/components/pro-sheet"
 import { ReplaySession } from "@/components/replay-consent"
 import { TourProvider, useTour } from "@/components/tour"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -162,6 +163,7 @@ function UserMenu({ userId, email, guest }: { userId: string | null; email: stri
           <DropdownMenuLabel className="flex items-center gap-2">
             <UserAvatar userId={userId} email={email} size="sm" url={url} pending={pending} />
             <span className="truncate">{email ?? "Guest"}</span>
+            {me?.subscription.tier === "pro" && <ProBadge />}
           </DropdownMenuLabel>
         </DropdownMenuGroup>
         {guest && (
@@ -249,6 +251,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </div>
       <BottomTabs pathname={pathname} />
       <ReplaySession />
+      <ProSheet />
     </div>
     </TourProvider>
   )

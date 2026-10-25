@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test"
 
 import type { CookbookRecipeIn } from "@pantrila/core/types"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const user = "00000000-0000-4000-8000-000000000016"
 const nutrition = { kcal: 420, protein_g: 14, carbs_g: 65, fat_g: 12, fibre_g: 3 }
@@ -53,7 +53,7 @@ test(`estimated import saves and retains its nutrition notes when photo ${photoF
       ingredients: saved.ingredients.map((line) => ({ ...line, grams: line.quantity, in_pantry: false })),
     }
     const data = path === "/me" ? { id: user, email: null, avatar_url: null, anonymous: true,
-      limits: { imports_left: 9, imports_per_day: 10, photos_left: 5, photos_per_day: 5 } }
+      ...account({ imports: 9, photos: 5 }) }
       : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [],
         days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }
       : path === "/foods" ? ["basil", "pasta"].map((key) => ({ key, name: key, aisle: "other" }))

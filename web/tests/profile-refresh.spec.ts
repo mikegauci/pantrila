@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const id = "00000000-0000-4000-8000-000000000003"
 
@@ -24,7 +24,7 @@ test("saving an allergy refreshes warnings in an already visited chat", async ({
     const now = new Date().toISOString()
     const data = path === "/me/profile" ? profile
       : path === "/meta" ? { allergens: ["peanuts"], diets: [], cuisines: [], meal_types: ["dinner"], units: ["g"] }
-      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, limits: { chats_left: 50 } }
+      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, ...account({ chats: 50 }) }
       : path === "/me/chats" ? [{ id: 1, title: "Snack", messages: 1, updated_at: now }]
       : path === "/me/chats/1" ? { id: 1, title: "Snack", updated_at: now, messages: [
         { role: "assistant", text: "Try a peanut snack.", reply: {

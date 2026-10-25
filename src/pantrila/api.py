@@ -21,8 +21,12 @@ Cooking mode ends with "I cooked this" (POST /me/cooked): it logs the cook and, 
 person opts out, takes the amounts used out of their pantry (see pantrila.cooking).
 /me/cooked/preview shows that pantry change first without saving anything.
 
-DELETE /me deletes the account: every row, Storage file and the Supabase sign-in, at once
-(see pantrila.accounts).
+DELETE /me deletes the account: every row, Storage file, the RevenueCat subscriber and the
+Supabase sign-in, at once (see pantrila.accounts).
+
+Paid features are capped per tier (Free or Pantrila Pro; see pantrila.entitlements and
+pantrila.operations): a Free cap reached is a 402 with `code: pro_required`, a Pro fair-use cap a
+429. POST /webhooks/revenuecat keeps Pro in step with the app stores.
 
 Recipes carry `photo_url` when they have a photo (Supabase Storage; see pantrila.photos), else
 null and the web app shows its placeholder art.
@@ -33,6 +37,7 @@ Run: uv run uvicorn pantrila.api:app --env-file .env --reload
 from __future__ import annotations
 
 import base64
+import hmac
 import json
 import logging
 import queue
@@ -44,14 +49,15 @@ from datetime import time as dtime
 from typing import Annotated, Any
 
 import sentry_sdk
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response
+from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 
 from pantrila import config
 from pantrila.accounts import storage_folders
-from pantrila.analytics import Analytics, Visits, analytics
+from pantrila.analytics import Analytics, Event, Visits, analytics
 from pantrila.api_models import (
+    AllowanceView,
     AppEvent,
     AvatarIn,
     ChatMessage,
@@ -88,6 +94,7 @@ from pantrila.api_models import (
     RecipeList,
     RepeatRequest,
     SlotRequest,
+    SubscriptionView,
     SwapList,
     SwapMealRequest,
     TableFood,
@@ -124,6 +131,15 @@ from pantrila.cookbook import (
     problems_for,
 )
 from pantrila.cooking import grams_used, use_from_pantry
+from pantrila.entitlements import (
+    Entitlement,
+    RevenueCat,
+    current,
+    from_subscriber,
+    revenuecat,
+    tier_of,
+    webhook_secret,
+)
 from pantrila.foods import UnitError, load_foods, measures
 from pantrila.grocery import grocery_list
 from pantrila.import_jobs import HEARTBEAT_SECONDS, ImportJob, ImportJobs
@@ -139,9 +155,11 @@ from pantrila.meal_swap import (
 )
 from pantrila.operations import (
     EmbeddingUsage,
+    Feature,
     PaidOperation,
+    ProRequired,
     ReelMeter,
-    daily_cap,
+    allowance,
     reel_import_timing,
 )
 from pantrila.pantry import UnknownFood, make_item, resolve_food
@@ -186,16 +204,47 @@ def today_start() -> datetime:
     return datetime.combine(datetime.now(UTC).date(), dtime.min, tzinfo=UTC)
 
 
-def limits_view(records: Records) -> LimitsView:
-    since = today_start()
-    left = {k: max(0, daily_cap(k) - records.count_since(k, since))
-            for k in ("plan", "chat", "import", "photo")}  # fmt: skip
-    return LimitsView(
-        plans_per_day=daily_cap("plan"), plans_left=left["plan"],
-        chats_per_day=daily_cap("chat"), chats_left=left["chat"],
-        imports_per_day=daily_cap("import"), imports_left=left["import"],
-        photos_per_day=daily_cap("photo"), photos_left=left["photo"],
-    )  # fmt: skip
+def limits_view(records: Records, tier: str) -> LimitsView:
+    now = datetime.now(UTC)
+
+    def left(kind: Feature) -> AllowanceView:
+        allow = allowance(kind, tier)  # type: ignore[arg-type]
+        used = records.count_since(kind, allow.start(now))
+        return AllowanceView(limit=allow.limit, left=max(0, allow.limit - used),
+                             window=allow.window, resets_at=allow.resets_at(now))  # fmt: skip
+
+    return LimitsView(plans=left("plan"), chats=left("chat"), imports=left("import"),
+                      photos=left("photo"))  # fmt: skip
+
+
+def subscription_view(user_id: str, saved: Entitlement | None) -> SubscriptionView:
+    pro = current(user_id, saved)
+    if pro is None:
+        return SubscriptionView(tier="free", status="expired" if saved else None,
+                                expires_at=saved.expires_at if saved else None,
+                                will_renew=False, store=saved.store if saved else None)  # fmt: skip
+    return SubscriptionView(tier="pro", status=pro.status, expires_at=pro.expires_at,
+                            will_renew=pro.will_renew, store=pro.store)  # fmt: skip
+
+
+def paid(s: Session, user_id: str, kind: Feature, model: str) -> PaidOperation:
+    """Reserve one of the person's tier's allowance for a paid feature."""
+    return PaidOperation(s.records, kind, model, tier_of(user_id, s.entitlements.get()))
+
+
+# RevenueCat webhook event types sent to PostHog; INITIAL_PURCHASE and a trial's first RENEWAL
+# are decided in subscription_event.
+SUBSCRIPTION_EVENTS: dict[str, Event] = {"RENEWAL": "renewed", "CANCELLATION": "cancelled",
+                                         "EXPIRATION": "expired"}  # fmt: skip
+
+
+def subscription_event(event: dict) -> Event | None:
+    kind = event.get("type")
+    if kind == "INITIAL_PURCHASE":
+        return "trial_started" if event.get("period_type") == "TRIAL" else "subscribed"
+    if kind == "RENEWAL" and event.get("is_trial_conversion"):
+        return "subscribed"
+    return SUBSCRIPTION_EVENTS.get(str(kind))
 
 
 # --- App ----------------------------------------------------------------------------------
@@ -250,10 +299,12 @@ def create_app(
     verify: Callable[[str], User] | None = None,
     media: MediaSource | None = None,
     events: Analytics | None = None,
+    billing: RevenueCat | None = None,
 ) -> FastAPI:
     """The API. Tests pass an in-memory backend, a token verifier and maybe a fake video
-    service; production builds a Postgres backend, verifies Supabase tokens at startup and
-    reads the video service from the environment (off unless configured)."""
+    service or RevenueCat; production builds a Postgres backend, verifies Supabase tokens at
+    startup and reads the video service and RevenueCat from the environment (off unless
+    configured)."""
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -262,6 +313,7 @@ def create_app(
         app.state.media = media or media_source()
         app.state.import_jobs = app.state.backend.import_jobs()
         app.state.analytics = events or analytics()
+        app.state.billing = billing or revenuecat()
         app.state.visits = Visits(app.state.backend.activity(), app.state.analytics)
         app.state.resume_stale = resume_stale
         stop = threading.Event()
@@ -275,9 +327,17 @@ def create_app(
         except Exception:
             log.warning("could not release import jobs", exc_info=True)
         app.state.analytics.close()
+        if app.state.billing is not None:
+            app.state.billing.close()
         app.state.backend.close()
 
     app = FastAPI(title="Pantrila API", version="0.4.0", lifespan=lifespan)
+
+    @app.exception_handler(ProRequired)
+    def pro_required(_: Request, exc: ProRequired) -> JSONResponse:
+        return JSONResponse({"detail": exc.detail, "code": "pro_required", "feature": exc.feature,
+                             "resets_at": exc.resets_at.isoformat()}, status_code=402)  # fmt: skip
+
     app.add_middleware(RequestSizeLimit)
     app.add_middleware(
         CORSMiddleware,
@@ -311,9 +371,11 @@ def create_app(
 
     @app.get("/me")
     def me(user: UserDep, s: SessionDep) -> Me:
+        saved = s.entitlements.get()
         return Me(id=user.id, email=user.email, anonymous=user.anonymous,
                   avatar_url=public_url(s.records.avatar_path()),
-                  limits=limits_view(s.records))  # fmt: skip
+                  subscription=subscription_view(user.id, saved),
+                  limits=limits_view(s.records, tier_of(user.id, saved)))  # fmt: skip
 
     @app.put("/me/avatar")
     def put_avatar(body: AvatarIn, request: Request, user: UserDep, s: SessionDep) -> Me:
@@ -368,6 +430,8 @@ def create_app(
                     backend.photos.delete_folder(folder)
             backend.erase(user.id)
             jobs.forget(user.id)
+            if request.app.state.billing is not None:  # the sign-in goes last, so a retry works
+                request.app.state.billing.delete(user.id)
             backend.admin.delete_user(user.id)
         except Exception as exc:
             log.exception("account deletion failed part way")
@@ -425,10 +489,66 @@ def create_app(
         return Response(status_code=204)
 
     @app.get("/me/usage")
-    def usage(s: SessionDep) -> UsageView:
+    def usage(user: UserDep, s: SessionDep) -> UsageView:
         events = [UsageEventView(**{k: getattr(e, k) for k in UsageEventView.model_fields})
                   for e in s.records.events(100)]  # fmt: skip
-        return UsageView(events=events, limits=limits_view(s.records))
+        saved = s.entitlements.get()
+        return UsageView(events=events, subscription=subscription_view(user.id, saved),
+                         limits=limits_view(s.records, tier_of(user.id, saved)))  # fmt: skip
+
+    @app.post("/webhooks/revenuecat")
+    def revenuecat_webhook(
+        request: Request,
+        body: Annotated[dict, Body()],
+        authorization: Annotated[str | None, Header()] = None,
+    ) -> dict:
+        """RevenueCat says a subscriber changed. Its body is not trusted: each user it names is
+        read back from RevenueCat's REST API and stored as RevenueCat says, so repeats and
+        out-of-order events are harmless. A non-200 makes RevenueCat retry."""
+        secret, rc = webhook_secret(), request.app.state.billing
+        if secret is None or rc is None:
+            raise HTTPException(503, "Subscriptions are not set up on this server.")
+        given = (authorization or "").removeprefix("Bearer ").strip()
+        if not hmac.compare_digest(given.encode(), secret.encode()):
+            raise HTTPException(401, "Wrong webhook secret.")
+        event = body.get("event") if isinstance(body.get("event"), dict) else {}
+        if event.get("type") == "TEST":
+            return {"ok": True}
+        names = [event.get("app_user_id"), *(event.get("transferred_from") or []),
+                 *(event.get("transferred_to") or [])]  # fmt: skip
+        users = [u for u in dict.fromkeys(names) if isinstance(u, str) and u
+                 and not u.startswith("$RCAnonymousID")][:10]  # fmt: skip
+        backend: Backend = request.app.state.backend
+        for user_id in users:
+            try:
+                fetched = from_subscriber(rc.subscriber(user_id))
+            except Exception as exc:
+                log.exception("could not read RevenueCat subscriber %s", user_id)
+                raise HTTPException(502, "RevenueCat could not be read. Retry.") from exc
+            with backend.session(user_id) as s:
+                saved = s.entitlements.get()
+                if fetched is None and (saved is None or saved.store == "manual"):
+                    continue  # never had Pro from a store; a hand-given Pro stays
+                if fetched is None:
+                    fetched = Entitlement("free", "expired", saved.expires_at, saved.store,
+                                          saved.product_id)  # fmt: skip
+                if saved and saved.store == "manual" and saved.active() and not fetched.active():
+                    continue
+                s.entitlements.put(fetched)
+        user_id, name = event.get("app_user_id"), subscription_event(event)
+        if name and user_id in users and isinstance(event.get("id"), str):
+            with backend.session(user_id) as s:
+                first = s.entitlements.first_event(event["id"])
+            if first:
+                props = {
+                    "store": str(event.get("store") or "").lower() or None,
+                    "product_id": event.get("product_id"),
+                    "period_type": str(event.get("period_type") or "").lower() or None,
+                }
+                if event.get("type") == "CANCELLATION":
+                    props["reason"] = event.get("cancel_reason")
+                request.app.state.analytics.capture(user_id, name, props)
+        return {"ok": True, "users": len(users)}
 
     @app.get("/recipes")
     def recipes(
@@ -510,18 +630,15 @@ def create_app(
                                 ) from exc  # fmt: skip
         return recipe
 
-    def paid_import(s: Session, work: Callable[[Importer], Any],
-                    operation: PaidOperation | None = None,
+    def paid_import(s: Session, work: Callable[[Importer], Any], operation: PaidOperation,
                     on_step: Callable[[str], None] | None = None) -> tuple:  # fmt: skip
-        """Run one paid import or estimate under the daily cap and log its usage; a caller that
-        already reserved the allowance passes its `operation`.
-        Returns (work's result, the importer, latency in ms)."""
+        """Run one paid import or estimate under the allowance `operation` reserved and log its
+        usage. Returns (work's result, the importer, latency in ms)."""
         model = config.model()
         source = app.state.media
         meter = ReelMeter(s.records, getattr(source, "actor", "media"))
         importer = Importer(client=app.state.backend.client, model=model, media=source,
                             meter=meter, on_step=on_step)  # fmt: skip
-        operation = operation or PaidOperation(s.records, "import", model)
 
         def logged(ok: bool) -> float:
             return operation.finish(importer.usage, ok, discard_empty=True)
@@ -537,8 +654,7 @@ def create_app(
             raise HTTPException(502, describe_failure(exc)) from exc
         return result, importer, logged(ok=True)
 
-    def import_view(s: Session, work: Callable[[Importer], Any],
-                    operation: PaidOperation | None = None,
+    def import_view(s: Session, work: Callable[[Importer], Any], operation: PaidOperation,
                     on_step: Callable[[str], None] | None = None) -> ImportView:  # fmt: skip
         result, importer, ms = paid_import(s, work, operation, on_step)
         model_cost, media_cost = importer.usage.cost(), importer.media_cost
@@ -570,16 +686,19 @@ def create_app(
 
     @app.post("/me/recipes/import/link")
     def import_link(body: LinkImport, user: UserDep, s: SessionDep) -> ImportView:
-        return imported(user.id, "link", import_view(s, work_for(body)))
+        return imported(user.id, "link", import_view(s, work_for(body), paid_importing(s, user)))
 
     @app.post("/me/recipes/import/post")
     def import_post(body: PostImport, user: UserDep, s: SessionDep) -> ImportView:
         """A TikTok, Instagram or Facebook post: its caption, else a recipe site it links."""
-        return imported(user.id, "post", import_view(s, work_for(body)))
+        return imported(user.id, "post", import_view(s, work_for(body), paid_importing(s, user)))
 
     @app.post("/me/recipes/import/text")
     def import_text(body: TextImport, user: UserDep, s: SessionDep) -> ImportView:
-        return imported(user.id, "text", import_view(s, work_for(body)))
+        return imported(user.id, "text", import_view(s, work_for(body), paid_importing(s, user)))
+
+    def paid_importing(s: Session, user: User) -> PaidOperation:
+        return paid(s, user.id, "import", config.model())
 
     def imported(user_id: str, kind: str, view: ImportView) -> ImportView:
         app.state.analytics.capture(user_id, "recipe_imported", {"kind": kind})
@@ -603,7 +722,8 @@ def create_app(
 
     @app.post("/me/recipes/import/photos")
     def import_photos(body: PhotoImport, user: UserDep, s: SessionDep) -> ImportView:
-        return imported(user.id, "photos", import_view(s, work_for(body)))
+        return imported(user.id, "photos",
+                        import_view(s, work_for(body), paid_importing(s, user)))  # fmt: skip
 
     def job_view(job: ImportJob) -> ImportJobView:
         error = ImportJobError(status=job.error[0], message=job.error[1]) if job.error else None
@@ -621,7 +741,7 @@ def create_app(
         if body.id and (existing := jobs.get(user.id, body.id)):
             return job_view(existing)
         with app.state.backend.session(user.id) as s:
-            operation = PaidOperation(s.records, "import", config.model())
+            operation = paid_importing(s, user)
         request = body.model_dump(exclude={"id"}, exclude_none=True)
         try:
             job = jobs.start(user.id, body.id, request, operation.reservation)
@@ -685,7 +805,8 @@ def create_app(
     @app.post("/me/recipes/estimate")
     def estimate_foods(body: EstimateRequest, s: SessionDep) -> EstimateView:
         """Nutrition and allergen estimates for foods the ingredient table lacks."""
-        estimates, importer, _ = paid_import(s, lambda i: i.estimate(body.names))
+        operation = PaidOperation(s.records, "estimate", config.model())
+        estimates, importer, _ = paid_import(s, lambda i: i.estimate(body.names), operation)
         return EstimateView(estimates=estimates, cost_usd=importer.usage.cost())
 
     @app.get("/me/recipes/{recipe_id}")
@@ -732,7 +853,7 @@ def create_app(
             gluten_free = False
         dish = Dish(title=r.title, summary=r.summary, ingredients=[i.name for i in r.ingredients],
                     steps=r.steps, gluten_free=gluten_free)  # fmt: skip
-        operation = PaidOperation(s.records, "photo", model)
+        operation = paid(s, user.id, "photo", model)
         photo_usage = PhotoUsage()
         try:
             photo = generate(dish, client=backend.client, model=model, usage=photo_usage)
@@ -956,7 +1077,7 @@ def create_app(
         """Plan the week from the saved profile and pantry, streaming progress as SSE."""
         backend: Backend = request.app.state.backend
         with backend.session(user.id) as s:
-            operation = PaidOperation(s.records, "plan", config.model())
+            operation = paid(s, user.id, "plan", config.model())
         events: queue.Queue = queue.Queue()
 
         def work() -> None:
@@ -1091,9 +1212,9 @@ def create_app(
         return reply
 
     @app.post("/chat")
-    def chat(body: ChatRequest, request: Request, s: SessionDep) -> ChatReply:
+    def chat(body: ChatRequest, request: Request, user: UserDep, s: SessionDep) -> ChatReply:
         thread = None if body.thread_id is None else get_thread(s, body.thread_id)
-        operation = PaidOperation(s.records, "chat", config.model())
+        operation = paid(s, user.id, "chat", config.model())
         return chat_turn(s, body, thread, operation, request.app.state.backend)
 
     @app.post("/chat/stream")
@@ -1103,7 +1224,7 @@ def create_app(
         backend: Backend = request.app.state.backend
         with backend.session(user.id) as s:
             thread = None if body.thread_id is None else get_thread(s, body.thread_id)
-            operation = PaidOperation(s.records, "chat", config.model())
+            operation = paid(s, user.id, "chat", config.model())
         events: queue.Queue = queue.Queue()
 
         def work() -> None:

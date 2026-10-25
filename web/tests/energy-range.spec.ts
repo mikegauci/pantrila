@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const id = "00000000-0000-4000-8000-000000000041"
 
@@ -25,7 +25,7 @@ test("the energy target can be a range, prefilled from the single number", async
     }
     const data = path === "/me/profile" ? profile
       : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null,
-        limits: { plans_left: 3, plans_per_day: 3, chats_left: 50 } }
+        ...account({ plans: 3, chats: 50 }) }
       : path === "/meta" ? { allergens: [], diets: [], cuisines: [], meal_types: ["breakfast", "dinner"], units: ["g"] }
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })

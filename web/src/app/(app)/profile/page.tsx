@@ -7,6 +7,7 @@ import { toast } from "sonner"
 
 import { label } from "@pantrila/core/format"
 import { hasKcalRange, kcalGoal } from "@pantrila/core/plan"
+import { leftText, subscriptionText } from "@pantrila/core/subscription"
 import type { Allergen, DietTag, MealType, Me, NutritionTargets, Profile } from "@pantrila/core/types"
 
 import { UserAvatar } from "@/components/app-shell"
@@ -15,6 +16,7 @@ import { Panel, PanelTitle } from "@/components/bits"
 import { FeedbackSheet } from "@/components/feedback"
 import { REPLAY_EXPLAINER } from "@/components/replay-consent"
 import { GoogleMark } from "@/components/google-mark"
+import { ProBadge } from "@/components/pro-sheet"
 import { useTour } from "@/components/tour"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -94,6 +96,33 @@ function RecordingCard() {
   )
 }
 
+/** Free or Pantrila Pro, and what is left of each paid feature. Pro is bought in the phone apps. */
+function PlanCard() {
+  const { data: me } = useMe()
+  if (!me) return null
+  const s = me.subscription
+  const store = s.store === "app_store" ? "the App Store" : s.store === "play_store" ? "Google Play" : null
+  return (
+    <Panel>
+      <PanelTitle action={s.tier === "pro" ? <ProBadge /> : undefined}>Your plan</PanelTitle>
+      <p className="mb-3 font-medium">{subscriptionText(s)}</p>
+      <ul className="grid gap-1 text-[14px] text-muted-foreground">
+        <li>{leftText("plan", me.limits.plans)}</li>
+        <li>{leftText("chat", me.limits.chats)}</li>
+        <li>{leftText("import", me.limits.imports)}</li>
+        <li>{leftText("photo", me.limits.photos)}</li>
+      </ul>
+      <p className="mt-3 text-[13px] text-muted-foreground">
+        {s.tier === "pro"
+          ? store
+            ? `Manage or cancel your subscription in ${store} on your phone.`
+            : "Thanks for trying Pantrila Pro."
+          : "Pantrila Pro (€4.99 a month or €29.99 a year, 7 days free) is coming to the iPhone and Android apps. Browsing, cooking mode, your pantry and grocery list stay free."}
+      </p>
+    </Panel>
+  )
+}
+
 function DeleteAccountCard() {
   const { session } = useAuth()
   const router = useRouter()
@@ -125,6 +154,10 @@ function DeleteAccountCard() {
       <p className="mb-4 text-muted-foreground">
         Deletes your profile, pantry, meal plans, chats, cookbook recipes and their photos, your
         picture and your sign-in, straight away. This cannot be undone.
+      </p>
+      <p className="mb-4 text-[13px] text-muted-foreground">
+        Have Pantrila Pro from the App Store or Google Play? Deleting your account does not stop the
+        subscription: cancel it in your phone&apos;s settings first.
       </p>
       {!open ? (
         <Button variant="destructive" onClick={() => setOpen(true)}>
@@ -365,6 +398,7 @@ export default function ProfilePage() {
       <div className="grid gap-5 lg:grid-cols-2">
         <div className="grid gap-5 lg:col-span-2">
           <AccountCard />
+          <PlanCard />
           <PictureCard />
         </div>
         <Panel>
