@@ -8,6 +8,7 @@ import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
 import { niceFractions } from "@pantrila/core/amounts"
+import { leftText } from "@pantrila/core/subscription"
 import { label } from "@pantrila/core/format"
 import { groupLines, groupSteps } from "@pantrila/core/sections"
 import { hasTemp, showTemps } from "@pantrila/core/temperature"
@@ -25,6 +26,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { send } from "@/lib/api"
 import { useCookbookRecipe, useMe, useProfile } from "@/lib/hooks"
 import { makePhoto, usePhotoPending } from "@/lib/photo-jobs"
+import { askForPro } from "@/lib/pro"
 import { useTempUnit } from "@/lib/temperature"
 import { cn } from "@/lib/utils"
 
@@ -101,13 +103,14 @@ export default function MyRecipePage() {
       mutate("/me/recipes")
       refreshMe()
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Could not update the photo.")
+      if (!askForPro(e)) toast.error(e instanceof Error ? e.message : "Could not update the photo.")
     } finally {
       setRemoving(false)
     }
   }
 
-  const photosLeft = me?.limits.photos_left
+  // Pro's fair-use cap stops the button; on Free a click opens the Pro sheet instead.
+  const photosStopped = me?.limits.photos.left === 0 && me.subscription.tier === "pro"
   const allergies = new Set(profile?.allergies ?? [])
   const { icon: SourceIcon, text: sourceText } = RECIPE_SOURCE[r.source]
   const have = r.ingredients.filter((i) => i.in_pantry).length
@@ -143,7 +146,7 @@ export default function MyRecipePage() {
           <div className="flex flex-wrap items-center gap-2">
             <Button
               variant="outline" size="sm" onClick={() => photo("make")}
-              disabled={making || removing || photosLeft === 0}
+              disabled={making || removing || photosStopped}
             >
               {making ? <Loader2 className="animate-spin" /> : <Camera />}
               {making ? "Making a photo…" : r.photo_url ? "New photo" : "Generate photo"}
@@ -156,7 +159,7 @@ export default function MyRecipePage() {
           </div>
           <p className="text-[12px] text-muted-foreground">
             An AI photo made from this recipe&apos;s own ingredients, about 15 seconds.
-            {me && ` ${me.limits.photos_left} of ${me.limits.photos_per_day} left today.`}
+            {me && (me.limits.photos.limit ? ` ${leftText("photo", me.limits.photos)}.` : " Comes with Pantrila Pro.")}
           </p>
         </div>
         <div className="flex flex-col gap-3">

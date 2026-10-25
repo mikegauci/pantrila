@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const id = "00000000-0000-4000-8000-000000000005"
 
@@ -38,7 +38,7 @@ test("cooking mode walks the steps, rings a timer and logs the cook", async ({ p
     const data = path === "/recipes/french-mushroom-omelette" ? recipe
       : path === "/me/cooked/preview" ? { cooked: null, pantry: [{ ...change, after: null }] }
       : path === "/me/profile" ? { allergies: [], diets: [] }
-      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, limits: {} }
+      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, ...account() }
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })
   })

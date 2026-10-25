@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send } from "@/lib/api"
-import { useFoods, useProfile } from "@/lib/hooks"
+import { useFoods, useMe, useProfile } from "@/lib/hooks"
 import { makePhoto } from "@/lib/photo-jobs"
 import { cn } from "@/lib/utils"
 
@@ -35,14 +35,22 @@ export const RECIPE_SOURCE: Record<RecipeSource, { icon: typeof Camera; text: st
   manual: { icon: PenLine, text: "Typed in" },
 }
 
-/** Saves a new recipe; its photo is then made while the person reads it (its page shows it arriving). */
-export async function saveNewRecipe(recipe: CookbookRecipeIn, mutate: ScopedMutator): Promise<CookbookDetail> {
+/** Saves a new recipe; its photo is then made while the person reads it (its page shows it arriving),
+ *  unless `photo` is false (no AI photos left, as on Free). */
+export async function saveNewRecipe(recipe: CookbookRecipeIn, mutate: ScopedMutator, photo = true): Promise<CookbookDetail> {
   const saved = await send<CookbookDetail>("/me/recipes", "POST", recipe)
+  if (!photo) {
+    mutate("/me/recipes")
+    return saved
+  }
   makePhoto(saved.id)
-    .then((photo) => mutate(`/me/recipes/${saved.id}`, photo, { revalidate: false }))
-    .catch((e) => toast.warning("Recipe saved. Its photo could not be generated.", {
-      description: e instanceof Error ? e.message : "You can try again from the recipe.",
-    }))
+    .then((made) => mutate(`/me/recipes/${saved.id}`, made, { revalidate: false }))
+    .catch((e) => {
+      if (e instanceof ApiError && e.pro) return  // a Free cap: the recipe keeps its meal-type art
+      toast.warning("Recipe saved. Its photo could not be generated.", {
+        description: e instanceof Error ? e.message : "You can try again from the recipe.",
+      })
+    })
     .finally(() => {
       mutate("/me/recipes")
       mutate("/me")
@@ -344,6 +352,7 @@ export function CookbookForm({
 }) {
   const { mutate } = useSWRConfig()
   const { data: foods } = useFoods()
+  const { data: me } = useMe()
   const keys = useMemo(() => new Set(foods?.map((f) => f.key) ?? []), [foods])
   const byKey = useMemo(() => new Map((foods ?? []).map((f) => [f.key, f])), [foods])
   const [r, setR] = useState<CookbookRecipeIn>(initial)
@@ -418,7 +427,7 @@ export function CookbookForm({
     try {
       const saved = recipeId
         ? await send<CookbookDetail>(`/me/recipes/${recipeId}`, "PUT", recipe)
-        : await saveNewRecipe(recipe, mutate)
+        : await saveNewRecipe(recipe, mutate, me?.limits.photos.left !== 0)
       toast.success(`Saved ${saved.title}`)
       onSaved(saved)
     } catch (e) {

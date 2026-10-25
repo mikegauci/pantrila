@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const id = "00000000-0000-4000-8000-000000000007"
 
@@ -29,7 +29,7 @@ test("temperatures switch between °C and °F, ovens show the fan setting, and t
     const path = new URL(route.request().url()).pathname
     const data = path === "/me/recipes/1" ? recipe
       : path === "/me/profile" ? { allergies: [], diets: [] }
-      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, limits: {} }
+      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, ...account() }
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })
   })

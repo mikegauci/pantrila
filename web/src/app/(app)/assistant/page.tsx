@@ -9,6 +9,7 @@ import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
 import type { ChatMessage, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard, ToolCall } from "@pantrila/core/types"
+import { leftText } from "@pantrila/core/subscription"
 
 import { useAuth } from "@/components/auth-provider"
 import { STARTERS } from "@/components/ask-pantrila"
@@ -20,6 +21,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send, streamChat } from "@/lib/api"
+import { askForPro } from "@/lib/pro"
 import { useChat, useChats, useCookbook, useMe, useRecipe, useRefreshKitchen } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
 
@@ -287,7 +289,7 @@ export default function AssistantPage() {
     else localStorage.removeItem(lastThreadKey)
   }, [current, lastThreadKey])
 
-  const chatsLeft = me?.limits.chats_left
+  const chatsLeft = me?.limits.chats.left
   useEffect(() => {
     if (chatsLeft != null && chatsLeft > 0 && chatsLeft <= 3) {
       toast.warning(`${chatsLeft} ${chatsLeft === 1 ? "message" : "messages"} left today.`)
@@ -362,6 +364,7 @@ export default function AssistantPage() {
       refreshThreads()
       if (reply.pantry_changed) refreshKitchen()
     } catch (e) {
+      askForPro(e)
       if (e instanceof ApiError && e.status === 409 && thread) await mutate(`/me/chats/${thread}`)
       const msg = e instanceof ApiError ? e.message : "Could not reach Pantrila. Try again."
       setPending([asked, { role: "assistant", text: msg, error: true }])
@@ -408,7 +411,7 @@ export default function AssistantPage() {
                     <ul className="mt-1.5 grid list-disc gap-1 pl-4 text-muted-foreground">
                       <li>Recipes it shows are checked against your rules, but read the ingredients if you have an allergy.</li>
                       <li>Chats are saved. Start a new one for a new topic.</li>
-                      {me && <li>{me.limits.chats_left} {me.limits.chats_left === 1 ? "message" : "messages"} left today.</li>}
+                      {me && <li>{leftText("chat", me.limits.chats)}.</li>}
                     </ul>
                   </Popover.Popup>
                 </Popover.Positioner>

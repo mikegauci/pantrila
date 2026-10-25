@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const id = "00000000-0000-4000-8000-000000000010"
 
@@ -18,7 +18,7 @@ test("Send feedback in the account menu sends the message to Sentry", async ({ p
   await page.route("http://127.0.0.1:8000/**", async (route) => {
     const path = new URL(route.request().url()).pathname
     if (path === "/plans/latest") return route.fulfill({ status: 404, json: {} })
-    const data = path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, limits: {} }
+    const data = path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, ...account() }
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })
   })

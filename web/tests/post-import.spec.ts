@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const id = "00000000-0000-4000-8000-000000000006"
 const post = "https://www.instagram.com/reel/C1abc/"
@@ -54,7 +54,7 @@ test("a post imports from its link straight into my recipes and keeps the credit
       ingredients: saved.ingredients.map((line) => ({ ...line, grams: 500, in_pantry: false })),
     }
     const data = path === "/me" ? { id, email: null, avatar_url: null, anonymous: true,
-      limits: { imports_left: 9, imports_per_day: 10, photos_left: 5, photos_per_day: 5 } }
+      ...account({ imports: 9, photos: 5 }) }
       : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [],
         days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }
       : path === "/foods" ? [{ key: "gnocchi", name: "gnocchi", aisle: "pasta" }]
@@ -115,7 +115,7 @@ test("where the service covers the platform, Pantrila says it is listening to th
         cost_usd: 0.012, media_cost_usd: 0.003, transcription_cost_usd: 0.001, latency_ms: 30000 } } })
     }
     const data = path === "/me" ? { id, email: null, avatar_url: null, anonymous: true,
-      limits: { imports_left: 9, imports_per_day: 10, photos_left: 5, photos_per_day: 5 } }
+      ...account({ imports: 9, photos: 5 }) }
       : path === "/me/recipes/import/timing" ? { estimated_seconds: 90, sample_count: 2 }
       : path === "/meta" ? { allergens: [], diets: [], meal_types: ["dinner"], units: ["g"], cuisines: [],
         reel_platforms: ["instagram"] }

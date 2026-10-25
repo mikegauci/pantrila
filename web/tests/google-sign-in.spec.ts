@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const GUEST = "00000000-0000-4000-8000-000000000003"
 const GOOGLE = "http://127.0.0.1:54321/fake-google"
@@ -32,7 +32,7 @@ async function mockBackends(page: Page, seen: string[]) {
     const data = path === "/me/profile" ? profile
       : path === "/meta" ? { allergens: ["peanuts"], diets: [], cuisines: [], meal_types: ["dinner"], units: ["g"] }
       : path === "/me/pantry" || path === "/me/chats" || path === "/me/recipes" || path === "/foods" ? []
-      : path === "/me" ? { id: GUEST, email: null, anonymous: true, avatar_url: null, limits: { chats_left: 50 } }
+      : path === "/me" ? { id: GUEST, email: null, anonymous: true, avatar_url: null, ...account({ chats: 50 }) }
       : { ok: true }
     await route.fulfill({ json: data })
   })

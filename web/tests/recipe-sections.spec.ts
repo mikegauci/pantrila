@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test"
 
 import type { CookbookRecipeIn } from "@pantrila/core/types"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const user = "00000000-0000-4000-8000-000000000017"
 const nutrition = { kcal: 420, protein_g: 14, carbs_g: 65, fat_g: 12, fibre_g: 3 }
@@ -44,7 +44,7 @@ test("an imported recipe keeps its ingredient groups and method headings through
       step_sections: recipe.step_sections ?? [],
     }
     const data = path === "/me" ? { id: user, email: null, avatar_url: null, anonymous: true,
-      limits: { imports_left: 9, imports_per_day: 10, photos_left: 5, photos_per_day: 5 } }
+      ...account({ imports: 9, photos: 5 }) }
       : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [],
         days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }
       : path === "/foods" ? ["basmati_rice", "chicken_thigh", "coconut_milk"].map((key) => ({ key, name: key, aisle: "other" }))
@@ -107,7 +107,7 @@ test("cooking mode lists the step's own group: one olive oil, and its seasonings
       estimated: false, invalid: [], pantry_foods: [], problems: [], photo_url: null,
       created_at: new Date().toISOString(), updated_at: new Date().toISOString(), ingredient_count: 6,
       ingredients: recipe.ingredients.map((l) => ({ ...l, grams: 10, in_pantry: false })) }
-      : path === "/me" ? { id: user, email: null, avatar_url: null, anonymous: true, limits: {} }
+      : path === "/me" ? { id: user, email: null, avatar_url: null, anonymous: true, ...account() }
       : path === "/me/profile" ? { allergies: [], diets: [] }
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })

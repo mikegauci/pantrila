@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const A = "00000000-0000-4000-8000-000000000001"
 const B = "00000000-0000-4000-8000-000000000002"
@@ -42,7 +42,7 @@ test("switching accounts drops cached data and remembered chat state", async ({ 
     if (path === "/plans/latest") return route.fulfill({ status: 404, json: { detail: "No plan" } })
     const data = path === "/me/profile" ? profile
       : path === "/me/chats" || path === "/me/recipes" ? []
-      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, limits: { chats_left: 50 } }
+      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, ...account({ chats: 50 }) }
       : { ok: true }
     await route.fulfill({ json: data })
   })

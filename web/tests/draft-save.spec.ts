@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const id = "00000000-0000-4000-8000-000000000004"
 const nutrition = { kcal: 100, protein_g: 1, carbs_g: 1, fat_g: 10, fibre_g: 0 }
@@ -44,7 +44,7 @@ test("draft warnings remain visible and the reviewed recipe can be edited and sa
         body: events.map(([kind, d]) => `event: ${kind}\ndata: ${JSON.stringify(d)}\n\n`).join("") })
     }
     const data = path === "/me" ? { id, email: null, avatar_url: null, anonymous: true,
-      limits: { chats_left: 50, photos_left: 5, photos_per_day: 5 } }
+      ...account({ chats: 50, photos: 5 }) }
       : path === "/me/profile" ? { allergies: ["milk"], diets: [], exclude_foods: [], pantry: [],
         days: 7, meals: ["dinner"], max_minutes: null, cuisines: [], notes: "", targets: {} }
       : path === "/foods" ? [{ key: "butter", name: "butter", aisle: "dairy" }]

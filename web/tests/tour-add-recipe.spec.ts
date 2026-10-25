@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const id = "00000000-0000-4000-8000-000000000008"
 
@@ -22,7 +22,7 @@ for (const size of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) 
         : path === "/recipes" ? { query: "", recipes: [], rules: {
           exclude_allergens: [], require_diets: [], max_minutes: null, meal_types: [], cuisines: [], exclude_foods: [] } }
         : path === "/meta" ? { allergens: [], diets: [], cuisines: [], meal_types: ["dinner"], units: ["g"] }
-        : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, limits: { chats_left: 50, imports_left: 20 } }
+        : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, ...account({ chats: 50, imports: 20 }) }
         : path === "/health" ? { ok: true } : []
       await route.fulfill({ json: data })
     })

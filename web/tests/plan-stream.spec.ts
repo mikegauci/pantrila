@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const id = "00000000-0000-4000-8000-000000000005"
 
@@ -20,7 +20,7 @@ test("an interrupted plan stream shows a failure instead of silently finishing",
         body: ': keep-alive\n\nevent: step\ndata: {"node":"retrieve"}\n\n' })
     }
     const data = path === "/me" ? { id, email: null, anonymous: true, avatar_url: null,
-      limits: { plans_left: 5, plans_per_day: 5, chats_left: 50 } }
+      ...account({ plans: 5, chats: 50 }) }
       : path === "/me/profile" ? { allergies: [], diets: [], exclude_foods: [], pantry: [], days: 7,
         meals: ["dinner"], targets: { kcal: 2000, min_protein_g: null, max_carbs_g: null },
         max_minutes: null, cuisines: [], notes: "" }

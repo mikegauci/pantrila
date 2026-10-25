@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 const id = "00000000-0000-4000-8000-000000000007"
 
@@ -29,7 +29,7 @@ test("a preheat step in cooking mode shows the bake sentence on hover, not on th
     const path = new URL(route.request().url()).pathname
     const data = path === `/recipes/${recipe.id}` ? recipe
       : path === "/me/profile" ? { allergies: [], diets: [] }
-      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, limits: {} }
+      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, ...account() }
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })
   })

@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test"
 
-import { session } from "./helpers"
+import { account, session } from "./helpers"
 
 // PostHog drops traffic from headless browsers as bots, so look like an ordinary Chrome.
 test.use({ userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36" })
@@ -20,7 +20,7 @@ async function signIn(page: Page, id: string, ingest: string[]) {
       pantry: [], cuisines: [], notes: "" }
     const data = path === "/me/profile" ? profile
       : path === "/meta" ? { allergens: [], diets: [], cuisines: [], meal_types: ["dinner"], units: ["g"] }
-      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, limits: {} }
+      : path === "/me" ? { id, email: null, anonymous: true, avatar_url: null, ...account() }
       : path === "/health" ? { ok: true } : []
     await route.fulfill({ json: data })
   })
