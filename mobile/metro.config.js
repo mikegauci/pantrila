@@ -1,9 +1,10 @@
-// Expo's Metro config finds the workspace (packages/core) on its own; Uniwind compiles the
-// Tailwind classes and must stay the outermost wrapper.
-const { getDefaultConfig } = require("expo/metro-config")
+// Expo's Metro config (through Sentry's, which adds the debug ids its source maps need) finds the
+// workspace (packages/core) on its own; Uniwind compiles the Tailwind classes and must stay the
+// outermost wrapper.
+const { getSentryExpoConfig } = require("@sentry/react-native/metro")
 const { withUniwindConfig } = require("uniwind/metro")
 
-const config = getDefaultConfig(__dirname)
+const config = getSentryExpoConfig(__dirname)
 
 module.exports = withUniwindConfig(config, {
   cssEntryFile: "./src/global.css",

@@ -168,9 +168,10 @@ const BUTTON = {
   primary: ["bg-primary", "text-primary-foreground", "primary-foreground"],
   outline: ["border border-border bg-surface", "text-foreground", "foreground"],
   ghost: ["", "text-foreground", "foreground"],
+  danger: ["bg-danger", "text-white", "danger-soft"],
 } as const
 
-/** The web's Button: primary, outline or ghost, at the web's `lg` (48) or `sm` (36) height. A busy
+/** The web's Button: primary, outline, ghost or danger, at the web's `lg` (48) or `sm` (36) height. A busy
  * button shows a spinner and cannot be pressed. */
 export function Button({ text, onPress, icon, variant = "primary", size = "lg", disabled, busy, label: name, className = "" }: {
   text: string

@@ -90,6 +90,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         microphonePermission: false,
       },
     ],
+    // Error reports and feedback (lib/sentry.ts). Source maps and debug files upload at build time
+    // only when SENTRY_AUTH_TOKEN is set (an EAS secret), so builds without it still pass.
+    [
+      "@sentry/react-native",
+      {
+        organization: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+        disableAutoUpload: !process.env.SENTRY_AUTH_TOKEN,
+      },
+    ],
     // iOS only (Android needs no plugin); without options the plugin expects Firebase files instead.
     ...(GOOGLE_IOS_CLIENT_ID
       ? [["@react-native-google-signin/google-signin", { iosUrlScheme: googleUrlScheme(GOOGLE_IOS_CLIENT_ID) }] as [string, object]]

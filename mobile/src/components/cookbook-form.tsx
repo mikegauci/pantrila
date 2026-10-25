@@ -1,6 +1,6 @@
 import { ChevronDown, Plus, Sparkles, Trash2, TriangleAlert, X } from "lucide-react-native"
 import { useEffect, useMemo, useRef, useState } from "react"
-import { Pressable, Text, TextInput, View, type TextInputProps } from "react-native"
+import { Pressable, Text, TextInput, View } from "react-native"
 import { useSWRConfig } from "swr"
 
 import { convertAmount } from "@pantrila/core/amounts"
@@ -13,6 +13,7 @@ import type {
 } from "@pantrila/core/types"
 
 import { AllergenBadge, Button, DietBadge, Panel, PanelTitle, ProblemAlert } from "@/components/bits"
+import { Field, INPUT } from "@/components/form"
 import { Icon } from "@/components/icon"
 import { MacroRing } from "@/components/macro-ring"
 import { OptionSheet } from "@/components/option-sheet"
@@ -27,20 +28,6 @@ export const NUTRITION_SOURCE =
 export const ESTIMATED_NOTE =
   "Some amounts or foods are estimated, so nutrition is approximate. Estimated amounts are noted beside the " +
   "ingredients. Check product labels for allergens."
-
-const INPUT = "rounded-xl border border-border bg-surface px-3 font-sans text-base text-foreground"
-
-function Field({ name, hint, className = "", ...input }: TextInputProps & { name: string; hint?: string }) {
-  return (
-    <View className={`gap-1.5 ${className}`}>
-      <Text className="font-sans-medium text-sm text-foreground">{name}</Text>
-      {hint && <Text className="font-sans text-xs text-muted-foreground">{hint}</Text>}
-      <TextInput accessibilityLabel={name} placeholderTextColorClassName="accent-muted-foreground"
-                 className={`${INPUT} ${input.multiline ? "min-h-24 py-2.5" : "h-11"}`}
-                 textAlignVertical={input.multiline ? "top" : undefined} {...input} />
-    </View>
-  )
-}
 
 /** A number box that keeps what is typed ("1." on the way to "1.5") and reports the number. */
 function NumberInput({ value, onChange, label: name, className = "" }: {

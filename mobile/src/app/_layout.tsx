@@ -16,13 +16,14 @@ import { useCSSVariable } from "uniwind"
 import { AuthProvider, useAuth } from "@/components/auth-provider"
 import { ShareHandler } from "@/components/share-handler"
 import { Toaster } from "@/components/toaster"
+import { wrapRoot } from "@/lib/sentry"
 
 SplashScreen.preventAutoHideAsync()
 
 // Cooking mode covers the app and has its own close button; a stray swipe must not leave it.
 const COOKING = { presentation: "fullScreenModal", gestureEnabled: false } as const
 
-export default function RootLayout() {
+function RootLayout() {
   // One family per weight: the names match the font-sans-* tokens in global.css.
   const [loaded, error] = useFonts({
     PlusJakartaSans_400Regular,
@@ -46,6 +47,9 @@ export default function RootLayout() {
     </ShareIntentProvider>
   )
 }
+
+// Sentry's wrapper reports render errors and touches (off without a DSN).
+export default wrapRoot(RootLayout)
 
 /** Signed out: the welcome screen. Signed in: the tabs and the screens they open. The email
  * link's callback works either way. */
@@ -77,6 +81,9 @@ function Screens() {
         <Stack.Screen name="recipes/mine/[id]/cook" options={COOKING} />
         <Stack.Screen name="recipes/mine/new" options={{ headerShown: true, title: "Add a recipe" }} />
         <Stack.Screen name="account" options={{ headerShown: true, title: "Account", presentation: "modal" }} />
+        <Stack.Screen name="pantry" options={{ headerShown: true, title: "Pantry" }} />
+        <Stack.Screen name="profile" options={{ headerShown: true, title: "Profile" }} />
+        <Stack.Screen name="intro" options={{ presentation: "fullScreenModal", gestureEnabled: false }} />
       </Stack.Protected>
       <Stack.Protected guard={!session}>
         <Stack.Screen name="welcome" />
