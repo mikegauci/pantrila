@@ -1,11 +1,11 @@
-import useSWR, { type SWRConfiguration } from "swr"
+import useSWR, { useSWRConfig, type SWRConfiguration } from "swr"
 import useSWRInfinite from "swr/infinite"
 
 import type {
-  ChatThreadSummary, CookbookCard, Meta, Profile, RecipeDetail, RecipeList,
+  ChatThreadSummary, CookbookCard, GroceryList, Me, Meta, Plan, Profile, RecipeDetail, RecipeList,
 } from "@pantrila/core/types"
 
-import { api, type ApiError } from "@/lib/api"
+import { api, ApiError } from "@/lib/api"
 
 const fetcher = <T,>(path: string) => api<T>(path)
 
@@ -15,11 +15,39 @@ export function useApi<T>(path: string | null, config?: SWRConfiguration<T, ApiE
 
 const STATIC = { revalidateOnFocus: false, revalidateIfStale: false, dedupingInterval: 3_600_000 }
 
+export const useMe = () => useApi<Me>("/me")
 export const useMeta = () => useApi<Meta>("/meta", STATIC)
 export const useProfile = () => useApi<Profile>("/me/profile")
 export const useRecipe = (id: string | null) => useApi<RecipeDetail>(id ? `/recipes/${id}` : null)
 export const useChats = () => useApi<ChatThreadSummary[]>("/me/chats")
 export const useCookbook = () => useApi<CookbookCard[]>("/me/recipes")
+
+/** The latest plan; a 404 (no plan yet) comes back as null, not an error. */
+export function usePlan() {
+  return useSWR<Plan | null, ApiError>("/plans/latest", async (p: string) => {
+    try {
+      return await api<Plan>(p)
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 404) return null
+      throw e
+    }
+  })
+}
+
+export function useGrocery(people: number, enabled = true) {
+  return useApi<GroceryList>(enabled ? `/plans/latest/grocery?people=${people}` : null)
+}
+
+/** Store a changed plan and refresh what depends on it (grocery list, swap options). */
+export function useSavePlan() {
+  const { mutate } = useSWRConfig()
+  return (plan: Plan) => {
+    mutate("/plans/latest", plan, { revalidate: false })
+    mutate((key) => typeof key === "string" && (
+      key.startsWith("/plans/latest/grocery") || key.startsWith("/plans/latest/meals")
+    ))
+  }
+}
 
 export const PAGE = 24
 
