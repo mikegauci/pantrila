@@ -1109,7 +1109,10 @@ Update this block when commands change.
   `git config user.email "13453945+mikegauci@users.noreply.github.com"` before committing.
   No `Co-Authored-By` or `Claude-Session` trailers.
 - Branches: `feat/<short-feature-name>` in kebab-case, `fix/<name>` for bug fixes. No random
-  suffixes.
+  suffixes. **Never use a `claude/` branch** (owner's rule, for every session and tool): if the
+  session or harness assigns one (such as `claude/<random-words>`), ignore it and create the
+  `feat/` or `fix/` branch from up-to-date `main` instead; push and open the PR from that branch.
+  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-cookbook` for PR 8).
 - Commit messages use plain descriptive text. `feat/` and `fix/` are branch prefixes only;
   do not prefix commit messages with them.
 - PR titles say specifically what the PR does (for example "Add hybrid recipe search with
