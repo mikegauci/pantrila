@@ -16,11 +16,12 @@ import { Icon } from "@/components/icon"
 import { ImportProgress } from "@/components/import-progress"
 import { ApiError } from "@/lib/api"
 import { useApi, useMe, useMeta } from "@/lib/hooks"
-import { PhotoAccessError, pickPhotos } from "@/lib/images"
+import { PhotoAccessError, pickPhotos, shrinkPhoto } from "@/lib/images"
 import {
   forgetImport, type ImportRequest, type ImportStep, importRecipe, pendingImport, wasStartedHere, watchImport,
 } from "@/lib/import-jobs"
 import { saveNewRecipe } from "@/lib/photo-jobs"
+import { type SharedRecipe, takeShare, useSharedRecipe } from "@/lib/share"
 import { toast } from "@/lib/toast"
 
 const MAX_PHOTOS = 4
@@ -61,14 +62,37 @@ function useImport(onDone: (v: ImportView) => void) {
   return { busy, steps, error, setError, run }
 }
 
+/** Runs `start` once when the component mounts with something shared to Pantrila. */
+function useStartShared(shared: unknown, start: () => void) {
+  const started = useRef(false)
+  useEffect(() => {
+    if (!shared || started.current) return
+    started.current = true
+    start()
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- once, with what was shared
+  }, [shared])
+}
+
 function ErrorText({ error }: { error: string | null }) {
   return error ? <Text accessibilityRole="alert" className="font-sans text-[13px] text-danger">{error}</Text> : null
 }
 
-function PhotoImport({ onDone }: { onDone: (v: ImportView) => void }) {
+function PhotoImport({ onDone, shared }: {
+  onDone: (v: ImportView) => void
+  shared?: Extract<SharedRecipe, { kind: "photos" }>["photos"]
+}) {
   const [photos, setPhotos] = useState<string[]>([])
   const [denied, setDenied] = useState(false)
   const job = useImport(onDone)
+  useStartShared(shared, async () => {
+    try {
+      const images = await Promise.all(shared!.map(shrinkPhoto))
+      setPhotos(images)
+      job.run({ kind: "photos", images }, "Could not read the photos.")
+    } catch (e) {
+      job.setError(e instanceof Error ? e.message : "Could not read the shared photos.")
+    }
+  })
 
   async function add(from: "camera" | "library") {
     job.setError(null)
@@ -116,8 +140,8 @@ function PhotoImport({ onDone }: { onDone: (v: ImportView) => void }) {
   )
 }
 
-function LinkImport({ kind, onDone }: { kind: "link" | "post"; onDone: (v: ImportView) => void }) {
-  const [url, setUrl] = useState("")
+function LinkImport({ kind, onDone, shared }: { kind: "link" | "post"; onDone: (v: ImportView) => void; shared?: string }) {
+  const [url, setUrl] = useState(shared ?? "")
   const [estimate, setEstimate] = useState<number | null>(null)
   const job = useImport(onDone)
   const link = url.trim()
@@ -131,6 +155,7 @@ function LinkImport({ kind, onDone }: { kind: "link" | "post"; onDone: (v: Impor
     setEstimate(slow ? timing?.estimated_seconds ?? 105 : null)
     job.run({ kind, url: link }, kind === "post" ? "Could not read that post." : "Could not import that link.")
   }
+  useStartShared(shared, read)
 
   return (
     <View className="gap-3">
@@ -157,9 +182,10 @@ function LinkImport({ kind, onDone }: { kind: "link" | "post"; onDone: (v: Impor
   )
 }
 
-function TextImport({ onDone }: { onDone: (v: ImportView) => void }) {
-  const [text, setText] = useState("")
+function TextImport({ onDone, shared }: { onDone: (v: ImportView) => void; shared?: string }) {
+  const [text, setText] = useState(shared ?? "")
   const job = useImport(onDone)
+  useStartShared(shared, () => job.run({ kind: "text", text: shared!.trim() }, "Could not read that text."))
   return (
     <View className="gap-3">
       <TextInput accessibilityLabel="Recipe text" value={text} onChangeText={setText} multiline maxLength={20000}
@@ -176,7 +202,8 @@ function TextImport({ onDone }: { onDone: (v: ImportView) => void }) {
 
 /** Add a recipe: from a post, a link, photos or pasted text (read by AI as a background job,
  * then saved straight away unless something needs the person), or typed into the form.
- * `?method=post|link` (from Home) opens that way at once. An import still running when the app
+ * `?method=post|link` (from Home) opens that way at once; a share from another app (`lib/share.ts`)
+ * starts its import here. An import still running when the app
  * was closed is picked up again here ("Finishing your import…"). */
 export default function NewRecipe() {
   const userId = useAuth().session!.user.id
@@ -194,6 +221,21 @@ export default function NewRecipe() {
   const [resumeError, setResumeError] = useState<string | null>(null)
   const [resumeSteps, setResumeSteps] = useState<ImportStep[]>([])
   const stopWaiting = useRef<(() => void) | null>(null)
+  // Something shared to Pantrila from another app: its import starts here at once.
+  const [incoming, setIncoming] = useState<SharedRecipe | null>(null)
+  const shared = useSharedRecipe()
+  const [seenShare, setSeenShare] = useState<number | null>(null)
+  if (shared && shared.id !== seenShare) {
+    setSeenShare(shared.id)
+    setResumeError(null)
+    setResult(null)
+    setDraft(null)
+    setIncoming(shared)
+    setMethod(shared.kind === "photos" ? "photo" : shared.kind)
+  }
+  useEffect(() => {
+    if (shared) takeShare(shared.id)  // this screen has it now
+  }, [shared])
 
   const review = (v: ImportView) => {
     setResult(v)
@@ -243,6 +285,7 @@ export default function NewRecipe() {
   }, [userId])
 
   function pick(key: Method) {
+    setIncoming(null)
     setResumeError(null)
     setResult(null)
     setDraft(key === "manual" ? BLANK_RECIPE : null)
@@ -292,10 +335,17 @@ export default function NewRecipe() {
         {showImport && (
           <Panel>
             <PanelTitle>{IMPORT_TITLE[method as Exclude<Method, "manual">]}</PanelTitle>
-            {method === "photo" && <PhotoImport onDone={imported} />}
-            {method === "link" && <LinkImport kind="link" onDone={imported} />}
-            {method === "post" && <LinkImport kind="post" onDone={imported} />}
-            {method === "text" && <TextImport onDone={imported} />}
+            {method === "photo" && (
+              <PhotoImport key={incoming?.id} onDone={imported}
+                           shared={incoming?.kind === "photos" ? incoming.photos : undefined} />
+            )}
+            {(method === "link" || method === "post") && (
+              <LinkImport key={`${method}${incoming?.id ?? ""}`} kind={method} onDone={imported}
+                          shared={incoming && "url" in incoming && incoming.kind === method ? incoming.url : undefined} />
+            )}
+            {method === "text" && (
+              <TextImport key={incoming?.id} onDone={imported} shared={incoming?.kind === "text" ? incoming.text : undefined} />
+            )}
             {me && <Text className="mt-3 font-sans text-xs text-muted-foreground">{leftText("import", me.limits.imports)}.</Text>}
           </Panel>
         )}

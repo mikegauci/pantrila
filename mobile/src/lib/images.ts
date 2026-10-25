@@ -8,14 +8,18 @@ const MAX = 1600
 
 export class PhotoAccessError extends Error {}
 
-async function shrink(asset: ImagePicker.ImagePickerAsset): Promise<string> {
-  const scale = Math.min(1, MAX / Math.max(asset.width || MAX, asset.height || MAX))
-  const context = ImageManipulator.manipulate(asset.uri)
+/** One photo as a JPEG data URL, longest side at most `MAX` px. Shared photos may not say their
+ * size, so it is read from the image then. */
+export async function shrinkPhoto(photo: { uri: string; width?: number | null; height?: number | null }): Promise<string> {
+  let image = await ImageManipulator.manipulate(photo.uri).renderAsync()
+  const width = photo.width || image.width
+  const height = photo.height || image.height
+  const scale = Math.min(1, MAX / Math.max(width, height))
   if (scale < 1) {
-    context.resize(asset.width >= asset.height ? { width: Math.round(asset.width * scale) }
-                                               : { height: Math.round(asset.height * scale) })
+    image = await ImageManipulator.manipulate(image)
+      .resize(width >= height ? { width: Math.round(width * scale) } : { height: Math.round(height * scale) })
+      .renderAsync()
   }
-  const image = await context.renderAsync()
   const out = await image.saveAsync({ format: SaveFormat.JPEG, compress: 0.85, base64: true })
   if (!out.base64) throw new Error("Could not read that photo.")
   return `data:image/jpeg;base64,${out.base64}`
@@ -36,5 +40,5 @@ export async function pickPhotos(from: "camera" | "library", limit: number): Pro
     ? await ImagePicker.launchCameraAsync(options)
     : await ImagePicker.launchImageLibraryAsync({ ...options, allowsMultipleSelection: true, selectionLimit: limit })
   if (result.canceled) return []
-  return Promise.all(result.assets.slice(0, limit).map(shrink))
+  return Promise.all(result.assets.slice(0, limit).map(shrinkPhoto))
 }

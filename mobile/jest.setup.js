@@ -57,9 +57,26 @@ jest.mock("expo-image-manipulator", () => ({
     manipulate: jest.fn(() => {
       const context = {
         resize: jest.fn(() => context),
-        renderAsync: jest.fn(async () => ({ saveAsync: jest.fn(async () => ({ base64: "SlBFRw==" })) })),
+        renderAsync: jest.fn(async () => ({ width: 1200, height: 900, saveAsync: jest.fn(async () => ({ base64: "SlBFRw==" })) })),
       }
       return context
     }),
   },
 }))
+
+// The share sheet: tests call `mockShare(intent)` (global) to share into the app.
+jest.mock("expo-share-intent", () => {
+  const React = require("react")
+  const empty = { files: null, text: null, webUrl: null, type: null }
+  let setIntent = () => {}
+  global.mockShare = (intent) => setIntent({ ...empty, ...intent })
+  return {
+    ShareIntentProvider: ({ children }) => children,
+    useShareIntentContext: () => {
+      const [shareIntent, set] = React.useState(empty)
+      setIntent = set
+      const hasShareIntent = Boolean(shareIntent.text || shareIntent.webUrl || shareIntent.files)
+      return { hasShareIntent, shareIntent, resetShareIntent: React.useCallback(() => set(empty), []), error: null }
+    },
+  }
+})
