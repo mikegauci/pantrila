@@ -42,10 +42,23 @@ Building the iOS and Android apps with Expo, one PR at a time, in the order give
 [`docs/plans/mobile-app.md`](docs/plans/mobile-app.md). In a new chat (desktop or phone), say "do the
 next PR of the mobile plan": read that file first, take the first PR its Progress table does not
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
-Progress and the handoff log, and adding a Status entry here. Next: **PR 1 (`feat/shared-core`)**;
-the owner can do PR 0 (Apple, Google Play, Expo and RevenueCat accounts) alongside it.
+Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) is done. Next:
+**PR 2 (`feat/mobile-skeleton`)**; the owner still has PR 0 (Apple, Google Play, Expo and RevenueCat
+accounts), needed for PR 2's device builds.
 
 ## Status (update as work lands)
+
+Shared core for the phone app (mobile plan PR 1): the repo root is an npm workspace (`web`, `packages/*`; `site/`
+stays separate) with one root `package-lock.json` (same versions as the old `web/` one). `packages/core`
+(`@pantrila/core`, TypeScript source imported as `@pantrila/core/<module>`, `transpilePackages` in
+`web/next.config.ts`) now holds the API types, `amounts`, `sections`, `plan`, `format`, `avatar`, the pure parts of
+`cooking` (timers, preheat hints, `stepUses`, progress types), `temperature` and `voice` (`voiceCommand`, `micHelp`),
+`sse.ts` (`EventParser`, `readEvents` on any ReadableStream, so `expo/fetch` works) and `api.ts`
+(`createApi({ baseUrl, getToken, onSlow, fetch })`, `ApiError`). `web/src/lib` keeps the hooks, `localStorage`, wake
+lock, sounds, the browser speech listener and `api.ts`, which wraps `createApi` with the Supabase session and the
+wake-up toast. `globals.css` adds `@source` for core so its avatar tints stay in the CSS. 49 Vitest tests in
+`packages/core/test`; CI gains a `core` job, and the web job installs from the root and also runs on
+`packages/**` changes. No visible change (all 41 Playwright specs pass); no model call, so no eval rerun.
 
 PostHog session replay, on by default (owner's choice, opt-out): every signed-in visit is recorded unless the
 person turns off "Record my visits" in Profile (`localStorage["pantrila-replay:<user>"]="off"`); there is no prompt.
@@ -863,6 +876,11 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `PANTRILA_DAILY_CHATS`, `PANTRILA_DAILY_IMPORTS`, `PANTRILA_DAILY_PHOTOS`) and in total
   (`PANTRILA_DAILY_BUDGET_USD`).
 - `render.yaml`: Render Blueprint for the API.
+- `package.json` (root): npm workspaces `web` and `packages/*`; one `package-lock.json` at the root.
+- `packages/core/`: `@pantrila/core`, code shared by web and the phone app (no React, DOM or React
+  Native): `src/types.ts` (API types), `api.ts` (`createApi`, `ApiError`), `sse.ts`, `amounts.ts`,
+  `cooking.ts`, `temperature.ts`, `voice.ts`, `sections.ts`, `plan.ts`, `format.ts`, `avatar.ts`;
+  Vitest tests in `test/`. Imported as `@pantrila/core/<module>`.
 - `site/`: the pantrila.com landing site (Next.js, static, no API or sign-in): `src/app/page.tsx` (sections),
   `privacy/`, `terms/`, `src/lib.ts` (addresses and contact), `src/components/` (header/footer, screenshot
   frames, logo copied from `web/`; animation in `motion.tsx`, `hero-art.tsx`, `demos.tsx`, `allergen-check.tsx`),
@@ -890,13 +908,14 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - `web/`: Next.js 16 App Router (Cache Components on), Tailwind v4, shadcn/ui on Base UI;
   see `web/DESIGN_SYSTEM.md` (tokens live in `src/app/globals.css`). Signed-in screens are
   client components under `src/app/(app)/` fetching the API with SWR (`src/lib/hooks.ts`,
-  `src/lib/api.ts`, types in `src/lib/types.ts` mirror `api_models.py`); Supabase is used only for
+  `src/lib/api.ts`, types in `@pantrila/core/types` mirror `api_models.py`); Supabase is used only for
   sign-in (Google, magic link or anonymous guest; a guest links Google with `linkGoogle`). The cookbook lives under `recipes/mine` (list,
   `new`, `[id]`) with the shared form in `src/components/cookbook-form.tsx`; "From a post" can
   import the post directly, with an estimated countdown. The first-run tour
   is `src/components/tour.tsx` (`TourProvider` in `AppShell`, `useTour().start`). Cooking mode is
-  `src/components/cooking-mode.tsx` with helpers in `src/lib/cooking.ts`; voice commands are
-  `src/components/voice-control.tsx` and `src/lib/voice.ts`. The assistant's
+  `src/components/cooking-mode.tsx` with helpers in `@pantrila/core/cooking` and `src/lib/cooking.ts`
+  (storage, wake lock, sounds); voice commands are `src/components/voice-control.tsx`,
+  `@pantrila/core/voice` (words to commands) and `src/lib/voice.ts` (browser listener). The assistant's
   thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrila.tsx`. `RecipeArt` (`src/components/bits.tsx`)
   shows the recipe photo with `next/image` (host allowed from `NEXT_PUBLIC_SUPABASE_URL` in
   `next.config.ts`) or the meal-type art when there is none. `src/proxy.ts` only redirects the retired Vercel addresses. Read `web/AGENTS.md`: this Next.js differs from
@@ -942,7 +961,9 @@ uv run pantrila photos generate [--only ids] [--limit n] [--force] [--dry-run]  
 uv run python scripts/langsmith_dashboard.py [--source api|cli|eval|all]  # LangSmith dashboard
 uv run python scripts/email_templates.py      # rewrite supabase/templates/ (then paste into Supabase)
 uv run uvicorn pantrila.api:app --env-file .env --reload   # API on :8000 (SUPABASE_URL, DATABASE_URL)
-cd web && npm ci && npm run dev          # :3000; web/.env.local from web/.env.example
+npm ci                                   # from the root: installs web and packages/* (one lockfile)
+npm test --workspace @pantrila/core      # shared-code unit tests (Vitest); typecheck: npm run typecheck --workspace @pantrila/core
+cd web && npm run dev                    # :3000; web/.env.local from web/.env.example
 cd web && npm run lint && npm run typecheck && npm run build   # what CI runs for web
 cd site && npm ci && npm run dev         # landing site on :3001 (lint, typecheck, build as for web)
 ```
