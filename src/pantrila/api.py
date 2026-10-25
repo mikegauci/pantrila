@@ -560,9 +560,11 @@ def create_app(
         diet: Annotated[list[DietTag] | None, Query()] = None,
         safe: bool = True,
         limit: Annotated[int, Query(ge=1, le=60)] = 24,
+        offset: Annotated[int, Query(ge=0, le=500)] = 0,
     ) -> RecipeList:
         """Hybrid search, or browse by title when `q` is empty. With `safe` (the default) the
-        person's allergies, diets, excluded foods and time limit are added as filters."""
+        person's allergies, diets, excluded foods and time limit are added as filters. `offset`
+        skips that many results (the phone's list loads more as it scrolls)."""
         profile = s.kitchen.profile()
         diets, limits = set(diet or []), [m for m in (max_minutes,) if m]
         f = SearchFilters(meal_types=meal or [], cuisines=cuisine or [])  # fmt: skip
@@ -578,7 +580,7 @@ def create_app(
             operation = PaidOperation(s.records, "search", config.embed_model())
             before = s.store.embed_tokens
             try:
-                ids = s.store.search(q, f, limit)
+                ids = s.store.search(q, f, offset + limit)[offset:]
             except Exception:
                 operation.finish(
                     EmbeddingUsage(embed_tokens=s.store.embed_tokens - before), ok=False
@@ -586,7 +588,7 @@ def create_app(
                 raise
             operation.finish(EmbeddingUsage(embed_tokens=s.store.embed_tokens - before))
         else:
-            ids = s.store.browse(f, limit)
+            ids = s.store.browse(f, offset + limit)[offset:]
         found, photos = s.store.get(ids), s.store.photos(ids)
         return RecipeList(query=q, rules=f, recipes=[recipe_card(found[i], profile, photos.get(i))
                                                      for i in ids if i in found])  # fmt: skip
