@@ -18,6 +18,7 @@ jobs:
       python: ${{ steps.filter.outputs.python }}
       web: ${{ steps.filter.outputs.web }}
       core: ${{ steps.filter.outputs.core }}
+      mobile: ${{ steps.filter.outputs.mobile }}
       site: ${{ steps.filter.outputs.site }}
     steps:
       - uses: actions/checkout@v4
@@ -43,6 +44,12 @@ jobs:
               - "package-lock.json"
               - ".github/workflows/ci.yml"
             core:
+              - "packages/**"
+              - "package.json"
+              - "package-lock.json"
+              - ".github/workflows/ci.yml"
+            mobile:
+              - "mobile/**"
               - "packages/**"
               - "package.json"
               - "package-lock.json"
@@ -139,6 +146,28 @@ jobs:
       - run: npm ci
       - run: npm run typecheck --workspace @pantrila/core
       - run: npm test --workspace @pantrila/core
+
+  # The Expo phone app: lint, types, unit tests and Expo's project checks. Device builds run on EAS.
+  mobile:
+    needs: changes
+    if: needs.changes.outputs.mobile == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+        working-directory: .
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npx expo-doctor
 
   # The pantrila.com landing site: static pages, so lint, types and a build are the checks.
   site:
