@@ -10,7 +10,8 @@ import Recipes from "@/app/(tabs)/recipes"
 import Account from "@/app/account"
 import Cook from "@/app/recipes/[id]/cook"
 import RecipePage from "@/app/recipes/[id]/index"
-import MyRecipe from "@/app/recipes/mine/[id]"
+import CookMine from "@/app/recipes/mine/[id]/cook"
+import MyRecipe from "@/app/recipes/mine/[id]/index"
 import MyRecipes from "@/app/recipes/mine/index"
 import NewRecipe from "@/app/recipes/mine/new"
 
@@ -28,7 +29,8 @@ export function showApp(url: string) {
       "recipes/[id]/index": RecipePage,
       "recipes/[id]/cook": Cook,
       "recipes/mine/index": MyRecipes,
-      "recipes/mine/[id]": MyRecipe,
+      "recipes/mine/[id]/index": MyRecipe,
+      "recipes/mine/[id]/cook": CookMine,
       "recipes/mine/new": NewRecipe,
       account: Account,
     },

@@ -2,7 +2,7 @@ import useSWR, { useSWRConfig, type SWRConfiguration } from "swr"
 import useSWRInfinite from "swr/infinite"
 
 import type {
-  ChatThreadSummary, CookbookCard, GroceryList, Me, Meta, Plan, Profile, RecipeDetail, RecipeList,
+  ChatThreadSummary, CookbookCard, CookbookDetail, GroceryList, Me, Meta, Plan, Profile, RecipeDetail, RecipeList,
 } from "@pantrila/core/types"
 
 import { api, ApiError } from "@/lib/api"
@@ -21,6 +21,18 @@ export const useProfile = () => useApi<Profile>("/me/profile")
 export const useRecipe = (id: string | null) => useApi<RecipeDetail>(id ? `/recipes/${id}` : null)
 export const useChats = () => useApi<ChatThreadSummary[]>("/me/chats")
 export const useCookbook = () => useApi<CookbookCard[]>("/me/recipes")
+export const useCookbookRecipe = (id: string | null) => useApi<CookbookDetail>(id ? `/me/recipes/${id}` : null)
+
+/** Refresh what a kitchen change touches (pantry, recipes' pantry marks, plans, the grocery list). */
+export function useRefreshKitchen() {
+  const { mutate } = useSWRConfig()
+  return () => mutate(
+    (key) => typeof key === "string" && (
+      key.startsWith("/recipes") || key.startsWith("/plans") || key.startsWith("/me/recipes") ||
+      key === "/me/pantry" || key === "/me/cooked"
+    ),
+  )
+}
 
 /** The latest plan; a 404 (no plan yet) comes back as null, not an error. */
 export function usePlan() {

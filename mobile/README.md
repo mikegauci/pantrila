@@ -39,6 +39,11 @@ content rather than opening another (iOS will not stack them). Screens still to 
 (`src/components/soon.tsx`) with the PR that brings them. Data comes through SWR hooks in
 `src/lib/hooks.ts`; anything kept on the phone for one person goes under `userKey(user.id, ...)`.
 
+Cooking mode needs native modules a development build carries: `expo-keep-awake`, `expo-notifications` (timers
+that ring with the phone locked), `expo-audio` (the ring and chime in `assets/sounds/`, written by
+`scripts/cooking_sounds.py` at the repo root) and `expo-speech-recognition` (voice commands; its permission texts
+are in `app.config.ts`).
+
 ## Checks
 
 ```bash

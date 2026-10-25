@@ -16,6 +16,9 @@ import { AuthProvider, useAuth } from "@/components/auth-provider"
 
 SplashScreen.preventAutoHideAsync()
 
+// Cooking mode covers the app and has its own close button; a stray swipe must not leave it.
+const COOKING = { presentation: "fullScreenModal", gestureEnabled: false } as const
+
 export default function RootLayout() {
   // One family per weight: the names match the font-sans-* tokens in global.css.
   const [loaded, error] = useFonts({
@@ -59,10 +62,10 @@ function Screens() {
       <Stack.Protected guard={!!session}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="recipes/[id]/index" options={{ headerShown: true, title: "Recipe" }} />
-        <Stack.Screen name="recipes/[id]/cook" options={{ headerShown: true, title: "Cooking mode" }} />
+        <Stack.Screen name="recipes/[id]/cook" options={COOKING} />
         <Stack.Screen name="recipes/mine/index" options={{ headerShown: true, title: "My recipes" }} />
         <Stack.Screen name="recipes/mine/[id]/index" options={{ headerShown: true, title: "My recipe" }} />
-        <Stack.Screen name="recipes/mine/[id]/cook" options={{ headerShown: true, title: "Cooking mode" }} />
+        <Stack.Screen name="recipes/mine/[id]/cook" options={COOKING} />
         <Stack.Screen name="recipes/mine/new" options={{ headerShown: true, title: "Add a recipe" }} />
         <Stack.Screen name="account" options={{ headerShown: true, title: "Account", presentation: "modal" }} />
       </Stack.Protected>
