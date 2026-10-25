@@ -4,6 +4,9 @@ import { BookOpen, ChefHat, Search, ShieldCheck } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
+import { label } from "@pantrila/core/format"
+import type { DietTag, MealType, RecipeList, SearchRules } from "@pantrila/core/types"
+
 import { EmptyState } from "@/components/bits"
 import { FilterMenu } from "@/components/filter-menu"
 import { RecipeCard } from "@/components/recipe-card"
@@ -11,10 +14,8 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Switch } from "@/components/ui/switch"
-import { label } from "@/lib/format"
 import { useApi, useMeta } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
-import type { DietTag, MealType, RecipeList, SearchRules } from "@/lib/types"
 
 const TIMES = [15, 30, 45, 60]
 const MEALS: MealType[] = ["breakfast", "lunch", "dinner", "snack", "dessert"]

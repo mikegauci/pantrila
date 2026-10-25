@@ -5,14 +5,15 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
+import { label } from "@pantrila/core/format"
+import { repeatChoices } from "@pantrila/core/plan"
+import type { Plan, PlanMeal } from "@pantrila/core/types"
+
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { ApiError, send } from "@/lib/api"
-import { label } from "@/lib/format"
 import { useSavePlan } from "@/lib/hooks"
-import { repeatChoices } from "@/lib/plan"
-import type { Plan, PlanMeal } from "@/lib/types"
 
 /** Cook once, eat again: pick meals on later days that become this meal's leftovers. The
  * server changes all of them or none, and buys for them on the grocery list. */

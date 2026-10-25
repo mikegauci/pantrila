@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation"
 import { useRef, useState } from "react"
 import { toast } from "sonner"
 
+import { label } from "@pantrila/core/format"
+import { hasKcalRange, kcalGoal } from "@pantrila/core/plan"
+import type { Allergen, DietTag, MealType, Me, NutritionTargets, Profile } from "@pantrila/core/types"
+
 import { UserAvatar } from "@/components/app-shell"
 import { useAuth } from "@/components/auth-provider"
 import { Panel, PanelTitle } from "@/components/bits"
@@ -19,14 +23,11 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send } from "@/lib/api"
-import { label } from "@/lib/format"
 import { useFoods, useMe, useMeta, useProfile, useRefreshKitchen } from "@/lib/hooks"
 import { toAvatarDataUrl } from "@/lib/images"
 import { replayAvailable, replayChoice, setReplayChoice } from "@/lib/replay"
 import { googlePicture, linkGoogle, supabase } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
-import { hasKcalRange, kcalGoal } from "@/lib/plan"
-import type { Allergen, DietTag, MealType, Me, NutritionTargets, Profile } from "@/lib/types"
 
 const DIET_HELP: Partial<Record<DietTag, string>> = {
   low_carb: "at most 20 g carbs per serving",

@@ -1,11 +1,19 @@
 "use client"
 
-import { NutritionSource } from "@/components/nutrition-source"
 import { Camera, Clapperboard, ClipboardPaste, Link2, PenLine, Plus, Share2, Sparkles, Trash2, TriangleAlert, X } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
 import { type ScopedMutator, useSWRConfig } from "swr"
 
+import { convertAmount } from "@pantrila/core/amounts"
+import { label, MEAL_ORDER } from "@pantrila/core/format"
+import { groupLines, stepsToText, textToSteps } from "@pantrila/core/sections"
+import type {
+  Allergen, CookbookDetail, CookbookPreview, CookbookRecipeIn, EstimateView, Food, FoodEstimate,
+  RecipeLine, RecipeSource, SourcePlatform, Unit,
+} from "@pantrila/core/types"
+
+import { NutritionSource } from "@/components/nutrition-source"
 import { AllergenBadge, DietBadge, Panel, PanelTitle, ProblemAlert } from "@/components/bits"
 import { MacroRing } from "@/components/macro-ring"
 import { NativeSelect } from "@/components/native-select"
@@ -13,17 +21,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { convertAmount } from "@/lib/amounts"
 import { ApiError, send } from "@/lib/api"
-import { label, MEAL_ORDER } from "@/lib/format"
 import { useFoods, useProfile } from "@/lib/hooks"
 import { makePhoto } from "@/lib/photo-jobs"
-import { groupLines, stepsToText, textToSteps } from "@/lib/sections"
 import { cn } from "@/lib/utils"
-import type {
-  Allergen, CookbookDetail, CookbookPreview, CookbookRecipeIn, EstimateView, Food, FoodEstimate,
-  RecipeLine, RecipeSource, SourcePlatform, Unit,
-} from "@/lib/types"
 
 export const RECIPE_SOURCE: Record<RecipeSource, { icon: typeof Camera; text: string }> = {
   photo: { icon: Camera, text: "From a photo" },

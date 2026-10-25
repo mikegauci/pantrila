@@ -1,4 +1,4 @@
-import type { StepSection } from "@/lib/types"
+import type { StepSection } from "./types"
 
 export interface Group<T> {
   /** The source's heading ("For the sauce"); empty when the list is not grouped. */

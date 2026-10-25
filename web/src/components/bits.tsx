@@ -3,9 +3,10 @@ import {
 } from "lucide-react"
 import Image from "next/image"
 
+import { label } from "@pantrila/core/format"
+import type { Allergen, DietTag, MealType } from "@pantrila/core/types"
+
 import { cn } from "@/lib/utils"
-import { label } from "@/lib/format"
-import type { Allergen, DietTag, MealType } from "@/lib/types"
 
 /** A card per the design system: white, 20px radius, 1px border. */
 export function Panel({

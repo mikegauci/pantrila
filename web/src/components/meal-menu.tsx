@@ -6,6 +6,10 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
+import { label } from "@pantrila/core/format"
+import { cookPortions, EATING_OUT_SIZES, leftoverSources, leftoversOf, mealHref } from "@pantrila/core/plan"
+import type { MealType, Plan, PlanMeal, SlotKind } from "@pantrila/core/types"
+
 import { RepeatMealSheet } from "@/components/repeat-meal"
 import { buttonVariants } from "@/components/ui/button"
 import {
@@ -13,10 +17,7 @@ import {
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ApiError, send } from "@/lib/api"
-import { label } from "@/lib/format"
 import { useSavePlan } from "@/lib/hooks"
-import { cookPortions, EATING_OUT_SIZES, leftoverSources, leftoversOf, mealHref } from "@/lib/plan"
-import type { MealType, Plan, PlanMeal, SlotKind } from "@/lib/types"
 
 const MAX_LEFTOVER_CHOICES = 4 // the most recent earlier meals; older leftovers are rare
 

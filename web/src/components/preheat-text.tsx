@@ -2,9 +2,9 @@
 
 import { Popover } from "@base-ui/react/popover"
 
-import { niceFractions } from "@/lib/amounts"
-import { PREHEAT, preheatHint } from "@/lib/cooking"
-import { showTemps, type TempUnit } from "@/lib/temperature"
+import { niceFractions } from "@pantrila/core/amounts"
+import { PREHEAT, preheatHint } from "@pantrila/core/cooking"
+import { showTemps, type TempUnit } from "@pantrila/core/temperature"
 
 /** A step's text with its preheat words underlined; hover, focus or tap shows the later step that names the time. */
 export function PreheatText({ steps, index, unit }: { steps: string[]; index: number; unit: TempUnit }) {

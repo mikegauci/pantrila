@@ -1,0 +1,11 @@
+{
+  "name": "pantrila",
+  "private": true,
+  "workspaces": [
+    "web",
+    "packages/*"
+  ],
+  "scripts": {
+    "test:core": "npm test --workspace @pantrila/core"
+  }
+}

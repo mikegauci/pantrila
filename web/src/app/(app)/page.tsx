@@ -3,6 +3,9 @@
 import { ArrowRight, CalendarDays, Refrigerator, ShoppingBasket } from "lucide-react"
 import Link from "next/link"
 
+import { label, planDayIndex } from "@pantrila/core/format"
+import { mealHref } from "@pantrila/core/plan"
+
 import { AskPantrila } from "@/components/ask-pantrila"
 import { EmptyState, Panel, PanelTitle, ProblemAlert, RecipeArt } from "@/components/bits"
 import { MacroRing } from "@/components/macro-ring"
@@ -10,8 +13,6 @@ import { MyRecipesHome } from "@/components/my-recipes-home"
 import { buttonVariants } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useAuth } from "@/components/auth-provider"
-import { label, planDayIndex } from "@/lib/format"
-import { mealHref } from "@/lib/plan"
 import { useGrocery, usePantry, usePlan } from "@/lib/hooks"
 import { firstName } from "@/lib/supabase"
 

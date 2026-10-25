@@ -3,12 +3,13 @@
 import { Ruler } from "lucide-react"
 import { type ReactNode, useState } from "react"
 
+import { amountIn, bareName, formatAmount, unitsFor, type Measured, type ShowUnit } from "@pantrila/core/amounts"
+
 import { buttonVariants } from "@/components/ui/button"
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuRadioGroup,
   DropdownMenuRadioItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { amountIn, bareName, formatAmount, unitsFor, type Measured, type ShowUnit } from "@/lib/amounts"
 import { cn } from "@/lib/utils"
 
 /**

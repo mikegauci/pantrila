@@ -4,11 +4,12 @@ import { useState } from "react"
 import { useSWRConfig } from "swr"
 import { toast } from "sonner"
 
+import type { CookbookRecipeIn, RecipeCard as Recipe, RecipeDetail } from "@pantrila/core/types"
+
 import { DietBadge, RecipeArt } from "@/components/bits"
 import { api, send } from "@/lib/api"
 import { useCookbook } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
-import type { CookbookRecipeIn, RecipeCard as Recipe, RecipeDetail } from "@/lib/types"
 
 const myRecipes = (
   <Link href="/recipes/mine" className="font-bold underline underline-offset-2">My Recipes</Link>

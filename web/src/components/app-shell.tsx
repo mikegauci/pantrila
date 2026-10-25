@@ -8,6 +8,8 @@ import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState, useSyncExternalStore } from "react"
 import { toast } from "sonner"
 
+import { avatarFor } from "@pantrila/core/avatar"
+
 import { useAuth } from "@/components/auth-provider"
 import { FeedbackSheet } from "@/components/feedback"
 import { GoogleMark } from "@/components/google-mark"
@@ -21,7 +23,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
 import { pingServer } from "@/lib/api"
-import { avatarFor } from "@/lib/avatar"
 import { useMe } from "@/lib/hooks"
 import { googlePicture, linkGoogle, supabase } from "@/lib/supabase"
 import { cn } from "@/lib/utils"

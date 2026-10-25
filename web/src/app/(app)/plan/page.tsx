@@ -6,17 +6,18 @@ import { useRef, useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
+import { label, MEAL_ORDER, planDayIndex, seconds, usd } from "@pantrila/core/format"
+import { hasKcalRange, kcalMet, kcalTargetText, mealHref } from "@pantrila/core/plan"
+import type { Nutrition, NutritionTargets, Plan, PlanMeal } from "@pantrila/core/types"
+
 import { AiBadge, EmptyState, Panel, PanelTitle, ProblemAlert, RecipeArt, Stat } from "@/components/bits"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { MealMenu } from "@/components/meal-menu"
 import { SwapMealSheet, type SwapTarget } from "@/components/swap-meal"
 import { ApiError, streamPlan } from "@/lib/api"
-import { label, MEAL_ORDER, planDayIndex, seconds, usd } from "@/lib/format"
 import { useMe, usePlan, useProfile } from "@/lib/hooks"
-import { hasKcalRange, kcalMet, kcalTargetText, mealHref } from "@/lib/plan"
 import { cn } from "@/lib/utils"
-import type { Nutrition, NutritionTargets, Plan, PlanMeal } from "@/lib/types"
 
 const STEPS: Record<string, string> = {
   profile: "Read your profile and pantry",

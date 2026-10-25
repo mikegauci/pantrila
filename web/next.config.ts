@@ -10,6 +10,8 @@ const photoPatterns = supabaseUrl
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  // Shared code is TypeScript source, compiled with the app.
+  transpilePackages: ["@pantrila/core"],
   images: {
     remotePatterns: photoPatterns,
     // Photo paths change whenever the photo does, so a long cache is safe.

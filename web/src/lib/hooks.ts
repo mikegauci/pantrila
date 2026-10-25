@@ -2,11 +2,12 @@
 
 import useSWR, { useSWRConfig, type SWRConfiguration } from "swr"
 
-import { api, ApiError } from "@/lib/api"
 import type {
   ChatThread, ChatThreadSummary, CookbookCard, CookbookDetail, Cooked, Food, GroceryList, Me, Meta, PantryItem, Plan, Profile, RecipeDetail,
   Usage,
-} from "@/lib/types"
+} from "@pantrila/core/types"
+
+import { api, ApiError } from "@/lib/api"
 
 const fetcher = <T,>(path: string) => api<T>(path)
 

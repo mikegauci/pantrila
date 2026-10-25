@@ -1,4 +1,4 @@
-import type { Unit } from "@/lib/types"
+import type { Unit } from "./types"
 
 /**
  * How ingredient amounts read: US measures as fractions ("1 1/4 tsp"), metric as whole numbers

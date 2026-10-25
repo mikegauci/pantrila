@@ -1,9 +1,10 @@
 "use client"
 
+import { kcalGoal, kcalTargetText } from "@pantrila/core/plan"
+import type { Plan } from "@pantrila/core/types"
+
 import { Panel, PanelTitle } from "@/components/bits"
 import { usePlan } from "@/lib/hooks"
-import { kcalGoal, kcalTargetText } from "@/lib/plan"
-import type { Plan } from "@/lib/types"
 
 function DayChart({ plan }: { plan: Plan }) {
   const target = kcalTargetText(plan.targets)

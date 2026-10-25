@@ -3,13 +3,14 @@
 import { ArrowLeft, BookOpen, Clock, Flame, Plus, TriangleAlert } from "lucide-react"
 import Link from "next/link"
 
+import type { CookbookCard, RecipeSource } from "@pantrila/core/types"
+
 import { DietBadge, EmptyState, Panel, RecipeArt } from "@/components/bits"
 import { RECIPE_SOURCE } from "@/components/cookbook-form"
 import { buttonVariants } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useCookbook } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
-import type { CookbookCard, RecipeSource } from "@/lib/types"
 
 const ORIGIN: Record<RecipeSource, string> = {
   post: "social media", link: "links", photo: "photos", video: "videos", text: "pasted text", manual: "typed in",
