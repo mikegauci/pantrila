@@ -1,7 +1,7 @@
 import type { ConfigContext, ExpoConfig } from "expo/config"
 
 // Set once by `npx eas-cli init` (run in mobile/); it links builds to the Expo project. Not a secret.
-const EAS_PROJECT_ID = ""
+const EAS_PROJECT_ID = "b60bab44-4784-4b21-8ba2-e8aed45df863"
 
 // Same green as the icon's gradient end (web/brand); the splash shows the white mark on it.
 const BRAND_GREEN = "#2a7a38"
