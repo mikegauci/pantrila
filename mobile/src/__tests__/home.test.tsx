@@ -1,6 +1,6 @@
 import { fireEvent, screen } from "expo-router/testing-library"
 
-import { api, health } from "@/lib/api"
+import { api, health, streamChat } from "@/lib/api"
 import { card } from "@/test/fixtures"
 import { fakeApi, showApp } from "@/test/screens"
 
@@ -18,7 +18,10 @@ jest.mock("@/lib/auth", () => ({
   linkWith: jest.fn(),
   signOut: jest.fn(),
 }))
-jest.mock("@/lib/api", () => ({ api: jest.fn(), health: jest.fn(async () => true) }))
+jest.mock("@/lib/api", () => ({
+  ApiError: jest.requireActual("@pantrila/core/api").ApiError,
+  api: jest.fn(), health: jest.fn(async () => true), streamChat: jest.fn(() => new Promise(() => {})),
+}))
 
 const mine = (n: number) => ({ ...card(n), id: n, title: `My dish ${n}` })
 
@@ -39,7 +42,9 @@ it("greets by name, opens a question in the Assistant tab and pings the server",
 
   await fireEvent.changeText(screen.getByLabelText("Ask Pantrila"), "  What is a roux?  ")
   await fireEvent.press(screen.getByLabelText("Ask"))
-  expect(shown.getPathnameWithParams()).toBe("/assistant?q=What+is+a+roux%3F")
+  // The Assistant tab asks it in a new chat.
+  expect(shown.getPathname()).toBe("/assistant")
+  expect(streamChat).toHaveBeenCalledWith({ message: "What is a roux?", thread_id: null }, expect.any(Function))
 })
 
 beforeEach(() => {

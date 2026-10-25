@@ -3,18 +3,15 @@ import { MessageCircle, Send } from "lucide-react-native"
 import { useState } from "react"
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native"
 
+import { addWords, STARTERS } from "@pantrila/core/chat"
+
 import { AiBadge, Panel } from "@/components/bits"
+import { DictateButton } from "@/components/dictate-button"
 import { Icon } from "@/components/icon"
 import { useChats } from "@/lib/hooks"
 
-export const STARTERS = [
-  "What can I cook tonight with what I have?",
-  "I just bought eggs, spinach and feta.",
-  "Find a quick high-protein breakfast.",
-]
-
-/** Home card: a question typed or picked here opens the Assistant tab (the chat itself comes in
- * mobile plan PR 10, which reads `q` and `thread`). */
+/** Home card: a question typed or picked here opens the Assistant tab in a new chat (`?q=`); a
+ * recent chat opens there too (`?thread=`). */
 export function AskPantrila() {
   const [text, setText] = useState("")
   const { data: threads } = useChats()
@@ -46,6 +43,7 @@ export function AskPantrila() {
           returnKeyType="send"
           className="h-11 flex-1 rounded-xl border border-border bg-surface px-3 font-sans text-base text-foreground"
         />
+        <DictateButton onHeard={(words) => setText((t) => addWords(t, words))} />
         <Pressable accessibilityRole="button" accessibilityLabel="Ask" disabled={!text.trim()} onPress={() => ask(text)}
                    className={`size-11 items-center justify-center rounded-xl bg-primary ${text.trim() ? "" : "opacity-50"}`}>
           <Icon icon={Send} tone="primary-foreground" size={18} />
