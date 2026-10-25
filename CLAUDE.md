@@ -43,12 +43,26 @@ Building the iOS and Android apps with Expo, one PR at a time, in the order give
 next PR of the mobile plan": read that file first, take the first PR its Progress table does not
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
 Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
-(`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`) and PR 4 (`feat/mobile-sign-in`) are done. Next: **PR 5
-(`feat/mobile-recipes`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
+(`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`), PR 4 (`feat/mobile-sign-in`) and PR 5 (`feat/mobile-recipes`) are done. Next:
+**PR 6 (`feat/mobile-plan`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
 installs (Android development build finished), PR 3's Render variables and RevenueCat webhook, and PR 4's Google,
 Apple and Supabase settings plus a new development build.
 
 ## Status (update as work lands)
+
+Phone app shell, Home and Recipes (mobile plan PR 5): the signed-in app is five tabs (`mobile/src/app/(tabs)/`,
+`expo-router/js-tabs`: Home, Assistant, Recipes, Plan, Grocery, the web's order) with an account button in the
+header (Google/Apple picture or the emoji avatar; opens `account.tsx`). The tabs ping `/health` on start and show
+"Waking up the Pantrila server…" while a request waits on a sleeping server (`lib/waking.ts` behind `createApi`'s
+`onSlow`, the web's 3 s / 10 min rule). Home: greeting, Ask Pantrila (opens the Assistant tab with `?q=`), My
+recipes (latest 4 or the import pitch). Recipes: search, Meal/Time/Diet/Cuisine chip rows, the "Only what suits
+me" banner, an infinite list (`GET /recipes` gains `offset`; a search stays one page). Recipe page: photo, the
+rules it breaks, allergens marked for the person, servings, a unit sheet per ingredient, macro ring, method with
+°C/°F (kept per user), fan-oven settings and fractions from core, "Start cooking". Pull to refresh, empty and error
+states. Assistant, Plan, Grocery, My recipes, imports, cooking mode, Pantry and Profile say they are coming (their
+PRs). New dependencies `lucide-react-native` and `react-native-svg` (native, so the next development build needs
+remaking). 22 Jest tests (screens through `expo-router/testing-library` with a fake API); `expo export` bundles iOS
+and Android; `expo-doctor` 20/20; 1 new Python test. No model call, so no eval rerun.
 
 Phone sign-in (mobile plan PR 4): the Expo app signs in like the web: Continue with Google (Google's native sheet,
 `@react-native-google-signin/google-signin`, id token to `signInWithIdToken`), Continue with Apple (iPhone only,
@@ -919,7 +933,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   without an amount stay). The cooking log is in `records.py` (`Cooked`, `cooked_meals`).
 - `src/pantrila/api.py`: FastAPI app (`create_app(backend, verify)`; tests pass an in-memory
   backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
-  `/me/usage`, `/webhooks/revenuecat`, `/me/avatar` (PUT/DELETE), `DELETE /me` (the whole account), `POST /me/events` (funnel steps from the browser), `/recipes` (search or browse, profile rules as filters unless `safe=false`),
+  `/me/usage`, `/webhooks/revenuecat`, `/me/avatar` (PUT/DELETE), `DELETE /me` (the whole account), `POST /me/events` (funnel steps from the browser), `/recipes` (search or browse, profile rules as filters unless `safe=false`, `limit`/`offset` pages),
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
   `/plans/latest`, `/plans/latest/grocery`, `/plans/latest/meals/{day}/{meal_type}` (`/options`
   GET, PUT to swap), `POST /chat` (continues `thread_id` or starts a
@@ -934,12 +948,16 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - `package.json` (root): npm workspaces `web`, `mobile` and `packages/*`; one `package-lock.json` at the root.
 - `mobile/`: the Expo phone app (see `mobile/README.md` and `mobile/AGENTS.md`: read Expo's versioned docs,
   not memory). `app.config.ts`, `eas.json`, `metro.config.js` (Uniwind), `src/global.css` (tokens),
-  `src/app/` (Expo Router screens; `_layout.tsx` loads the fonts and guards `welcome` / `index` with
-  `Stack.Protected`; `auth/callback.tsx` finishes email links), `src/lib/api.ts` (`createApi` with
-  `expo/fetch` and the session's token), `src/lib/supabase.ts` + `secure-session.ts` (session storage),
-  `src/lib/auth.ts` (Google, Apple, guest, email link, linking, sign-out), `src/components/` (`AuthProvider`,
-  `AccountCard`, `Choice`), `src/__tests__/` (Jest), `src/uniwind-types.d.ts` (written by Metro, committed),
-  `assets/` (from `web/brand/`).
+  `src/app/` (Expo Router screens; `_layout.tsx` loads the fonts and guards `welcome` / the signed-in screens
+  with `Stack.Protected`; `(tabs)/` holds Home, Assistant, Recipes, Plan, Grocery; `recipes/[id]`,
+  `recipes/mine/*` and `account.tsx` open over them; `auth/callback.tsx` finishes email links),
+  `src/lib/api.ts` (`createApi` with `expo/fetch`, the session's token and `waking.ts`), `src/lib/hooks.ts`
+  (SWR hooks, `useRecipePages`), `src/lib/recipes.ts` (filters), `src/lib/temperature.ts` (°C/°F per user),
+  `src/lib/supabase.ts` + `secure-session.ts` (session storage), `src/lib/auth.ts` (Google, Apple, guest, email
+  link, linking, sign-out), `src/components/` (`bits.tsx` like the web's, `Icon`, `RecipeCard`, `ChipRow`,
+  `MeasuredLine`, `MacroRing`, `WakeNotice`, `Soon`, `AuthProvider`, `AccountCard`, `Choice`), `src/__tests__/`
+  (Jest; `src/test/` has the fake API and fixtures; `jest.config.js`, `jest.setup.js`), `src/uniwind-types.d.ts`
+  (written by Metro, committed), `assets/` (from `web/brand/`).
 - `packages/core/`: `@pantrila/core`, code shared by web and the phone app (no React, DOM or React
   Native): `src/types.ts` (API types), `api.ts` (`createApi`, `ApiError`), `sse.ts`, `amounts.ts`,
   `cooking.ts`, `temperature.ts`, `voice.ts`, `sections.ts`, `plan.ts`, `format.ts`, `avatar.ts`;
