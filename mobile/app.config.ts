@@ -3,6 +3,11 @@ import type { ConfigContext, ExpoConfig } from "expo/config"
 // Set once by `npx eas-cli init` (run in mobile/); it links builds to the Expo project. Not a secret.
 const EAS_PROJECT_ID = "b60bab44-4784-4b21-8ba2-e8aed45df863"
 
+// Google's iOS client id (docs/google-sign-in.md); its reverse is the URL scheme Google's sheet
+// returns to. Public, not a secret; set as an EAS environment variable.
+const GOOGLE_IOS_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID
+const googleUrlScheme = (id: string) => `com.googleusercontent.apps.${id.replace(".apps.googleusercontent.com", "")}`
+
 // Same green as the icon's gradient end (web/brand); the splash shows the white mark on it.
 const BRAND_GREEN = "#2a7a38"
 
@@ -20,6 +25,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     bundleIdentifier: "com.pantrila.app",
     supportsTablet: false,
+    usesAppleSignIn: true,
     config: { usesNonExemptEncryption: false },
   },
   android: {
@@ -34,6 +40,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-router",
+    "expo-secure-store",
+    "expo-apple-authentication",
+    // iOS only (Android needs no plugin); without options the plugin expects Firebase files instead.
+    ...(GOOGLE_IOS_CLIENT_ID
+      ? [["@react-native-google-signin/google-signin", { iosUrlScheme: googleUrlScheme(GOOGLE_IOS_CLIENT_ID) }] as [string, object]]
+      : []),
     [
       "expo-splash-screen",
       { image: "./assets/android-foreground.png", imageWidth: 200, backgroundColor: BRAND_GREEN },
