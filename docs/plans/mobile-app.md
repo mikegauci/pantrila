@@ -370,6 +370,51 @@ the app.
 
 No model call, so no eval rerun.
 
+### Converting Free users to Pro
+
+Principle: Free must already be useful at its best moment, and Pro is offered right after the person
+has felt that value and hit a limit. Never on a blank screen, never in cooking mode, never as a
+popup on launch. Cooking mode, the grocery list, the pantry and search stay free (see PR 3's table).
+
+Where the offer appears, with the copy each time:
+
+- **Limit reached (402)**: the paywall sheet names what they tried ("You have used your 1 plan this
+  week") and when it resets ("Free plans reset Monday"), then offers "Try Pro free for 7 days".
+  This is the main conversion point, so it has to be fast and clear.
+- **Import limit (5 a month)**: show the count ("5 of 5 imports this month") at the moment they paste
+  a fifth link, with the trial as the way on. Never hidden behind a failed import.
+- **After a plan is saved**: one quiet line under the plan ("Free: 1 plan a week. Pro plans as often
+  as you like."). Shown once per week, not on every visit.
+- **Profile**: a "Pantrila Pro" row showing plan and usage, with "Try free for 7 days" for Free users.
+  No banner on other screens.
+- **Trial day 5**: a push reminder ("Your free trial ends in 2 days. Cancel any time in Settings,
+  nothing is charged before then."). Honest and useful; it also protects the store rating.
+- **Expired subscriber**: a "Welcome back" sheet on their next open, with the yearly plan first and
+  their data untouched. Nothing is deleted or locked away.
+
+The paywall (PR 12) itself:
+
+- Lead with the benefit they just hit, not a feature list. Then the yearly plan first with its
+  saving, the monthly plan second, and the trial above the button ("7 days free, then €29.99 a year").
+- Price, period, auto-renewal wording, "Restore purchases", terms and privacy links are always
+  visible, as Apple requires.
+- Use only true claims: no countdowns, no "only 3 left", no invented user counts or reviews.
+- Cancelling is one tap in the store's settings, and the app says so. Trust is part of why people
+  start a trial.
+
+Measure before tuning (PostHog, keyed by user id; events in PR 3 plus `paywall_shown` with
+`reason` (`limit`, `profile`, `welcome_back`), `paywall_closed` and `trial_started` by `source`):
+
+- Share of people who reach a limit and then start a trial, per limit. This tells us which limit
+  is doing the work.
+- Trial start to paid, and paid after 3 months (the number that pays the bills).
+- Set targets after 4 weeks of real data. Until then, do not change the limits to chase a number.
+
+Guardrails: no ads in the apps (Free stays ad-free; ad SDKs would also break the PR 13 privacy
+answers), no feature that works on the web
+but is locked on the phone, and no change to a limit without writing down the before and after
+numbers here.
+
 ## PR 13: store readiness and testing
 
 Branch `feat/mobile-store`.
