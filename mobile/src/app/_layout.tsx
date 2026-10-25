@@ -10,6 +10,7 @@ import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
 import { StatusBar } from "expo-status-bar"
 import { useEffect } from "react"
+import { useCSSVariable } from "uniwind"
 
 import { AuthProvider, useAuth } from "@/components/auth-provider"
 
@@ -34,9 +35,11 @@ export default function RootLayout() {
   )
 }
 
-/** Signed out: the welcome screen. Signed in: the app. The email link's callback works either way. */
+/** Signed out: the welcome screen. Signed in: the tabs and the screens they open. The email
+ * link's callback works either way. */
 function Screens() {
   const { session, ready } = useAuth()
+  const [background, foreground] = useCSSVariable(["--color-background", "--color-foreground"]) as string[]
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync()  // the splash stays up until the stored session is read
@@ -44,9 +47,23 @@ function Screens() {
 
   if (!ready) return null
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack screenOptions={{
+      headerShown: false,
+      headerStyle: { backgroundColor: background },
+      headerTintColor: foreground,
+      headerShadowVisible: false,
+      headerTitleStyle: { fontFamily: "PlusJakartaSans_600SemiBold" },
+      headerBackButtonDisplayMode: "minimal",
+      contentStyle: { backgroundColor: background },
+    }}>
       <Stack.Protected guard={!!session}>
-        <Stack.Screen name="index" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="recipes/[id]/index" options={{ headerShown: true, title: "Recipe" }} />
+        <Stack.Screen name="recipes/[id]/cook" options={{ headerShown: true, title: "Cooking mode" }} />
+        <Stack.Screen name="recipes/mine/index" options={{ headerShown: true, title: "My recipes" }} />
+        <Stack.Screen name="recipes/mine/[id]" options={{ headerShown: true, title: "My recipe" }} />
+        <Stack.Screen name="recipes/mine/new" options={{ headerShown: true, title: "Add a recipe" }} />
+        <Stack.Screen name="account" options={{ headerShown: true, title: "Account", presentation: "modal" }} />
       </Stack.Protected>
       <Stack.Protected guard={!session}>
         <Stack.Screen name="welcome" />

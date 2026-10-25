@@ -1,45 +1,65 @@
-import { render, screen } from "@testing-library/react-native"
-import { SafeAreaProvider } from "react-native-safe-area-context"
-import { SWRConfig } from "swr"
+import { fireEvent, screen } from "expo-router/testing-library"
 
-import Home from "@/app/index"
+import { api, health } from "@/lib/api"
+import { card } from "@/test/fixtures"
+import { fakeApi, showApp } from "@/test/screens"
 
 jest.mock("@/components/auth-provider", () => ({
-  useAuth: () => ({ ready: true, session: { user: { id: "u1", is_anonymous: true, identities: [], user_metadata: {} } } }),
+  useAuth: () => ({
+    ready: true,
+    session: { user: { id: "u1", is_anonymous: true, identities: [], user_metadata: { full_name: "Ada Lovelace" } } },
+  }),
 }))
 jest.mock("@/lib/auth", () => ({
+  firstName: (user: { user_metadata: { full_name: string } }) => user.user_metadata.full_name.split(" ")[0],
+  userKey: (id: string, name: string) => `pantrila:${id}:${name}`,
   appleReady: async () => false,
   googleReady: () => true,
-  firstName: () => null,
   linkWith: jest.fn(),
   signOut: jest.fn(),
 }))
+jest.mock("@/lib/api", () => ({ api: jest.fn(), health: jest.fn(async () => true) }))
 
-jest.mock("@/lib/api", () => {
-  const { ApiError } = jest.requireActual("@pantrila/core/api")
-  return {
-    ApiError,
-    health: jest.fn(async () => true),
-    api: jest.fn(async () => { throw new ApiError(401, "Sign in first.") }),
-  }
+const mine = (n: number) => ({ ...card(n), id: n, title: `My dish ${n}` })
+
+it("greets by name, opens a question in the Assistant tab and pings the server", async () => {
+  ;(api as jest.Mock).mockImplementation(fakeApi({
+    "/me/recipes": [],
+    "/me/chats": [{ id: 7, title: "Tofu ideas", updated_at: "2026-10-25T10:00:00Z" }],
+  }))
+  const shown = await showApp("/")
+  expect(screen.getByText(/^Good (morning|afternoon|evening), Ada$/)).toBeTruthy()
+  expect(health).toHaveBeenCalled()
+  // Five tabs, in the web's order.
+  for (const tab of ["Home", "Assistant", "Recipes", "Plan", "Grocery"]) expect(screen.getAllByText(tab).length).toBeGreaterThan(0)
+
+  // No recipes yet: the import pitch.
+  expect(await screen.findByText(/Saw a recipe on TikTok/)).toBeTruthy()
+  expect(await screen.findByText("Tofu ideas")).toBeTruthy()
+
+  await fireEvent.changeText(screen.getByLabelText("Ask Pantrila"), "  What is a roux?  ")
+  await fireEvent.press(screen.getByLabelText("Ask"))
+  expect(shown.getPathnameWithParams()).toBe("/assistant?q=What+is+a+roux%3F")
 })
 
-const frame = { x: 0, y: 0, width: 390, height: 844 }
-const insets = { top: 47, left: 0, right: 0, bottom: 34 }
+beforeEach(() => {
+  ;(api as jest.Mock).mockImplementation(fakeApi({ "/me/recipes": [1, 2, 3, 4, 5].map(mine), "/me/chats": [] }))
+})
 
-it("shows the server is up and that recipe options need a sign-in", async () => {
-  await render(
-    <SafeAreaProvider initialMetrics={{ frame, insets }}>
-      <SWRConfig value={{ provider: () => new Map(), shouldRetryOnError: false }}>
-        <Home />
-      </SWRConfig>
-    </SafeAreaProvider>,
-  )
-  expect(screen.getByText("Pantrila")).toBeTruthy()
-  expect(await screen.findByText("Up")).toBeTruthy()
-  expect(await screen.findByText("Sign in first.")).toBeTruthy()
-  // A guest is offered to keep their data, and can sign out.
-  expect(screen.getByText("Keep your data")).toBeTruthy()
-  expect(screen.getByText("Continue with Google")).toBeTruthy()
-  expect(screen.getByText("Sign out")).toBeTruthy()
+it("shows the latest four of My recipes", async () => {
+  const shown = await showApp("/")
+  expect(await screen.findByText("5 saved")).toBeTruthy()
+  expect(screen.getByText("My dish 4")).toBeTruthy()
+  expect(screen.queryByText("My dish 5")).toBeNull()
+
+  await fireEvent.press(screen.getByText("My dish 2"))
+  expect(shown.getPathname()).toBe("/recipes/mine/2")
+})
+
+it("opens Account from the header", async () => {
+  const again = await showApp("/")
+  await screen.findByText("5 saved")
+  await fireEvent.press(screen.getByLabelText("Account"))
+  expect(again.getPathname()).toBe("/account")
+  expect(await screen.findByText("Keep your data")).toBeTruthy()  // a guest can keep their data
 })
