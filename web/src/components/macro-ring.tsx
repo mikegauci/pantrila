@@ -1,4 +1,4 @@
-import type { Nutrition } from "@/lib/types"
+import type { Nutrition } from "@pantrila/core/types"
 
 const SEGMENTS = [
   { key: "protein_g", name: "Protein", color: "var(--primary)", kcalPerG: 4 },

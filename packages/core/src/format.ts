@@ -1,4 +1,4 @@
-import type { MealType } from "@/lib/types"
+import type { MealType } from "./types"
 
 export const label = (key: string) => {
   const s = key.replaceAll("_", " ")

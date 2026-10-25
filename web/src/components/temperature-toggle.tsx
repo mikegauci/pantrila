@@ -1,7 +1,9 @@
 "use client"
 
+import type { TempUnit } from "@pantrila/core/temperature"
+
 import { cn } from "@/lib/utils"
-import { useTempUnit, type TempUnit } from "@/lib/temperature"
+import { useTempUnit } from "@/lib/temperature"
 
 const UNITS: TempUnit[] = ["C", "F"]
 

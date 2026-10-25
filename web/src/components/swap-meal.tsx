@@ -6,16 +6,17 @@ import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
+import { label } from "@pantrila/core/format"
+import type { MealOption, MealOptions, MealType, Plan, PlanMeal } from "@pantrila/core/types"
+
 import { EmptyState, ProblemAlert, RecipeArt } from "@/components/bits"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ApiError, send } from "@/lib/api"
-import { label } from "@/lib/format"
 import { useApi, useSavePlan } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
-import type { MealOption, MealOptions, MealType, Plan, PlanMeal } from "@/lib/types"
 
 export interface SwapTarget {
   day: number

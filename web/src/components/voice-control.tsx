@@ -5,11 +5,11 @@ import { CircleHelp, Mic, MicOff, X } from "lucide-react"
 import { useCallback, useState } from "react"
 import { toast } from "sonner"
 
+import { VOICE_COMMANDS, micHelp, type VoiceCommand, type VoiceError } from "@pantrila/core/voice"
+
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import {
-  VOICE_COMMANDS, micHelp, useVoiceCommands, useVoiceSupported, type VoiceCommand, type VoiceError,
-} from "@/lib/voice"
+import { useVoiceCommands, useVoiceSupported } from "@/lib/voice"
 
 const ON_KEY = "pantrila-voice"
 const OK_KEY = "pantrila-voice-ok"

@@ -1,5 +1,5 @@
-import { label } from "@/lib/format"
-import type { MealType, NutritionTargets, Plan, PlanMeal } from "@/lib/types"
+import { label } from "./format"
+import type { MealType, NutritionTargets, Plan, PlanMeal } from "./types"
 
 /** Rough energy for eating out, offered as one tap each; "Don't count" leaves it unknown. */
 export const EATING_OUT_SIZES = [

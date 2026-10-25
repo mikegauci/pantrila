@@ -8,6 +8,8 @@ import { Fragment, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
+import type { ChatMessage, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard, ToolCall } from "@pantrila/core/types"
+
 import { useAuth } from "@/components/auth-provider"
 import { STARTERS } from "@/components/ask-pantrila"
 import { AiBadge, ProblemAlert, RecipeArt } from "@/components/bits"
@@ -20,7 +22,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { ApiError, send, streamChat } from "@/lib/api"
 import { useChat, useChats, useCookbook, useMe, useRecipe, useRefreshKitchen } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
-import type { ChatMessage, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard, ToolCall } from "@/lib/types"
 
 /** A saved message, or one only this page knows about: the question in flight or an error. */
 interface Message extends ChatMessage {

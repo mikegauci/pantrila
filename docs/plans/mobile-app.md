@@ -120,21 +120,21 @@ them):
 
 Branch `feat/shared-core`. Moves platform-free code out of `web/` so the native app can use it.
 
-- [ ] Root `package.json` with npm workspaces `web`, `packages/*` (`mobile` added in PR 2); one
+- [x] Root `package.json` with npm workspaces `web`, `packages/*` (`mobile` added in PR 2); one
       root `package-lock.json` replaces `web/package-lock.json`. `site/` stays out.
-- [ ] `packages/core` (`@pantrila/core`, TypeScript source consumed directly; `transpilePackages`
+- [x] `packages/core` (`@pantrila/core`, TypeScript source consumed directly; `transpilePackages`
       in `web/next.config.ts`).
-- [ ] Move `types.ts`, `amounts.ts`, `temperature.ts` (pure parts), `sections.ts`, `plan.ts`,
+- [x] Move `types.ts`, `amounts.ts`, `temperature.ts` (pure parts), `sections.ts`, `plan.ts`,
       `format.ts`, `avatar.ts` and the pure parts of `cooking.ts` and `voice.ts` (parsing,
       `voiceCommand`, `micHelp`, timers from text, `stepUses`, `preheatHint`, `fanTemp`).
       React hooks and `localStorage` code stay in `web/` and import the pure functions.
-- [ ] `api.ts`: a `createApi({ baseUrl, getToken, onSlow, fetch })` factory in core; `web/` wraps
+- [x] `api.ts`: a `createApi({ baseUrl, getToken, onSlow, fetch })` factory in core; `web/` wraps
       it with its Supabase session, Sonner toast and wake-up notice. SSE parsing to `core/sse.ts`.
-- [ ] Unit tests for the moved functions (Vitest in `packages/core`), run in CI.
-- [ ] CI: install from the root; `web` job unchanged otherwise; new `core` test step.
-- [ ] Vercel `pantrila` project: check the preview build passes with the workspace install (root
+- [x] Unit tests for the moved functions (Vitest in `packages/core`), run in CI.
+- [x] CI: install from the root; `web` job unchanged otherwise; new `core` test step.
+- [x] Vercel `pantrila` project: check the preview build passes with the workspace install (root
       directory stays `web/`; "Include files outside the root directory" on).
-- [ ] All Playwright specs pass; no visible change.
+- [x] All Playwright specs pass; no visible change.
 
 Done when: web works exactly as before and imports the moved code from `@pantrila/core`.
 
@@ -412,7 +412,7 @@ Branch `feat/mobile-launch`.
 | PR | Branch | State |
 | --- | --- | --- |
 | 0 | (owner) | not started |
-| 1 | `feat/shared-core` | not started |
+| 1 | `feat/shared-core` | done |
 | 2 | `feat/mobile-skeleton` | not started |
 | 3 | `feat/subscription-tiers` | not started |
 | 4 | `feat/mobile-sign-in` | not started |
@@ -433,3 +433,10 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
 
 - 2026-10-24: plan written (this file).
 - 2026-10-24: freemium added (PR 3 subscription tiers, PR 12 paywall); later PRs renumbered.
+- 2026-10-25: PR 1 (`feat/shared-core`): root npm workspaces and lockfile, `@pantrila/core` (types, API client
+  factory, SSE reader, amounts, cooking, temperature, voice, sections, plan, format, avatar) with 49 Vitest tests and
+  a CI `core` job; web imports it, no visible change. For PR 2: import core as `@pantrila/core/<module>` (package
+  `exports` map `./*` to `src/*.ts`, so Metro needs package exports on, the default in recent SDKs); build the phone
+  client with `createApi({ baseUrl, getToken, onSlow, fetch })` passing `fetch` from `expo/fetch` for streaming; core
+  uses `TextDecoder` and `ReadableStream.getReader`, no `TextDecoderStream`. `avatarFor` returns Tailwind class names,
+  so NativeWind needs `packages/core/src` in its content paths too.

@@ -4,15 +4,16 @@ import { Minus, Plus, ShoppingBasket } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
+import { label } from "@pantrila/core/format"
+import type { GroceryItem } from "@pantrila/core/types"
+
 import { useAuth } from "@/components/auth-provider"
 import { EmptyState, Panel, PanelTitle } from "@/components/bits"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Skeleton } from "@/components/ui/skeleton"
-import { label } from "@/lib/format"
 import { useGrocery, usePlan } from "@/lib/hooks"
 import { cn } from "@/lib/utils"
-import type { GroceryItem } from "@/lib/types"
 
 const AISLES: Record<string, string> = { nuts_seeds: "Nuts and seeds", oils_condiments: "Oils and condiments" }
 

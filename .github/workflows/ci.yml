@@ -17,6 +17,7 @@ jobs:
     outputs:
       python: ${{ steps.filter.outputs.python }}
       web: ${{ steps.filter.outputs.web }}
+      core: ${{ steps.filter.outputs.core }}
       site: ${{ steps.filter.outputs.site }}
     steps:
       - uses: actions/checkout@v4
@@ -34,8 +35,17 @@ jobs:
               - "pyproject.toml"
               - "uv.lock"
               - ".github/workflows/ci.yml"
+            # The web app builds from the shared code and the root lockfile too.
             web:
               - "web/**"
+              - "packages/**"
+              - "package.json"
+              - "package-lock.json"
+              - ".github/workflows/ci.yml"
+            core:
+              - "packages/**"
+              - "package.json"
+              - "package-lock.json"
               - ".github/workflows/ci.yml"
             site:
               - "site/**"
@@ -88,8 +98,10 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: web/package-lock.json
+          cache-dependency-path: package-lock.json
+      # One install at the root for every workspace (web, packages/*).
       - run: npm ci
+        working-directory: .
       - run: npm run lint
       - run: npm run typecheck
       # Playwright's server builds the app (with the test API settings), so that build is also
@@ -97,8 +109,8 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: web/.next/cache
-          key: next-${{ hashFiles('web/package-lock.json') }}-${{ hashFiles('web/src/**') }}
-          restore-keys: next-${{ hashFiles('web/package-lock.json') }}-
+          key: next-${{ hashFiles('package-lock.json') }}-${{ hashFiles('web/src/**', 'packages/core/src/**') }}
+          restore-keys: next-${{ hashFiles('package-lock.json') }}-
       # Tests run in the Google Chrome that ships with the runner image, so there is no browser
       # download and no apt install of its libraries (that step took 5-10 minutes).
       - run: google-chrome --version
@@ -111,6 +123,22 @@ jobs:
           name: browser-failures
           path: web/test-results/
           retention-days: 7
+
+  # Shared code for the web and phone apps: types and unit tests.
+  core:
+    needs: changes
+    if: needs.changes.outputs.core == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npm run typecheck --workspace @pantrila/core
+      - run: npm test --workspace @pantrila/core
 
   # The pantrila.com landing site: static pages, so lint, types and a build are the checks.
   site:

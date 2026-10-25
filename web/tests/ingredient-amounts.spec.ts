@@ -1,8 +1,8 @@
 import { expect, type Page, test } from "@playwright/test"
 
-import { session } from "./helpers"
+import type { CookbookRecipeIn } from "@pantrila/core/types"
 
-import type { CookbookRecipeIn } from "../src/lib/types"
+import { session } from "./helpers"
 
 const user = "00000000-0000-4000-8000-000000000018"
 const nutrition = { kcal: 420, protein_g: 30, carbs_g: 50, fat_g: 12, fibre_g: 2 }

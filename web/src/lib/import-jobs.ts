@@ -1,5 +1,6 @@
+import type { ImportView } from "@pantrila/core/types"
+
 import { ApiError, api, send } from "@/lib/api"
-import type { ImportView } from "@/lib/types"
 
 /**
  * Imports run as jobs on the server, so a locked phone or a tab in the background does not

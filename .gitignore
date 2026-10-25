@@ -227,3 +227,6 @@ supabase/.temp/
 
 # Playwright MCP browser tool output
 .playwright-mcp/
+
+# npm workspaces (web, packages/*) install at the root
+node_modules/

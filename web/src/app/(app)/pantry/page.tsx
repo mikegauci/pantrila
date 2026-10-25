@@ -4,6 +4,9 @@ import { Plus, Refrigerator, X } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
 
+import { label } from "@pantrila/core/format"
+import type { PantryItem, Unit } from "@pantrila/core/types"
+
 import { EmptyState, Panel, PanelTitle } from "@/components/bits"
 import { NativeSelect } from "@/components/native-select"
 import { Button } from "@/components/ui/button"
@@ -11,9 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ApiError, send } from "@/lib/api"
-import { label } from "@/lib/format"
 import { useFoods, usePantry, useRefreshKitchen } from "@/lib/hooks"
-import type { PantryItem, Unit } from "@/lib/types"
 
 const UNITS: Unit[] = ["g", "kg", "ml", "l", "piece", "tbsp", "tsp", "cup"]
 

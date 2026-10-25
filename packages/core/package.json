@@ -1,0 +1,18 @@
+{
+  "name": "@pantrila/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pantrila code shared by the web and phone apps: API types and client, cooking, plan and amount helpers. No UI.",
+  "type": "module",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "vitest": "^5.0.5"
+  }
+}

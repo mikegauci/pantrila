@@ -2,8 +2,9 @@
 
 import { useEffect, useSyncExternalStore } from "react"
 
+import type { CookbookDetail } from "@pantrila/core/types"
+
 import { send } from "@/lib/api"
-import type { CookbookDetail } from "@/lib/types"
 
 /**
  * Recipe photos being made. The request runs here, outside any page, so saving a new recipe

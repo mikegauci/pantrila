@@ -2,10 +2,11 @@
 
 import { Trash2 } from "lucide-react"
 
+import { ago } from "@pantrila/core/format"
+import type { ChatThreadSummary } from "@pantrila/core/types"
+
 import { Button } from "@/components/ui/button"
-import { ago } from "@/lib/format"
 import { cn } from "@/lib/utils"
-import type { ChatThreadSummary } from "@/lib/types"
 
 /** The person's saved chats, most recently used first. */
 export function ChatThreads({
