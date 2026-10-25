@@ -156,7 +156,10 @@ export function createApi({ baseUrl, getToken, onSlow, fetch: doFetch = fetch, s
   /** Wake the API as early as possible; failures surface later on real requests. */
   const ping = () => void request("/health", {}).catch(() => {})
 
-  return { api, send, streamPlan, streamChat, ping }
+  /** True when the API answers /health (no sign-in needed). */
+  const health = () => request("/health", {}).then((res) => res.ok, () => false)
+
+  return { api, send, streamPlan, streamChat, ping, health }
 }
 
 export type Api = ReturnType<typeof createApi>
