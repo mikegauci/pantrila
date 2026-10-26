@@ -44,15 +44,31 @@ next PR of the mobile plan": read that file first, take the first PR its Progres
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
 Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
 (`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`), PR 4 (`feat/mobile-sign-in`), PR 5 (`feat/mobile-recipes`), PR 6 (`feat/mobile-plan`), PR 7
-(`feat/mobile-cooking`), PR 8 (`feat/mobile-cookbook`), PR 9 (`feat/mobile-share`), PR 10 (`feat/mobile-assistant`), PR 11 (`feat/mobile-profile`)
-and PR 12 (`feat/mobile-paywall`) are done. Next: **PR 13 (`feat/mobile-store`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
+(`feat/mobile-cooking`), PR 8 (`feat/mobile-cookbook`), PR 9 (`feat/mobile-share`), PR 10 (`feat/mobile-assistant`), PR 11 (`feat/mobile-profile`),
+PR 12 (`feat/mobile-paywall`) and PR 13 (`feat/mobile-store`) are done. Next: **PR 14 (`feat/mobile-launch`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
 installs (Android development build finished), PR 3's Render variables and RevenueCat webhook, and PR 4's Google,
 Apple and Supabase settings plus a new development build, and PR 9's `APPLE_TEAM_ID` / `ANDROID_CERT_SHA256` on Vercel
 (`docs/share-and-links.md`), and PR 11's Sentry project with `EXPO_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT` and
 `SENTRY_AUTH_TOKEN` on EAS, and PR 12's store products, RevenueCat offering, `EXPO_PUBLIC_REVENUECAT_IOS_KEY` /
-`EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` on EAS and sandbox purchase tests.
+`EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` on EAS and sandbox purchase tests, and PR 13's store forms (`docs/store-listing.md`),
+the e2e and screenshots workflows on EAS, production builds, Play's 14-day closed test with 12 testers and TestFlight.
 
 ## Status (update as work lands)
+
+Store readiness (mobile plan PR 13): `docs/store-listing.md` holds what goes into App Store Connect and Play Console:
+names, subtitle, keywords, descriptions (`tests/test_store_listing.py` checks the character limits), categories, age
+and content rating, the App privacy and Data safety answers (email, name, health info from allergies and diet, profile
+picture, user content, user id, purchases, product interaction, diagnostics; no tracking, no ads), the in-app products
+(suggested ids), review notes ("Try it as a guest"; Account, "Try Pro free for 7 days") and the screenshot list.
+`mobile/.maestro/` has Maestro flows (guest sign-in, search, cook, plan, import, tag `e2e`; `screenshots.yaml`) run
+by EAS Workflows (`mobile/.eas/workflows/e2e.yml`, `screenshots.yml`) on the new `e2e` build profile (iOS simulator
+and APK, no credentials); written from the screens' labels, not yet run. Permission fix: `expo-image-picker`'s
+`microphonePermission: false` blocked `RECORD_AUDIO` and dropped the iOS microphone text, so voice commands could not
+use the mic; the texts are now constants in `app.config.ts`, secure store asks for no Face ID, and store builds block
+`SYSTEM_ALERT_WINDOW` (`src/__tests__/app-config.test.ts`). The privacy page gains "Delete your account"
+(`pantrila.com/privacy#delete-account`, Play's deletion link). `eas.json` submits Android to the closed track
+(`alpha`). 77 Jest tests (3 new), 2 new Python tests; config changes, so the next build needs making. No model call, so
+no eval rerun.
 
 Phone paywall (mobile plan PR 12): `react-native-purchases` (`lib/purchases.ts`) sells Pantrila Pro through RevenueCat
 as the Supabase user id (configured at sign-in, `logIn`/`logOut` from `AuthProvider`; off without
@@ -1061,7 +1077,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `VoiceControl`, `AuthProvider`, `AccountCard`, `Choice`; `lib/grocery.ts` keeps the list's ticks, `lib/cooking.ts`
   progress and sounds, `lib/timer-alerts.ts` timer notifications, `lib/voice.ts` speech, `lib/stored.ts` per-user
   settings), `src/__tests__/`
-  (Jest; `src/test/` has the fake API and fixtures; `jest.config.js`, `jest.setup.js`), `src/uniwind-types.d.ts`
+  (Jest; `src/test/` has the fake API and fixtures; `jest.config.js`, `jest.setup.js`), `.maestro/` (Maestro flows,
+  `subflows/guest.yaml`) and `.eas/workflows/` (`e2e.yml`, `screenshots.yml`), `src/uniwind-types.d.ts`
   (written by Metro, committed), `assets/` (from `web/brand/`).
 - `packages/core/`: `@pantrila/core`, code shared by web and the phone app (no React, DOM or React
   Native): `src/types.ts` (API types), `api.ts` (`createApi`, `ApiError`), `sse.ts`, `amounts.ts`,
@@ -1077,6 +1094,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - `scripts/`: `generate_corpus.py`, `build_usda_table.py`, `langsmith_dashboard.py` (rebuilds the
   "Pantrila live" LangSmith dashboard via the charts API).
 - `docs/`: `demo-script.md` (video walkthrough), `google-sign-in.md` (Google Cloud + Supabase setup),
+  `store-listing.md` (store text, privacy answers, review notes, screenshot list),
   `share-and-links.md` (share sheet and app links, owner steps), `screenshots/` (README images, taken from the
   web app at 1280 px wide).
 - `supabase/migrations/`: SQL migrations. `supabase/templates/`: auth email templates written by
@@ -1158,6 +1176,8 @@ cd site && npm ci && npm run dev         # landing site on :3001 (lint, typechec
 cd mobile && npx expo start              # phone app; open it in the Pantrila development build (not Expo Go)
 cd mobile && npm run lint && npm run typecheck && npm test && npx expo-doctor   # what CI runs for mobile
 cd mobile && npx eas-cli build --profile development --platform android|ios   # device builds on EAS (owner)
+cd mobile && npx eas-cli workflow:run e2e.yml        # Maestro flows on EAS (screenshots.yml for store shots)
+cd mobile && npx eas-cli build --profile production --platform all && npx eas-cli submit   # store builds (owner)
 ```
 
 Update this block when commands change.
@@ -1190,7 +1210,7 @@ Update this block when commands change.
   suffixes. **Never use a `claude/` branch** (owner's rule, for every session and tool): if the
   session or harness assigns one (such as `claude/<random-words>`), ignore it and create the
   `feat/` or `fix/` branch from up-to-date `main` instead; push and open the PR from that branch.
-  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-store` for PR 13).
+  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-launch` for PR 14).
 - Commit messages use plain descriptive text. `feat/` and `fix/` are branch prefixes only;
   do not prefix commit messages with them.
 - PR titles say specifically what the PR does (for example "Add hybrid recipe search with
