@@ -167,6 +167,11 @@ Terms: https://pantrila.com/terms
 Privacy: https://pantrila.com/privacy
 ```
 
+### Graphics
+
+App icon `docs/store-assets/play-icon-512.png` (512 x 512) and feature graphic
+`docs/store-assets/play-feature-graphic-1024x500.png`, both rendered by `node scripts/store-art.mjs` (from `web/`).
+
 ### Settings
 
 | Field | Answer |
