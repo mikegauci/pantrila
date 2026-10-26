@@ -1,7 +1,7 @@
 "use client"
 
 import { NutritionSource } from "@/components/nutrition-source"
-import { CalendarDays, ChefHat, Mail, ShieldCheck, ShoppingBasket, UserRound } from "lucide-react"
+import { CalendarDays, ChefHat, Link2, Mail, MessageCircle, ShieldCheck, UserRound } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -11,13 +11,15 @@ import { Logo } from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { takeReturn } from "@/lib/return-to"
 import { signInWithGoogle, supabase } from "@/lib/supabase"
 
 const POINTS = [
-  { icon: ChefHat, text: "Find recipes from what is already in your kitchen" },
-  { icon: CalendarDays, text: "Plan a week of meals around your diet and nutrition targets" },
-  { icon: ShoppingBasket, text: "Get a grocery list of only what is missing" },
-  { icon: ShieldCheck, text: "Allergens and diets are checked by code, not by the AI's word" },
+  { icon: MessageCircle, text: "Ask what to cook and get recipes that suit you" },
+  { icon: Link2, text: "Save recipes from TikTok, Instagram, Facebook or any recipe site" },
+  { icon: ChefHat, text: "Cook step by step, hands free, with timers that start themselves" },
+  { icon: CalendarDays, text: "Plan your week and get a grocery list of only what is missing" },
+  { icon: ShieldCheck, text: "Allergens and diets checked by code, not by the AI's word" },
 ]
 
 export default function LoginPage() {
@@ -30,7 +32,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (ready && session) router.replace("/")
+    if (ready && session) router.replace(takeReturn())
   }, [ready, session, router])
 
   async function sendLink(e: React.FormEvent) {
@@ -71,7 +73,7 @@ export default function LoginPage() {
         <Logo />
         <div>
           <p className="max-w-md text-[28px] font-bold leading-9">
-            Your kitchen, your diet, a week of meals that fits both.
+            Your AI cooking companion, from idea to plate.
           </p>
           <ul className="mt-8 grid gap-4">
             {POINTS.map(({ icon: Icon, text }) => (
@@ -94,7 +96,7 @@ export default function LoginPage() {
           <Logo className="mb-10 lg:hidden" />
           <h1 className="text-[28px] font-bold leading-9">Welcome to Pantrila</h1>
           <p className="mt-2 text-[15px] text-muted-foreground">
-            Set your diet and allergies, add what is in your kitchen and plan a week of meals.
+            Ask what to cook, save the recipes you love and get talked through every step.
           </p>
 
           {error && (

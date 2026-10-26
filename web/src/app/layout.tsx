@@ -11,8 +11,8 @@ const sans = Plus_Jakarta_Sans({ variable: "--font-sans", subsets: ["latin"] })
 export const metadata: Metadata = {
   title: { default: "Pantrila", template: "%s · Pantrila" },
   description:
-    "AI cooking and meal-planning assistant: recipes from your pantry, a week of meals that " +
-    "respects your allergies and targets, and a grocery list.",
+    "Your AI cooking companion: ask what to cook, save recipes from TikTok, Instagram and any site, " +
+    "cook hands free step by step, and plan meals that respect your allergies and targets.",
   // Safari on iPhone shows its "Open in the app / Get" banner once the App Store listing is live.
   itunes: APP_STORE_ID ? { appId: APP_STORE_ID } : null,
 }
