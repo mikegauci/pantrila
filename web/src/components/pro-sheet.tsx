@@ -7,6 +7,7 @@ import { PRO_GIVES, USED_UP, resetsText } from "@pantrila/core/subscription"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { useProRequired } from "@/lib/pro"
+import { APP_STORE_URL, PLAY_STORE_URL } from "@/lib/stores"
 
 /** "Get Pantrila Pro in the app": Pro is sold in the iPhone and Android apps only (no web checkout),
  *  and Pro bought there counts here too. Opened by `askForPro` at a Free cap. */
@@ -36,8 +37,19 @@ export function ProSheet() {
         </div>
         <p className="flex gap-2 text-[13px] text-muted-foreground">
           <Smartphone className="mt-0.5 size-4 shrink-0" aria-hidden />
-          Pro is sold in the Pantrila apps for iPhone and Android, coming soon to the App Store and
-          Google Play. Sign in there with this account and Pro works here too.
+          <span>
+            Pro is sold in the Pantrila apps for iPhone and Android
+            {APP_STORE_URL || PLAY_STORE_URL ? (
+              <>
+                {" ("}
+                {APP_STORE_URL && <a href={APP_STORE_URL} className="font-semibold text-primary-text underline underline-offset-4">App Store</a>}
+                {APP_STORE_URL && PLAY_STORE_URL && ", "}
+                {PLAY_STORE_URL && <a href={PLAY_STORE_URL} className="font-semibold text-primary-text underline underline-offset-4">Google Play</a>}
+                {")"}
+              </>
+            ) : ", coming soon to the App Store and Google Play"}
+            . Sign in there with this account and Pro works here too.
+          </span>
         </p>
         <p className="text-[13px] text-muted-foreground">
           Browsing, search, cooking mode, your pantry, grocery list and My recipes stay free.

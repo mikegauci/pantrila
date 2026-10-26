@@ -14,6 +14,7 @@ import { useAuth } from "@/components/auth-provider"
 import { FeedbackSheet } from "@/components/feedback"
 import { GoogleMark } from "@/components/google-mark"
 import { Logo } from "@/components/logo"
+import { AppBanner } from "@/components/app-banner"
 import { ProBadge, ProSheet } from "@/components/pro-sheet"
 import { ReplaySession } from "@/components/replay-consent"
 import { TourProvider, useTour } from "@/components/tour"
@@ -234,6 +235,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen">
       <Sidebar pathname={pathname} />
       <div className="md:pl-[76px] xl:pl-[248px]">
+        <AppBanner />
         <header className="sticky top-0 z-20 flex h-[72px] items-center gap-4 border-b bg-background/90 px-4 backdrop-blur md:px-8">
           <Link href="/" className="md:hidden" aria-label="Pantrila home">
             <Logo compact />

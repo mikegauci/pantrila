@@ -22,7 +22,7 @@ import { BrowserFrame, PhoneFrame } from "@/components/frames"
 import { FlipWord } from "@/components/flip-word"
 import { HeroArt, HeroGlow } from "@/components/hero-art"
 import { CountUp, Reveal, StaggerItem, StaggerList } from "@/components/motion"
-import { APP_URL, GITHUB_URL, cn } from "@/lib"
+import { APP_STORE_URL, APP_URL, GITHUB_URL, PLAY_STORE_URL, cn } from "@/lib"
 
 const FEATURES = [
   {
@@ -135,7 +135,9 @@ const FAQ = [
   },
   {
     q: "Is there a phone app?",
-    a: "Pantrila works in the browser on your phone today, including cooking mode and voice commands. Apps for iPhone and Android are on the way.",
+    a: APP_STORE_URL || PLAY_STORE_URL
+      ? `Yes: ${[APP_STORE_URL && "Pantrila for iPhone on the App Store", PLAY_STORE_URL && "Pantrila for Android on Google Play"].filter(Boolean).join(" and ")}, with sharing recipes straight from Instagram, TikTok or Facebook, voice commands and timers that ring with the phone locked. Your account and recipes are the same in the apps and the browser.`
+      : "Pantrila works in the browser on your phone today, including cooking mode and voice commands. Apps for iPhone and Android are on the way.",
   },
   {
     q: "Does cooking mode work hands free?",
@@ -369,8 +371,12 @@ function GetTheApp() {
       <div className="mx-auto max-w-6xl space-y-12 px-4 sm:px-6">
         <SectionHeading
           eyebrow="Get the app"
-          title="Start cooking in your browser today"
-          text="Pantrila runs on your phone, tablet or computer, with nothing to install. Phone apps are coming."
+          title={APP_STORE_URL || PLAY_STORE_URL ? "On your phone or in your browser" : "Start cooking in your browser today"}
+          text={APP_STORE_URL && PLAY_STORE_URL
+            ? "Get Pantrila for iPhone or Android, or use it in any browser. One account works everywhere."
+            : APP_STORE_URL || PLAY_STORE_URL
+              ? `Get Pantrila for ${APP_STORE_URL ? "iPhone (Android is coming)" : "Android (iPhone is coming)"}, or use it in any browser. One account works everywhere.`
+              : "Pantrila runs on your phone, tablet or computer, with nothing to install. Phone apps are coming."}
         />
         <StaggerList className="grid gap-4 md:grid-cols-[1.4fr_1fr_1fr]">
           <StaggerItem className="flex flex-col justify-between gap-6 rounded-2xl bg-primary p-7 text-primary-foreground shadow-lift">
@@ -389,8 +395,10 @@ function GetTheApp() {
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </a>
           </StaggerItem>
-          <StoreCard store="App Store" device="iPhone and iPad" icon={AppleLogo} />
-          <StoreCard store="Google Play" device="Android phones and tablets" icon={GooglePlayLogo} />
+          <StoreCard store="App Store" device="iPhone" icon={AppleLogo} href={APP_STORE_URL}
+                     badge={{ src: "/badges/app-store.svg", alt: "Download on the App Store", width: 120, height: 40 }} />
+          <StoreCard store="Google Play" device="Android phones" icon={GooglePlayLogo} href={PLAY_STORE_URL}
+                     badge={{ src: "/badges/google-play.png", alt: "Get it on Google Play", width: 155, height: 60, inset: 10 }} />
         </StaggerList>
       </div>
     </section>
@@ -414,25 +422,45 @@ function GooglePlayLogo({ className }: { className?: string }) {
   )
 }
 
+// A store's official badge (Apple's and Google's artwork, unchanged, as their guidelines ask) once the
+// app is listed there; "Coming soon" until then.
 function StoreCard({
   store,
   device,
   icon: Icon,
+  href,
+  badge,
 }: {
   store: string
   device: string
   icon: (props: { className?: string }) => React.ReactNode
+  href: string | null
+  // inset: the clear space Google's artwork carries on its left, so both badges line up with the text
+  badge: { src: string; alt: string; width: number; height: number; inset?: number }
 }) {
   return (
-    <StaggerItem className="flex flex-col justify-between gap-6 rounded-2xl border border-dashed border-border bg-surface p-7">
+    <StaggerItem
+      className={cn(
+        "flex flex-col justify-between gap-6 rounded-2xl border bg-surface p-7",
+        href ? "border-border" : "border-dashed border-border",
+      )}
+    >
       <div className="space-y-2">
-        <Icon className="size-7 text-muted-foreground" />
+        <Icon className={cn("size-7", href ? "text-foreground" : "text-muted-foreground")} />
         <h3 className="text-[19px] font-bold">{store}</h3>
         <p className="text-[14px] text-muted-foreground">For {device}.</p>
       </div>
-      <span className="inline-flex h-12 items-center justify-center rounded-xl bg-surface-muted px-6 text-[14px] font-semibold text-muted-foreground">
-        Coming soon
-      </span>
+      {href ? (
+        <a href={href} className="inline-flex h-[60px] items-center transition-transform active:scale-[0.97]">
+          {/* eslint-disable-next-line @next/next/no-img-element -- the store's artwork as supplied */}
+          <img src={badge.src} alt={badge.alt} width={badge.width} height={badge.height}
+               style={badge.inset ? { marginLeft: -badge.inset } : undefined} />
+        </a>
+      ) : (
+        <span className="inline-flex h-12 items-center justify-center rounded-xl bg-surface-muted px-6 text-[14px] font-semibold text-muted-foreground">
+          Coming soon
+        </span>
+      )}
     </StaggerItem>
   )
 }

@@ -14,12 +14,14 @@
       "extends": "base",
       "developmentClient": true,
       "distribution": "internal",
-      "environment": "development"
+      "environment": "development",
+      "channel": "development"
     },
     "preview": {
       "extends": "base",
       "distribution": "internal",
-      "environment": "preview"
+      "environment": "preview",
+      "channel": "preview"
     },
     "e2e": {
       "extends": "base",
@@ -35,7 +37,8 @@
     "production": {
       "extends": "base",
       "autoIncrement": true,
-      "environment": "production"
+      "environment": "production",
+      "channel": "production"
     }
   },
   "submit": {

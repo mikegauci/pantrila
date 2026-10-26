@@ -32,6 +32,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   orientation: "portrait",
   userInterfaceStyle: "automatic",
   icon: "./assets/icon.png",
+  // EAS Update: JavaScript and asset fixes reach store builds without a review. The fingerprint policy
+  // makes the runtime version a hash of the native code and config, so an update only ever reaches
+  // builds with the same native side; a change to native code needs a new store build.
+  runtimeVersion: { policy: "fingerprint" },
+  updates: {
+    url: `https://u.expo.dev/${EAS_PROJECT_ID}`,
+    // Start with what is installed; a downloaded update is used from the next launch.
+    fallbackToCacheTimeout: 0,
+  },
   ios: {
     bundleIdentifier: "com.pantrila.app",
     supportsTablet: false,
