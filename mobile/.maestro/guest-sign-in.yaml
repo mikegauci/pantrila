@@ -1,0 +1,13 @@
+# Signs in as a guest and finds the five tabs. App Review's way in.
+appId: com.pantrila.app
+tags: [e2e]
+---
+- runFlow: subflows/guest.yaml
+- assertVisible: "Home"
+- assertVisible: "Assistant"
+- assertVisible: "Recipes"
+- assertVisible: "Plan"
+- assertVisible: "Grocery"
+- tapOn: "Recipes"
+- assertVisible:
+    id: "recipe-list"

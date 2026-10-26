@@ -1,0 +1,27 @@
+# Opens cooking mode on a recipe and steps through it.
+appId: com.pantrila.app
+tags: [e2e]
+---
+- runFlow: subflows/guest.yaml
+- tapOn: "Recipes"
+- tapOn: "Search recipes"
+- inputText: "vegetable paella"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "Vegetable Paella.*"
+    timeout: 30000
+- tapOn: "Vegetable Paella.*"
+- scrollUntilVisible:
+    element: "Start cooking"
+    direction: DOWN
+- tapOn: "Start cooking"
+# The get-ready page: servings and the checklist, then step 1.
+- extendedWaitUntil:
+    visible: "Start cooking"
+    timeout: 10000
+- tapOn: "Start cooking"
+- assertVisible: "Next step"
+- tapOn: "Next step"
+- assertVisible: "Back"
+- tapOn: "Back"
+- assertVisible: "Next step"

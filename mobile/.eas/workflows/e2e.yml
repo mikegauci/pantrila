@@ -1,0 +1,34 @@
+# End-to-end flows (.maestro/, tag e2e) on an Android emulator and an iOS simulator, against the
+# live API with a fresh guest each flow. Run by hand: `npx eas-cli workflow:run e2e.yml` in mobile/.
+# A simulator build needs no Apple credentials. The plan and import flows spend about $0.02.
+name: e2e
+
+jobs:
+  build_android:
+    type: build
+    params:
+      platform: android
+      profile: e2e
+  build_ios:
+    type: build
+    params:
+      platform: ios
+      profile: e2e
+  maestro_android:
+    needs: [build_android]
+    type: maestro
+    runs_on: linux-medium-nested-virtualization
+    params:
+      build_id: ${{ needs.build_android.outputs.build_id }}
+      flow_path: ./.maestro
+      include_tags: e2e
+      retries: 1
+      record_screen: true
+  maestro_ios:
+    needs: [build_ios]
+    type: maestro
+    params:
+      build_id: ${{ needs.build_ios.outputs.build_id }}
+      flow_path: ./.maestro
+      include_tags: e2e
+      retries: 1

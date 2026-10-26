@@ -21,6 +21,17 @@
       "distribution": "internal",
       "environment": "preview"
     },
+    "e2e": {
+      "extends": "base",
+      "withoutCredentials": true,
+      "environment": "preview",
+      "ios": {
+        "simulator": true
+      },
+      "android": {
+        "buildType": "apk"
+      }
+    },
     "production": {
       "extends": "base",
       "autoIncrement": true,
@@ -28,6 +39,11 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "track": "alpha",
+        "releaseStatus": "completed"
+      }
+    }
   }
 }

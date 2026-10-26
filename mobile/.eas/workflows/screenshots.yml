@@ -1,0 +1,33 @@
+# Store screenshots (.maestro/screenshots.yaml) on the sizes the stores ask for: iPhone 6.9"
+# (iPhone 16 Pro Max, 1320 x 2868) and an Android phone (Pixel 7). The PNGs are the jobs'
+# artifacts. Run by hand: `npx eas-cli workflow:run screenshots.yml` in mobile/.
+name: screenshots
+
+jobs:
+  build_android:
+    type: build
+    params:
+      platform: android
+      profile: e2e
+  build_ios:
+    type: build
+    params:
+      platform: ios
+      profile: e2e
+  android_phone:
+    needs: [build_android]
+    type: maestro
+    runs_on: linux-large-nested-virtualization
+    params:
+      build_id: ${{ needs.build_android.outputs.build_id }}
+      flow_path: ./.maestro/screenshots.yaml
+      device_identifier: pixel_7
+      retries: 1
+  iphone_6_9:
+    needs: [build_ios]
+    type: maestro
+    params:
+      build_id: ${{ needs.build_ios.outputs.build_id }}
+      flow_path: ./.maestro/screenshots.yaml
+      device_identifier: "iPhone 16 Pro Max"
+      retries: 1

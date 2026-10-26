@@ -1,0 +1,66 @@
+# Store screenshots (docs/store-listing.md lists them in order). Not part of the e2e run: the
+# screenshots workflow runs it on the store's device sizes and keeps the PNGs as job artifacts.
+appId: com.pantrila.app
+tags: [screenshots]
+---
+- runFlow: subflows/guest.yaml
+# 1. Plan: a planned week (a real planner run).
+- tapOn: "Plan"
+- tapOn: "Plan my week"
+- extendedWaitUntil:
+    visible: "Your week is planned"
+    timeout: 150000
+- extendedWaitUntil:
+    notVisible: "Your week is planned"
+    timeout: 10000
+- takeScreenshot: screenshots/01-plan
+# 2. Grocery list from the plan.
+- tapOn: "Grocery"
+- extendedWaitUntil:
+    visible: "To buy"
+    timeout: 30000
+- takeScreenshot: screenshots/02-grocery
+# 3. Recipes with the safety banner.
+- tapOn: "Recipes"
+- extendedWaitUntil:
+    visible:
+      id: "recipe-list"
+    timeout: 30000
+- takeScreenshot: screenshots/03-recipes
+# 4. A recipe page, then 5. cooking mode on step 1.
+- tapOn: "Search recipes"
+- inputText: "vegetable paella"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "Vegetable Paella.*"
+    timeout: 30000
+- tapOn: "Vegetable Paella.*"
+- extendedWaitUntil:
+    visible: "Ingredients"
+    timeout: 30000
+- hideKeyboard
+- takeScreenshot: screenshots/04-recipe
+- scrollUntilVisible:
+    element: "Start cooking"
+    direction: DOWN
+- tapOn: "Start cooking"
+- tapOn: "Start cooking"
+- assertVisible: "Next step"
+- takeScreenshot: screenshots/05-cooking
+- tapOn: "Leave cooking mode"
+# 6. The assistant answering a question.
+- tapOn: "Assistant"
+- tapOn: "Message"
+- inputText: "A quick vegetarian dinner with what I have"
+- tapOn: "Send"
+- extendedWaitUntil:
+    visible: "Let's cook this!"
+    timeout: 90000
+- takeScreenshot: screenshots/06-assistant
+# 7. Import from social media (the share sheet's way in).
+- tapOn: "Home"
+- tapOn: "Import from social media"
+- extendedWaitUntil:
+    visible: "Paste Instagram, Facebook or TikTok link"
+    timeout: 10000
+- takeScreenshot: screenshots/07-import

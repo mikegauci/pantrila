@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function Privacy() {
   const mail = <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
   return (
-    <LegalPage title="Privacy" updated="25 October 2026">
+    <LegalPage title="Privacy" updated="26 October 2026">
       <p>
         Pantrila is an AI cooking and meal-planning assistant at <a href={APP_URL}>app.pantrila.com</a> and in the
         Pantrila apps for iPhone and Android; this policy covers all three. Pantrila
@@ -179,6 +179,18 @@ export default function Privacy() {
         account): that removes everything Pantrila holds
         about you, including your sign-in, straight away. It does not cancel a Pantrila Pro subscription: cancel that
         in your phone&rsquo;s settings (App Store or Google Play) first.
+      </p>
+
+      <h2 id="delete-account" className="scroll-mt-24">Delete your account</h2>
+      <p>
+        In the Pantrila app for iPhone or Android: Account, Delete account, then type &ldquo;delete&rdquo;. On the web at
+        app.pantrila.com: Profile, Delete account. Everything is deleted at once, with no waiting period: your
+        account, food profile, pantry, plans, chats, cookbook recipes and their photos, your profile picture, the
+        meals you cooked, your usage counts, your RevenueCat record and your PostHog events. Error reports in Sentry
+        and traces in LangSmith carry only an account id and expire on their own. A Pantrila Pro subscription is billed by Apple or Google,
+        so cancel it in the store first (Account, Manage subscription); deleting the account does not stop it. If you
+        can no longer sign in, write to {mail} from the email linked to your account and it will be deleted within a
+        month.
       </p>
 
       <h2>Your rights</h2>

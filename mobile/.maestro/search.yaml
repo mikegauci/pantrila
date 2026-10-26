@@ -1,0 +1,19 @@
+# Searches Pantrila's recipes and opens one.
+appId: com.pantrila.app
+tags: [e2e]
+---
+- runFlow: subflows/guest.yaml
+- tapOn: "Recipes"
+- tapOn: "Search recipes"
+- inputText: "vegetable paella"
+- pressKey: Enter
+- extendedWaitUntil:
+    visible: "Vegetable Paella.*"
+    timeout: 30000
+- tapOn: "Vegetable Paella.*"
+- extendedWaitUntil:
+    visible: "Ingredients"
+    timeout: 30000
+- scrollUntilVisible:
+    element: "Method"
+    direction: DOWN

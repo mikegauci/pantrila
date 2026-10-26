@@ -57,3 +57,21 @@ Screen tests render the routes with `expo-router/testing-library` and a fake API
 
 `src/uniwind-types.d.ts` is written by Metro (`npx expo start` or `npx expo export`); commit it when it
 changes. Icons in `assets/` come from `web/brand/` via `node scripts/icons.mjs` in `web/`.
+
+## End-to-end flows and store screenshots
+
+`.maestro/` holds Maestro flows that drive a real build against the live API as a fresh guest: guest sign-in,
+search, cooking mode, a plan and a pasted-text import (tag `e2e`; the plan and import cost about $0.02 a run),
+and `screenshots.yaml` (tag `screenshots`), which takes the store screenshots listed in
+`docs/store-listing.md`. They run on EAS Workflows from simulator and emulator builds (`e2e` profile in
+`eas.json`, no Apple credentials needed):
+
+```bash
+npx eas-cli workflow:run e2e.yml           # in mobile/: Android emulator and iOS simulator
+npx eas-cli workflow:run screenshots.yml   # iPhone 16 Pro Max (6.9") and Pixel 7; PNGs are the jobs' artifacts
+maestro test .maestro/search.yaml          # locally, with the app on a simulator or emulator
+```
+
+The `e2e` builds use the EAS `preview` environment, so `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` must be set
+there. Store builds: `npx eas-cli build --profile production --platform all`, then `npx eas-cli submit`
+(TestFlight; Play's closed testing track, `alpha`).
