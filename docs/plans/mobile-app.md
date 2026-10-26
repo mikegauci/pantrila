@@ -553,14 +553,21 @@ Branch `feat/mobile-store`.
 Branch `feat/mobile-launch`.
 
 - [ ] **(owner)** Submit to App Review and to Play production (after the 14-day test). Review notes:
-      "Tap Try it as a guest; no account needed."
-- [ ] `site/`: the "Coming soon" store cards become real App Store and Google Play badges with links;
-      the web app offers the app on phones (smart app banner on iOS).
-- [ ] EAS Update channels for production, so JavaScript-only fixes ship without a store review;
-      `runtimeVersion` policy set so an update never reaches a build with different native code.
-- [ ] README: mobile section, architecture diagram gains the app, screenshots; `docs/demo-script.md`
-      gains the share-to-import moment.
-- [ ] `CLAUDE.md`: Status, Layout and Commands final.
+      "Tap Try it as a guest; no account needed." (Full notes in `docs/store-listing.md`.)
+- [x] `site/`: the "Coming soon" store cards become real App Store and Google Play badges with links;
+      the web app offers the app on phones (smart app banner on iOS). Apple's and Google's official badges
+      (`site/public/badges/`) show once `NEXT_PUBLIC_APP_STORE_ID` (the app's Apple ID, digits) and
+      `NEXT_PUBLIC_PLAY_STORE_LIVE=1` are set on Vercel; the web app reads the same two for Safari's
+      `apple-itunes-app` banner, a closable "Pantrila for Android" bar on Android phones and links in the Pro
+      sheet. **(owner)** set both on the `pantrila` and `pantrila-site` projects and redeploy each.
+- [x] EAS Update channels for production, so JavaScript-only fixes ship without a store review;
+      `runtimeVersion` policy set so an update never reaches a build with different native code
+      (`expo-updates`, `runtimeVersion: { policy: "fingerprint" }`, channels `development`, `preview`,
+      `production`; `mobile/README.md` says how to publish one).
+- [x] README: mobile section, architecture diagram gains the app, screenshots; `docs/demo-script.md`
+      gains the share-to-import moment. Phone screenshots come from the screenshots workflow (PR 13) once it
+      runs; **(owner)** add two of them to the README then.
+- [x] `CLAUDE.md`: Status, Layout and Commands final.
 
 ## Later (not in 1.0)
 
@@ -587,7 +594,7 @@ Branch `feat/mobile-launch`.
 | 11 | `feat/mobile-profile` | done (owner: Sentry project and EAS variables, a new development build) |
 | 12 | `feat/mobile-paywall` | done (owner: store products, RevenueCat offering, SDK keys on EAS, a new development build, sandbox tests) |
 | 13 | `feat/mobile-store` | done (owner: store forms from `docs/store-listing.md`, run the e2e and screenshots workflows, production builds, closed test with 12 testers for 14 days, TestFlight) |
-| 14 | `feat/mobile-launch` | not started |
+| 14 | `feat/mobile-launch` | done (owner: store submissions after the closed test, the two store variables on Vercel, phone screenshots in the README) |
 
 ## Handoff log
 
@@ -774,3 +781,12 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   Privacy page: "Delete your account" (`#delete-account`, Play's deletion link). `eas.json` submits Android to the
   closed track. The flows were written from the screens' labels and are not yet run; expect a fix round on their
   first EAS run. For PR 14: the store badges and links need the App Store id and Play listing once they exist.
+- 2026-10-26: PR 14 (`feat/mobile-launch`): the landing site's store cards show the official App Store and Google Play
+  badges with links (and the copy and FAQ follow) once `NEXT_PUBLIC_APP_STORE_ID` / `NEXT_PUBLIC_PLAY_STORE_LIVE` are set
+  on Vercel; the web app sends Safari's `apple-itunes-app` tag, shows a closable Android bar (`components/app-banner.tsx`,
+  `pantrila-app-banner-off`) and links the stores from the Pro sheet (`lib/stores.ts`; `app-banner.spec.ts`, all 43
+  Playwright specs pass). `expo-updates` with fingerprint runtime versions and a channel per build profile; a native
+  module, so the next builds need making. README gains "Phone apps", the app and `packages/core` in the architecture
+  diagram and the phone commands; the demo script gains sharing a reel to Pantrila. Every code PR of the plan is done;
+  what is left is the owner's: PR 0's accounts, the dashboard and EAS settings of PRs 2-13, the closed test and the
+  store submissions.
