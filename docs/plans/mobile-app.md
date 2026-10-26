@@ -25,8 +25,8 @@ Decisions (owner, 2026-10-24):
 
 How to use this plan: do **one PR at a time, in order**. Start each PR in a fresh chat with
 "Do the next PR of `docs/plans/mobile-app.md`". Read this file and `CLAUDE.md` first. At the end of
-each PR, tick its checklist here, add a line to the handoff log at the bottom, and update the Status
-section of `CLAUDE.md`. Owner steps (accounts, dashboards, phone checks) are marked **(owner)**.
+each PR, tick its checklist here, add a line to the handoff log at the bottom, and add an entry to
+`docs/status-log.md`. Owner steps (accounts, dashboards, phone checks) are marked **(owner)**.
 
 ## Things to know before starting
 

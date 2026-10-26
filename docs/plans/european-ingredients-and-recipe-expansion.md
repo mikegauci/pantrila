@@ -35,7 +35,7 @@ Each PR must leave the application working. Follow the repository's branch, revi
 delivery instructions. Use readable commits within each PR; split recipe content into small
 batches of about 20–25 or fewer. Do not create a separate PR for every recipe batch.
 
-Update this file and the short `CLAUDE.md` status as work lands. Record the actual PR URL,
+Update this file and `docs/status-log.md` (and the `CLAUDE.md` summary if needed) as work lands. Record the actual PR URL,
 counts, tests, eval reports, deployment state and next action. Never mark kitchen testing or
 deployment complete based only on local checks.
 
