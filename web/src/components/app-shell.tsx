@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
 import { pingServer } from "@/lib/api"
+import { rememberReturn } from "@/lib/return-to"
 import { useMe } from "@/lib/hooks"
 import { googlePicture, linkGoogle, supabase } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
@@ -217,6 +218,8 @@ function Today() {
   return useSyncExternalStore(noSubscribe, todayText, () => "")
 }
 
+let signedInHere = false
+
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
@@ -224,8 +227,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   useEffect(pingServer, [])
 
+  // Someone who arrives signed out comes back to this page after signing in; someone who signs out
+  // does not (the shell remounts per account, so this is kept outside it).
   useEffect(() => {
-    if (ready && !session) router.replace("/login")
+    if (session) signedInHere = true
+    else if (ready) {
+      if (!signedInHere) rememberReturn(window.location.pathname + window.location.search)
+      router.replace("/login")
+    }
   }, [ready, session, router])
 
   const title = NAV.find((n) => active(pathname, n.href))?.label ?? "Pantrila"
