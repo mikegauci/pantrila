@@ -35,6 +35,8 @@ Event = Literal[
     "recipe_imported",
     "plan_created",
     "cooking_mode_opened",
+    "paywall_shown",
+    "paywall_closed",
     # Pantrila Pro, from the RevenueCat webhook (pantrila.entitlements)
     "trial_started",
     "subscribed",

@@ -460,9 +460,18 @@ class ImportTiming(BaseModel):
     sample_count: int
 
 
+PaywallReason = Literal["limit", "profile", "plan_note", "welcome_back"]
+
+
 class AppEvent(BaseModel):
-    name: Literal["cooking_mode_opened"]
+    """A step only the app sees. Cooking mode carries `source`; the paywall carries why it
+    opened (`reason`, the Free cap's `feature`) and, once closed, how (`outcome`)."""
+
+    name: Literal["cooking_mode_opened", "paywall_shown", "paywall_closed"]
     source: Literal["corpus", "mine"] | None = None
+    reason: PaywallReason | None = None
+    feature: Literal["plan", "chat", "import", "photo"] | None = None
+    outcome: Literal["bought", "restored", "closed"] | None = None
 
 
 class AvatarIn(BaseModel):
