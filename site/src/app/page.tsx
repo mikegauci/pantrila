@@ -1,7 +1,6 @@
 import Image from "next/image"
 import {
   ArrowRight,
-  CalendarDays,
   ChefHat,
   Globe,
   Link2,
@@ -10,9 +9,7 @@ import {
   Plus,
   ScanSearch,
   ShieldCheck,
-  ShoppingBasket,
   Sparkles,
-  Wheat,
 } from "lucide-react"
 
 import { AllergenCheck } from "@/components/allergen-check"
@@ -24,72 +21,52 @@ import { HeroArt, HeroGlow } from "@/components/hero-art"
 import { CountUp, Reveal, StaggerItem, StaggerList } from "@/components/motion"
 import { APP_STORE_URL, APP_URL, GITHUB_URL, PLAY_STORE_URL, cn } from "@/lib"
 
-const FEATURES = [
+// The three things Pantrila is for; meal planning, pantry and nutrition support them further down.
+const BENEFITS = [
   {
     icon: MessageCircle,
-    title: "Ask Pantrila",
-    text: "Ask anything about cooking. It searches recipes, checks your pantry, swaps an ingredient or scales a recipe, and every recipe it suggests is checked against your rules.",
-  },
-  {
-    icon: CalendarDays,
-    title: "A week of meals",
-    text: "Breakfast, lunch and dinner for up to seven days, fitted to your calories and protein. Swap a meal, eat out, skip one or cook once and eat the leftovers.",
+    title: "Ask anything",
+    text: "“What can I make tonight?” Pantrila answers from its recipe library and your pantry, swaps an ingredient, scales a recipe or writes a new one, and checks what it suggests against your rules.",
   },
   {
     icon: Link2,
     title: "Save recipes from anywhere",
-    text: "Paste a recipe link or an Instagram, TikTok or Facebook post, or snap a cookbook page. Pantrila reads the ingredients and method and credits the creator.",
+    text: "Paste an Instagram, TikTok or Facebook post or a recipe link, or snap a cookbook page. Pantrila turns it into a recipe in your cookbook and credits the creator.",
   },
   {
     icon: ChefHat,
-    title: "Cooking mode, hands free",
-    text: "One step at a time, with timers taken from the recipe and the screen kept awake. Turn on the mic and say “next”, “back” or “start timer” when your hands are in the bowl.",
+    title: "Cook it, hands free",
+    text: "One step at a time, with timers taken from the recipe and the screen kept awake. Say “next”, “back” or “start timer” when your hands are in the bowl.",
     highlight: true,
-  },
-  {
-    icon: ShoppingBasket,
-    title: "Pantry and grocery list",
-    text: "Keep track of what you have. The grocery list holds only what is missing, sorted by aisle and rounded to amounts you can actually buy.",
-  },
-  {
-    icon: Wheat,
-    title: "Nutrition worked out, not guessed",
-    text: "Calories and macros (protein, carbs and fat) come from each ingredient’s weight and public food data from USDA and the French Ciqual tables.",
   },
 ]
 
 const SHOWCASE = [
   {
-    eyebrow: "Plan",
-    title: "Your week, planned in under a minute",
-    text: "Tell Pantrila your diet, allergies and targets once. It drafts a week from recipes that fit, uses what is already in your pantry first, and shows how each day lands on energy and protein.",
-    points: ["Set one calorie number or a range", "Swap any meal from recipes that suit you", "Repeat a meal on other days as leftovers"],
-    demo: PlanDemo,
-    image: { src: "/screens/plan.jpg", alt: "A week's meal plan in Pantrila with daily energy and protein bars", width: 1280, height: 800 },
-  },
-  {
     eyebrow: "Ask",
-    title: "A cooking assistant that knows your kitchen",
-    text: "“What can I make with chickpeas and spinach?” Pantrila answers from its recipe library and your pantry, and adds items to your pantry when you tell it what you bought.",
+    title: "A cooking companion that knows your kitchen",
+    text: "Ask what to cook, what to swap or how long to rest the dough. Pantrila answers from its recipe library and your pantry, and adds items to your pantry when you tell it what you bought.",
     points: ["Cites the recipes it recommends", "Warns you when something breaks your rules", "Writes new recipes you can save to your cookbook"],
     demo: AskDemo,
     image: { src: "/screens/assistant.jpg", alt: "A conversation with the Pantrila assistant recommending recipes", width: 1280, height: 800 },
+    cta: { label: "Try the assistant", href: `${APP_URL}/assistant` },
   },
   {
     eyebrow: "Save",
     title: (
       <>
-        That recipe you saw on{" "}
+        Saw a recipe on{" "}
         <span className="whitespace-nowrap">
-          <FlipWord words={["Instagram", "Facebook", "TikTok"]} colors={["#d6249f", "#1877f2", "#00a99d"]} />,
+          <FlipWord words={["Instagram", "Facebook", "TikTok"]} colors={["#d6249f", "#1877f2", "#00a99d"]} />?
         </span>{" "}
-        in your cookbook
+        Make it yours.
       </>
     ),
-    text: "Paste the post link. Pantrila reads the caption, follows the creator’s link or listens to the video, then turns it into a recipe with amounts, steps and nutrition.",
-    points: ["Links, photos, posts or typed in", "Keeps the creator’s notes and credit", "Allergens checked like every other recipe"],
+    text: "Paste the post link, or share it to the phone app. Pantrila reads the caption, follows the creator’s link or listens to the video, then saves it to your cookbook with amounts, steps and nutrition.",
+    points: ["Posts, recipe sites, cookbook photos or typed in", "Keeps the creator’s notes and credit", "Allergens checked like every other recipe"],
     demo: SaveDemo,
     image: { src: "/screens/recipe.jpg", alt: "A recipe in Pantrila with its photo, allergens, ingredients and nutrition", width: 1280, height: 800 },
+    cta: { label: "Import your first recipe", href: `${APP_URL}/recipes/mine/new?method=post` },
   },
   {
     eyebrow: "Cook",
@@ -99,6 +76,16 @@ const SHOWCASE = [
     demo: CookDemo,
     image: { src: "/screens/cooking.jpg", alt: "Cooking mode on a phone, showing one step and a timer", width: 390, height: 844 },
     phone: true,
+    cta: { label: "Find a recipe to cook", href: `${APP_URL}/recipes` },
+  },
+  {
+    eyebrow: "Plan and shop",
+    title: "Your week planned, your grocery list written",
+    text: "Tell Pantrila your diet, allergies and targets once. It drafts a week from recipes that fit, uses what is in your pantry first, and lists only what is missing, sorted by aisle.",
+    points: ["Fitted to your calories and protein, one number or a range", "Swap a meal, eat out, skip one or cook once for leftovers", "Nutrition worked out from each ingredient with USDA and Ciqual food data"],
+    demo: PlanDemo,
+    image: { src: "/screens/plan.jpg", alt: "A week's meal plan in Pantrila with daily energy and protein bars", width: 1280, height: 800 },
+    cta: { label: "Plan your week", href: `${APP_URL}/plan` },
   },
 ]
 
@@ -115,15 +102,15 @@ const SAFETY = [
   },
   {
     icon: ShieldCheck,
-    title: "Never shown if it breaks a rule",
-    text: "A meal that breaks one of your rules is repaired or replaced before you see the plan. The AI suggests; rules decide.",
+    title: "Conflicts caught before you see them",
+    text: "A planned meal that breaks one of your rules is repaired or replaced, and a recipe you import or the assistant writes shows a warning instead.",
   },
 ]
 
 const FAQ = [
   {
     q: "Is Pantrila free?",
-    a: "Yes. Pantrila is free to use in your browser. Each account has a daily allowance of AI plans, chats, imports and photos.",
+    a: "Yes, free to try with no sign-up. Browsing, search, cooking mode, your pantry, grocery list and cookbook are unlimited. The AI parts have a free allowance: 10 assistant messages a day, 5 recipe imports a month and 1 meal plan a week. Pantrila Pro (€4.99 a month or €29.99 a year, 7 days free) gives larger allowances and AI recipe photos, and is sold in the phone apps.",
   },
   {
     q: "Do I need an account?",
@@ -131,7 +118,7 @@ const FAQ = [
   },
   {
     q: "Which allergies and diets does it handle?",
-    a: "The 14 allergens EU law requires labels for (including gluten, milk, eggs, peanuts, tree nuts, soy, fish, shellfish and sesame), plus vegetarian, vegan, gluten-free and other diets, and any food you choose to avoid. Always check product labels yourself if an allergy is serious.",
+    a: "The 14 allergens EU law requires labels for (including gluten, milk, eggs, peanuts, tree nuts, soy, fish, shellfish and sesame), plus vegetarian, vegan, gluten-free and other diets, and any food you choose to avoid. The checks rely on each recipe’s ingredient list, so always check ingredients and product labels yourself if an allergy is serious.",
   },
   {
     q: "Is there a phone app?",
@@ -149,9 +136,9 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <Facts />
       <Features />
       <Showcase />
+      <Facts />
       <Safety />
       <GetTheApp />
       <Faq />
@@ -164,24 +151,23 @@ function Hero() {
   return (
     <section className="relative -mt-16 overflow-hidden pt-16">
       <HeroGlow />
-      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pt-14 pb-16 sm:px-6 md:pt-20 lg:grid-cols-[1fr_1.15fr] lg:gap-10">
+      <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pt-8 pb-16 sm:px-6 md:pt-20 lg:grid-cols-[1fr_1.15fr] lg:gap-10">
         <div className="space-y-6">
           <Reveal>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-surface px-3 py-1 text-[13px] font-semibold text-primary-text">
               <Sparkles className="size-3.5" aria-hidden="true" />
-              AI cooking and meal planning
+              Ask · Save · Cook · Plan
             </span>
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="text-[40px] leading-[1.08] font-extrabold tracking-tight text-balance sm:text-[52px]">
-              Cook from what you have. Eat what suits you.
+              Your AI cooking companion, from idea to plate.
             </h1>
           </Reveal>
           <Reveal delay={0.16}>
             <p className="max-w-xl text-[17px] leading-[28px] text-muted-foreground text-pretty">
-              Tell Pantrila what is in your kitchen, how you eat and what you can’t. It finds recipes, plans your week,
-              writes the grocery list and talks you through the cooking, hands free if you like, and checks every meal
-              against your allergies.
+              Ask what to cook, save recipes from anywhere and get talked through every step, all checked against
+              your allergies and diet.
             </p>
           </Reveal>
           <Reveal delay={0.24} className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -198,7 +184,7 @@ function Hero() {
           </Reveal>
           <Reveal delay={0.32}>
             <p className="text-[13px] text-muted-foreground">
-              Works in any browser. Continue with Google or try it as a guest, no sign-up needed.
+              Free to try · No sign-up needed · Free plan has AI usage limits
             </p>
           </Reveal>
         </div>
@@ -245,12 +231,12 @@ function Features() {
     <section id="features" className="scroll-mt-16 py-20">
       <div className="mx-auto max-w-6xl space-y-12 px-4 sm:px-6">
         <SectionHeading
-          eyebrow="Features"
-          title="Everything you need, from planning to plate"
-          text="From the first idea to the last step at the stove, in one place."
+          eyebrow="Your cooking companion"
+          title="Ask it. Save it. Cook it."
+          text="One companion from the first idea to the last step at the stove, with your week planned and your shopping written too."
         />
-        <StaggerList className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map(({ icon: Icon, title, text, highlight }) => (
+        <StaggerList className="grid gap-4 md:grid-cols-3">
+          {BENEFITS.map(({ icon: Icon, title, text, highlight }) => (
             <StaggerItem
               key={title}
               className={cn(
@@ -326,6 +312,13 @@ function Showcase() {
                 </li>
               ))}
             </ul>
+            <a
+              href={item.cta.href}
+              className="group inline-flex items-center gap-1.5 pt-2 font-semibold text-primary-text underline-offset-4 hover:underline"
+            >
+              {item.cta.label}
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+            </a>
           </Reveal>
         </div>
       ))}
@@ -343,8 +336,8 @@ function Safety() {
             The AI suggests. Rules decide.
           </h2>
           <p className="text-[16px] text-white/75 text-pretty">
-            An allergy is not something to leave to a language model. Pantrila checks food rules in plain code that
-            gives the same answer every time.
+            An allergy is not something to leave to a language model. Pantrila checks recipes against your saved
+            allergies and diet in plain code that gives the same answer every time, before it recommends them.
           </p>
         </Reveal>
         <AllergenCheck />
@@ -358,7 +351,8 @@ function Safety() {
           ))}
         </StaggerList>
         <p className="text-center text-[13px] text-white/60">
-          Pantrila is not medical advice. If an allergy is serious, check ingredients and labels yourself too.
+          The checks are only as good as a recipe’s ingredient list, and products differ, so if an allergy is serious,
+          always check ingredients and labels yourself. Pantrila is not medical advice.
         </p>
       </div>
     </section>
