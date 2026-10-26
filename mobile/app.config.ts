@@ -32,10 +32,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   orientation: "portrait",
   userInterfaceStyle: "automatic",
   icon: "./assets/icon.png",
-  // EAS Update: JavaScript and asset fixes reach store builds without a review. The fingerprint policy
-  // makes the runtime version a hash of the native code and config, so an update only ever reaches
-  // builds with the same native side; a change to native code needs a new store build.
-  runtimeVersion: { policy: "fingerprint" },
+  // EAS Update: JavaScript and asset fixes reach store builds without a review. An update only reaches
+  // builds of the same `version`, so raise `version` with any native change (a native module, a plugin
+  // or this file). Not the fingerprint policy: this config reads EAS_BUILD_PROFILE and the
+  // SENTRY_AUTH_TOKEN secret, which differ between a Mac and EAS, so the two fingerprints never matched
+  // and every EAS build failed.
+  runtimeVersion: { policy: "appVersion" },
   updates: {
     url: `https://u.expo.dev/${EAS_PROJECT_ID}`,
     // Start with what is installed; a downloaded update is used from the next launch.
