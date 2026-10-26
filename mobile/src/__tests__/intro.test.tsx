@@ -24,7 +24,7 @@ beforeEach(async () => {
 
 it("shows three cards the first time, then never again for this person", async () => {
   const shown = await showApp("/")
-  expect(await screen.findByText("Plan your week")).toBeTruthy()
+  expect(await screen.findByText("Ask Pantrila")).toBeTruthy()
   expect(shown.getPathname()).toBe("/intro")
   await fireEvent.press(screen.getByText("Next"))
   expect(screen.getByText("Import from a post")).toBeTruthy()

@@ -58,6 +58,20 @@ the listings are live, and phone screenshots in the README.
 
 ## Status (update as work lands)
 
+Companion messaging: Pantrila is now pitched as "your AI cooking companion" (ask, save, cook; planning and
+groceries support them), after an outside review of pantrila.com. Landing site: hero "Your AI cooking companion, from
+idea to plate." with a shorter line, "Free to try · No sign-up needed · Free plan has AI usage limits", the assistant
+screenshot in front (`home.jpg` removed) and less space above on phones; three benefits (Ask, Save, Cook) replace the
+six-card grid; showcase order Ask, Save ("Saw a recipe on Instagram? Make it yours."), Cook, Plan and shop, each with a
+link into the app (`/assistant`, `/recipes/mine/new?method=post`, `/recipes`, `/plan`); facts after the showcase;
+safety copy no longer says "never shown" and says the checks rely on the ingredient list; FAQ gives the real Free
+allowances and Pro's price. Web: sign-in returns to the page someone opened signed out (`lib/return-to.ts`,
+`sessionStorage["pantrila-return-to"]`, own pages only; not after signing out in that tab), new login and metadata
+copy (`return-after-sign-in.spec.ts`; 45 specs pass). Phone: welcome line and the first intro card ("Ask Pantrila").
+Store listing: names "Pantrila: AI Cooking Companion", new subtitle, promo, keywords, descriptions led by Ask/Save/Cook,
+and a companion-first screenshot upload order. README intro and the cold-start note (the uptime ping keeps the API
+awake). Copy only apart from the return path; no model call, so no eval rerun.
+
 Launch (mobile plan PR 14): the landing site's store cards show Apple's and Google's official badges with links
 (`site/public/badges/`; FAQ and "Get the app" copy follow) once `NEXT_PUBLIC_APP_STORE_ID` (the app's Apple ID, digits)
 and `NEXT_PUBLIC_PLAY_STORE_LIVE=1` are set on Vercel, else "Coming soon" (`site/src/lib.ts`). The web app reads the same
@@ -1138,7 +1152,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `@pantrila/core/voice` (words to commands) and `src/lib/voice.ts` (browser listener). The assistant's
   thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrila.tsx`. `RecipeArt` (`src/components/bits.tsx`)
   shows the recipe photo with `next/image` (host allowed from `NEXT_PUBLIC_SUPABASE_URL` in
-  `next.config.ts`) or the meal-type art when there is none. `src/proxy.ts` only redirects the retired Vercel addresses. `src/lib/stores.ts` holds the phone apps' store
+  `next.config.ts`) or the meal-type art when there is none. `src/proxy.ts` only redirects the retired Vercel addresses. `src/lib/return-to.ts` brings someone who opened a page signed out back to it after sign-in. `src/lib/stores.ts` holds the phone apps' store
   links (Safari's banner in the root layout, `components/app-banner.tsx` on Android, the Pro sheet). `src/app/.well-known/` serves the phone app's link
   files (`src/lib/app-links.ts`). Read `web/AGENTS.md`: this Next.js differs from
   older versions (e.g. `proxy.ts` replaces middleware; check `node_modules/next/dist/docs/`).

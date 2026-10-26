@@ -51,7 +51,7 @@ export function SiteFooter() {
         <div className="max-w-xs space-y-3">
           <Logo />
           <p className="text-[14px] text-muted-foreground">
-            An AI cooking and meal-planning assistant. The AI suggests; rules decide.
+            Your AI cooking companion. The AI suggests; rules decide.
           </p>
         </div>
         <div className="grid grid-cols-2 gap-x-12 gap-y-2 text-[14px]">

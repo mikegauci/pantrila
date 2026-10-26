@@ -1,17 +1,17 @@
 # Pantrila
 
-AI cooking and meal-planning assistant. Tell it what is in your kitchen, your diet, allergies
-and nutrition targets; it finds recipes with hybrid RAG search, plans your week with a
-LangGraph agent, builds a grocery list from what is missing and answers cooking questions in
-a chat. You can add your own recipes from photos, a link, a TikTok, Instagram or Facebook post
-or by typing them in, and cook any
-recipe in cooking mode. It runs in the browser and as an iPhone and Android app. **The model proposes; deterministic code decides.** Every recipe and plan is
+Your AI cooking companion. Ask Pantrila what to cook and it answers from a recipe corpus with
+hybrid RAG search and your pantry; save recipes from a TikTok, Instagram or Facebook post, a link,
+photos or typed text into your own cookbook; then cook any recipe step by step in a hands-free
+cooking mode. Behind that, a LangGraph agent plans your week around your diet, allergies and
+nutrition targets and builds a grocery list from what is missing. It runs in the browser and as an
+iPhone and Android app. **The model proposes; deterministic code decides.** Every recipe and plan is
 re-checked against your allergens and diet before you see it.
 
 **Live demo: https://app.pantrila.com** ("Continue with Google" keeps your data; "Try it as a guest" needs no account, and a guest
-can add Google later without losing anything. The API
-runs on Render's free plan and sleeps when idle, so the first request can take about 50
-seconds.) Demo video walkthrough: [`docs/demo-script.md`](docs/demo-script.md).
+can add Google later without losing anything. The API runs on Render's free plan, kept awake by an
+uptime ping every 5 minutes; if it has slept, the app says "Waking up the Pantrila server…" while the
+first request waits.) Demo video walkthrough: [`docs/demo-script.md`](docs/demo-script.md).
 
 ![A planned week: three meals a day with portions fitted to 1900 kcal, protein checked per day](docs/screenshots/plan.png)
 
@@ -316,7 +316,7 @@ The paid evals are a manual GitHub Actions workflow.
 - Cooking-mode timers find durations written as numbers or simple words ("3 to 4 minutes",
   "1½ hours"); a phrase like "until golden" gets no timer. Timers only ring while the page is
   open, and browsers without the Screen Wake Lock API (or in battery saver) may still dim.
-- Render's free plan sleeps when idle, so the first request after a pause is slow.
+- Render's free plan sleeps when idle. An uptime ping every 5 minutes keeps it awake, but if it does sleep, the first request after a pause is slow.
 
 "Macros" means protein, carbs and fat; "kcal" is food energy (calories).
 

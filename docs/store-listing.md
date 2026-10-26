@@ -13,33 +13,42 @@ account deletion `https://pantrila.com/privacy#delete-account`.
 ### App name (max 30)
 
 ```text
-Pantrila: Meal Planner
+Pantrila: AI Cooking Companion
 ```
 
 ### Subtitle (max 30)
 
 ```text
-Plan meals around your pantry
+Recipe saver & meal planner
 ```
 
 ### Promotional text (max 170)
 
 ```text
-Tell Pantrila what is in your kitchen and what you cannot eat. It plans your week, checks every meal against your allergies and writes the grocery list.
+Ask what to cook, save recipes from TikTok, Instagram or any site, and cook hands-free step by step. Suggestions are checked against your allergies and diet.
 ```
 
 ### Keywords (max 100)
 
 ```text
-meal plan,recipes,grocery list,pantry,allergy,diet,cooking,recipe import,vegan,gluten free,macros
+meal planner,recipes,recipe saver,grocery list,pantry,allergy,diet,recipe import,vegan,gluten free
 ```
 
 ### Description (max 4000)
 
 ```text
-Pantrila is a cooking and meal-planning assistant that knows your kitchen.
+Pantrila is your AI cooking companion. Ask what to cook, save the recipes you find online and get talked through every step, all checked against your allergies and diet.
 
 Tell it your diet, your allergies, the foods you never eat and your nutrition targets once. Then:
+
+ASK PANTRILA
+Ask what to cook tonight, what goes with the chickpeas in your cupboard, how to swap an ingredient or how to scale a recipe. Answers point to real recipes, use your pantry and respect your rules, and Pantrila can write a new recipe for you to save.
+
+SAVE RECIPES FROM ANYWHERE
+Seen a recipe on TikTok, Instagram or Facebook? Share the post to Pantrila, or a recipe page, cookbook photos or pasted text. It reads the recipe into your cookbook, credits the creator, works out the nutrition and warns you about anything that does not suit you.
+
+COOK HANDS-FREE
+Cooking mode shows one step at a time with the ingredients for that step, timers that ring with the phone locked, and voice commands: say "next", "back" or "start timer". The screen stays on.
 
 PLAN YOUR WEEK
 Pantrila plans breakfast, lunch and dinner for the days you choose, using what is already in your pantry. Every plan is checked against your allergies and diet by fixed rules before you see it, not by the AI's say-so. Swap any meal, repeat a meal as leftovers, eat out or skip a day.
@@ -47,17 +56,8 @@ Pantrila plans breakfast, lunch and dinner for the days you choose, using what i
 A GROCERY LIST THAT KNOWS YOUR PANTRY
 The list is made from your plan, minus what you already have, grouped by aisle and sized for the people you cook for.
 
-IMPORT RECIPES FROM ANYWHERE
-Share a TikTok, Instagram or Facebook post, a recipe page, cookbook photos or pasted text to Pantrila. It reads the recipe, credits the creator, works out the nutrition and warns you about anything that does not suit you.
-
-COOK HANDS-FREE
-Cooking mode shows one step at a time with the ingredients for that step, timers that ring with the phone locked, and voice commands: say "next", "back" or "start timer". The screen stays on.
-
-ASK PANTRILA
-Ask what to cook tonight, how to swap an ingredient or how to scale a recipe. Answers point to real recipes and respect your rules.
-
 300 RECIPES TO START
-A recipe collection with nutrition worked out from each ingredient: energy, protein, carbs and fat, and the 14 EU allergens.
+A recipe collection with nutrition worked out from each ingredient: energy, protein, carbs and fat, and the 14 EU allergens. The checks rely on each recipe's ingredient list, so if an allergy is serious, check ingredients and labels yourself too.
 
 FREE AND PRO
 Pantrila is free to use: 1 plan a week, 5 recipe imports a month and 10 questions a day, with no ads. Pantrila Pro gives 5 meal plans, 20 recipe imports and 50 assistant messages a day, and AI photos for your own recipes: €4.99 a month or €29.99 a year, with a 7-day free trial.
@@ -124,21 +124,30 @@ food profile above. Photos sent for an import are used for that request only and
 ### App name (max 30)
 
 ```text
-Pantrila: AI Meal Planner
+Pantrila: AI Cooking Companion
 ```
 
 ### Short description (max 80)
 
 ```text
-Plan meals around your pantry, allergies and diet. Import recipes from any post.
+Ask what to cook, save recipes from any post and cook hands-free, step by step.
 ```
 
 ### Full description (max 4000)
 
 ```text
-Pantrila is a cooking and meal-planning assistant that knows your kitchen.
+Pantrila is your AI cooking companion. Ask what to cook, save the recipes you find online and get talked through every step, all checked against your allergies and diet.
 
 Tell it your diet, your allergies, the foods you never eat and your nutrition targets once. Then:
+
+ASK PANTRILA
+Ask what to cook tonight, what goes with the chickpeas in your cupboard, how to swap an ingredient or how to scale a recipe. Answers point to real recipes, use your pantry and respect your rules, and Pantrila can write a new recipe for you to save.
+
+SAVE RECIPES FROM ANYWHERE
+Seen a recipe on TikTok, Instagram or Facebook? Share the post to Pantrila, or a recipe page, cookbook photos or pasted text. It reads the recipe into your cookbook, credits the creator, works out the nutrition and warns you about anything that does not suit you.
+
+COOK HANDS-FREE
+Cooking mode shows one step at a time with the ingredients for that step, timers that ring with the phone locked, and voice commands: say "next", "back" or "start timer". The screen stays on.
 
 PLAN YOUR WEEK
 Pantrila plans breakfast, lunch and dinner for the days you choose, using what is already in your pantry. Every plan is checked against your allergies and diet by fixed rules before you see it, not by the AI's say-so. Swap any meal, repeat a meal as leftovers, eat out or skip a day.
@@ -146,17 +155,8 @@ Pantrila plans breakfast, lunch and dinner for the days you choose, using what i
 A GROCERY LIST THAT KNOWS YOUR PANTRY
 The list is made from your plan, minus what you already have, grouped by aisle and sized for the people you cook for.
 
-IMPORT RECIPES FROM ANYWHERE
-Share a TikTok, Instagram or Facebook post, a recipe page, cookbook photos or pasted text to Pantrila. It reads the recipe, credits the creator, works out the nutrition and warns you about anything that does not suit you.
-
-COOK HANDS-FREE
-Cooking mode shows one step at a time with the ingredients for that step, timers that ring with the phone locked, and voice commands: say "next", "back" or "start timer". The screen stays on.
-
-ASK PANTRILA
-Ask what to cook tonight, how to swap an ingredient or how to scale a recipe. Answers point to real recipes and respect your rules.
-
 300 RECIPES TO START
-A recipe collection with nutrition worked out from each ingredient: energy, protein, carbs and fat, and the 14 EU allergens.
+A recipe collection with nutrition worked out from each ingredient: energy, protein, carbs and fat, and the 14 EU allergens. The checks rely on each recipe's ingredient list, so if an allergy is serious, check ingredients and labels yourself too.
 
 FREE AND PRO
 Pantrila is free to use: 1 plan a week, 5 recipe imports a month and 10 questions a day, with no ads. Pantrila Pro gives 5 meal plans, 20 recipe imports and 50 assistant messages a day, and AI photos for your own recipes: €4.99 a month or €29.99 a year, with a 7-day free trial. The subscription renews automatically until you cancel it in Google Play.
@@ -258,18 +258,19 @@ Taken by `.maestro/screenshots.yaml` (run `npx eas-cli workflow:run screenshots.
 16 Pro Max simulator (6.9", 1320 x 2868; App Store Connect scales it for the smaller iPhones, so 6.5" shots are
 optional) and a Pixel 7 emulator (1080 x 2400, within Play's limits). The app is phones only
 (`supportsTablet: false`), so no iPad shots. Order and caption for each (captions are added in the store's
-own frame tool or left out):
+own frame tool or left out). Upload them in the store in the "Upload" order, companion features first; the file
+numbers are the order the flow takes them in:
 
-| # | Screen | Caption |
-| --- | --- | --- |
-| 01 | Plan, a planned week | A week of meals that fits your diet |
-| 02 | Grocery list | Only what your pantry is missing |
-| 03 | Recipes with "Only what suits me" | 300 recipes, checked for your allergies |
-| 04 | A recipe page | Nutrition worked out from every ingredient |
-| 05 | Cooking mode, step 1 | Cook hands-free, one step at a time |
-| 06 | Assistant reply with recipe cards | Ask what to cook tonight |
-| 07 | Import from social media | Save recipes from TikTok, Instagram and Facebook |
-| 08 | Paywall (by hand, on a build with the RevenueCat key: Account, Your plan) | For the in-app purchase review only |
+| Upload | File | Screen | Caption |
+| --- | --- | --- | --- |
+| 1 | 06 | Assistant reply with recipe cards | Your AI cooking companion |
+| 2 | 07 | Import from social media | Save recipes from TikTok, Instagram and Facebook |
+| 3 | 05 | Cooking mode, step 1 | Cook hands-free, one step at a time |
+| 4 | 01 | Plan, a planned week | A week of meals that fits your diet |
+| 5 | 02 | Grocery list | Only what your pantry is missing |
+| 6 | 03 | Recipes with "Only what suits me" | 300 recipes, checked for your allergies |
+| 7 | 04 | A recipe page | Nutrition worked out from every ingredient |
+| - | 08 | Paywall (by hand, on a build with the RevenueCat key: Account, Your plan) | For the in-app purchase review only |
 
 Play also needs a **feature graphic** (1024 x 500 PNG): the white mark on the brand green (`web/brand/`), with
 "Pantrila" beside it.

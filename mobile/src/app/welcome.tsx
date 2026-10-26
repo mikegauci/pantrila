@@ -40,7 +40,7 @@ export default function Welcome() {
         <View className="gap-2 px-6">
           <Text className="font-sans-bold text-3xl text-foreground">Welcome to Pantrila</Text>
           <Text className="font-sans text-base text-muted-foreground">
-            Set your diet and allergies, add what is in your kitchen and plan a week of meals.
+            Your AI cooking companion: ask what to cook, save the recipes you love and get talked through every step.
           </Text>
 
           {shared && (

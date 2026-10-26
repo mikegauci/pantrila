@@ -5,6 +5,7 @@ import { useEffect, useSyncExternalStore } from "react"
 
 import { useAuth } from "@/components/auth-provider"
 import { Logo } from "@/components/logo"
+import { takeReturn } from "@/lib/return-to"
 
 const noSubscribe = () => () => {}
 
@@ -32,7 +33,7 @@ export default function AuthCallback() {
 
   // A failed Google link leaves the guest signed in, so only move on when nothing failed.
   useEffect(() => {
-    if (ready && session && !error) router.replace("/")
+    if (ready && session && !error) router.replace(takeReturn())
   }, [ready, session, error, router])
 
   return (
