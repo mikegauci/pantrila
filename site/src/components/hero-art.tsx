@@ -57,8 +57,8 @@ export function HeroArt() {
       >
         <BrowserFrame>
           <Image
-            src="/screens/home.jpg"
-            alt="Pantrila's home screen with today's meals, nutrition and the assistant"
+            src="/screens/assistant.jpg"
+            alt="A conversation with the Pantrila assistant recommending recipes"
             width={1280}
             height={800}
             priority

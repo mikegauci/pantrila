@@ -1,5 +1,5 @@
 import { router } from "expo-router"
-import { CalendarDays, Mic, Share, type LucideIcon } from "lucide-react-native"
+import { MessageCircle, Mic, Share, type LucideIcon } from "lucide-react-native"
 import { useState } from "react"
 import { Pressable, Text, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
@@ -12,9 +12,9 @@ import { introDone } from "@/lib/intro"
 /** The phone's onboarding instead of the web's tour: three cards, once per person (lib/intro.ts). */
 const CARDS: { icon: LucideIcon; tint: string; tone: string; title: string; text: string }[] = [
   {
-    icon: CalendarDays, tint: "bg-primary-soft", tone: "primary-text", title: "Plan your week",
-    text: "Set your diet, allergies and targets in Profile. Pantrila plans the week's meals, checks every one " +
-      "against your rules in code and makes the grocery list from what your pantry is missing.",
+    icon: MessageCircle, tint: "bg-primary-soft", tone: "primary-text", title: "Ask Pantrila",
+    text: "Your cooking companion: ask what to cook, swap an ingredient or plan your week. Set your diet and " +
+      "allergies in Profile and Pantrila checks what it suggests against them in code.",
   },
   {
     icon: Share, tint: "bg-yellow-soft", tone: "foreground", title: "Import from a post",

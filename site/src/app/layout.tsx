@@ -9,18 +9,18 @@ import "./globals.css"
 const sans = Plus_Jakarta_Sans({ variable: "--font-sans", subsets: ["latin"] })
 
 const description =
-  "Pantrila finds recipes from what is in your kitchen, plans a week of meals that respects " +
-  "your allergies, diet and nutrition targets, writes the grocery list and talks you through the cooking."
+  "Pantrila is your AI cooking companion: ask what to cook, save recipes from Instagram, TikTok, " +
+  "Facebook or any site, cook hands free step by step, and plan meals around your allergies and diet."
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: "Pantrila: AI cooking and meal planning", template: "%s · Pantrila" },
+  title: { default: "Pantrila: your AI cooking companion", template: "%s · Pantrila" },
   description,
   openGraph: {
     type: "website",
     siteName: "Pantrila",
     url: SITE_URL,
-    title: "Pantrila: AI cooking and meal planning",
+    title: "Pantrila: your AI cooking companion",
     description,
   },
   twitter: { card: "summary_large_image" },
