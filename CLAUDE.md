@@ -32,6 +32,10 @@ latency per plan, and clear architecture matter as much as features.
    year, 7-day trial), EAS builds and store submission. 15 steps (PR 0 for the owner's accounts,
    then PR 1-14), each its own PR, in
    [`docs/plans/mobile-app.md`](docs/plans/mobile-app.md).
+7. **Cooking XP, bingo cards and sharing**: XP and chef levels from cooking, cook cards that tag the recipe's
+   creator, a weekly cooking goal, Plan Bingo, badges, level rewards and referrals (some Pro time), quiet push
+   notifications, published recipes, Kitchen Circles and Pro challenge cards. 10 PRs in
+   [`docs/plans/gamification.md`](docs/plans/gamification.md); never rewards eating less.
 
 Work on one step at a time; each step is its own PR (commits within it can be split for a
 readable history). Start a fresh Claude Code chat per step; this file carries the context.
@@ -86,7 +90,8 @@ Where things stand (2026-10-26):
   app `version`). Owner steps are under "Mobile apps" above.
 - **Next planned work**: [`docs/plans/guest-safeguards.md`](docs/plans/guest-safeguards.md) (CAPTCHA, guest limits,
   link prompt; after launch) and [`docs/plans/european-ingredients-and-recipe-expansion.md`](docs/plans/european-ingredients-and-recipe-expansion.md)
-  (PR 1 merged; PR 2 next). Follow the user's chosen task; a plan existing is not a request to start it.
+  (PR 1 merged; PR 2 next), and [`docs/plans/gamification.md`](docs/plans/gamification.md) (XP, cook cards, bingo,
+  rewards, Circles; start once the Play closed test runs). Follow the user's chosen task; a plan existing is not a request to start it.
 
 ## Stack
 
