@@ -70,7 +70,9 @@ allowances and Pro's price. Web: sign-in returns to the page someone opened sign
 copy (`return-after-sign-in.spec.ts`; 45 specs pass). Phone: welcome line and the first intro card ("Ask Pantrila").
 Store listing: names "Pantrila: AI Cooking Companion", new subtitle, promo, keywords, descriptions led by Ask/Save/Cook,
 and a companion-first screenshot upload order. README intro and the cold-start note (the uptime ping keeps the API
-awake). Copy only apart from the return path; no model call, so no eval rerun.
+awake). Copy only apart from the return path; no model call, so no eval rerun. Follow-up: privacy and terms describe
+Pantrila as an AI cooking companion, and the sharing image (`site/src/app/opengraph-image.jpg`, 1200x630) shows the
+headline with the assistant and cooking-mode screenshots.
 
 Launch (mobile plan PR 14): the landing site's store cards show Apple's and Google's official badges with links
 (`site/public/badges/`; FAQ and "Get the app" copy follow) once `NEXT_PUBLIC_APP_STORE_ID` (the app's Apple ID, digits)
