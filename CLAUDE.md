@@ -58,6 +58,8 @@ the listings are live, and phone screenshots in the README.
 
 ## Status (update as work lands)
 
+EAS builds fixed (runtime version): every EAS build failed in "Configure expo-updates" with "Runtime version calculated on local machine not equal to runtime version calculated during build", since the fingerprint policy hashes the app config and `app.config.ts` reads `EAS_BUILD_PROFILE` (blocked permissions) and the `SENTRY_AUTH_TOKEN` secret (Sentry upload), which a Mac does not have. `runtimeVersion` is now `{ policy: "appVersion" }` ("0.1.0"): raise `version` with any native change so an update never reaches an older build (`mobile/README.md`). Config test updated. No model call, so no eval rerun.
+
 Companion messaging: Pantrila is now pitched as "your AI cooking companion" (ask, save, cook; planning and
 groceries support them), after an outside review of pantrila.com. Landing site: hero "Your AI cooking companion, from
 idea to plate." with a shorter line, "Free to try · No sign-up needed · Free plan has AI usage limits", the assistant
@@ -80,7 +82,7 @@ and `NEXT_PUBLIC_PLAY_STORE_LIVE=1` are set on Vercel, else "Coming soon" (`site
 two (`web/src/lib/stores.ts`): Safari's `apple-itunes-app` banner (root layout `itunes`), a closable "Pantrila for
 Android" bar above the header on Android phones (`components/app-banner.tsx`, `pantrila-app-banner-off`) and store links
 in the Pro sheet; Playwright builds with both set (`app-banner.spec.ts`; 43 specs pass). The phone app gains
-`expo-updates`: `runtimeVersion: { policy: "fingerprint" }`, `updates.url` from the EAS project, channels
+`expo-updates`: `runtimeVersion: { policy: "appVersion" }` (was "fingerprint"; see the runtime version entry above), `updates.url` from the EAS project, channels
 `development` / `preview` / `production` in `eas.json` (`eas update --channel production`; a native change needs a new
 store build). README: "Phone apps" section, the app, RevenueCat and `packages/core` in the architecture diagram, phone
 commands; the demo script gains sharing a reel into the app. 78 Jest tests (1 new). No model call, so no eval rerun.
@@ -1089,7 +1091,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - `package.json` (root): npm workspaces `web`, `mobile` and `packages/*`; one `package-lock.json` at the root.
 - `mobile/`: the Expo phone app (see `mobile/README.md` and `mobile/AGENTS.md`: read Expo's versioned docs,
   not memory). `app.config.ts`, `eas.json`, `metro.config.js` (Uniwind), `src/global.css` (tokens),
-  `expo-updates` (fingerprint runtime versions, channels per build profile), `src/app/` (Expo Router screens; `_layout.tsx` loads the fonts and guards `welcome` / the signed-in screens
+  `expo-updates` (runtime version = app `version`, channels per build profile), `src/app/` (Expo Router screens; `_layout.tsx` loads the fonts and guards `welcome` / the signed-in screens
   with `Stack.Protected`; `(tabs)/` holds Home, Assistant, Recipes, Plan, Grocery; `recipes/[id]`,
   `recipes/mine/*`, `account.tsx`, `pantry.tsx`, `profile.tsx`, `pro.tsx` (the paywall, `lib/pro.ts`) and `intro.tsx` (first-run cards, `lib/intro.ts`) open over them; `auth/callback.tsx` finishes email links),
   `src/lib/api.ts` (`createApi` with `expo/fetch`, the session's token, `X-Pantrila-Client` and `waking.ts`), `src/lib/sentry.ts`

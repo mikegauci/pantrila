@@ -79,13 +79,14 @@ there. Store builds: `npx eas-cli build --profile production --platform all`, th
 ## Updates without a store review
 
 `expo-updates` is in the app: each build profile has a channel (`development`, `preview`, `production` in
-`eas.json`), and the runtime version is a fingerprint of the native code and config, so an update only reaches
-builds with the same native side. A JavaScript or asset fix for store users:
+`eas.json`), and the runtime version is the app's `version` in `app.config.ts`, so an update only reaches
+builds of that version. A JavaScript or asset fix for store users:
 
 ```bash
 npx eas-cli update --channel production --environment production --message "Fix the grocery list total"
 ```
 
 The phone downloads it on launch and uses it from the next one. A change to native code (a new native module, a
-plugin or `app.config.ts`) changes the fingerprint: that needs a new store build, and older builds keep their
-last update.
+plugin or `app.config.ts`) needs a raised `version` and a new store build, so the update never reaches older
+builds, which keep their last update. (The fingerprint policy was dropped: the config reads `EAS_BUILD_PROFILE`
+and the `SENTRY_AUTH_TOKEN` secret, so the fingerprint on a Mac never matched the one on EAS and builds failed.)
