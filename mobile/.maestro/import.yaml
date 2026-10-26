@@ -1,0 +1,16 @@
+# Imports a pasted recipe (one import call on the live API, about $0.007) and opens it saved.
+appId: com.pantrila.app
+tags: [e2e]
+---
+- runFlow: subflows/guest.yaml
+- openLink: "pantrila://recipes/mine/new?method=text"
+- tapOn: "Recipe text"
+- inputText: "Lemon garlic pasta. Serves 2. 200 g spaghetti, 2 tbsp olive oil, 2 garlic cloves, 1 lemon, 30 g parmesan. 1. Boil the spaghetti for 10 minutes. 2. Fry the sliced garlic in the oil for 1 minute. 3. Toss the pasta with the garlic, lemon juice and grated parmesan."
+- hideKeyboard
+- tapOn: "Read recipe"
+- extendedWaitUntil:
+    visible: "Saved .*"
+    timeout: 120000
+- extendedWaitUntil:
+    visible: "Ingredients"
+    timeout: 30000

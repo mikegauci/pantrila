@@ -1,0 +1,18 @@
+# A fresh guest on the Home tab: wipes the app, taps "Try it as a guest" and skips the intro.
+appId: com.pantrila.app
+---
+- launchApp:
+    clearState: true
+    clearKeychain: true
+- extendedWaitUntil:
+    visible: "Try it as a guest"
+    timeout: 30000
+- tapOn: "Try it as a guest"
+- extendedWaitUntil:
+    visible: "Skip"
+    timeout: 30000
+- tapOn: "Skip"
+# The API on Render may be waking up ("Waking up the Pantrila server…").
+- extendedWaitUntil:
+    visible: "Ask Pantrila"
+    timeout: 90000

@@ -520,21 +520,32 @@ numbers here.
 
 Branch `feat/mobile-store`.
 
-- [ ] App Store Connect: privacy labels (data: email, user id, user content, crash data; not used
+- [x] App Store Connect: privacy labels (data: email, user id, user content, crash data; not used
       for tracking; no ad SDKs), age rating, category Food & Drink, support URL
-      `https://pantrila.com`, privacy URL `https://pantrila.com/privacy`.
-- [ ] Play Console: Data safety form (same answers), content rating, target audience, app access
-      (guest sign-in, no login needed), ads: none.
-- [ ] Review notes for both stores name the Pro products and how to reach the paywall.
-- [ ] Permission texts in `app.config.ts` (camera, photos, microphone, speech recognition,
-      notifications) in plain words.
-- [ ] Store listing text and screenshots (6.9" and 6.5" iPhone, iPad if supported, Android phone);
+      `https://pantrila.com`, privacy URL `https://pantrila.com/privacy`. Answers in
+      `docs/store-listing.md` (also name, health info, purchases, product interaction and diagnostics).
+      **(owner)** enter them in App Store Connect.
+- [x] Play Console: Data safety form (same answers), content rating, target audience, app access
+      (guest sign-in, no login needed), ads: none. Answers in `docs/store-listing.md`; the deletion link is
+      `https://pantrila.com/privacy#delete-account` (new section). **(owner)** enter them in Play Console.
+- [x] Review notes for both stores name the Pro products and how to reach the paywall
+      (`docs/store-listing.md`; product ids suggested there: `pantrila_pro_yearly` / `pantrila_pro_monthly`
+      on Apple, `pantrila_pro` with base plans `yearly` / `monthly` on Google).
+- [x] Permission texts in `app.config.ts` (camera, photos, microphone, speech recognition,
+      notifications) in plain words. Fixed on the way: the image picker's `microphonePermission: false` had
+      removed `RECORD_AUDIO` and the iOS microphone text, which voice commands need. Notifications need no
+      text on either platform.
+- [x] Store listing text and screenshots (6.9" and 6.5" iPhone, iPad if supported, Android phone);
       `docs/store-listing.md` holds the text so it is versioned. A Maestro flow takes the
-      screenshots.
-- [ ] Maestro end-to-end flows (guest sign-in, search, plan, cook, import) run on EAS.
+      screenshots (`.maestro/screenshots.yaml`, `screenshots.yml` workflow: 6.9" iPhone and Pixel 7; 6.5" is
+      optional now, and the app is phones only). **(owner)** run it and upload the PNGs.
+- [x] Maestro end-to-end flows (guest sign-in, search, plan, cook, import) run on EAS
+      (`.maestro/`, `e2e.yml` workflow, `e2e` build profile). Not run yet: **(owner)** link the GitHub repo to
+      the Expo project and `npx eas-cli workflow:run e2e.yml`.
 - [ ] **(owner)** `eas build --profile production` both platforms; `eas submit` to TestFlight and the
       Play **closed testing** track; invite at least 12 Android testers and keep them opted in for
-      14 days. TestFlight beta testers in the meantime.
+      14 days. TestFlight beta testers in the meantime. (`eas.json` submits Android to `alpha`, Play's
+      closed track; Play needs the first upload by hand.)
 - [ ] Fix what testers find (follow-up PRs as needed).
 
 ## PR 14: launch
@@ -575,7 +586,7 @@ Branch `feat/mobile-launch`.
 | 10 | `feat/mobile-assistant` | done (owner: chat on a real phone with the next development build) |
 | 11 | `feat/mobile-profile` | done (owner: Sentry project and EAS variables, a new development build) |
 | 12 | `feat/mobile-paywall` | done (owner: store products, RevenueCat offering, SDK keys on EAS, a new development build, sandbox tests) |
-| 13 | `feat/mobile-store` | not started |
+| 13 | `feat/mobile-store` | done (owner: store forms from `docs/store-listing.md`, run the e2e and screenshots workflows, production builds, closed test with 12 testers for 14 days, TestFlight) |
 | 14 | `feat/mobile-launch` | not started |
 
 ## Handoff log
@@ -753,3 +764,13 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   `trial_started` and `subscribed`. 74 Jest tests (10 new), 71 core tests, 1 new Python test. New native module, so the
   next development build needs making. For PR 13: the review notes can say "Account → Your plan → Try Pro free for 7
   days" reaches the paywall; App Review needs the products "Ready to Submit" and the paywall screenshot.
+- 2026-10-26: PR 13 (`feat/mobile-store`): `docs/store-listing.md` (App Store and Play listing text with a test for the
+  character limits, privacy label and Data safety answers, age and content rating, review notes, in-app products,
+  screenshot list, testing rules), `.maestro/` flows (guest sign-in, search, cook, plan, import; `screenshots.yaml`) and
+  EAS Workflows `e2e.yml` / `screenshots.yml` on a new `e2e` build profile (simulator and APK, no credentials).
+  Permission fix: `expo-image-picker`'s `microphonePermission: false` had blocked `RECORD_AUDIO` and dropped
+  `NSMicrophoneUsageDescription`, so voice commands could not get the mic on either platform; it now shares the speech
+  plugin's text (a Jest test guards it). No Face ID text (secure store), and store builds block `SYSTEM_ALERT_WINDOW`.
+  Privacy page: "Delete your account" (`#delete-account`, Play's deletion link). `eas.json` submits Android to the
+  closed track. The flows were written from the screens' labels and are not yet run; expect a fix round on their
+  first EAS run. For PR 14: the store badges and links need the App Store id and Play listing once they exist.

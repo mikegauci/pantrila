@@ -1,0 +1,15 @@
+# Plans a week (a real planner run on the live API: about $0.01 and the guest's one Free plan).
+appId: com.pantrila.app
+tags: [e2e]
+---
+- runFlow: subflows/guest.yaml
+- tapOn: "Plan"
+- tapOn: "Plan my week"
+- extendedWaitUntil:
+    visible: "Your week is planned"
+    timeout: 150000
+- assertVisible: "Day 1"
+- tapOn: "Grocery"
+- extendedWaitUntil:
+    visible: "To buy"
+    timeout: 30000

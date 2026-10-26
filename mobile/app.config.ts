@@ -11,6 +11,16 @@ const googleUrlScheme = (id: string) => `com.googleusercontent.apps.${id.replace
 // Same green as the icon's gradient end (web/brand); the splash shows the white mark on it.
 const BRAND_GREEN = "#2a7a38"
 
+// Permission texts, in the words the phone shows when it asks (the stores read them too). One
+// microphone text: two plugins write it, and a plugin given `false` removes the permission for all.
+const MICROPHONE = "Pantrila listens for “next”, “back” and timer commands while you cook with the mic on. Nothing is recorded."
+const SPEECH = "Pantrila turns what you say into cooking commands. It never records or stores your voice."
+const PHOTOS = "Pantrila reads a recipe from the photos you pick, such as a cookbook page or a screenshot."
+const CAMERA = "Pantrila reads a recipe from a photo you take of a cookbook page or a recipe card."
+
+// Store builds leave out what only the development build needs (its menu draws over other apps).
+const development = () => !process.env.EAS_BUILD_PROFILE || process.env.EAS_BUILD_PROFILE === "development"
+
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "Pantrila",
@@ -39,6 +49,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: BRAND_GREEN,
     },
     predictiveBackGestureEnabled: false,
+    blockedPermissions: development() ? [] : ["android.permission.SYSTEM_ALERT_WINDOW"],
     // App links: the same pages as on iOS, checked against app.pantrila.com/.well-known/assetlinks.json.
     intentFilters: [{
       action: "VIEW",
@@ -52,15 +63,16 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-router",
-    "expo-secure-store",
+    // The session key only; no Face ID, so no Face ID question.
+    ["expo-secure-store", { faceIDPermission: false }],
     "expo-apple-authentication",
     // Cooking timers ring through local notifications; voice commands need the mic and speech.
     "expo-notifications",
     [
       "expo-speech-recognition",
       {
-        microphonePermission: "Pantrila listens for “next”, “back” and timer commands while you cook with the mic on.",
-        speechRecognitionPermission: "Pantrila turns what you say into cooking commands. It never records or stores your voice.",
+        microphonePermission: MICROPHONE,
+        speechRecognitionPermission: SPEECH,
         androidSpeechServicePackages: ["com.google.android.googlequicksearchbox", "com.google.android.tts"],
       },
     ],
@@ -85,9 +97,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       "expo-image-picker",
       {
-        photosPermission: "Pantrila reads a recipe from the photos you pick, such as a cookbook page or a screenshot.",
-        cameraPermission: "Pantrila reads a recipe from a photo you take of a cookbook page or a recipe card.",
-        microphonePermission: false,
+        photosPermission: PHOTOS,
+        cameraPermission: CAMERA,
+        // Not `false`: that would block the microphone voice commands need, on both platforms.
+        microphonePermission: MICROPHONE,
       },
     ],
     // Error reports and feedback (lib/sentry.ts). Source maps and debug files upload at build time
