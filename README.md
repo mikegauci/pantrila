@@ -5,7 +5,7 @@ and nutrition targets; it finds recipes with hybrid RAG search, plans your week 
 LangGraph agent, builds a grocery list from what is missing and answers cooking questions in
 a chat. You can add your own recipes from photos, a link, a TikTok, Instagram or Facebook post
 or by typing them in, and cook any
-recipe in cooking mode. **The model proposes; deterministic code decides.** Every recipe and plan is
+recipe in cooking mode. It runs in the browser and as an iPhone and Android app. **The model proposes; deterministic code decides.** Every recipe and plan is
 re-checked against your allergens and diet before you see it.
 
 **Live demo: https://app.pantrila.com** ("Continue with Google" keeps your data; "Try it as a guest" needs no account, and a guest
@@ -51,6 +51,11 @@ flowchart LR
     subgraph Web["Next.js 16 on Vercel"]
         UI["10 screens<br/>SWR + SSE"]
     end
+    subgraph Phone["iPhone and Android (Expo)"]
+        App["Expo Router app<br/>share sheet, voice, timers"]
+        RC["RevenueCat<br/>Pantrila Pro"]
+    end
+    Core["packages/core<br/>shared TypeScript:<br/>API client, SSE, cooking"]
     subgraph API["FastAPI on Render"]
         Auth["JWT check<br/>(Supabase JWKS, ES256)"]
         Caps["Daily caps per user<br/>+ total budget"]
@@ -67,6 +72,10 @@ flowchart LR
     LS["LangSmith<br/>traces, feedback,<br/>eval experiments"]
 
     UI -- "Supabase Auth token" --> Auth --> Caps
+    App -- "Supabase Auth token" --> Auth
+    UI & App -.- Core
+    App --> RC
+    RC -- "webhook" --> Caps
     Caps --> Search & Planner & Chat
     Planner --> Search
     Chat --> Search
@@ -123,6 +132,27 @@ with the next message; the browser only says which thread it is in.
 |---|---|
 | ![Assistant answering from the pantry with cited recipes](docs/screenshots/assistant.png) | ![Recipe search showing only recipes that suit the profile](docs/screenshots/recipes.png) |
 | ![Recipe with per-serving macros and ingredient swaps](docs/screenshots/recipe.png) | ![Insights: nutrition per day, live cost and latency, offline eval numbers](docs/screenshots/insights.png) |
+
+## Phone apps
+
+`mobile/` is the iPhone and Android app, built with Expo (React Native) on the same API and Supabase
+sign-in as the web app, so one account works everywhere. The code both apps share (API types and client,
+the server-sent events reader, amounts, cooking timers, voice commands, plan and grocery helpers) lives in
+`packages/core`, with its own unit tests. What the phone adds:
+
+- **Share to Pantrila**: a recipe reel, post, page, text or photos shared from any app becomes an import
+  (an iOS share extension and Android intent filters).
+- **Cooking mode on the phone**: the screen stays on, timers ring through local notifications with the
+  phone locked, and voice commands use on-device speech recognition where the phone has it.
+- **Free and Pantrila Pro**: Free has 1 plan a week, 5 imports a month and 10 assistant messages a day;
+  Pro (€4.99 a month or €29.99 a year, 7-day trial) is sold in the stores through RevenueCat. The API
+  decides what each tier allows: a RevenueCat webhook records the subscription, and the app only sells it.
+- **Releases**: EAS Build makes the store builds, Maestro flows drive a real build on EAS (guest sign-in,
+  search, cooking, a plan, an import) and take the store screenshots, and EAS Update ships JavaScript-only
+  fixes to store builds whose native code matches (fingerprint runtime versions).
+
+Build steps, the PR-by-PR plan and the owner's store tasks: [`docs/plans/mobile-app.md`](docs/plans/mobile-app.md),
+[`mobile/README.md`](mobile/README.md) and [`docs/store-listing.md`](docs/store-listing.md).
 
 ## Design decisions
 
@@ -202,7 +232,10 @@ uv run pantrila chat                      # the cooking assistant in the termina
 
 # web app: API on :8000, web on :3000
 uv run uvicorn pantrila.api:app --env-file .env --reload
-cd web && cp .env.example .env.local && npm ci && npm run dev
+npm ci && cd web && cp .env.example .env.local && npm run dev   # one install at the root (npm workspaces)
+
+# phone app: in the Pantrila development build (mobile/README.md), not Expo Go
+cd mobile && cp .env.example .env.local && npx expo start
 ```
 
 Tests and evals:
@@ -218,7 +251,8 @@ uv run python -m evals.run_video [--plain]   # video-import eval, 6 spoken cooki
 uv run pytest -m live -s                 # paid evals with pass/fail thresholds
 ```
 
-CI runs ruff, pytest against Postgres 16 + pgvector, and the web lint, typecheck and build.
+CI runs ruff, pytest against Postgres 16 + pgvector, the shared-core tests, the web lint, typecheck and
+build, the phone app's lint, typecheck, Jest tests and `expo-doctor`, and the landing site's build.
 The paid evals are a manual GitHub Actions workflow.
 
 ## Repository
@@ -241,6 +275,10 @@ The paid evals are a manual GitHub Actions workflow.
 | `supabase/migrations/` | SQL migrations (pgvector, full text, RLS) |
 | `evals/` | Eval generators, runners, committed reports |
 | `web/` | Next.js app ([`web/DESIGN_SYSTEM.md`](web/DESIGN_SYSTEM.md)) |
+| `mobile/` | Expo app for iPhone and Android ([`mobile/README.md`](mobile/README.md)); Maestro flows in `mobile/.maestro/` |
+| `packages/core/` | TypeScript shared by the web and phone apps (`@pantrila/core/<module>`) |
+| `src/pantrila/entitlements.py`, `analytics.py` | Pantrila Pro from the RevenueCat webhook; PostHog funnel events |
+| `site/` | The pantrila.com landing site |
 
 ## Limitations
 
