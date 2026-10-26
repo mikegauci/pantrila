@@ -46,7 +46,7 @@ from collections.abc import Callable, Iterator
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from datetime import time as dtime
-from typing import Annotated, Any
+from typing import Annotated, Any, get_args
 
 import sentry_sdk
 from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query, Request, Response
@@ -96,6 +96,7 @@ from pantrila.api_models import (
     PantryAdd,
     PantryChangeView,
     PantryItemView,
+    PaywallReason,
     PhotoImport,
     PlanView,
     PostImport,
@@ -254,6 +255,14 @@ def subscription_event(event: dict) -> Event | None:
     if kind == "RENEWAL" and event.get("is_trial_conversion"):
         return "subscribed"
     return SUBSCRIPTION_EVENTS.get(str(kind))
+
+
+def paywall_source(event: dict) -> str | None:
+    """Which paywall sold it: the app sets the `paywall_reason` attribute before buying."""
+    attrs = event.get("subscriber_attributes")
+    attr = attrs.get("paywall_reason") if isinstance(attrs, dict) else None
+    value = attr.get("value") if isinstance(attr, dict) else None
+    return value if value in get_args(PaywallReason) else None
 
 
 # --- App ----------------------------------------------------------------------------------
@@ -424,8 +433,9 @@ def create_app(
 
     @app.post("/me/events", status_code=204)
     def app_event(body: AppEvent, request: Request, user: UserDep) -> Response:
-        """Funnel steps only the browser sees (opening cooking mode)."""
-        props = with_client({"source": body.source}, app_client(request))
+        """Funnel steps only the apps see (opening cooking mode, the paywall)."""
+        fields = body.model_dump(exclude={"name"}, exclude_none=True)
+        props = with_client(fields, app_client(request))
         request.app.state.analytics.capture(user.id, body.name, props)
         return Response(status_code=204)
 
@@ -563,6 +573,8 @@ def create_app(
                 }
                 if event.get("type") == "CANCELLATION":
                     props["reason"] = event.get("cancel_reason")
+                if name in ("trial_started", "subscribed"):
+                    props["source"] = paywall_source(event)
                 request.app.state.analytics.capture(user_id, name, props)
         return {"ok": True, "users": len(users)}
 

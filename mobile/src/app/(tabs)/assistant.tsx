@@ -19,6 +19,7 @@ import { Sheet } from "@/components/sheet"
 import { ApiError, send, streamChat } from "@/lib/api"
 import { useChat, useChats, useMe, useRefreshKitchen } from "@/lib/hooks"
 import { useStored } from "@/lib/stored"
+import { askForPro } from "@/lib/pro"
 import { toast } from "@/lib/toast"
 
 /** The cooking assistant, as on the web: saved chats, the reply streamed in as it is written
@@ -129,7 +130,7 @@ export default function Assistant() {
       refreshThreads()
       if (reply.pantry_changed) refreshKitchen()
     } catch (e) {
-      // A Free day's chats used up is a 402 whose message says so; the in-app Pro offer comes with PR 12.
+      askForPro(e)  // a Free day's chats used up opens the paywall; the message stays in the chat
       if (e instanceof ApiError && e.status === 409 && inThread) await mutate(`/me/chats/${inThread}`)
       const msg = e instanceof ApiError ? e.message : "Could not reach Pantrila. Try again."
       setPending([asked, { role: "assistant", text: msg, error: true }])

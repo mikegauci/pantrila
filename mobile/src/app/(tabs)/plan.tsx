@@ -16,6 +16,8 @@ import { MealSheet, type MealTarget } from "@/components/meal-sheet"
 import { DayTargets } from "@/components/plan-bars"
 import { ApiError, streamPlan } from "@/lib/api"
 import { useMe, usePlan, useProfile } from "@/lib/hooks"
+import { askForPro, openPaywall } from "@/lib/pro"
+import { useStored } from "@/lib/stored"
 import { toast } from "@/lib/toast"
 
 const STEPS: Record<string, string> = {
@@ -37,6 +39,9 @@ export default function PlanScreen() {
   const [steps, setSteps] = useState<string[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [refreshing, setRefreshing] = useState(false)
+  // After a plan on Free, one quiet line about Pro, once a week (keyed by the week's reset).
+  const [noteWeek, setNoteWeek] = useStored("pro-plan-note")
+  const [freeNote, setFreeNote] = useState(false)
 
   async function generate() {
     setSteps([])
@@ -48,11 +53,17 @@ export default function PlanScreen() {
           mutate(data as Plan, { revalidate: false })
           revalidate((key) => typeof key === "string" && key.startsWith("/plans/latest/grocery"))
           toast.success("Your week is planned")
+          const week = me?.limits.plans.resets_at
+          if (me?.subscription.tier === "free" && week && noteWeek !== undefined && noteWeek !== week) {
+            setFreeNote(true)
+            setNoteWeek(week)
+          }
         }
         if (event === "error") setError((data as { message: string }).message)
       })
     } catch (e) {
-      // A Free plan used up is a 402 whose message says so; the in-app Pro offer comes with PR 12.
+      // A Free plan used up opens the paywall; the message stays behind it.
+      askForPro(e)
       setError(e instanceof ApiError ? e.message : "Could not reach Pantrila. Try again.")
     } finally {
       setSteps(null)
@@ -92,6 +103,14 @@ export default function PlanScreen() {
           </Text>
         </Pressable>
       </Panel>
+
+      {freeNote && !running && (
+        <Pressable accessibilityRole="link" onPress={() => openPaywall("plan_note")}>
+          <Text className="font-sans text-[13px] text-muted-foreground">
+            Free: 1 plan a week. Pro plans as often as you like. <Text className="font-sans-semibold text-primary-text underline">See Pro</Text>
+          </Text>
+        </Pressable>
+      )}
 
       {running && (
         <Panel>

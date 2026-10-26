@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router"
-import { ChevronRight, Compass, MessageSquareHeart, Refrigerator, UserRound } from "lucide-react-native"
+import { BadgeCheck, ChevronRight, Compass, MessageSquareHeart, Refrigerator, Sparkles, UserRound } from "lucide-react-native"
 import { useState } from "react"
 import { Pressable, ScrollView, Text, View } from "react-native"
 
@@ -11,6 +11,8 @@ import { DeleteAccount } from "@/components/delete-account"
 import { FeedbackSheet } from "@/components/feedback"
 import { Icon } from "@/components/icon"
 import { useMe } from "@/lib/hooks"
+import { openPaywall, proOffer } from "@/lib/pro"
+import { manageSubscription } from "@/lib/purchases"
 
 /** From the header's account button: Pantry and Profile, the plan the person is on, help, the
  * account itself (keep a guest's data, sign out) and deleting it. */
@@ -53,16 +55,21 @@ function Row({ href, icon, title, text }: { href: "/pantry" | "/profile"; icon: 
   )
 }
 
-/** Free or Pantrila Pro, and what is left of each paid feature (the paywall comes in mobile plan PR 12). */
+/** Free or Pantrila Pro, what is left of each paid feature, and the way to Pro (the paywall) (where Restore purchases is) or
+ * to the store's page for the subscription (renewal, cancelling). */
 function PlanCard() {
   const { data: me } = useMe()
   if (!me) return null
   const s = me.subscription
   const store = s.store === "app_store" ? "the App Store" : s.store === "play_store" ? "Google Play" : null
+  const fromStore = s.store === "app_store" || s.store === "play_store"
   return (
     <Panel>
       <PanelTitle>Your plan</PanelTitle>
-      <Text className="mb-2 font-sans-semibold text-base text-foreground">{subscriptionText(s)}</Text>
+      <View className="mb-2 flex-row items-center gap-2">
+        <Text className="flex-1 font-sans-semibold text-base text-foreground">{subscriptionText(s)}</Text>
+        {s.tier === "pro" && <Icon icon={BadgeCheck} tone="primary-text" size={20} />}
+      </View>
       {(["plan", "chat", "import", "photo"] as const).map((f) => (
         <Text key={f} className="font-sans text-sm text-muted-foreground">
           {leftText(f, me.limits[`${f}s` as "plans" | "chats" | "imports" | "photos"])}
@@ -70,9 +77,15 @@ function PlanCard() {
       ))}
       <Text className="mt-2 font-sans text-xs text-muted-foreground">
         {s.tier === "pro"
-          ? store ? `Manage or cancel your subscription in ${store}.` : "Thanks for trying Pantrila Pro."
+          ? store ? `Cancel any time in ${store}; it takes one tap.` : "Thanks for trying Pantrila Pro."
           : "Browsing, cooking mode, your pantry and the grocery list stay free."}
       </Text>
+      <View className="mt-3 gap-2">
+        {s.tier === "free" && <Button text={proOffer(me)} icon={Sparkles} onPress={() => openPaywall("profile")} />}
+        {s.tier === "pro" && fromStore && (
+          <Button text="Manage subscription" variant="outline" onPress={() => manageSubscription().catch(() => {})} />
+        )}
+      </View>
     </Panel>
   )
 }

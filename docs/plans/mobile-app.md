@@ -433,20 +433,41 @@ the app.
 - [ ] **(owner)** Play Console: subscription `pro` with base plans `monthly` and `yearly` at the
       same prices and a 7-day free trial offer for new subscribers.
 - [ ] **(owner)** RevenueCat: products, entitlement `pro`, offering `default` with both packages.
-- [ ] `react-native-purchases` (and `react-native-purchases-ui` for RevenueCat's paywall, or our
+- [x] `react-native-purchases` (and `react-native-purchases-ui` for RevenueCat's paywall, or our
       own screen in the design system); `Purchases.logIn(<supabase user id>)` on sign-in,
       `logOut` on sign-out.
-- [ ] Paywall: shown at a 402 from the API and from Profile → "Pantrila Pro". Lists what Pro gives,
+- [x] Paywall: shown at a 402 from the API and from Profile → "Pantrila Pro". Lists what Pro gives,
       the yearly plan first with its saving ("€2.50 a month"), the trial ("7 days free, then
       €29.99 a year"), and Apple's required parts: price and period, auto-renewal wording, links
       to the terms and privacy pages, "Restore purchases".
-- [ ] A guest who buys is asked to keep their data with Google or Apple first (the purchase stays
+- [x] A guest who buys is asked to keep their data with Google or Apple first (the purchase stays
       with the store account either way, and "Restore purchases" recovers it).
-- [ ] Profile: plan, renewal date, "Manage subscription" (opens the App Store or Play page).
-- [ ] After a purchase the app refreshes `/me` until the webhook has landed (a few seconds), so
+- [x] Profile: plan, renewal date, "Manage subscription" (opens the App Store or Play page).
+- [x] After a purchase the app refreshes `/me` until the webhook has landed (a few seconds), so
       Pro limits apply at once.
+- [ ] **(owner)** RevenueCat's public SDK keys as EAS environment variables
+      `EXPO_PUBLIC_REVENUECAT_IOS_KEY` (`appl_...`) and `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` (`goog_...`), then a new
+      development build (a native module was added). Without them the paywall says Pro is not on sale yet.
 - [ ] **(owner)** test in the App Store sandbox (TestFlight) and Play license testers: start a
       trial, cancel, restore on a second phone, expire, and check the web app shows Pro.
+
+Done notes: our own paywall in the design system (`app/pro.tsx`, a modal), not `react-native-purchases-ui`, so it
+follows `DESIGN_SYSTEM.md` and the copy rules below. `lib/purchases.ts` wraps the SDK: configured on the first sign-in
+with the Supabase user id as `appUserID` (`logIn` on later changes, `logOut` on sign-out, from `AuthProvider`), the
+`default` offering's annual and monthly packages turned into core's `Offer` (store prices and currency; the trial from
+the product's free intro price, hidden on iOS when `checkTrialOrIntroductoryPriceEligibility` says ineligible; Google
+leaves out offers someone already had), `buy` sets the subscriber attribute `paywall_reason` first (the webhook adds
+it as `source` to `trial_started` and `subscribed`), `restore`, `manageSubscription` (RevenueCat's `managementURL`,
+else the store's subscriptions page). The paywall opens through `askForPro(e)` (`lib/pro.ts`) at every 402 (plan,
+chat, imports) and directly where the app already knows (Generate photo on Free, imports used up), from Account's
+plan card ("Try Pro free for 7 days", or "Get Pantrila Pro" for someone who had Pro), from the plan screen's weekly
+line ("Free: 1 plan a week. Pro plans as often as you like.", once per plan week) and as "Welcome back" for an expired
+store subscriber (once per ending, `useWelcomeBack` in the tabs layout). The plan card lives on Account (PR 11), not
+Profile. After a purchase or restore it asks `/me` every 2 s for up to 30 s, then closes with "Pantrila Pro is on".
+A trial schedules a local reminder 2 days before it ends. Shared words (what Free used up, what Pro gives, the trial
+line, the saving, the renewal terms per store) are in `@pantrila/core/subscription`; the web's Pro sheet uses them
+too. `POST /me/events` takes `paywall_shown` (`reason`, `feature`) and `paywall_closed` (`reason`, `outcome`:
+bought, restored, closed); reasons are `limit`, `profile`, `plan_note`, `welcome_back`.
 
 No model call, so no eval rerun.
 
@@ -553,7 +574,7 @@ Branch `feat/mobile-launch`.
 | 9 | `feat/mobile-share` | done (owner: Vercel variables and a redeploy, iOS extension provisioning, shares on real phones) |
 | 10 | `feat/mobile-assistant` | done (owner: chat on a real phone with the next development build) |
 | 11 | `feat/mobile-profile` | done (owner: Sentry project and EAS variables, a new development build) |
-| 12 | `feat/mobile-paywall` | not started |
+| 12 | `feat/mobile-paywall` | done (owner: store products, RevenueCat offering, SDK keys on EAS, a new development build, sandbox tests) |
 | 13 | `feat/mobile-store` | not started |
 | 14 | `feat/mobile-launch` | not started |
 
@@ -720,3 +741,15 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   core tests, 1 new Python test. New native module `@sentry/react-native`, so the next development build needs making.
   For PR 12: the plan card in `account.tsx` is where "Pantrila Pro" and "Manage subscription" go; a guest's
   "keep your data" is `linkWith` in `lib/auth.ts`.
+- 2026-10-26: PR 12 (`feat/mobile-paywall`): `react-native-purchases` 10 (`lib/purchases.ts`: RevenueCat as the Supabase
+  user id, offers from the `default` offering, buy with the `paywall_reason` attribute, restore, manage, a trial
+  reminder 2 days before it ends), the paywall `app/pro.tsx` (what was used up and when it comes back, what Pro gives,
+  yearly first with "Save 50%" and its price a month, the trial line above the button, the store's renewal terms,
+  Restore purchases, Terms and Privacy; a guest is asked to keep their data with Google or Apple first, "Buy as a
+  guest" stays), `lib/pro.ts` (`askForPro`, `openPaywall`, `proOffer`, `useWelcomeBack`), Account's plan card with the
+  trial or "Manage subscription", the plan screen's weekly line, imports used up and Generate photo on Free open it.
+  Core: `USED_UP`, `PRO_GIVES`, `resetsText`, `Offer`, `periodText`, `trialLine`, `savingText`, `renewalText` (web uses the
+  first three). API: `paywall_shown` / `paywall_closed` on `POST /me/events`; the webhook adds `source` to
+  `trial_started` and `subscribed`. 74 Jest tests (10 new), 71 core tests, 1 new Python test. New native module, so the
+  next development build needs making. For PR 13: the review notes can say "Account → Your plan → Try Pro free for 7
+  days" reaches the paywall; App Review needs the products "Ready to Submit" and the paywall screenshot.

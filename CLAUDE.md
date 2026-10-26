@@ -44,14 +44,28 @@ next PR of the mobile plan": read that file first, take the first PR its Progres
 mark done (owner-only steps go to the owner), and finish by ticking its checklist, updating
 Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
 (`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`), PR 4 (`feat/mobile-sign-in`), PR 5 (`feat/mobile-recipes`), PR 6 (`feat/mobile-plan`), PR 7
-(`feat/mobile-cooking`), PR 8 (`feat/mobile-cookbook`), PR 9 (`feat/mobile-share`), PR 10 (`feat/mobile-assistant`) and PR 11 (`feat/mobile-profile`)
-are done. Next: **PR 12 (`feat/mobile-paywall`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
+(`feat/mobile-cooking`), PR 8 (`feat/mobile-cookbook`), PR 9 (`feat/mobile-share`), PR 10 (`feat/mobile-assistant`), PR 11 (`feat/mobile-profile`)
+and PR 12 (`feat/mobile-paywall`) are done. Next: **PR 13 (`feat/mobile-store`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
 installs (Android development build finished), PR 3's Render variables and RevenueCat webhook, and PR 4's Google,
 Apple and Supabase settings plus a new development build, and PR 9's `APPLE_TEAM_ID` / `ANDROID_CERT_SHA256` on Vercel
 (`docs/share-and-links.md`), and PR 11's Sentry project with `EXPO_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT` and
-`SENTRY_AUTH_TOKEN` on EAS.
+`SENTRY_AUTH_TOKEN` on EAS, and PR 12's store products, RevenueCat offering, `EXPO_PUBLIC_REVENUECAT_IOS_KEY` /
+`EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` on EAS and sandbox purchase tests.
 
 ## Status (update as work lands)
+
+Phone paywall (mobile plan PR 12): `react-native-purchases` (`lib/purchases.ts`) sells Pantrila Pro through RevenueCat
+as the Supabase user id (configured at sign-in, `logIn`/`logOut` from `AuthProvider`; off without
+`EXPO_PUBLIC_REVENUECAT_IOS_KEY` / `_ANDROID_KEY`). The paywall (`app/pro.tsx`, our own screen) opens at every Free
+402 through `askForPro` (`lib/pro.ts`), from Account's plan card, the plan screen's once-a-week line and as "Welcome
+back" for an expired store subscriber: what was used up and when it returns, what Pro gives, yearly first ("Save 50%",
+price a month), "7 days free, then €29.99 a year" above the button, the store's renewal terms, Restore purchases, Terms
+and Privacy; a guest is asked to keep their data with Google or Apple first. After buying it asks `/me` until the
+webhook has made the person Pro (up to 30 s); a trial gets a local reminder 2 days before it ends. Account shows
+"Manage subscription" (the store's page). Words shared in `@pantrila/core/subscription` (web's Pro sheet uses them).
+API: `POST /me/events` takes `paywall_shown` and `paywall_closed`; the webhook adds `source` (the subscriber
+attribute `paywall_reason`) to `trial_started` and `subscribed`. 74 Jest tests (10 new), 71 core tests, 1 new Python
+test; a new native module, so the next development build needs making. No model call, so no eval rerun.
 
 Phone pantry, profile and account (mobile plan PR 11): the header's account button (the person's upload, else their
 Google picture, else the emoji; `components/avatar.tsx`) opens Account: Pantry and Profile, "Your plan" (Free or Pro,
@@ -1014,7 +1028,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   without an amount stay). The cooking log is in `records.py` (`Cooked`, `cooked_meals`).
 - `src/pantrila/api.py`: FastAPI app (`create_app(backend, verify)`; tests pass an in-memory
   backend). Routes: `/health`, `/meta`, `/foods`, `/me`, `/me/profile`, `/me/pantry`,
-  `/me/usage`, `/webhooks/revenuecat`, `/me/avatar` (PUT/DELETE), `DELETE /me` (the whole account), `POST /me/events` (funnel steps from the browser), `/recipes` (search or browse, profile rules as filters unless `safe=false`, `limit`/`offset` pages),
+  `/me/usage`, `/webhooks/revenuecat`, `/me/avatar` (PUT/DELETE), `DELETE /me` (the whole account), `POST /me/events` (funnel steps from the apps: cooking mode, the paywall), `/recipes` (search or browse, profile rules as filters unless `safe=false`, `limit`/`offset` pages),
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
   `/plans/latest`, `/plans/latest/grocery`, `/plans/latest/meals/{day}/{meal_type}` (`/options`
   GET, PUT to swap), `POST /chat` (continues `thread_id` or starts a
@@ -1031,9 +1045,9 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   not memory). `app.config.ts`, `eas.json`, `metro.config.js` (Uniwind), `src/global.css` (tokens),
   `src/app/` (Expo Router screens; `_layout.tsx` loads the fonts and guards `welcome` / the signed-in screens
   with `Stack.Protected`; `(tabs)/` holds Home, Assistant, Recipes, Plan, Grocery; `recipes/[id]`,
-  `recipes/mine/*`, `account.tsx`, `pantry.tsx`, `profile.tsx` and `intro.tsx` (first-run cards, `lib/intro.ts`) open over them; `auth/callback.tsx` finishes email links),
+  `recipes/mine/*`, `account.tsx`, `pantry.tsx`, `profile.tsx`, `pro.tsx` (the paywall, `lib/pro.ts`) and `intro.tsx` (first-run cards, `lib/intro.ts`) open over them; `auth/callback.tsx` finishes email links),
   `src/lib/api.ts` (`createApi` with `expo/fetch`, the session's token, `X-Pantrila-Client` and `waking.ts`), `src/lib/sentry.ts`
-  (errors and feedback), `src/lib/hooks.ts`
+  (errors and feedback), `src/lib/purchases.ts` (RevenueCat: offers, buy, restore, manage), `src/lib/hooks.ts`
   (SWR hooks, `useRecipePages`), `src/lib/recipes.ts` (filters), `src/lib/temperature.ts` (°C/°F per user),
   `src/lib/import-jobs.ts` (import jobs, saved per user), `src/lib/photo-jobs.ts` (background recipe photos,
   `saveNewRecipe`), `src/lib/images.ts` (photos to import), `src/lib/share.ts` + `src/components/share-handler.tsx` (the share
@@ -1176,7 +1190,7 @@ Update this block when commands change.
   suffixes. **Never use a `claude/` branch** (owner's rule, for every session and tool): if the
   session or harness assigns one (such as `claude/<random-words>`), ignore it and create the
   `feat/` or `fix/` branch from up-to-date `main` instead; push and open the PR from that branch.
-  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-paywall` for PR 12).
+  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-store` for PR 13).
 - Commit messages use plain descriptive text. `feat/` and `fix/` are branch prefixes only;
   do not prefix commit messages with them.
 - PR titles say specifically what the PR does (for example "Add hybrid recipe search with

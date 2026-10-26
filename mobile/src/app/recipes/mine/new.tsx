@@ -7,7 +7,7 @@ import { useSWRConfig } from "swr"
 import { BLANK_RECIPE, needsReview, POST_LINK, postPlatform } from "@pantrila/core/cookbook"
 import { seconds, usd } from "@pantrila/core/format"
 import { leftText } from "@pantrila/core/subscription"
-import type { CookbookRecipeIn, ImportView } from "@pantrila/core/types"
+import type { CookbookRecipeIn, ImportView, Me } from "@pantrila/core/types"
 
 import { useAuth } from "@/components/auth-provider"
 import { Button, Panel, PanelTitle } from "@/components/bits"
@@ -23,6 +23,7 @@ import {
 } from "@/lib/import-jobs"
 import { saveNewRecipe } from "@/lib/photo-jobs"
 import { type SharedRecipe, takeShare, useSharedRecipe } from "@/lib/share"
+import { askForPro, openPaywall, proOffer } from "@/lib/pro"
 import { toast } from "@/lib/toast"
 
 const MAX_PHOTOS = 4
@@ -55,6 +56,7 @@ function useImport(onDone: (v: ImportView) => void) {
     try {
       onDone(await importRecipe(userId, request, setSteps))
     } catch (e) {
+      askForPro(e)
       setError(e instanceof Error ? e.message : fallback)
     } finally {
       setBusy(false)
@@ -352,7 +354,7 @@ export default function NewRecipe() {
             {method === "text" && (
               <TextImport key={incoming?.id} onDone={imported} shared={incoming?.kind === "text" ? incoming.text : undefined} />
             )}
-            {me && <Text className="mt-3 font-sans text-xs text-muted-foreground">{leftText("import", me.limits.imports)}.</Text>}
+            {me && <ImportsLeft me={me} />}
           </Panel>
         )}
 
@@ -416,5 +418,20 @@ export default function NewRecipe() {
         )}
       </ScrollView>
     </KeyboardAvoidingView>
+  )
+}
+
+/** "3 of 5 AI imports left this month", and on Free with none left, the way on. */
+function ImportsLeft({ me }: { me: Me }) {
+  const a = me.limits.imports
+  const out = a.left === 0 && me.subscription.tier === "free"
+  return (
+    <View className="mt-3 gap-2">
+      <Text className="font-sans text-xs text-muted-foreground">{leftText("import", a)}.</Text>
+      {out && (
+        <Button text={proOffer(me)} variant="outline" size="sm"
+                onPress={() => openPaywall("limit", { feature: "import", resets_at: a.resets_at })} />
+      )}
+    </View>
   )
 }

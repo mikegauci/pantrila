@@ -1514,6 +1514,32 @@ def test_subscription_events_sent_to_posthog():
     assert subscription_event({"type": "BILLING_ISSUE"}) is None
 
 
+def test_paywall_events_and_the_paywall_that_sold_a_trial(billing, backend):
+    api, rc = billing
+    shown = {"name": "paywall_shown", "reason": "limit", "feature": "plan"}
+    assert api.post("/me/events", json=shown, headers={"X-Pantrila-Client": "ios"}
+                    ).status_code == 204  # fmt: skip
+    closed = {"name": "paywall_closed", "reason": "limit", "outcome": "bought"}
+    assert api.post("/me/events", json=closed).status_code == 204
+    assert api.post("/me/events", json={**closed, "outcome": "maybe"}).status_code == 422
+    assert api.post("/me/events", json={**shown, "reason": "popup"}).status_code == 422
+
+    rc.subscribers["carol"] = pro_subscriber()
+    attrs = {"paywall_reason": {"value": "limit", "updated_at_ms": 1}}
+    assert api.post("/webhooks/revenuecat", json=rc_event(subscriber_attributes=attrs),
+                    headers=HOOK).status_code == 200  # fmt: skip
+    odd = {"paywall_reason": {"value": "<script>"}}
+    assert api.post("/webhooks/revenuecat", headers=HOOK, json=rc_event(
+        "INITIAL_PURCHASE", event_id="evt-2", period_type="NORMAL", subscriber_attributes=odd,
+    )).status_code == 200  # fmt: skip
+
+    props = {e: p for u, e, p in backend.analytics.events if u == "carol"}
+    assert props["paywall_shown"] == {"reason": "limit", "feature": "plan", "client": "ios"}
+    assert props["paywall_closed"] == {"reason": "limit", "outcome": "bought"}
+    assert props["trial_started"]["source"] == "limit"
+    assert props["subscribed"]["source"] is None
+
+
 def test_webhook_keeps_a_hand_given_pro_and_is_off_without_setup(billing, backend):
     from datetime import UTC, datetime, timedelta
 

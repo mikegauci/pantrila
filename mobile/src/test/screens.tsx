@@ -10,6 +10,7 @@ import Recipes from "@/app/(tabs)/recipes"
 import Account from "@/app/account"
 import Intro from "@/app/intro"
 import Pantry from "@/app/pantry"
+import Paywall from "@/app/pro"
 import ProfileScreen from "@/app/profile"
 import Cook from "@/app/recipes/[id]/cook"
 import RecipePage from "@/app/recipes/[id]/index"
@@ -40,6 +41,7 @@ export function showApp(url: string) {
       pantry: Pantry,
       profile: ProfileScreen,
       intro: Intro,
+      pro: Paywall,
     },
     {
       initialUrl: url,

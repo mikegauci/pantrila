@@ -97,3 +97,35 @@ jest.mock("@/lib/intro", () => ({
   introDone: jest.fn(async () => {}),
   forgetIntro: jest.fn(async () => {}),
 }))
+
+// RevenueCat: tests set what the store sells (`mockOffering`) and what a purchase returns.
+jest.mock("react-native-purchases", () => {
+  const product = (identifier, price, priceString, pricePerMonthString, trial) => ({
+    identifier, price, priceString, pricePerMonthString,
+    introPrice: trial ? { price: 0, priceString: "€0.00", period: trial, cycles: 1, periodUnit: "WEEK", periodNumberOfUnits: 1 } : null,
+  })
+  const packages = [
+    { identifier: "$rc_annual", packageType: "ANNUAL", product: product("pro_yearly", 29.99, "€29.99", "€2.50", "P1W") },
+    { identifier: "$rc_monthly", packageType: "MONTHLY", product: product("pro_monthly", 4.99, "€4.99", "€4.99", "P1W") },
+  ]
+  const pro = { entitlements: { active: { pro: { periodType: "TRIAL", expirationDate: "2099-01-08T00:00:00Z" } } }, managementURL: null }
+  const Purchases = {
+    configure: jest.fn(),
+    logIn: jest.fn(async () => ({ created: false })),
+    logOut: jest.fn(async () => ({})),
+    isAnonymous: jest.fn(async () => false),
+    getOfferings: jest.fn(async () => ({ current: { availablePackages: packages }, all: {} })),
+    checkTrialOrIntroductoryPriceEligibility: jest.fn(async () => ({})),
+    setAttributes: jest.fn(async () => {}),
+    purchasePackage: jest.fn(async () => ({ customerInfo: pro })),
+    restorePurchases: jest.fn(async () => ({ entitlements: { active: {} } })),
+    getCustomerInfo: jest.fn(async () => pro),
+  }
+  return {
+    __esModule: true,
+    default: Purchases,
+    PACKAGE_TYPE: { ANNUAL: "ANNUAL", MONTHLY: "MONTHLY" },
+    PURCHASES_ERROR_CODE: { PURCHASE_CANCELLED_ERROR: "1" },
+    INTRO_ELIGIBILITY_STATUS: { INTRO_ELIGIBILITY_STATUS_INELIGIBLE: 1 },
+  }
+})
