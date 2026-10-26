@@ -24,6 +24,7 @@ import { send } from "@/lib/api"
 import { useCookbookRecipe, useMe, useProfile } from "@/lib/hooks"
 import { makePhoto, usePhotoPending } from "@/lib/photo-jobs"
 import { useTempUnit } from "@/lib/temperature"
+import { askForPro, openPaywall } from "@/lib/pro"
 import { toast } from "@/lib/toast"
 
 const confirm = (title: string, action: string) => new Promise<boolean>((resolve) => {
@@ -106,6 +107,7 @@ export default function MyRecipe() {
       mutate("/me/recipes")
       refreshMe()
     } catch (e) {
+      if (askForPro(e)) return
       toast.error(e instanceof Error ? e.message : "Could not update the photo.")
     } finally {
       setRemoving(false)
@@ -113,7 +115,9 @@ export default function MyRecipe() {
   }
 
   const photos = me?.limits.photos
-  const photosStopped = photos?.left === 0
+  // Pro's fair-use cap stops the button; on Free a tap opens the paywall instead.
+  const photosStopped = photos?.left === 0 && me?.subscription.tier === "pro"
+  const photosOnPro = photos?.left === 0 && me?.subscription.tier === "free"
   const allergies = new Set(profile?.allergies ?? [])
   const have = r.ingredients.filter((i) => i.in_pantry).length
   const cook = { pathname: "/recipes/mine/[id]/cook", params: { id: String(r.id) } } as const
@@ -151,7 +155,7 @@ export default function MyRecipe() {
         <View className="flex-row flex-wrap items-center gap-2">
           <Button variant="outline" size="sm" icon={Camera} busy={making} disabled={removing || photosStopped}
                   text={making ? "Making a photo…" : r.photo_url ? "New photo" : "Generate photo"}
-                  onPress={() => photo("make")} />
+                  onPress={() => photosOnPro ? openPaywall("limit", { feature: "photo", resets_at: photos.resets_at }) : photo("make")} />
           {r.photo_url && (
             <Button variant="ghost" size="sm" icon={ImageOff} text="Remove" disabled={making || removing}
                     onPress={() => photo("remove")} />

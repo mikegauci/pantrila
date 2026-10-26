@@ -83,6 +83,7 @@ function Screens() {
         <Stack.Screen name="account" options={{ headerShown: true, title: "Account", presentation: "modal" }} />
         <Stack.Screen name="pantry" options={{ headerShown: true, title: "Pantry" }} />
         <Stack.Screen name="profile" options={{ headerShown: true, title: "Profile" }} />
+        <Stack.Screen name="pro" options={{ presentation: "modal" }} />
         <Stack.Screen name="intro" options={{ presentation: "fullScreenModal", gestureEnabled: false }} />
       </Stack.Protected>
       <Stack.Protected guard={!session}>

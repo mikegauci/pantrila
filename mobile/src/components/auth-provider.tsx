@@ -2,6 +2,7 @@ import type { Session } from "@supabase/supabase-js"
 import { createContext, useContext, useEffect, useState } from "react"
 import { SWRConfig } from "swr"
 
+import { purchaser } from "@/lib/purchases"
 import { identify } from "@/lib/sentry"
 import { supabase, supabaseReady } from "@/lib/supabase"
 
@@ -21,6 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!supabaseReady()) return
     const { data } = supabase().auth.onAuthStateChange((_event, session) => {
       identify(session?.user.id ?? null)  // error reports name the account by its id, nothing more
+      purchaser(session?.user.id ?? null)  // Pro is bought as the same id, so the API's webhook knows whose
       setState({ session, ready: true })
     })
     return () => data.subscription.unsubscribe()

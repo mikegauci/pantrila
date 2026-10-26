@@ -8,6 +8,7 @@ import { AccountButton } from "@/components/account-button"
 import { WakeNotice } from "@/components/wake-notice"
 import { health } from "@/lib/api"
 import { useFirstIntro } from "@/lib/intro"
+import { useWelcomeBack } from "@/lib/pro"
 
 // Same order as the web's navigation; Pantry and Profile open from the account button.
 const TABS: { name: string; title: string; icon: LucideIcon }[] = [
@@ -25,6 +26,7 @@ export default function TabsLayout() {
   ]) as string[]
 
   useFirstIntro()  // three cards the first time this person opens the app on this phone
+  useWelcomeBack()  // the paywall once after a store subscription ended
 
   // Start waking the free server as soon as the app opens (the web pings on load too).
   useEffect(() => {
