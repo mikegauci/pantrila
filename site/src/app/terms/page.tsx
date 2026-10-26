@@ -21,7 +21,7 @@ export default function Terms() {
 
       <h2>What Pantrila is</h2>
       <p>
-        Pantrila is a cooking and meal-planning assistant that uses AI. It is free to use, with optional paid Pantrila
+        Pantrila is an AI cooking companion: it suggests recipes, answers cooking questions, imports recipes into your cookbook, guides you through cooking and plans meals. It is free to use, with optional paid Pantrila
         Pro for larger allowances. Features, allowances and the service itself may change or stop. It is offered as it is, without promises that it will always be available or free of
         mistakes.
       </p>

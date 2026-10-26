@@ -13,12 +13,12 @@ export default function Privacy() {
   return (
     <LegalPage title="Privacy" updated="26 October 2026">
       <p>
-        Pantrila is an AI cooking and meal-planning assistant at <a href={APP_URL}>app.pantrila.com</a> and in the
+        Pantrila is an AI cooking companion (recipes, a cooking assistant, recipe imports, cooking mode and meal planning) at <a href={APP_URL}>app.pantrila.com</a> and in the
         Pantrila apps for iPhone and Android; this policy covers all three. Pantrila
         decides how your data is used (it is the “data controller”). Questions or requests: {mail}.
       </p>
       <p>
-        In short: Pantrila keeps what you tell it so it can plan your meals, sends what you type to an AI model to
+        In short: Pantrila keeps what you tell it so it can suggest recipes, save your cookbook and plan your meals, sends what you type to an AI model to
         answer you, shows no ads, uses no tracking cookies and sells nothing.
       </p>
 
