@@ -43,3 +43,9 @@ test("store builds leave out the development menu's overlay permission", () => {
   expect(load("e2e").android?.blockedPermissions).toEqual(["android.permission.SYSTEM_ALERT_WINDOW"])
   expect(load("development").android?.blockedPermissions).toEqual([])
 })
+
+test("an update only reaches builds with the same native code", () => {
+  const c = load("production")
+  expect(c.runtimeVersion).toEqual({ policy: "fingerprint" })
+  expect(c.updates?.url).toBe(`https://u.expo.dev/${(c.extra as { eas: { projectId: string } }).eas.projectId}`)
+})

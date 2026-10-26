@@ -45,15 +45,29 @@ mark done (owner-only steps go to the owner), and finish by ticking its checklis
 Progress and the handoff log, and adding a Status entry here. PR 1 (`feat/shared-core`) and PR 2
 (`feat/mobile-skeleton`), PR 3 (`feat/subscription-tiers`), PR 4 (`feat/mobile-sign-in`), PR 5 (`feat/mobile-recipes`), PR 6 (`feat/mobile-plan`), PR 7
 (`feat/mobile-cooking`), PR 8 (`feat/mobile-cookbook`), PR 9 (`feat/mobile-share`), PR 10 (`feat/mobile-assistant`), PR 11 (`feat/mobile-profile`),
-PR 12 (`feat/mobile-paywall`) and PR 13 (`feat/mobile-store`) are done. Next: **PR 14 (`feat/mobile-launch`)**. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
+PR 12 (`feat/mobile-paywall`), PR 13 (`feat/mobile-store`) and PR 14 (`feat/mobile-launch`) are done: every code PR of
+the plan has landed. What remains is the owner's (below); fixes from testers come as `fix/` PRs. The owner still has PR 0 (Apple team pending activation, RevenueCat), PR 2's first device
 installs (Android development build finished), PR 3's Render variables and RevenueCat webhook, and PR 4's Google,
 Apple and Supabase settings plus a new development build, and PR 9's `APPLE_TEAM_ID` / `ANDROID_CERT_SHA256` on Vercel
 (`docs/share-and-links.md`), and PR 11's Sentry project with `EXPO_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT` and
 `SENTRY_AUTH_TOKEN` on EAS, and PR 12's store products, RevenueCat offering, `EXPO_PUBLIC_REVENUECAT_IOS_KEY` /
 `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` on EAS and sandbox purchase tests, and PR 13's store forms (`docs/store-listing.md`),
-the e2e and screenshots workflows on EAS, production builds, Play's 14-day closed test with 12 testers and TestFlight.
+the e2e and screenshots workflows on EAS, production builds, Play's 14-day closed test with 12 testers and TestFlight,
+and PR 14's store submissions, `NEXT_PUBLIC_APP_STORE_ID` / `NEXT_PUBLIC_PLAY_STORE_LIVE` on both Vercel projects once
+the listings are live, and phone screenshots in the README.
 
 ## Status (update as work lands)
+
+Launch (mobile plan PR 14): the landing site's store cards show Apple's and Google's official badges with links
+(`site/public/badges/`; FAQ and "Get the app" copy follow) once `NEXT_PUBLIC_APP_STORE_ID` (the app's Apple ID, digits)
+and `NEXT_PUBLIC_PLAY_STORE_LIVE=1` are set on Vercel, else "Coming soon" (`site/src/lib.ts`). The web app reads the same
+two (`web/src/lib/stores.ts`): Safari's `apple-itunes-app` banner (root layout `itunes`), a closable "Pantrila for
+Android" bar above the header on Android phones (`components/app-banner.tsx`, `pantrila-app-banner-off`) and store links
+in the Pro sheet; Playwright builds with both set (`app-banner.spec.ts`; 43 specs pass). The phone app gains
+`expo-updates`: `runtimeVersion: { policy: "fingerprint" }`, `updates.url` from the EAS project, channels
+`development` / `preview` / `production` in `eas.json` (`eas update --channel production`; a native change needs a new
+store build). README: "Phone apps" section, the app, RevenueCat and `packages/core` in the architecture diagram, phone
+commands; the demo script gains sharing a reel into the app. 78 Jest tests (1 new). No model call, so no eval rerun.
 
 Store readiness (mobile plan PR 13): `docs/store-listing.md` holds what goes into App Store Connect and Play Console:
 names, subtitle, keywords, descriptions (`tests/test_store_listing.py` checks the character limits), categories, age
@@ -1059,7 +1073,7 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
 - `package.json` (root): npm workspaces `web`, `mobile` and `packages/*`; one `package-lock.json` at the root.
 - `mobile/`: the Expo phone app (see `mobile/README.md` and `mobile/AGENTS.md`: read Expo's versioned docs,
   not memory). `app.config.ts`, `eas.json`, `metro.config.js` (Uniwind), `src/global.css` (tokens),
-  `src/app/` (Expo Router screens; `_layout.tsx` loads the fonts and guards `welcome` / the signed-in screens
+  `expo-updates` (fingerprint runtime versions, channels per build profile), `src/app/` (Expo Router screens; `_layout.tsx` loads the fonts and guards `welcome` / the signed-in screens
   with `Stack.Protected`; `(tabs)/` holds Home, Assistant, Recipes, Plan, Grocery; `recipes/[id]`,
   `recipes/mine/*`, `account.tsx`, `pantry.tsx`, `profile.tsx`, `pro.tsx` (the paywall, `lib/pro.ts`) and `intro.tsx` (first-run cards, `lib/intro.ts`) open over them; `auth/callback.tsx` finishes email links),
   `src/lib/api.ts` (`createApi` with `expo/fetch`, the session's token, `X-Pantrila-Client` and `waking.ts`), `src/lib/sentry.ts`
@@ -1085,7 +1099,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `cooking.ts`, `cookbook.ts`, `chat.ts`, `temperature.ts`, `voice.ts`, `sections.ts`, `plan.ts`, `grocery.ts`, `format.ts`, `avatar.ts`;
   Vitest tests in `test/`. Imported as `@pantrila/core/<module>`.
 - `site/`: the pantrila.com landing site (Next.js, static, no API or sign-in): `src/app/page.tsx` (sections),
-  `privacy/`, `terms/`, `src/lib.ts` (addresses and contact), `src/components/` (header/footer, screenshot
+  `privacy/`, `terms/`, `src/lib.ts` (addresses, contact and the store links from `NEXT_PUBLIC_APP_STORE_ID` /
+  `NEXT_PUBLIC_PLAY_STORE_LIVE`), `public/badges/` (official store badges), `src/components/` (header/footer, screenshot
   frames, logo copied from `web/`; animation in `motion.tsx`, `hero-art.tsx`, `demos.tsx`, `allergen-check.tsx`),
   `public/screens/` (app screenshots).
 - `data/`: `ingredients.csv` (hand-curated), `usda_foods.csv` (built by
@@ -1123,7 +1138,8 @@ use. No model call, so no eval rerun; offline tests cover ranking, rule checks a
   `@pantrila/core/voice` (words to commands) and `src/lib/voice.ts` (browser listener). The assistant's
   thread list is `src/components/chat-threads.tsx`; the Home card is `src/components/ask-pantrila.tsx`. `RecipeArt` (`src/components/bits.tsx`)
   shows the recipe photo with `next/image` (host allowed from `NEXT_PUBLIC_SUPABASE_URL` in
-  `next.config.ts`) or the meal-type art when there is none. `src/proxy.ts` only redirects the retired Vercel addresses. `src/app/.well-known/` serves the phone app's link
+  `next.config.ts`) or the meal-type art when there is none. `src/proxy.ts` only redirects the retired Vercel addresses. `src/lib/stores.ts` holds the phone apps' store
+  links (Safari's banner in the root layout, `components/app-banner.tsx` on Android, the Pro sheet). `src/app/.well-known/` serves the phone app's link
   files (`src/lib/app-links.ts`). Read `web/AGENTS.md`: this Next.js differs from
   older versions (e.g. `proxy.ts` replaces middleware; check `node_modules/next/dist/docs/`).
 
@@ -1178,6 +1194,7 @@ cd mobile && npm run lint && npm run typecheck && npm test && npx expo-doctor   
 cd mobile && npx eas-cli build --profile development --platform android|ios   # device builds on EAS (owner)
 cd mobile && npx eas-cli workflow:run e2e.yml        # Maestro flows on EAS (screenshots.yml for store shots)
 cd mobile && npx eas-cli build --profile production --platform all && npx eas-cli submit   # store builds (owner)
+cd mobile && npx eas-cli update --channel production --environment production --message "..."   # JS-only fix to store builds
 ```
 
 Update this block when commands change.
@@ -1210,7 +1227,7 @@ Update this block when commands change.
   suffixes. **Never use a `claude/` branch** (owner's rule, for every session and tool): if the
   session or harness assigns one (such as `claude/<random-words>`), ignore it and create the
   `feat/` or `fix/` branch from up-to-date `main` instead; push and open the PR from that branch.
-  For mobile-plan PRs, use the branch name the plan gives (`feat/mobile-launch` for PR 14).
+  For mobile-plan PRs, use the branch name the plan gives (fixes after launch: `fix/<name>`).
 - Commit messages use plain descriptive text. `feat/` and `fix/` are branch prefixes only;
   do not prefix commit messages with them.
 - PR titles say specifically what the PR does (for example "Add hybrid recipe search with

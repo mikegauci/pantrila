@@ -75,3 +75,17 @@ maestro test .maestro/search.yaml          # locally, with the app on a simulato
 The `e2e` builds use the EAS `preview` environment, so `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` must be set
 there. Store builds: `npx eas-cli build --profile production --platform all`, then `npx eas-cli submit`
 (TestFlight; Play's closed testing track, `alpha`).
+
+## Updates without a store review
+
+`expo-updates` is in the app: each build profile has a channel (`development`, `preview`, `production` in
+`eas.json`), and the runtime version is a fingerprint of the native code and config, so an update only reaches
+builds with the same native side. A JavaScript or asset fix for store users:
+
+```bash
+npx eas-cli update --channel production --environment production --message "Fix the grocery list total"
+```
+
+The phone downloads it on launch and uses it from the next one. A change to native code (a new native module, a
+plugin or `app.config.ts`) changes the fingerprint: that needs a new store build, and older builds keep their
+last update.

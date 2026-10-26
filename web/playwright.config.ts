@@ -23,6 +23,9 @@ export default defineConfig({
       NEXT_PUBLIC_SENTRY_DSN: "https://public@o1.ingest.de.sentry.io/1",
       // A fake project: replay requests go to /ingest, which specs intercept.
       NEXT_PUBLIC_POSTHOG_KEY: "phc_playwright",
+      // Store listings as if the apps were live (app-banner.spec.ts).
+      NEXT_PUBLIC_APP_STORE_ID: "6740000000",
+      NEXT_PUBLIC_PLAY_STORE_LIVE: "1",
     },
   },
 })
