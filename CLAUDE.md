@@ -53,7 +53,9 @@ RevenueCat project with entitlement `pro` and a placeholder `default` offering, 
 `/webhooks/revenuecat` returning 200, `REVENUECAT_WEBHOOK_SECRET` on Render; Play developer account verified (device
 check passed on Samsung Remote Test Lab); Play app "Pantrila: AI Cooking Companion" (`com.pantrila.app`) with its
 setup checklist, store listing, icon, feature graphic (`docs/store-assets/`) and phone screenshots (web app at
-phone size); reviewer account `pantrila.review@gmail.com` for Play's sign-in details. Android builds on EAS:
+phone size); reviewer account `pantrila.review@gmail.com` for Play's sign-in details. Closed test "Alpha" (versionCode 2, tester group
+`testers-community@googlegroups.com`) sent for Google's review on 2026-10-27; a second Google Android client "Pantrila
+Android (Play)" with Play's app signing SHA-1, and `ANDROID_CERT_SHA256` (Play signing + EAS upload SHA-256) on Vercel. Android builds on EAS:
 production 0.1.0 (versionCode 2, no RevenueCat key) and a preview APK.
 Still to do: upload the production `.aab` to Play internal testing, then closed testing (Testers Community for most
 of the 12 testers, 14 days) and apply for production; Play subscription `pantrila_pro` (`monthly` EUR 4.99, `yearly`
@@ -61,7 +63,7 @@ EUR 29.99, 7-day trial); RevenueCat Android app (Play service account), products
 `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` on EAS, then a new build; confirm `REVENUECAT_API_KEY` on Render with a sandbox
 purchase; make the reviewer account Pro (a `manual` `entitlements` row; not yet confirmed); everything Apple once the
 team is active (App Store Connect app, Sign in with Apple, products, iOS key, iOS build, TestFlight, review);
-`APPLE_TEAM_ID` / `ANDROID_CERT_SHA256` on Vercel (`docs/share-and-links.md`); `NEXT_PUBLIC_APP_STORE_ID` /
+`APPLE_TEAM_ID` on Vercel (`docs/share-and-links.md`); `NEXT_PUBLIC_APP_STORE_ID` /
 `NEXT_PUBLIC_PLAY_STORE_LIVE` on both Vercel projects once listed; phone screenshots in the README. Maestro flows
 on EAS need a paid Expo plan (run locally with the Maestro CLI instead). The owner has no Android phone and this
 Mac (2017, dual-core) cannot run the Android emulator.
