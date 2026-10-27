@@ -4,6 +4,12 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Android app links live: `ANDROID_CERT_SHA256` on Vercel holds Google Play's app signing key and the EAS upload key
+(SHA-256), so `app.pantrila.com/.well-known/assetlinks.json` is served and recipe and plan links open the Android app.
+A second Google Android OAuth client carries Play's signing SHA-1, so Google sign-in works in apps installed from Play.
+This PR touches `web/` only to record the variable in `web/.env.example`, which also triggers the production build
+the variable needs (the project skips builds when `web/` is unchanged). No model call, so no eval rerun.
+
 EAS builds fixed (runtime version): every EAS build failed in "Configure expo-updates" with "Runtime version calculated on local machine not equal to runtime version calculated during build", since the fingerprint policy hashes the app config and `app.config.ts` reads `EAS_BUILD_PROFILE` (blocked permissions) and the `SENTRY_AUTH_TOKEN` secret (Sentry upload), which a Mac does not have. `runtimeVersion` is now `{ policy: "appVersion" }` ("0.1.0"): raise `version` with any native change so an update never reaches an older build (`mobile/README.md`). Config test updated. No model call, so no eval rerun.
 
 Companion messaging: Pantrila is now pitched as "your AI cooking companion" (ask, save, cook; planning and
