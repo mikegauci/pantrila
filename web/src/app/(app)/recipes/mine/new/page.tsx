@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowLeft, Camera, ChevronDown, Link2, MessageCircle, PenLine, Share2, Sparkles, X } from "lucide-react"
+import { ArrowLeft, Camera, ChevronDown, ClipboardPaste, Link2, MessageCircle, PenLine, Share2, Sparkles, X } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { type FocusEvent, useEffect, useRef, useState } from "react"
@@ -19,6 +19,7 @@ import { BLANK_RECIPE, CHAT_DRAFT, CookbookForm, needsReview, saveNewRecipe } fr
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { ApiError } from "@/lib/api"
 import { askForPro } from "@/lib/pro"
 import { useApi, useMe, useMeta } from "@/lib/hooks"
@@ -35,7 +36,7 @@ const METHODS: { key: Method; icon: typeof Camera; title: string; text: string }
   { key: "photo", icon: Camera, title: "From photos", text: "A cookbook page, a card or a screenshot. Up to 4 photos." },
   { key: "link", icon: Link2, title: "From a link", text: "Paste a recipe page from any site." },
   { key: "post", icon: Share2, title: "From social media", text: "A TikTok, Instagram or Facebook post: its caption or the video." },
-  { key: "manual", icon: PenLine, title: "Type it in", text: "Fill in the form yourself." },
+  { key: "manual", icon: PenLine, title: "Type or paste", text: "Paste a recipe you copied, or fill in the form yourself." },
 ]
 
 const IMPORT_TITLE: Record<Exclude<Method, "manual">, string> = {
@@ -205,6 +206,64 @@ function PostImport({ onDone }: { onDone: (v: ImportView) => void }) {
       <p className="text-[12px] text-muted-foreground">
         Pantrila reads the recipe from your post and credits the creator.
       </p>
+      {error && <p role="alert" className="text-[13px] text-danger">{error}</p>}
+    </form>
+  )
+}
+
+/** A recipe copied from a note, a message or an email, read by AI like the other imports. */
+function PasteImport({ onDone }: { onDone: (v: ImportView) => void }) {
+  const userId = useAuth().session!.user.id
+  const [text, setText] = useState("")
+  const [busy, setBusy] = useState(false)
+  const [steps, setSteps] = useState<ImportStep[]>([])
+  const [error, setError] = useState<string | null>(null)
+  const canPaste = typeof navigator !== "undefined" && !!navigator.clipboard?.readText
+
+  async function read(pasted: string) {
+    if (pasted.trim().length < 10) return setError("Paste the ingredients and method of a recipe.")
+    setBusy(true)
+    setSteps([])
+    setError(null)
+    try {
+      onDone(await importRecipe(userId, { kind: "text", text: pasted.trim() }, setSteps))
+    } catch (e) {
+      askForPro(e)
+      setError(e instanceof Error ? e.message : "Could not read that text.")
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function fromClipboard() {
+    setError(null)
+    try {
+      const copied = await navigator.clipboard.readText()
+      if (!copied.trim()) return setError("Your clipboard is empty. Copy a recipe first.")
+      setText(copied)
+      read(copied)
+    } catch {
+      setError("Pantrila could not read your clipboard. Paste into the box instead.")
+    }
+  }
+
+  return (
+    <form className="grid gap-3" onSubmit={(e) => { e.preventDefault(); if (!busy) read(text) }}>
+      <Label htmlFor="recipe-text">Recipe text</Label>
+      <Textarea id="recipe-text" value={text} maxLength={20000} disabled={busy}
+                placeholder="Paste the ingredients and method"
+                onChange={(e) => setText(e.target.value)} className="min-h-28 max-h-80 bg-surface text-[15px]" />
+      <div className="flex flex-wrap gap-2">
+        {canPaste && (
+          <Button type="button" variant="outline" size="lg" disabled={busy} onClick={fromClipboard}>
+            <ClipboardPaste /> Paste from clipboard
+          </Button>
+        )}
+        <Button type="submit" size="lg" disabled={busy || !text.trim()}>
+          <Sparkles /> {busy ? "Reading the recipe…" : "Read recipe"}
+        </Button>
+      </div>
+      {busy && <ImportProgress steps={steps} />}
       {error && <p role="alert" className="text-[13px] text-danger">{error}</p>}
     </form>
   )
@@ -441,6 +500,21 @@ export default function NewRecipePage() {
                     </details>
                   )}
                 </div>
+              )}
+              {method === "manual" && !fromChat && !result && (
+                <Panel>
+                  <PanelTitle>Paste a recipe</PanelTitle>
+                  <p className="-mt-1 mb-3 text-[13px] text-muted-foreground">
+                    Copied one from a note, a message or an email? Paste it and Pantrila fills in the form.
+                    Or type it into the form below.
+                  </p>
+                  <PasteImport onDone={imported} />
+                  {me && (
+                    <p className="mt-3 text-[12px] text-muted-foreground">
+                      {leftText("import", me.limits.imports)}.
+                    </p>
+                  )}
+                </Panel>
               )}
               <CookbookForm
                 key={formKey}
