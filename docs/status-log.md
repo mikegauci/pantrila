@@ -4,6 +4,12 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Paste a recipe on the web: the "Type it in" card on `/recipes/mine/new` is now "Type or paste" and opens a
+"Paste a recipe" panel above the blank form (a text box and "Paste from clipboard"), which runs the existing text import
+(`kind: "text"` job, `Importer.from_text`) like the phone app's "Paste text". A clean result saves straight away; anything
+to fix opens in the form. Checked live on a formatted recipe (8 ingredients, 5 steps) and a messy message-style one
+(5 ingredients, 3 steps). No prompt, schema or model change, so no eval rerun.
+
 Android app links live: `ANDROID_CERT_SHA256` on Vercel holds Google Play's app signing key and the EAS upload key
 (SHA-256), so `app.pantrila.com/.well-known/assetlinks.json` is served and recipe and plan links open the Android app.
 A second Google Android OAuth client carries Play's signing SHA-1, so Google sign-in works in apps installed from Play.
