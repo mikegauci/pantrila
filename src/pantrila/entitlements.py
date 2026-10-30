@@ -9,6 +9,8 @@ Pro bought on a phone also counts on the web (same user id).
 One `entitlements` row per person who has or had Pro; no row means Free. `store='manual'` rows
 are written by hand (early users, with an end date) and are never taken away by a webhook.
 PANTRILA_PRO_USERS (comma-separated user ids) gives Pro to the owner and App Review accounts.
+PANTRILA_UNLIMITED_USERS (same form) also lifts the per-user caps for the owner's own accounts;
+the daily budget across everyone still applies.
 """
 
 from __future__ import annotations
@@ -49,6 +51,11 @@ class Entitlement:
 
 def pro_users() -> set[str]:
     return {u.strip() for u in (os.environ.get("PANTRILA_PRO_USERS") or "").split(",") if u.strip()}
+
+
+def unlimited_users() -> set[str]:
+    raw = os.environ.get("PANTRILA_UNLIMITED_USERS") or ""
+    return {u.strip() for u in raw.split(",") if u.strip()}
 
 
 def current(user_id: str, saved: Entitlement | None) -> Entitlement | None:

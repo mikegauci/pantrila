@@ -13,7 +13,7 @@ from typing import Literal
 from fastapi import HTTPException
 
 from pantrila import config
-from pantrila.entitlements import Tier
+from pantrila.entitlements import Tier, unlimited_users
 from pantrila.planner import Usage
 from pantrila.records import Kind, QuotaExceeded, Records, UsageEvent
 
@@ -72,6 +72,7 @@ FREE: dict[str, tuple[str, int, Window]] = {
     "import": ("IMPORTS", 5, "month"),
     "photo": ("PHOTOS", 0, "day"),
 }
+UNLIMITED = 1_000_000  # the cap for PANTRILA_UNLIMITED_USERS; the apps show it as "no limit"
 NOUNS = {"plan": "meal plan", "chat": "assistant message", "import": "recipe import",
          "photo": "AI recipe photo"}  # fmt: skip
 
@@ -96,7 +97,9 @@ class Allowance:
         return start + timedelta(days=7 if self.window == "week" else 1)
 
 
-def allowance(kind: Kind, tier: Tier) -> Allowance:
+def allowance(kind: Kind, tier: Tier, user_id: str | None = None) -> Allowance:
+    if user_id is not None and user_id in unlimited_users():
+        return Allowance(UNLIMITED, "day")
     if tier == "free" and kind in FREE:
         name, count, window = FREE[kind]
         chosen = os.environ.get(f"PANTRILA_FREE_{name}_WINDOW")
@@ -128,7 +131,7 @@ class PaidOperation:
     def __init__(self, records: Records, kind: Kind, model: str, tier: Tier = "free"):
         self.records, self.kind, self.model = records, kind, model
         now = datetime.now(UTC)
-        allow = allowance(kind, tier)
+        allow = allowance(kind, tier, getattr(records, "user_id", None))
         try:
             self.reservation = records.reserve(
                 kind,

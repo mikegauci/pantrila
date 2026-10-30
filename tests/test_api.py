@@ -16,6 +16,7 @@ from pantrila.chats import MAX_THREADS_PER_USER, MemoryChats
 from pantrila.cookbook import MemoryCookbook
 from pantrila.entitlements import MemoryEntitlements
 from pantrila.import_jobs import MemoryImportJobs
+from pantrila.operations import UNLIMITED
 from pantrila.pantry import MemoryKitchen
 from pantrila.photos import MemoryPhotos, cookbook_path
 from pantrila.planner import PlanDraft
@@ -1453,6 +1454,14 @@ def test_free_caps_are_402_with_the_feature_and_pro_caps_stay_429(api, backend, 
     monkeypatch.setenv("PANTRILA_DAILY_CHATS", "0")  # Pro's fair-use cap
     assert api.post("/chat", json={"message": "Hi"}).status_code == 429
     assert api.get("/me").json()["subscription"]["tier"] == "pro"  # alice: PANTRILA_PRO_USERS
+
+    # PANTRILA_UNLIMITED_USERS lifts every per-user cap, Free's and Pro's
+    monkeypatch.setenv("PANTRILA_UNLIMITED_USERS", "alice, carol")
+    assert api.post("/me/recipes/import/jobs", json=job, headers=CAROL).status_code == 202
+    limits = api.get("/me", headers=CAROL).json()["limits"]
+    assert limits["plans"]["limit"] == limits["chats"]["left"] == UNLIMITED
+    backend.client.replies = [plan_reply(CHICKEN, CURRY)]
+    assert sse(api.post("/plans", headers=CAROL).text)[-1][0] == "plan"
 
 
 def test_webhook_needs_its_secret_and_reads_revenuecat_not_the_body(billing, backend):
