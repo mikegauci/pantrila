@@ -81,6 +81,8 @@ services:
         value: "0"
       - key: PANTRILA_PRO_USERS # owner and App Review accounts, comma separated
         sync: false
+      - key: PANTRILA_UNLIMITED_USERS # owner's accounts with no per-user caps, comma separated
+        sync: false
       - key: REVENUECAT_WEBHOOK_SECRET # same value as the webhook's Authorization header
         sync: false
       - key: REVENUECAT_API_KEY # secret REST API key (v1)

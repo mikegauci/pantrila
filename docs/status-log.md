@@ -10,6 +10,12 @@ summed every user's spend since the 1st and failed with "Pantrila's demo budget 
 accounts once the month passed $2. The budget now uses `budget_day()` (start of the UTC day); the per-user count keeps the
 feature's window. Test in `tests/test_api.py`. No model call, so no eval rerun.
 
+Accounts with no per-user caps: `PANTRILA_UNLIMITED_USERS` (comma-separated user ids, on Render) lifts every per-user
+cap, Free's and Pro's, for the owner's own accounts (`entitlements.unlimited_users`, `operations.allowance(..., user_id)`,
+cap `operations.UNLIMITED`); the daily budget across everyone still applies. `/me` reports the cap, and `leftText` in
+`@pantrila/core/subscription` shows it as "No limit on ...". The two owner accounts also got `manual` Pro rows. No model
+call, so no eval rerun.
+
 Paste a recipe on the web: the "Type it in" card on `/recipes/mine/new` is now "Type or paste" and opens a
 "Paste a recipe" panel above the blank form (a text box and "Paste from clipboard"), which runs the existing text import
 (`kind: "text"` job, `Importer.from_text`) like the phone app's "Paste text". A clean result saves straight away; anything
