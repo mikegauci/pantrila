@@ -4,6 +4,12 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Daily budget counts only today: `reserve` (`records.py`, both `DbRecords` and `MemoryRecords`) checked the shared
+`PANTRILA_DAILY_BUDGET_USD` against spend since the start of the feature's own window, so Free imports (a monthly cap)
+summed every user's spend since the 1st and failed with "Pantrila's demo budget is used or reserved" on brand new
+accounts once the month passed $2. The budget now uses `budget_day()` (start of the UTC day); the per-user count keeps the
+feature's window. Test in `tests/test_api.py`. No model call, so no eval rerun.
+
 Accounts with no per-user caps: `PANTRILA_UNLIMITED_USERS` (comma-separated user ids, on Render) lifts every per-user
 cap, Free's and Pro's, for the owner's own accounts (`entitlements.unlimited_users`, `operations.allowance(..., user_id)`,
 cap `operations.UNLIMITED`); the daily budget across everyone still applies. `/me` reports the cap, and `leftText` in
