@@ -1057,6 +1057,24 @@ def test_search_is_metered_and_budget_checked(api, backend, monkeypatch):
     assert api.get("/recipes?q=salmon", headers={"Authorization": "Bearer bob"}).status_code == 503
 
 
+def test_budget_counts_only_todays_spend_for_monthly_caps():
+    from datetime import UTC, datetime, timedelta
+
+    from pantrila.records import QuotaExceeded, UsageEvent, budget_day
+
+    shared: dict = {"plans": [], "events": []}
+    old = UsageEvent("import", "m", 100, cost_usd=5.0)
+    old.created_at = budget_day() - timedelta(days=3)
+    MemoryRecords("alice", shared).log(old)
+    month = datetime.now(UTC) - timedelta(days=31)
+    bob = MemoryRecords("bob", shared)
+    assert bob.reserve("import", month, 5, 2.0, 0.15)  # earlier days do not use today's budget
+    bob.log(UsageEvent("import", "m", 100, cost_usd=1.9))
+    with pytest.raises(QuotaExceeded) as exc:
+        bob.reserve("import", month, 5, 2.0, 0.15)
+    assert exc.value.status == 503
+
+
 def test_unexpected_plan_failure_records_partial_usage(api, backend, monkeypatch):
     from pantrila.planner import Usage
 

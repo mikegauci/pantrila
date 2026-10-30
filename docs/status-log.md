@@ -4,6 +4,12 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Daily budget counts only today: `reserve` (`records.py`, both `DbRecords` and `MemoryRecords`) checked the shared
+`PANTRILA_DAILY_BUDGET_USD` against spend since the start of the feature's own window, so Free imports (a monthly cap)
+summed every user's spend since the 1st and failed with "Pantrila's demo budget is used or reserved" on brand new
+accounts once the month passed $2. The budget now uses `budget_day()` (start of the UTC day); the per-user count keeps the
+feature's window. Test in `tests/test_api.py`. No model call, so no eval rerun.
+
 Paste a recipe on the web: the "Type it in" card on `/recipes/mine/new` is now "Type or paste" and opens a
 "Paste a recipe" panel above the blank form (a text box and "Paste from clipboard"), which runs the existing text import
 (`kind: "text"` job, `Importer.from_text`) like the phone app's "Paste text". A clean result saves straight away; anything

@@ -24,6 +24,11 @@ Kind = Literal["plan", "chat", "import", "photo", "search", "reel", "estimate"]
 MAX_COOKED_PER_USER = 500  # older cooking log entries are dropped
 
 
+def budget_day(now: datetime | None = None) -> datetime:
+    """Start of the UTC day the shared budget covers, whatever window a feature's cap uses."""
+    return (now or datetime.now(UTC)).replace(hour=0, minute=0, second=0, microsecond=0)
+
+
 class QuotaExceeded(ValueError):
     def __init__(self, message: str, status: int):
         super().__init__(message)
@@ -96,9 +101,10 @@ class Records(Protocol):
 
     def log(self, event: UsageEvent) -> None: ...
 
-    def reserve(
-        self, kind: Kind, since: datetime, cap: int, budget: float, amount: float
-    ) -> str: ...
+    def reserve(self, kind: Kind, since: datetime, cap: int, budget: float, amount: float) -> str:
+        """Hold `amount` if this user has fewer than `cap` events of `kind` since `since` and
+        today's spend by everyone leaves room in the daily `budget`."""
+        ...
 
     def settle(self, reservation: str, event: UsageEvent | None) -> None: ...
 
@@ -171,7 +177,7 @@ class MemoryRecords:
     def reserve(self, kind, since, cap, budget, amount) -> str:
         with self.lock:
             enforce_quota(
-                self.count_since(kind, since), self.spend_since(since), cap, budget, amount
+                self.count_since(kind, since), self.spend_since(budget_day()), cap, budget, amount
             )
             rid = str(uuid.uuid4())
             self.reservations[rid] = (self.user_id, kind, amount, datetime.now(UTC))
@@ -295,7 +301,7 @@ class DbRecords:
         with self.conn.transaction():
             self.conn.execute("select pg_advisory_xact_lock(73492810)")
             enforce_quota(
-                self.count_since(kind, since), self.spend_since(since), cap, budget, amount
+                self.count_since(kind, since), self.spend_since(budget_day()), cap, budget, amount
             )
             rid = str(uuid.uuid4())
             self.conn.execute(
