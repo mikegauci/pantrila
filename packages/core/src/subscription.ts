@@ -12,9 +12,13 @@ const NOUNS: Record<Feature, [string, string]> = {
 const WINDOW_TEXT = { day: "today", week: "this week", month: "this month" } as const
 
 /** "3 of 5 AI imports left this month"; "No photos on Free" for a feature the tier lacks. */
+/** The API's cap for accounts with no per-person limits (PANTRILA_UNLIMITED_USERS). */
+export const UNLIMITED = 1_000_000
+
 export function leftText(feature: Feature, a: Allowance): string {
   const [one, many] = NOUNS[feature]
   if (a.limit === 0) return `No ${many} on Free`
+  if (a.limit >= UNLIMITED) return `No limit on ${many}`
   return `${a.left} of ${a.limit} ${a.limit === 1 ? one : many} left ${WINDOW_TEXT[a.window]}`
 }
 

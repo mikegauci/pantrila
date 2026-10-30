@@ -218,7 +218,7 @@ def limits_view(records: Records, tier: str) -> LimitsView:
     now = datetime.now(UTC)
 
     def left(kind: Feature) -> AllowanceView:
-        allow = allowance(kind, tier)  # type: ignore[arg-type]
+        allow = allowance(kind, tier, getattr(records, "user_id", None))  # type: ignore[arg-type]
         used = records.count_since(kind, allow.start(now))
         return AllowanceView(limit=allow.limit, left=max(0, allow.limit - used),
                              window=allow.window, resets_at=allow.resets_at(now))  # fmt: skip
