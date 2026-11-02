@@ -167,7 +167,16 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
+      # Every expo-doctor check blocks except "packages match the installed Expo SDK": Expo's list moves each
+      # time it publishes a patch, so out-of-date packages are a warning here and get updated before a store
+      # build (mobile/README.md, "Before a store build").
       - run: npx expo-doctor
+        env:
+          EXPO_DOCTOR_SKIP_DEPENDENCY_VERSION_CHECK: "1"
+      - name: Expo package versions (warning only)
+        run: >-
+          npx expo install --check ||
+          echo "::warning title=Expo packages out of date::Run 'npx expo install --check' in mobile/ and raise version in app.config.ts before the next store build."
 
   # The pantrila.com landing site: static pages, so lint, types and a build are the checks.
   site:

@@ -52,6 +52,17 @@ npm run lint && npm run typecheck && npm test   # in mobile/
 npx expo-doctor
 ```
 
+CI runs `expo-doctor` without its "packages match the installed Expo SDK" check, because Expo's list changes each
+time it publishes a patch; `npx expo install --check` runs after it as a warning only ("Expo packages out of date" on
+the run's summary).
+
+### Before a store build
+
+1. `npx expo install --check` in `mobile/`; if it lists packages, `npx expo install --fix` and commit.
+2. `npx expo-doctor` passes with every check.
+3. If anything native changed since the last store build (an `expo-*` or React Native upgrade, a native module, a
+   plugin or `app.config.ts`), raise `version` in `app.config.ts` and `package.json`.
+
 Screen tests render the routes with `expo-router/testing-library` and a fake API (`src/test/screens.tsx`);
 `jest.setup.js` stands in for Uniwind's theme and AsyncStorage.
 
