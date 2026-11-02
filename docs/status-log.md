@@ -4,6 +4,12 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Automatic Android store builds: `mobile/.eas/workflows/store-android.yml` (EAS Workflows) builds the `production`
+profile and submits it to Play's `alpha` track whenever a push to `main` changes `mobile/app.config.ts`, where `version`
+is raised after native changes; it can also be started with `npx eas-cli workflow:run store-android.yml`. Owner steps
+(link the GitHub repo in EAS, a Play submit service account key, `EXPO_TOKEN` for Claude Code sessions) are in
+`mobile/README.md`. No model call, so no eval rerun.
+
 Expo version check is a CI warning: the mobile job runs `expo-doctor` with `EXPO_DOCTOR_SKIP_DEPENDENCY_VERSION_CHECK=1`
 (its other checks still block) and then `npx expo install --check`, which only adds an "Expo packages out of date"
 warning, so a new Expo patch release no longer turns `main` red. `mobile/README.md` gains "Before a store build"

@@ -1,0 +1,28 @@
+# Android store build, automatic: a push to main that changes mobile/app.config.ts (where `version` is
+# raised after any native change, mobile/README.md "Before a store build") builds the production profile
+# (EAS raises versionCode) and submits it to Play's closed test (eas.json submit.production: track
+# `alpha`). JavaScript-only fixes go out with `eas update` instead and do not touch app.config.ts.
+# Needs the GitHub repository linked to the EAS project (base directory `mobile`) and a Play service
+# account key with release permissions under the project's Android submit credentials.
+# Run by hand: `npx eas-cli workflow:run store-android.yml` in mobile/.
+name: Android store build
+
+on:
+  push:
+    branches: ["main"]
+    paths: ["mobile/app.config.ts"]
+
+jobs:
+  build_android:
+    name: Build Android (production)
+    type: build
+    params:
+      platform: android
+      profile: production
+  submit_android:
+    name: Submit to Play closed testing
+    needs: [build_android]
+    type: submit
+    params:
+      build_id: ${{ needs.build_android.outputs.build_id }}
+      profile: production

@@ -87,6 +87,21 @@ The `e2e` builds use the EAS `preview` environment, so `EXPO_PUBLIC_SUPABASE_PUB
 there. Store builds: `npx eas-cli build --profile production --platform all`, then `npx eas-cli submit`
 (TestFlight; Play's closed testing track, `alpha`).
 
+### Automatic Android store builds
+
+`.eas/workflows/store-android.yml` runs on EAS whenever a push to `main` changes `app.config.ts`, which is where
+`version` is raised after a native change: it builds the `production` profile (EAS raises `versionCode`) and submits
+the build to Play's `alpha` track. So the release path for a native change is: update packages, raise `version`,
+merge. JavaScript-only fixes still go out with `eas update`. Start it by hand with
+`npx eas-cli workflow:run store-android.yml`. It needs, once, from the owner:
+
+1. expo.dev, project `pantrila`, GitHub: link `mikegauci/pantrila` with base directory `mobile`.
+2. A Google Cloud service account (for example `eas-submit`, project `pantrila`, no roles), its JSON key uploaded
+   under the project's Credentials, Android, "Google Service Account Key for Play Store Submissions", and the account
+   invited in Play Console (Users and permissions) with "Release to testing tracks" on the app.
+3. To let Claude Code sessions start builds too: an Expo access token (expo.dev, Account settings, Access tokens)
+   stored in the cloud environment as `EXPO_TOKEN`.
+
 ## Updates without a store review
 
 `expo-updates` is in the app: each build profile has a channel (`development`, `preview`, `production` in
