@@ -265,7 +265,8 @@ Where things stand (2026-10-26):
   progress and sounds, `lib/timer-alerts.ts` timer notifications, `lib/voice.ts` speech, `lib/stored.ts` per-user
   settings), `src/__tests__/`
   (Jest; `src/test/` has the fake API and fixtures; `jest.config.js`, `jest.setup.js`), `.maestro/` (Maestro flows,
-  `subflows/guest.yaml`) and `.eas/workflows/` (`e2e.yml`, `screenshots.yml`), `src/uniwind-types.d.ts`
+  `subflows/guest.yaml`) and `.eas/workflows/` (`e2e.yml`, `screenshots.yml`, `store-android.yml`: build and submit
+  to Play's alpha track when `app.config.ts` changes on `main`), `src/uniwind-types.d.ts`
   (written by Metro, committed), `assets/` (from `web/brand/`).
 - `packages/core/`: `@pantrila/core`, code shared by web and the phone app (no React, DOM or React
   Native): `src/types.ts` (API types), `api.ts` (`createApi`, `ApiError`), `sse.ts`, `amounts.ts`,
@@ -370,6 +371,7 @@ cd mobile && npx eas-cli build --profile development --platform android|ios   # 
 cd mobile && npx eas-cli workflow:run e2e.yml        # Maestro flows on EAS (screenshots.yml for store shots)
 cd mobile && npx eas-cli build --profile production --platform all && npx eas-cli submit   # store builds (owner)
 cd mobile && npx eas-cli update --channel production --environment production --message "..."   # JS-only fix to store builds
+cd mobile && npx eas-cli workflow:run store-android.yml   # Android build + Play alpha submit (also runs on main when app.config.ts changes)
 ```
 
 Update this block when commands change.
