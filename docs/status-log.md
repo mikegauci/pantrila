@@ -4,6 +4,11 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Expo SDK 58 patches (November): `expo` 58.0.22, `expo-audio` 58.0.11, `expo-dev-client` 58.0.18, `expo-router`
+58.0.29, `expo-updates` 58.0.20 and `react-native-screens` 4.30.1, so `expo-doctor` passes in CI again (Expo published
+them after #156). Native changes, but no 0.1.1 build exists yet, so `version` stays 0.1.1 and the next production build
+carries them. No model call, so no eval rerun.
+
 Phone app version 0.1.1: the Expo SDK 58 patch bump (`expo`, `expo-updates`, `expo-router`, React Native 0.88.0 to
 0.88.1 and others) changed native code without raising `version`, so with the `appVersion` runtime policy an
 `eas update` from `main` would have reached the 0.1.0 store build (versionCode 2) with JavaScript built against newer
