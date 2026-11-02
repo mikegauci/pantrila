@@ -4,6 +4,13 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Pantrila Pro on Google Play (owner setup, no app code): subscription `pantrila_pro` with base plans `yearly` and
+`monthly` and a `trial-7d` offer on each; its icon `docs/store-assets/play-pro-subscription-icon-1024.png` (the app icon
+on the gold accent gradient) is rendered by `web/scripts/store-art.mjs`. `docs/store-listing.md` records the
+subscription's settings, `docs/plans/mobile-app.md` ticks the Play steps, fixes the product ids (`pantrila_pro`, and
+`pantrila_pro_yearly` / `pantrila_pro_monthly` on Apple) and logs the RevenueCat Android app and the Play 15% service fee enrolment. No model call, so no eval
+rerun.
+
 Daily budget counts only today: `reserve` (`records.py`, both `DbRecords` and `MemoryRecords`) checked the shared
 `PANTRILA_DAILY_BUDGET_USD` against spend since the start of the feature's own window, so Free imports (a monthly cap)
 summed every user's spend since the 1st and failed with "Pantrila's demo budget is used or reserved" on brand new

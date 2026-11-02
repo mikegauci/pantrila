@@ -111,10 +111,16 @@ them):
 - [ ] App Store Connect → Business: sign the Paid Applications Agreement, add bank and tax details
       (needed before any subscription can be tested or sold).
 - [ ] Apple **App Store Small Business Program** and Google Play's 15% service fee tier: enrol, so
-      the store cut is 15% instead of 30%.
-- [ ] Play Console: payments profile (merchant account) linked.
+      the store cut is 15% instead of 30%. Google: enrolled 2026-11-02 (account group, no other developer
+      accounts); Apple waits for the team.
+- [x] Play Console: payments profile (merchant account) linked (2026-11-02).
 - [ ] RevenueCat account (free until about $2.5k a month in revenue); a project "Pantrila" with the
-      iOS and Android apps added (App Store Connect API key, Play service account).
+      iOS and Android apps added (App Store Connect API key, Play service account). Android: app
+      "Pantrila (Play Store)" (`com.pantrila.app`) added 2026-11-02 with service account
+      `revenuecat@pantrila.iam.gserviceaccount.com` (Google Cloud project `pantrila`; Play Android Developer,
+      Play Developer Reporting and Pub/Sub APIs on; roles Pub/Sub Admin and Monitoring Viewer; Play Console app
+      permissions: view app information, view financial data, manage orders and subscriptions). Its
+      credentials were still validating (Google takes up to 36 hours); iOS waits for the Apple team.
 
 ## PR 1: shared `packages/core` (no behaviour change)
 
@@ -426,12 +432,13 @@ No model call, so no eval rerun.
 Branch `feat/mobile-paywall`. Must ship before store submission: Apple reviews subscriptions with
 the app.
 
-- [ ] **(owner)** App Store Connect: subscription group "Pantrila Pro" with `pro_monthly` (€4.99)
-      and `pro_yearly` (€29.99), each with a 7-day free trial introductory offer; prices for the
+- [ ] **(owner)** App Store Connect: subscription group "Pantrila Pro" with `pantrila_pro_monthly` (€4.99)
+      and `pantrila_pro_yearly` (€29.99), each with a 7-day free trial introductory offer; prices for the
       other storefronts from Apple's equalisation (check the UK price). Review screenshot of the
       paywall.
-- [ ] **(owner)** Play Console: subscription `pro` with base plans `monthly` and `yearly` at the
-      same prices and a 7-day free trial offer for new subscribers.
+- [x] **(owner)** Play Console: subscription `pantrila_pro` with base plans `monthly` and `yearly` at the
+      same prices and a 7-day free trial offer (`trial-7d`) for new subscribers (2026-11-02; settings in
+      `docs/store-listing.md`).
 - [ ] **(owner)** RevenueCat: products, entitlement `pro`, offering `default` with both packages.
 - [x] `react-native-purchases` (and `react-native-purchases-ui` for RevenueCat's paywall, or our
       own screen in the design system); `Purchases.logIn(<supabase user id>)` on sign-in,
@@ -592,7 +599,7 @@ Branch `feat/mobile-launch`.
 | 9 | `feat/mobile-share` | done (owner: Vercel variables and a redeploy, iOS extension provisioning, shares on real phones) |
 | 10 | `feat/mobile-assistant` | done (owner: chat on a real phone with the next development build) |
 | 11 | `feat/mobile-profile` | done (owner: Sentry project and EAS variables, a new development build) |
-| 12 | `feat/mobile-paywall` | done (owner: store products, RevenueCat offering, SDK keys on EAS, a new development build, sandbox tests) |
+| 12 | `feat/mobile-paywall` | done (owner: Play subscription done; RevenueCat Android products and offering, SDK keys on EAS, a new build, sandbox tests; Apple products) |
 | 13 | `feat/mobile-store` | done (owner: store forms from `docs/store-listing.md`, run the e2e and screenshots workflows, production builds, closed test with 12 testers for 14 days, TestFlight) |
 | 14 | `feat/mobile-launch` | done (owner: store submissions after the closed test, the two store variables on Vercel, phone screenshots in the README) |
 
@@ -790,3 +797,12 @@ Add one line per PR: date, PR link, what landed, anything the next PR must know.
   diagram and the phone commands; the demo script gains sharing a reel to Pantrila. Every code PR of the plan is done;
   what is left is the owner's: PR 0's accounts, the dashboard and EAS settings of PRs 2-13, the closed test and the
   store submissions.
+- 2026-11-02: owner steps for Pro on Android (no code). Play Console: payments profile, subscription `pantrila_pro`
+  (base plans `yearly` €29.99 and `monthly` €4.99, offer `trial-7d` on each, all active) with the gold Pro icon
+  rendered by `web/scripts/store-art.mjs`; settings in `docs/store-listing.md`. Google Cloud: service account
+  `revenuecat` with a JSON key, invited to Play Console with three app permissions. RevenueCat: Android app
+  `com.pantrila.app` added, credentials waiting on Google (subscription purchases already validate; the two catalog
+  checks were pending). Next: once the credentials are green, import `pantrila_pro:yearly` and `pantrila_pro:monthly`,
+  attach them to entitlement `pro` and to the `default` offering's Annual and Monthly packages, connect Google developer
+  notifications, then `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` on EAS and a new build (internal testing first). License
+  testing has no list: the owner has no Android phone (use a throwaway Gmail on Samsung Remote Test Lab).
