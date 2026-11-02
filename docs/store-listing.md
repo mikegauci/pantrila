@@ -169,8 +169,10 @@ Privacy: https://pantrila.com/privacy
 
 ### Graphics
 
-App icon `docs/store-assets/play-icon-512.png` (512 x 512) and feature graphic
-`docs/store-assets/play-feature-graphic-1024x500.png`, both rendered by `node scripts/store-art.mjs` (from `web/`).
+App icon `docs/store-assets/play-icon-512.png` (512 x 512), feature graphic
+`docs/store-assets/play-feature-graphic-1024x500.png` and the Pantrila Pro subscription icon
+`docs/store-assets/play-pro-subscription-icon-1024.png` (1024 x 1024, the app icon on a gold gradient), all rendered
+by `node scripts/store-art.mjs` (from `web/`).
 
 ### Settings
 
@@ -200,6 +202,24 @@ App icon `docs/store-assets/play-icon-512.png` (512 x 512) and feature graphic
 
 RevenueCat imports these as `pantrila_pro:yearly` and `pantrila_pro:monthly`; put them in the `default`
 offering's annual and monthly packages next to the App Store products.
+
+As set up on 2026-11-02 (all active, 175 countries):
+
+| Field | Value |
+| --- | --- |
+| Name | Pantrila Pro |
+| Benefits (40 characters each) | 5 meal plans a day; 20 recipe imports a day; 50 assistant messages a day; AI photos for your own recipes (keep in step with the Pro caps in `operations.py`) |
+| Icon | `docs/store-assets/play-pro-subscription-icon-1024.png` |
+| Product tax category | Digital app sales |
+| Compliance settings | Service |
+| Age rating | All ages (the content rating is Everyone; the 18+ target audience is a separate setting) |
+| Base plans | Auto-renewing; grace period, account hold and resubscribe at Play's defaults; no tags. `yearly` carries Play's "Backwards compatible" label, which the RevenueCat SDK does not need |
+| Offers | `trial-7d` on each base plan: new customer acquisition, "Never had this subscription", one free-trial phase of 7 days |
+
+The payments profile is a personal merchant account ("What do you sell": Computer Software; statement name
+`PANTRILA`). License testing (Manage account, Play apps settings, License testing) has no list yet: the owner has no
+Android phone. A throwaway Gmail on Samsung Remote Test Lab, added there and to internal testing, can make test
+purchases with Play's test card.
 
 ### Data safety
 

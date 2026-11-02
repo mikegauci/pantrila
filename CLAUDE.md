@@ -46,7 +46,7 @@ Building the iOS and Android apps with Expo in [`docs/plans/mobile-app.md`](docs
 PR (1-14) has landed; fixes from testers come as `fix/` PRs. To continue the plan, read that file first and finish
 by ticking its checklist, updating Progress and the handoff log, and adding a Status entry.
 
-Owner's state (2026-10-26). Done: EAS project `@mikegauci/pantrila`; Google iOS and Android OAuth clients and
+Owner's state (2026-11-02). Done: EAS project `@mikegauci/pantrila`; Google iOS and Android OAuth clients and
 Supabase's Google client ids ("Skip nonce checks" on) and `pantrila://auth/callback`; EAS variables (Google client
 ids, Supabase publishable key, `EXPO_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`);
 RevenueCat project with entitlement `pro` and a placeholder `default` offering, webhook to
@@ -54,13 +54,14 @@ RevenueCat project with entitlement `pro` and a placeholder `default` offering, 
 check passed on Samsung Remote Test Lab); Play app "Pantrila: AI Cooking Companion" (`com.pantrila.app`) with its
 setup checklist, store listing, icon, feature graphic (`docs/store-assets/`) and phone screenshots (web app at
 phone size); reviewer account `pantrila.review@gmail.com` for Play's sign-in details. Closed test "Alpha" (versionCode 2, tester group
-`testers-community@googlegroups.com`) sent for Google's review on 2026-10-27; a second Google Android client "Pantrila
+`testers-community@googlegroups.com`) sent for Google's review on 2026-10-27 and active since (testers open the app daily); a second Google Android client "Pantrila
 Android (Play)" with Play's app signing SHA-1, and `ANDROID_CERT_SHA256` (Play signing + EAS upload SHA-256) on Vercel. Android builds on EAS:
-production 0.1.0 (versionCode 2, no RevenueCat key) and a preview APK.
-Still to do: upload the production `.aab` to Play internal testing, then closed testing (Testers Community for most
-of the 12 testers, 14 days) and apply for production; Play subscription `pantrila_pro` (`monthly` EUR 4.99, `yearly`
-EUR 29.99, 7-day trial); RevenueCat Android app (Play service account), products in the offering, and
-`EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` on EAS, then a new build; confirm `REVENUECAT_API_KEY` on Render with a sandbox
+production 0.1.0 (versionCode 2, no RevenueCat key) and a preview APK. Play payments profile and subscription
+`pantrila_pro` (`yearly` EUR 29.99, `monthly` EUR 4.99, `trial-7d` offers; 2026-11-02); RevenueCat Android app with
+the `revenuecat@pantrila.iam.gserviceaccount.com` service account (credentials were still validating).
+Still to do: finish the closed test (14 days) and apply for production; once RevenueCat's credentials are green, the
+products in entitlement `pro` and the `default` offering and Google developer notifications, then
+`EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` on EAS and a new build (internal testing first); confirm `REVENUECAT_API_KEY` on Render with a sandbox
 purchase; make the reviewer account Pro (a `manual` `entitlements` row; not yet confirmed); everything Apple once the
 team is active (App Store Connect app, Sign in with Apple, products, iOS key, iOS build, TestFlight, review);
 `APPLE_TEAM_ID` on Vercel (`docs/share-and-links.md`); `NEXT_PUBLIC_APP_STORE_ID` /
