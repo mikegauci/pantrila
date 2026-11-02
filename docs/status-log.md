@@ -4,6 +4,13 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Phone app version 0.1.1: the Expo SDK 58 patch bump (`expo`, `expo-updates`, `expo-router`, React Native 0.88.0 to
+0.88.1 and others) changed native code without raising `version`, so with the `appVersion` runtime policy an
+`eas update` from `main` would have reached the 0.1.0 store build (versionCode 2) with JavaScript built against newer
+native modules. `version` is now 0.1.1 in `mobile/app.config.ts` and `mobile/package.json`; the rule in the config
+comment and `mobile/README.md` now names package upgrades. The next production build (with
+`EXPO_PUBLIC_REVENUECAT_ANDROID_KEY`) is 0.1.1. No model call, so no eval rerun.
+
 Pantrila Pro on Google Play (owner setup, no app code): subscription `pantrila_pro` with base plans `yearly` and
 `monthly` and a `trial-7d` offer on each; its icon `docs/store-assets/play-pro-subscription-icon-1024.png` (the app icon
 on the gold accent gradient) is rendered by `web/scripts/store-art.mjs`. `docs/store-listing.md` records the

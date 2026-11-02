@@ -87,6 +87,6 @@ npx eas-cli update --channel production --environment production --message "Fix 
 ```
 
 The phone downloads it on launch and uses it from the next one. A change to native code (a new native module, a
-plugin or `app.config.ts`) needs a raised `version` and a new store build, so the update never reaches older
+plugin, `app.config.ts`, or an upgrade of React Native or an `expo-*` package, even a patch) needs a raised `version` and a new store build, so the update never reaches older
 builds, which keep their last update. (The fingerprint policy was dropped: the config reads `EAS_BUILD_PROFILE`
 and the `SENTRY_AUTH_TOKEN` secret, so the fingerprint on a Mac never matched the one on EAS and builds failed.)

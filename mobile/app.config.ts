@@ -27,14 +27,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: "pantrila",
   // The web app is web/ (Next.js); this one is phones only.
   platforms: ["ios", "android"],
-  version: "0.1.0",
+  version: "0.1.1",
   scheme: "pantrila",
   orientation: "portrait",
   userInterfaceStyle: "automatic",
   icon: "./assets/icon.png",
   // EAS Update: JavaScript and asset fixes reach store builds without a review. An update only reaches
-  // builds of the same `version`, so raise `version` with any native change (a native module, a plugin
-  // or this file). Not the fingerprint policy: this config reads EAS_BUILD_PROFILE and the
+  // builds of the same `version`, so raise `version` with any native change (a native module, a plugin,
+  // this file, or an upgrade of React Native or an expo-* package). Not the fingerprint policy: this config reads EAS_BUILD_PROFILE and the
   // SENTRY_AUTH_TOKEN secret, which differ between a Mac and EAS, so the two fingerprints never matched
   // and every EAS build failed.
   runtimeVersion: { policy: "appVersion" },
