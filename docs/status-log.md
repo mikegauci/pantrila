@@ -4,6 +4,11 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Expo version check is a CI warning: the mobile job runs `expo-doctor` with `EXPO_DOCTOR_SKIP_DEPENDENCY_VERSION_CHECK=1`
+(its other checks still block) and then `npx expo install --check`, which only adds an "Expo packages out of date"
+warning, so a new Expo patch release no longer turns `main` red. `mobile/README.md` gains "Before a store build"
+(update the packages, a full `expo-doctor`, raise `version` after native changes). No model call, so no eval rerun.
+
 Expo SDK 58 patches (November): `expo` 58.0.22, `expo-audio` 58.0.11, `expo-dev-client` 58.0.18, `expo-router`
 58.0.29, `expo-updates` 58.0.20 and `react-native-screens` 4.30.1, so `expo-doctor` passes in CI again (Expo published
 them after #156). Native changes, but no 0.1.1 build exists yet, so `version` stays 0.1.1 and the next production build

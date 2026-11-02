@@ -364,7 +364,8 @@ cd web && npm run dev                    # :3000; web/.env.local from web/.env.e
 cd web && npm run lint && npm run typecheck && npm run build   # what CI runs for web
 cd site && npm ci && npm run dev         # landing site on :3001 (lint, typecheck, build as for web)
 cd mobile && npx expo start              # phone app; open it in the Pantrila development build (not Expo Go)
-cd mobile && npm run lint && npm run typecheck && npm test && npx expo-doctor   # what CI runs for mobile
+cd mobile && npm run lint && npm run typecheck && npm test && npx expo-doctor   # mobile checks (CI skips doctor's SDK version check: a warning)
+cd mobile && npx expo install --check     # before a store build: Expo patches (then --fix, and raise `version`)
 cd mobile && npx eas-cli build --profile development --platform android|ios   # device builds on EAS (owner)
 cd mobile && npx eas-cli workflow:run e2e.yml        # Maestro flows on EAS (screenshots.yml for store shots)
 cd mobile && npx eas-cli build --profile production --platform all && npx eas-cli submit   # store builds (owner)
