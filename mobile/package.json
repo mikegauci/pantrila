@@ -1,6 +1,6 @@
 {
   "name": "pantrila-mobile",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "expo-router/entry",
   "dependencies": {
     "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",
