@@ -8,7 +8,7 @@ Pantrila Pro on Google Play (owner setup, no app code): subscription `pantrila_p
 `monthly` and a `trial-7d` offer on each; its icon `docs/store-assets/play-pro-subscription-icon-1024.png` (the app icon
 on the gold accent gradient) is rendered by `web/scripts/store-art.mjs`. `docs/store-listing.md` records the
 subscription's settings, `docs/plans/mobile-app.md` ticks the Play steps, fixes the product ids (`pantrila_pro`, and
-`pantrila_pro_yearly` / `pantrila_pro_monthly` on Apple) and logs the RevenueCat Android app. No model call, so no eval
+`pantrila_pro_yearly` / `pantrila_pro_monthly` on Apple) and logs the RevenueCat Android app and the Play 15% service fee enrolment. No model call, so no eval
 rerun.
 
 Daily budget counts only today: `reserve` (`records.py`, both `DbRecords` and `MemoryRecords`) checked the shared

@@ -56,7 +56,7 @@ setup checklist, store listing, icon, feature graphic (`docs/store-assets/`) and
 phone size); reviewer account `pantrila.review@gmail.com` for Play's sign-in details. Closed test "Alpha" (versionCode 2, tester group
 `testers-community@googlegroups.com`) sent for Google's review on 2026-10-27 and active since (testers open the app daily); a second Google Android client "Pantrila
 Android (Play)" with Play's app signing SHA-1, and `ANDROID_CERT_SHA256` (Play signing + EAS upload SHA-256) on Vercel. Android builds on EAS:
-production 0.1.0 (versionCode 2, no RevenueCat key) and a preview APK. Play payments profile and subscription
+production 0.1.0 (versionCode 2, no RevenueCat key) and a preview APK. Play payments profile (15% service fee tier) and subscription
 `pantrila_pro` (`yearly` EUR 29.99, `monthly` EUR 4.99, `trial-7d` offers; 2026-11-02); RevenueCat Android app with
 the `revenuecat@pantrila.iam.gserviceaccount.com` service account (credentials were still validating).
 Still to do: finish the closed test (14 days) and apply for production; once RevenueCat's credentials are green, the

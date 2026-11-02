@@ -217,7 +217,7 @@ As set up on 2026-11-02 (all active, 175 countries):
 | Offers | `trial-7d` on each base plan: new customer acquisition, "Never had this subscription", one free-trial phase of 7 days |
 
 The payments profile is a personal merchant account ("What do you sell": Computer Software; statement name
-`PANTRILA`). License testing (Manage account, Play apps settings, License testing) has no list yet: the owner has no
+`PANTRILA`), enrolled in Play's 15% service fee tier (an account group with no other developer accounts). License testing (Manage account, Play apps settings, License testing) has no list yet: the owner has no
 Android phone. A throwaway Gmail on Samsung Remote Test Lab, added there and to internal testing, can make test
 purchases with Play's test card.
 

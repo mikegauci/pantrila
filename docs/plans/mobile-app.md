@@ -111,7 +111,8 @@ them):
 - [ ] App Store Connect → Business: sign the Paid Applications Agreement, add bank and tax details
       (needed before any subscription can be tested or sold).
 - [ ] Apple **App Store Small Business Program** and Google Play's 15% service fee tier: enrol, so
-      the store cut is 15% instead of 30%.
+      the store cut is 15% instead of 30%. Google: enrolled 2026-11-02 (account group, no other developer
+      accounts); Apple waits for the team.
 - [x] Play Console: payments profile (merchant account) linked (2026-11-02).
 - [ ] RevenueCat account (free until about $2.5k a month in revenue); a project "Pantrila" with the
       iOS and Android apps added (App Store Connect API key, Play service account). Android: app
