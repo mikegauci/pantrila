@@ -4,6 +4,12 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Blocked recipe links read from the WordPress API: when a site refuses the page (401/402/403/429, often a Cloudflare
+firewall), link import and a caption's linked pages (`fetch_recipe_page` in `recipe_import.py`) ask the same site's
+`/wp-json/wp/v2/posts?slug=<last path part>` and use the post only when its own link is the one pasted; anything else
+keeps the "take a screenshot" message. simplehomeedit.com's coconut beef curry now imports (16 ingredients, 9 steps).
+The text sent to the model is the same kind as a page without recipe data, so no prompt change and no eval rerun.
+
 Automatic Android store builds: `mobile/.eas/workflows/store-android.yml` (EAS Workflows) builds the `production`
 profile and submits it to Play's `alpha` track whenever a push to `main` changes `mobile/app.config.ts`, where `version`
 is raised after native changes; it can also be started with `npx eas-cli workflow:run store-android.yml`. Owner steps
