@@ -4,6 +4,10 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Recipes search shows a loading state, and My recipes drops its "Where they came from" panel (web and phone app).
+Web `recipes/page.tsx` shows skeleton cards whenever a search or filter is loading (uncached) instead of keeping the
+old results; the phone app's Recipes tab swaps its spinner for pulsing placeholder cards. No model call, so no eval rerun.
+
 Blocked recipe links read from the WordPress API: when a site refuses the page (401/402/403/429, often a Cloudflare
 firewall), link import and a caption's linked pages (`fetch_recipe_page` in `recipe_import.py`) ask the same site's
 `/wp-json/wp/v2/posts?slug=<last path part>` and use the post only when its own link is the one pasted; anything else
