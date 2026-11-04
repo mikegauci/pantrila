@@ -8,6 +8,7 @@ from pantrila.photos import (
     STORED_SIZE,
     Dish,
     corpus_path,
+    is_smoothie,
     photo_prompt,
     public_url,
     shows_bread,
@@ -63,3 +64,15 @@ def test_to_webp_stores_4_by_3_at_1200x900():
         Image.new("RGB", size, "orange").save(png, "PNG")
         with Image.open(io.BytesIO(to_webp(png.getvalue()))) as img:
             assert img.format == "WEBP" and img.size == STORED_SIZE == (1200, 900)
+
+
+def test_smoothie_is_photographed_in_a_glass():
+    from dataclasses import replace
+
+    smoothie = replace(TART, title="Green Smoothie")
+    assert is_smoothie(smoothie)
+    prompt = photo_prompt(smoothie)
+    assert "clear drinking glass" in prompt and "stoneware bowl" not in prompt
+    bowl = replace(TART, title="Berry Smoothie Bowl")
+    assert not is_smoothie(bowl) and "stoneware bowl" in photo_prompt(bowl)
+    assert not is_smoothie(TART)
