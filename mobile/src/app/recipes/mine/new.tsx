@@ -211,7 +211,9 @@ function TextImport({ onDone, shared }: { onDone: (v: ImportView) => void; share
  * was closed is picked up again here ("Finishing your import…"). */
 export default function NewRecipe() {
   const userId = useAuth().session!.user.id
-  const params = useLocalSearchParams<{ method?: string; from?: string; draft?: string; thread?: string }>()
+  const params = useLocalSearchParams<{ method?: string; url?: string; from?: string; draft?: string; thread?: string }>()
+  // The assistant's "Save to My recipes" on a web page hands over its link (`?method=link&url=`).
+  const [webLink] = useState(() => (params.method === "link" && params.url && /^https?:\/\//.test(params.url) ? params.url : undefined))
   // A recipe the assistant wrote, and the chat it came from so the saved recipe can lead back.
   const [fromChat] = useState(() => (params.from === "chat" ? chatDraft(params.draft) : null))
   const chatThread = fromChat && params.thread && /^\d+$/.test(params.thread) ? params.thread : null
@@ -349,7 +351,8 @@ export default function NewRecipe() {
             )}
             {(method === "link" || method === "post") && (
               <LinkImport key={`${method}${incoming?.id ?? ""}`} kind={method} onDone={imported}
-                          shared={incoming && "url" in incoming && incoming.kind === method ? incoming.url : undefined} />
+                          shared={incoming && "url" in incoming && incoming.kind === method ? incoming.url
+                                  : method === "link" ? webLink : undefined} />
             )}
             {method === "text" && (
               <TextImport key={incoming?.id} onDone={imported} shared={incoming?.kind === "text" ? incoming.text : undefined} />

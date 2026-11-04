@@ -1,7 +1,7 @@
 "use client"
 
 import { Popover } from "@base-ui/react/popover"
-import { BookmarkPlus, Check, History, Info, Loader2, PenLine, Plus, Refrigerator, Repeat, Scale, Search, Send, Sparkles } from "lucide-react"
+import { BookmarkPlus, Check, ExternalLink, Globe, History, Info, Loader2, PenLine, Plus, Refrigerator, Repeat, Scale, Search, Send, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Fragment, useEffect, useRef, useState } from "react"
@@ -9,10 +9,10 @@ import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
 import {
-  addWords, chatBlocks, draftTag, headingOf, inlineParts, type LiveReply, STARTERS, startReply, type ToolIcon, toolSummary, usedRecipes,
-  withEvent,
+  addWords, chatBlocks, draftTag, headingOf, importLinkPath, inlineParts, type LiveReply, searchedRecipes, STARTERS, startReply,
+  type ToolIcon, toolSummary, usedRecipes, withEvent,
 } from "@pantrila/core/chat"
-import type { ChatMessage, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard } from "@pantrila/core/types"
+import type { ChatMessage, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard, WebRecipesView } from "@pantrila/core/types"
 import { leftText } from "@pantrila/core/subscription"
 
 import { useAuth } from "@/components/auth-provider"
@@ -114,7 +114,77 @@ function RecipeCardView({ id, servings }: { id: string; servings?: number }) {
   )
 }
 
-function Bubble({ m, thread }: { m: Message; thread: number | null }) {
+/**
+ * "Check external sources" under a reply that searched recipes: one web search for the question
+ * it answered. The pages are not checked yet; saving one runs the link import, which checks it.
+ */
+function WebRecipes({ m, thread, index }: { m: Message; thread: number | null; index: number | null }) {
+  const { mutate } = useSWRConfig()
+  const { mutate: refreshMe } = useMe()
+  const [busy, setBusy] = useState(false)
+  const found = m.reply?.web_recipes
+  if (m.error || !thread || index === null || !searchedRecipes(m.reply)) return null
+
+  async function search() {
+    setBusy(true)
+    try {
+      const view = await send<WebRecipesView>(`/me/chats/${thread}/messages/${index}/web`, "POST")
+      await mutate<ChatThread>(`/me/chats/${thread}`, (t) => t && {
+        ...t,
+        messages: t.messages.map((msg, i) => i === index && msg.reply
+          ? { ...msg, reply: { ...msg.reply, web_recipes: view.recipes } } : msg),
+      }, { revalidate: false })
+    } catch (e) {
+      askForPro(e)
+      toast.error(e instanceof Error ? e.message : "Could not search the web.")
+    } finally {
+      setBusy(false)
+      refreshMe()
+    }
+  }
+
+  if (found == null) {
+    return (
+      <Button variant="outline" size="sm" className="w-fit bg-surface" disabled={busy} onClick={search}>
+        {busy ? <Loader2 className="animate-spin" /> : <Globe />}
+        {busy ? "Searching the web…" : "Check external sources"}
+      </Button>
+    )
+  }
+  if (found.length === 0) {
+    return (
+      <p className="flex items-center gap-2 rounded-xl border border-dashed bg-surface-muted px-3 py-2 text-[12px] text-muted-foreground">
+        <Globe className="size-3.5 shrink-0" aria-hidden /> No recipe pages on the web fit this request and your profile.
+      </p>
+    )
+  }
+  return (
+    <div className="grid gap-2 rounded-[20px] border bg-surface px-4 py-3">
+      <p className="flex items-center gap-2 text-[13px] font-semibold">
+        <Globe className="size-4 text-muted-foreground" aria-hidden /> From the web
+      </p>
+      <p className="text-[12px] text-muted-foreground">
+        Not checked against your profile yet. Saving one reads the whole recipe and checks it.
+      </p>
+      <ul className="grid gap-2">
+        {found.map((w) => (
+          <li key={w.url} className="grid gap-1.5 rounded-[14px] border bg-surface-muted p-3">
+            <a href={w.url} target="_blank" rel="noopener noreferrer"
+               className="flex items-start gap-1.5 text-[14px] font-semibold leading-5 hover:text-primary-text">
+              {w.title} <ExternalLink className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" aria-hidden />
+            </a>
+            <p className="text-[12px] text-muted-foreground">{w.site}{w.summary && ` · ${w.summary}`}</p>
+            <Link href={importLinkPath(w.url)} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "w-fit bg-surface")}>
+              <BookmarkPlus /> Save to My recipes
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function Bubble({ m, thread, index }: { m: Message; thread: number | null; index: number | null }) {
   const router = useRouter()
   const { session } = useAuth()
   const userId = session!.user.id
@@ -153,6 +223,7 @@ function Bubble({ m, thread }: { m: Message; thread: number | null }) {
           </div>
         )}
       </div>
+      <WebRecipes m={m} thread={thread} index={index} />
       {r?.drafts?.map((d, i) => {
         const tag = draftTag(thread, d)
         const saved = tag ? cookbook?.find((c) => c.chat_draft === tag) : undefined
@@ -201,6 +272,7 @@ export default function AssistantPage() {
   const end = useRef<HTMLDivElement>(null)
   // A remembered chat that was deleted (here or on another device) means a new chat.
   const current = threadError?.status === 404 ? null : threadId
+  const savedCount = current ? thread?.messages.length ?? 0 : 0
   const messages: Message[] = [...(current ? thread?.messages ?? [] : []), ...pending]
 
   useEffect(() => {
@@ -323,6 +395,7 @@ export default function AssistantPage() {
                     <p className="mt-2 font-semibold">Good to know</p>
                     <ul className="mt-1.5 grid list-disc gap-1 pl-4 text-muted-foreground">
                       <li>Recipes it shows are checked against your rules, but read the ingredients if you have an allergy.</li>
+                      <li>“Check external sources” searches recipe sites. Those pages are checked when you save one.</li>
                       <li>Chats are saved. Start a new one for a new topic.</li>
                       {me && <li>{leftText("chat", me.limits.chats)}.</li>}
                     </ul>
@@ -365,7 +438,7 @@ export default function AssistantPage() {
             </div>
           ) : (
             <div className="grid gap-4">
-              {messages.map((m, i) => <Bubble key={i} m={m} thread={current} />)}
+              {messages.map((m, i) => <Bubble key={i} m={m} thread={current} index={i < savedCount ? i : null} />)}
               {busy && live?.text ? (
                 <div className="min-w-0 max-w-[92%] break-words rounded-[20px] rounded-bl-md border bg-surface px-4 py-3">
                   <Rich text={live.text} recipes={live.cards} />

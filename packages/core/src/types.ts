@@ -280,6 +280,23 @@ export interface ChatReply {
   cost_usd: number | null
   latency_ms: number
   drafts: CookbookRecipeIn[]
+  /** Recipe pages from "Check external sources"; null or missing before a search ran. */
+  web_recipes?: WebRecipe[] | null
+}
+
+/** A recipe page found on the web. Not checked against the person's rules until it is saved. */
+export interface WebRecipe {
+  title: string
+  url: string
+  site: string
+  summary: string
+}
+
+export interface WebRecipesView {
+  recipes: WebRecipe[]
+  dropped: number
+  cost_usd: number | null
+  latency_ms: number
 }
 
 export interface ChatMessage {
