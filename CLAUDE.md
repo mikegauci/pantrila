@@ -174,6 +174,9 @@ Where things stand (2026-10-26):
   tools search_recipes, check_pantry, update_pantry, swap_ingredient, scale_recipe; replies
   cite recipes as `[recipe-id]` and the guard appends a note for any cited recipe that breaks
   a hard rule or does not exist.
+- `src/pantrila/web_recipes.py`: "Check external sources" in the assistant. `find_web_recipes` (one web search call,
+  `store=False`, up to 5 pages), `ingredient_problems` (drops pages whose listed ingredients break a rule; the full
+  check runs when a page is saved through the link import), `WebRecipe`.
 - `src/pantrila/accounts.py`: account deletion (`USER_TABLES`, `erase_rows`, `storage_folders`,
   `SupabaseAuthAdmin` deletes the Auth user); `Backend.erase` and `Backend.admin` wire it in.
 - `src/pantrila/entitlements.py`: Pantrila Pro (`Entitlement`, `tier_of`, `from_subscriber`, `RevenueCatApi`,
@@ -235,7 +238,7 @@ Where things stand (2026-10-26):
   `/recipes/{id}`, `/recipes/{id}/swaps`, `POST /plans` (SSE: `step`, then `plan` or `error`),
   `/plans/latest`, `/plans/latest/grocery`, `/plans/latest/meals/{day}/{meal_type}` (`/options`
   GET, PUT to swap), `POST /chat` (continues `thread_id` or starts a
-  thread; the server supplies the thread's history; `POST /chat/stream` is the same as SSE), `/me/chats` (list, get, delete),
+  thread; the server supplies the thread's history; `POST /chat/stream` is the same as SSE), `/me/chats` (list, get, delete; `/{id}/messages/{index}/web` searches the web for that reply),
   `/me/cooked` (GET log, POST "I cooked this"; `/preview`), `/me/recipes` (cookbook CRUD,
   `/preview`, `/import/link|photos|post|text` (one request), `/import/jobs` POST + `/import/jobs/{id}` GET (the same imports as background jobs), `/import/timing`, `/estimate`, `/{id}/photo` POST/DELETE). Every
   recipe returned carries the hard rules it breaks for the person's current profile and its
