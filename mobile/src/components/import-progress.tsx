@@ -44,7 +44,7 @@ export function ImportProgress({ steps, estimatedSeconds = null }: {
             : "Taking longer than usual. Still working…"}
         </Text>
         <Text className="font-sans text-xs text-muted-foreground">
-          {remaining !== null && "An estimate from your recent imports. "}
+          {remaining !== null && "A rough estimate, not a promise. "}
           You can lock your phone or leave the app; the import keeps going.
         </Text>
       </View>

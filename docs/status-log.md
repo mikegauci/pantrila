@@ -4,6 +4,12 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Import progress counts down for links, photos and pasted text (not just reel posts): fixed estimates per kind
+(`IMPORT_SECONDS` in `@pantrila/core/cookbook`: link 20 s, photos 25 s, text 15 s) on web and the phone app, and the card
+says "A rough estimate, not a promise." Three more steps show in the list: "Found the recipe data the site publishes" or
+"No recipe data on the page, reading its text" (`data`/`pagetext`, from `from_html`) and "Working out nutrition,
+allergens and diets" (`nutrition`). Progress labels only, no prompt or model change, so no eval rerun.
+
 Smoothie photos show a glass, not a bowl. `photos.py` has a `DRINK_SCENE` used when `is_smoothie(dish)` (title says
 "smoothie" and not "bowl"), asking for a clear drinking glass instead of the stoneware bowl. Corpus photo paths hash the
 prompt, so only smoothie recipes regenerate. No model call in tests, so no eval rerun.
