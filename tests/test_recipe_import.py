@@ -14,9 +14,11 @@ from pantrila.recipe_import import (
     check_image,
     check_url,
     fetch_page,
+    fetch_recipe_page,
     jsonld_recipe,
     page_text,
     to_draft,
+    wordpress_api_url,
 )
 
 PUBLIC = "93.184.216.34"
@@ -115,6 +117,63 @@ def test_fetch_refuses_errors_and_non_html():
         fetch_page("https://a.example/bot", http, resolver(PUBLIC))
     with pytest.raises(ImportFailed, match="not a web page"):
         fetch_page("https://a.example/pdf", http, resolver(PUBLIC))
+
+
+WP_API = (
+    "https://blog.example/wp-json/wp/v2/posts?slug=coconut-curry&_fields=link%2Ctitle%2Ccontent"
+)
+
+
+def wp_post(link="https://blog.example/recipe/coconut-curry/"):
+    return [{"link": link, "title": {"rendered": "Coconut Curry"},
+             "content": {"rendered": "<h2>Ingredients</h2><ul><li>400 ml coconut milk</li></ul>"
+                                     "<h2>Method</h2><p>Simmer.</p>"}}]  # fmt: skip
+
+
+def test_wordpress_api_url_uses_the_last_path_part_as_slug():
+    assert wordpress_api_url("https://blog.example/recipe/coconut-curry/") == WP_API
+    assert wordpress_api_url("https://blog.example/") is None
+    assert wordpress_api_url("https://blog.example/recipe.html") is None
+    assert wordpress_api_url("https://blog.example/wp-json/wp/v2/posts") is None
+    assert wordpress_api_url("ftp://blog.example/coconut-curry") is None
+
+
+def test_refused_page_is_read_from_the_wordpress_api():
+    link = "https://blog.example/recipe/coconut-curry/"
+    http = mock_http({link: httpx.Response(403), WP_API: httpx.Response(200, json=wp_post())})
+    url, html = fetch_recipe_page(link, http, resolver(PUBLIC))
+    assert url == link
+    text = page_text(html)
+    assert text.startswith("Coconut Curry") and "400 ml coconut milk" in text and "Simmer." in text
+
+    client = FakeClient(imported())
+    Importer(client=client, model="m").from_link(link, http, resolver(PUBLIC))
+    sent = client.calls[0]["input"][0]["content"][0]["text"]
+    assert sent.startswith(f"Text of the web page {link}") and "coconut milk" in sent
+
+
+@pytest.mark.parametrize("api", [
+    httpx.Response(404),
+    httpx.Response(403),
+    httpx.Response(200, json=[]),
+    httpx.Response(200, json={"code": "rest_no_route"}),
+    httpx.Response(200, json=wp_post("https://blog.example/other/coconut-curry-2/")),
+    httpx.Response(200, json=[{"link": "https://blog.example/recipe/coconut-curry/"}]),
+    httpx.Response(200, text="not json", headers={"content-type": "application/json"}),
+    httpx.Response(200, html="<p>login</p>"),
+])  # fmt: skip
+def test_refusal_stands_when_the_wordpress_api_has_no_such_post(api):
+    link = "https://blog.example/recipe/coconut-curry/"
+    http = mock_http({link: httpx.Response(403), WP_API: api})
+    with pytest.raises(ImportFailed, match="add it as a photo"):
+        fetch_recipe_page(link, http, resolver(PUBLIC))
+
+
+def test_other_errors_do_not_try_the_wordpress_api():
+    link = "https://blog.example/recipe/coconut-curry/"
+    http = mock_http({link: httpx.Response(404)})  # no API route: a request would fail
+    with pytest.raises(ImportFailed, match="404"):
+        fetch_recipe_page(link, http, resolver(PUBLIC))
 
 
 def test_jsonld_recipe_is_found_in_a_graph_and_trimmed():

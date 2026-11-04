@@ -50,7 +50,7 @@ from html.parser import HTMLParser
 from http.client import HTTPException as HTTPProtocolError
 from io import BytesIO
 from typing import Protocol
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import unquote, urlencode, urljoin, urlsplit, urlunsplit
 
 from pydantic import BaseModel, Field, ValidationError
 
@@ -523,6 +523,65 @@ def fetch_bytes(url: str, http=None, resolve: Resolver = resolve_host,
         raise ImportFailed("The link redirects too many times.")
     except (httpx.HTTPError, OSError, HTTPProtocolError) as exc:
         raise ImportFailed("Could not load that page.") from exc
+
+
+_WP_SLUG = re.compile(r"[a-z0-9][a-z0-9_%-]{0,199}", re.IGNORECASE)
+
+
+def wordpress_api_url(url: str) -> str | None:
+    """The WordPress REST API query for the post a link points at (its last path part is the
+    slug), or None when the link cannot be a WordPress post."""
+    parts = urlsplit(url)
+    segments = [s for s in parts.path.split("/") if s]
+    if parts.scheme not in ("http", "https") or not segments or segments[0] == "wp-json":
+        return None
+    if not _WP_SLUG.fullmatch(segments[-1]):
+        return None
+    query = urlencode({"slug": unquote(segments[-1]).lower(), "_fields": "link,title,content"})
+    return urlunsplit((parts.scheme, parts.netloc, "/wp-json/wp/v2/posts", query, ""))
+
+
+def _page_key(url: str) -> tuple[str, str]:
+    parts = urlsplit(url)
+    host = (parts.hostname or "").removeprefix("www.")
+    return host, unquote(parts.path).rstrip("/").lower()
+
+
+def wordpress_page(url: str, http=None, resolve: Resolver = resolve_host) -> tuple[str, str] | None:
+    """(post link, html) of the WordPress post at `url`, read from the site's REST API, which
+    many recipe blogs keep open when their firewall refuses the page itself. Only a post whose
+    own link is `url` counts; None for anything else (no API, no such post, bad data)."""
+    api = wordpress_api_url(url)
+    if api is None:
+        return None
+    try:
+        _, body = fetch_page(api, http, resolve, kinds=("application/json",))
+        posts = json.loads(body)
+    except (ImportFailed, ValueError):
+        return None
+    for post in posts if isinstance(posts, list) else []:
+        try:
+            link, title = post["link"], post["title"]["rendered"]
+            content = post["content"]["rendered"]
+        except (KeyError, TypeError):
+            continue
+        if not all(isinstance(v, str) for v in (link, title, content)) or not content.strip():
+            continue
+        if _page_key(link) == _page_key(url):
+            return link, f"<html><head><title>{title}</title></head><body>{content}</body></html>"
+    return None
+
+
+def fetch_recipe_page(url: str, http=None, resolve: Resolver = resolve_host) -> tuple[str, str]:
+    """`fetch_page` for a recipe link: when the site refuses the page, the same post from its
+    WordPress REST API if it has one, else the refusal."""
+    try:
+        return fetch_page(url, http, resolve)
+    except ImportFailed as exc:
+        if str(exc) != BLOCKED or (page := wordpress_page(url, http, resolve)) is None:
+            raise
+        log.info("page refused; read %s from the WordPress API", urlsplit(url).hostname)
+        return page
 
 
 # --- Reading pages ----------------------------------------------------------------------------
@@ -1105,7 +1164,7 @@ class Importer:
             raise ImportFailed(social.NOT_A_POST)
         start = time.perf_counter()
         self.step("page")
-        final_url, html = fetch_page(url.strip(), http, resolve)
+        final_url, html = fetch_recipe_page(url.strip(), http, resolve)
         result = self.from_html(final_url, html)
         result.latency_ms = (time.perf_counter() - start) * 1000
         return result
@@ -1393,7 +1452,7 @@ class Importer:
             if time.perf_counter() - start > LINKS_BUDGET_S:
                 break
             try:
-                page = fetch_page(link, http, resolve)
+                page = fetch_recipe_page(link, http, resolve)
             except ImportFailed:
                 continue
             if jsonld_recipe(page[1]) is not None:
