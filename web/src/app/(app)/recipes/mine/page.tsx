@@ -62,14 +62,14 @@ export default function MyRecipesPage() {
   )
   return (
     <div className="grid gap-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="grid justify-items-start gap-1">
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+        <div className="justify-self-start">
           <Link href="/recipes" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
             <ArrowLeft /> Recipes
           </Link>
-          <h2 className="text-[18px] font-semibold">My recipes</h2>
         </div>
-        {add}
+        <h2 className="text-center text-[18px] font-semibold">My recipes</h2>
+        <div className="justify-self-end">{add}</div>
       </div>
       {error ? (
         <p role="alert" className="text-danger">{error.message}</p>

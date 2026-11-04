@@ -4,6 +4,10 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Recipes page tidy-up (web and phone app). The web Recipes page drops the "Hybrid search (meaning + keywords) for “…”,
+best match first." line, and the phone app's Recipes tab drops the same line. On web, My recipes puts its title in the
+middle of the header, with the "← Recipes" link on the left and "Add a recipe" on the right. No model call, so no eval rerun.
+
 Import progress counts down for links, photos and pasted text (not just reel posts): fixed estimates per kind
 (`IMPORT_SECONDS` in `@pantrila/core/cookbook`: link 20 s, photos 25 s, text 15 s) on web and the phone app, and the card
 says "A rough estimate, not a promise." Three more steps show in the list: "Found the recipe data the site publishes" or

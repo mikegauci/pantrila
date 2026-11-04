@@ -67,11 +67,6 @@ export default function Recipes() {
         <Switch accessibilityLabel="Only what suits me" value={f.safe} onValueChange={(safe) => change({ safe })}
                 thumbColorClassName="accent-surface" trackColorOnClassName="accent-primary" />
       </View>
-      {f.q !== "" && (
-        <Text className="font-sans text-xs text-muted-foreground">
-          Hybrid search (meaning + keywords) for “{f.q}”, best match first.
-        </Text>
-      )}
     </View>
   )
 
