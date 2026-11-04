@@ -87,7 +87,7 @@ export default function Recipes() {
       ListHeaderComponent={header}
       ListEmptyComponent={
         error ? <ErrorState message={error.message} onRetry={() => mutate()} />
-        : isLoading ? <ActivityIndicator className="my-10" />
+        : isLoading ? <RecipeSkeletons />
         : <EmptyState icon={ChefHat} title="No recipes match">Try fewer filters or different words.</EmptyState>
       }
       ListFooterComponent={loadingMore ? <ActivityIndicator className="my-6" /> : undefined}
@@ -96,5 +96,20 @@ export default function Recipes() {
       keyboardShouldPersistTaps="handled"
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}
     />
+  )
+}
+
+/** Grey placeholder cards while a search or filter loads. */
+function RecipeSkeletons() {
+  return (
+    <View testID="recipe-loading" accessibilityLabel="Loading recipes" className="gap-3">
+      {Array.from({ length: 4 }, (_, i) => (
+        <View key={i} className="animate-pulse gap-3 rounded-[20px] border border-border bg-surface p-3">
+          <View className="aspect-[4/3] w-full rounded-2xl bg-border" />
+          <View className="h-4 w-3/4 rounded bg-border" />
+          <View className="h-3 w-1/2 rounded bg-border" />
+        </View>
+      ))}
+    </View>
   )
 }

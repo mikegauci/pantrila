@@ -3,10 +3,9 @@
 import { ArrowLeft, BookOpen, Clock, Flame, Plus, TriangleAlert } from "lucide-react"
 import Link from "next/link"
 
-import { origins } from "@pantrila/core/cookbook"
 import type { CookbookCard } from "@pantrila/core/types"
 
-import { DietBadge, EmptyState, Panel, RecipeArt } from "@/components/bits"
+import { DietBadge, EmptyState, RecipeArt } from "@/components/bits"
 import { RECIPE_SOURCE } from "@/components/cookbook-form"
 import { buttonVariants } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -72,9 +71,6 @@ export default function MyRecipesPage() {
         </div>
         {add}
       </div>
-      {data?.length ? (
-        <Panel className="p-4 text-[13px] text-muted-foreground">Where they came from: {origins(data)}.</Panel>
-      ) : null}
       {error ? (
         <p role="alert" className="text-danger">{error.message}</p>
       ) : isLoading ? (

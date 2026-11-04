@@ -87,9 +87,9 @@ beforeEach(async () => {
   }))
 })
 
-it("lists my recipes with where they came from", async () => {
+it("lists my recipes", async () => {
   const shown = await showApp("/recipes/mine")
-  expect(await screen.findByText("Where they came from: social media 1, links 1.")).toBeTruthy()
+  expect(await screen.findByText("Pasta from a link")).toBeTruthy()
   expect(screen.getByText("From social media")).toBeTruthy()
   await fireEvent.press(screen.getByLabelText("Pasta from a link"))
   expect(shown.getPathname()).toBe("/recipes/mine/8")

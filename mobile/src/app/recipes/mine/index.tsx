@@ -3,10 +3,10 @@ import { BookOpen, Clock, Flame, Plus, TriangleAlert, type LucideIcon } from "lu
 import { useState } from "react"
 import { ActivityIndicator, FlatList, Pressable, RefreshControl, Text, View } from "react-native"
 
-import { origins, SOURCE_TEXT } from "@pantrila/core/cookbook"
+import { SOURCE_TEXT } from "@pantrila/core/cookbook"
 import type { CookbookCard } from "@pantrila/core/types"
 
-import { Button, DietBadge, EmptyState, ErrorState, Panel, RecipeArt } from "@/components/bits"
+import { Button, DietBadge, EmptyState, ErrorState, RecipeArt } from "@/components/bits"
 import { Icon } from "@/components/icon"
 import { SOURCE_ICON } from "@/components/recipe-source"
 import { useCookbook } from "@/lib/hooks"
@@ -41,9 +41,6 @@ export default function MyRecipes() {
       ListHeaderComponent={data.length ? (
         <View className="gap-3 pb-1">
           {add}
-          <Panel className="p-4">
-            <Text className="font-sans text-[13px] text-muted-foreground">Where they came from: {origins(data)}.</Text>
-          </Panel>
         </View>
       ) : undefined}
       ListEmptyComponent={(
