@@ -4,6 +4,10 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+Recipes page tidy-up (web and phone app). The web Recipes page drops the "Hybrid search (meaning + keywords) for “…”,
+best match first." line, and the phone app's Recipes tab drops the same line. On web, My recipes puts its title in the
+middle of the header, with the "← Recipes" link on the left and "Add a recipe" on the right. No model call, so no eval rerun.
+
 Smoothie photos show a glass, not a bowl. `photos.py` has a `DRINK_SCENE` used when `is_smoothie(dish)` (title says
 "smoothie" and not "bowl"), asking for a clear drinking glass instead of the stoneware bowl. Corpus photo paths hash the
 prompt, so only smoothie recipes regenerate. No model call in tests, so no eval rerun.

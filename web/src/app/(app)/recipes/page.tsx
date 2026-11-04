@@ -117,8 +117,6 @@ export default function RecipesPage() {
         </label>
       </div>
 
-      {q && <p className="text-[12px] text-muted-foreground">Hybrid search (meaning + keywords) for “{q}”, best match first.</p>}
-
       {error ? (
         <p role="alert" className="text-danger">{error.message}</p>
       ) : isLoading ? (
