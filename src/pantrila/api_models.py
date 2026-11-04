@@ -31,6 +31,7 @@ from pantrila.schema import (
 )
 from pantrila.search import SearchFilters
 from pantrila.social import MAX_CAPTION_CHARS
+from pantrila.web_recipes import WebRecipe
 
 MAX_MESSAGE_CHARS = 2000
 
@@ -323,6 +324,16 @@ class ChatReply(BaseModel):
     drafts: list[CookbookRecipeIn] = Field(
         default=[], description="Recipes the assistant wrote, for the cookbook's review form."
     )
+    web_recipes: list[WebRecipe] | None = Field(
+        default=None, description="Recipe pages from the web search; null before one ran."
+    )
+
+
+class WebRecipesView(BaseModel):
+    recipes: list[WebRecipe]
+    dropped: int = Field(description="Pages left out because their ingredients break a rule.")
+    cost_usd: float | None
+    latency_ms: float
 
 
 class ChatMessage(BaseModel):
