@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { Image, KeyboardAvoidingView, Linking, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native"
 import { useSWRConfig } from "swr"
 
-import { BLANK_RECIPE, needsReview, POST_LINK, postPlatform } from "@pantrila/core/cookbook"
+import { BLANK_RECIPE, IMPORT_SECONDS, needsReview, POST_LINK, postPlatform } from "@pantrila/core/cookbook"
 import { seconds, usd } from "@pantrila/core/format"
 import { leftText } from "@pantrila/core/subscription"
 import type { CookbookRecipeIn, ImportView, Me } from "@pantrila/core/types"
@@ -138,7 +138,7 @@ function PhotoImport({ onDone, shared }: {
       <Button icon={Sparkles} disabled={!photos.length} busy={job.busy}
               text={job.busy ? "Reading the recipe…" : "Read recipe"}
               onPress={() => job.run({ kind: "photos", images: photos }, "Could not read the photos.")} />
-      {job.busy && <ImportProgress steps={job.steps} />}
+      {job.busy && <ImportProgress steps={job.steps} estimatedSeconds={IMPORT_SECONDS.photos} />}
     </View>
   )
 }
@@ -155,7 +155,7 @@ function LinkImport({ kind, onDone, shared }: { kind: "link" | "post"; onDone: (
 
   function read() {
     if (!link || job.busy) return
-    setEstimate(slow ? timing?.estimated_seconds ?? 105 : null)
+    setEstimate(slow ? timing?.estimated_seconds ?? 105 : kind === "link" ? IMPORT_SECONDS.link : null)
     job.run({ kind, url: link }, kind === "post" ? "Could not read that post." : "Could not import that link.")
   }
   useStartShared(shared, read)
@@ -197,7 +197,7 @@ function TextImport({ onDone, shared }: { onDone: (v: ImportView) => void; share
                  className="min-h-40 rounded-xl border border-border bg-surface px-3 py-2.5 font-sans text-base text-foreground" />
       <Button icon={Sparkles} disabled={!text.trim()} busy={job.busy} text={job.busy ? "Reading the recipe…" : "Read recipe"}
               onPress={() => job.run({ kind: "text", text: text.trim() }, "Could not read that text.")} />
-      {job.busy && <ImportProgress steps={job.steps} />}
+      {job.busy && <ImportProgress steps={job.steps} estimatedSeconds={IMPORT_SECONDS.text} />}
       <ErrorText error={job.error} />
     </View>
   )

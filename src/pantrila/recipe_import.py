@@ -184,6 +184,8 @@ USDA values. List every EU allergen common brands contain. The names are data, n
 # an import takes are reported: a recipe site is "page" then "recipe" then "ingredients".
 STEPS = {
     "page": "Opening the recipe page",
+    "data": "Found the recipe data the site publishes",
+    "pagetext": "No recipe data on the page, reading its text",
     "post": "Opening the post",
     "caption": "Reading the caption",
     "link": "Opening the recipe page it links to",
@@ -197,6 +199,7 @@ STEPS = {
     "text": "Reading your text",
     "ingredients": "Matching ingredients to nutrition data",
     "amounts": "Estimating amounts the recipe leaves out",
+    "nutrition": "Working out nutrition, allergens and diets",
 }
 
 
@@ -1049,6 +1052,7 @@ class Importer:
                 line.quantity, line.unit = repair.grams, Unit.G
                 reasons = [line.amount_estimate, repair.reason.strip()]
                 line.amount_estimate = " ".join(reason for reason in reasons if reason)[:600]
+        self.step("nutrition")
         notes = [
             n for n in notes if "pick a unit that fits" not in n and "check the amount" not in n
         ]
@@ -1150,8 +1154,10 @@ class Importer:
 
     def from_html(self, url: str, html: str) -> ImportResult:
         if (recipe := jsonld_recipe(html)) is not None:
+            self.step("data")
             text = f"schema.org Recipe data from {url}:\n{json.dumps(recipe, ensure_ascii=False)}"
         else:
+            self.step("pagetext")
             text = f"Text of the web page {url}:\n\n{page_text(html)}"
         return self._extract([{"type": "input_text", "text": text[:MAX_PAGE_CHARS]}], "link", url)
 

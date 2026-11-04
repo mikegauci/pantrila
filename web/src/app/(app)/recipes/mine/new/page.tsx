@@ -7,7 +7,7 @@ import { type FocusEvent, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { useSWRConfig } from "swr"
 
-import { POST_LINK, postPlatform } from "@pantrila/core/cookbook"
+import { IMPORT_SECONDS, POST_LINK, postPlatform } from "@pantrila/core/cookbook"
 import { seconds, usd } from "@pantrila/core/format"
 import { leftText } from "@pantrila/core/subscription"
 import type { CookbookRecipeIn, ImportView } from "@pantrila/core/types"
@@ -104,7 +104,7 @@ function PhotoImport({ onDone }: { onDone: (v: ImportView) => void }) {
       <Button size="lg" className="w-fit" disabled={!photos.length || busy} onClick={read}>
         <Sparkles /> {busy ? "Reading the recipe…" : "Read recipe"}
       </Button>
-      {busy && <ImportProgress steps={steps} />}
+      {busy && <ImportProgress steps={steps} estimatedSeconds={IMPORT_SECONDS.photos} />}
     </div>
   )
 }
@@ -129,7 +129,7 @@ function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
       onSubmit={async (e) => {
         e.preventDefault()
         setBusy(true)
-        setEstimatedSeconds(POST_LINK.test(url.trim()) ? timing?.estimated_seconds ?? 105 : null)
+        setEstimatedSeconds(POST_LINK.test(url.trim()) ? timing?.estimated_seconds ?? 105 : IMPORT_SECONDS.link)
         setSteps([])
         setError(null)
         try {
@@ -263,7 +263,7 @@ function PasteImport({ onDone }: { onDone: (v: ImportView) => void }) {
           <Sparkles /> {busy ? "Reading the recipe…" : "Read recipe"}
         </Button>
       </div>
-      {busy && <ImportProgress steps={steps} />}
+      {busy && <ImportProgress steps={steps} estimatedSeconds={IMPORT_SECONDS.text} />}
       {error && <p role="alert" className="text-[13px] text-danger">{error}</p>}
     </form>
   )
