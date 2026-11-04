@@ -10,6 +10,10 @@ says "A rough estimate, not a promise." Three more steps show in the list: "Foun
 "No recipe data on the page, reading its text" (`data`/`pagetext`, from `from_html`) and "Working out nutrition,
 allergens and diets" (`nutrition`). Progress labels only, no prompt or model change, so no eval rerun.
 
+Smoothie photos show a glass, not a bowl. `photos.py` has a `DRINK_SCENE` used when `is_smoothie(dish)` (title says
+"smoothie" and not "bowl"), asking for a clear drinking glass instead of the stoneware bowl. Corpus photo paths hash the
+prompt, so only smoothie recipes regenerate. No model call in tests, so no eval rerun.
+
 Recipes search shows a loading state, and My recipes drops its "Where they came from" panel (web and phone app).
 Web `recipes/page.tsx` shows skeleton cards whenever a search or filter is loading (uncached) instead of keeping the
 old results; the phone app's Recipes tab swaps its spinner for pulsing placeholder cards. No model call, so no eval rerun.

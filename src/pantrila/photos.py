@@ -40,6 +40,14 @@ SCENE = (
     "matte speckled grey stoneware bowl or plate, whichever suits the dish. Light grey stone "
     "surface, a soft grey linen napkin at one corner, soft natural daylight from the side. "
 )
+DRINK_SCENE = (
+    "Realistic editorial food photography, eye-level three-quarter angle, close-up with a "
+    "very shallow depth of field (f/1.8): the smoothie is in sharp focus and the background "
+    "is strongly blurred; the tall glass fills most of the frame, slightly below centre. "
+    "Served in a clear drinking glass, filled to near the rim, never in a bowl. Light grey "
+    "stone surface, a soft grey linen napkin at one corner, soft natural daylight from the "
+    "side. "
+)
 FAITHFUL = (
     "Show only these ingredients. Garnish only with ingredients from this list; add no "
     "herbs, spices or toppings that are not listed. "
@@ -72,6 +80,12 @@ def shows_bread(dish: Dish) -> bool:
     return not dish.gluten_free and re.search(r"\bbread\b", text) is not None
 
 
+def is_smoothie(dish: Dish) -> bool:
+    """A smoothie is drunk from a glass; a "smoothie bowl" is eaten with a spoon."""
+    title = dish.title.lower()
+    return re.search(r"\bsmoothies?\b", title) is not None and "bowl" not in title
+
+
 def photo_prompt(dish: Dish) -> str:
     # "butter, cold and cubed" -> "butter": preparation notes would read as more ingredients
     names = ", ".join(dict.fromkeys(n.split(",")[0].strip() for n in dish.ingredients
@@ -80,7 +94,8 @@ def photo_prompt(dish: Dish) -> str:
     final = f" Final step: {steps[-1].strip()}" if steps else ""
     return (
         f"{dish.title}. {dish.summary} Ingredients: {names}.{final} "
-        + FAITHFUL + SCENE + PROPS + (BREAD if shows_bread(dish) else "") + "No text, no hands."
+        + FAITHFUL + (DRINK_SCENE if is_smoothie(dish) else SCENE) + PROPS
+        + (BREAD if shows_bread(dish) else "") + "No text, no hands."
     )  # fmt: skip
 
 
