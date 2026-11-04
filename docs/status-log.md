@@ -8,6 +8,12 @@ Recipes page tidy-up (web and phone app). The web Recipes page drops the "Hybrid
 best match first." line, and the phone app's Recipes tab drops the same line. On web, My recipes puts its title in the
 middle of the header, with the "← Recipes" link on the left and "Add a recipe" on the right. No model call, so no eval rerun.
 
+Import progress counts down for links, photos and pasted text (not just reel posts): fixed estimates per kind
+(`IMPORT_SECONDS` in `@pantrila/core/cookbook`: link 20 s, photos 25 s, text 15 s) on web and the phone app, and the card
+says "A rough estimate, not a promise." Three more steps show in the list: "Found the recipe data the site publishes" or
+"No recipe data on the page, reading its text" (`data`/`pagetext`, from `from_html`) and "Working out nutrition,
+allergens and diets" (`nutrition`). Progress labels only, no prompt or model change, so no eval rerun.
+
 Smoothie photos show a glass, not a bowl. `photos.py` has a `DRINK_SCENE` used when `is_smoothie(dish)` (title says
 "smoothie" and not "bowl"), asking for a clear drinking glass instead of the stoneware bowl. Corpus photo paths hash the
 prompt, so only smoothie recipes regenerate. No model call in tests, so no eval rerun.

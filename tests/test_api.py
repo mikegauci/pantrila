@@ -718,8 +718,10 @@ def test_background_import_finishes_without_the_request_that_started_it(api, bac
     # The page lists what the import did, in plain words.
     assert job["steps"] == [
         {"key": "page", "label": "Opening the recipe page"},
+        {"key": "pagetext", "label": "No recipe data on the page, reading its text"},
         {"key": "recipe", "label": "Reading the recipe"},
         {"key": "ingredients", "label": "Matching ingredients to nutrition data"},
+        {"key": "nutrition", "label": "Working out nutrition, allergens and diets"},
     ]
     assert [e["kind"] for e in api.get("/me/usage").json()["events"]] == ["import"]
     assert api.get("/me/recipes").json() == []

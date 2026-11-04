@@ -124,4 +124,8 @@ export function importRows(steps: ImportStep[]): { step: ImportStep; done: boole
 }
 
 /** 75 -> "1:15". */
+/** Rough seconds an import takes when no video is heard (from the eval runs' latency, with margin):
+ * the countdown on the progress card. Posts whose video is heard use the person's own timing. */
+export const IMPORT_SECONDS = { link: 20, photos: 25, text: 15 } as const
+
 export const clock = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`

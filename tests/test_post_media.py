@@ -152,7 +152,17 @@ def test_ingredients_only_caption_hears_the_video_and_keeps_the_caption():
     # The caption reads at medium; the video, the slowest call, at low.
     efforts = [kw["reasoning"]["effort"] for kind, kw in client.calls if kind == "parse"]
     assert efforts == ["medium", "low", "low"]  # the last: the web search for a dish
-    assert steps == ["caption", "ingredients", "video", "listen", "watch", "ingredients", "match"]
+    assert steps == [
+        "caption",
+        "ingredients",
+        "nutrition",
+        "video",
+        "listen",
+        "watch",
+        "ingredients",
+        "nutrition",
+        "match",
+    ]
     d = result.draft
     assert (d.source, d.source_url, d.source_platform, d.source_author) == (
         "post", REEL, "instagram", "zachs.foods")  # fmt: skip
