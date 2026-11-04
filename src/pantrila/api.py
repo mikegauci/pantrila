@@ -112,6 +112,7 @@ from pantrila.api_models import (
     ToolCallView,
     UsageEventView,
     UsageView,
+    WebRecipesView,
 )
 from pantrila.api_views import (
     cookbook_card,
@@ -204,6 +205,7 @@ from pantrila.schema import (
 )
 from pantrila.search import SearchFilters
 from pantrila.swaps import UnsupportedDessertSwap, evaluate_swap, swap_options
+from pantrila.web_recipes import find_web_recipes
 
 log = logging.getLogger("pantrila.api")
 
@@ -1250,6 +1252,38 @@ def create_app(
         if saved is None:
             raise HTTPException(409, "This chat changed in another tab. Reload it and try again.")
         return reply
+
+    @app.post("/me/chats/{thread_id}/messages/{index}/web")
+    def web_recipes(thread_id: int, index: int, request: Request, user: UserDep,
+                    s: SessionDep) -> WebRecipesView:  # fmt: skip
+        """Search the web for recipe pages for the request an assistant reply answered ("Check
+        external sources"). Counts as a chat. The pages are saved on that reply; they are not
+        checked until the person saves one (the link import checks the whole recipe)."""
+        thread = get_thread(s, thread_id)
+        if not 1 <= index < len(thread.messages):
+            raise HTTPException(404, "No such message.")
+        message = ChatMessage.model_validate(thread.messages[index])
+        asked = ChatMessage.model_validate(thread.messages[index - 1])
+        if message.role != "assistant" or message.reply is None or asked.role != "user":
+            raise HTTPException(400, "Only an assistant reply can search the web.")
+        operation = paid(s, user.id, "chat", config.model())
+        backend: Backend = request.app.state.backend
+        try:
+            found = find_web_recipes(asked.text, s.kitchen.profile(), client=backend.client,
+                                     model=config.model())  # fmt: skip
+        except Exception as exc:
+            operation.finish(Usage(), ok=False)
+            log.exception("web recipe search failed")
+            raise HTTPException(502, "Pantrila could not search the web. Try again.") from exc
+        operation.finish(found.usage)
+        message.reply.web_recipes = found.recipes
+        s.chats.set_message(thread_id, index, message.model_dump(mode="json"))
+        return WebRecipesView(
+            recipes=found.recipes,
+            dropped=found.dropped,
+            cost_usd=found.usage.cost(),
+            latency_ms=round(found.latency_ms),
+        )
 
     @app.post("/chat")
     def chat(body: ChatRequest, request: Request, user: UserDep, s: SessionDep) -> ChatReply:

@@ -1633,3 +1633,31 @@ def test_events_say_which_app_they_came_from(api, backend, monkeypatch):
         },
     )
     assert "x-pantrila-client" in pre.headers.get("access-control-allow-headers", "").lower()
+
+
+def test_check_external_sources_saves_pages_on_the_reply(api, backend):
+    from pantrila.web_recipes import FoundRecipe, FoundRecipes
+
+    api.put("/me/profile", json={"allergies": ["fish"]})
+    backend.client.replies = [text_reply("Try these.")]
+    reply = api.post("/chat", json={"message": "Chicken and rice ideas?"}).json()
+    thread = reply["thread_id"]
+    pages = FoundRecipes(recipes=[
+        FoundRecipe(title="Chicken rice", url="https://example.com/a", summary="Nice.",
+                    ingredients=["chicken thigh", "rice"]),
+        FoundRecipe(title="Salmon rice", url="https://example.com/b", summary="Fishy.",
+                    ingredients=["salmon", "rice"]),
+    ])  # fmt: skip
+    backend.client.replies = [SimpleNamespace(output_parsed=pages, usage=USAGE)]
+    body = api.post(f"/me/chats/{thread}/messages/1/web").json()
+    assert [r["url"] for r in body["recipes"]] == ["https://example.com/a"] and body["dropped"] == 1
+    saved = api.get(f"/me/chats/{thread}").json()["messages"][1]["reply"]
+    assert [r["title"] for r in saved["web_recipes"]] == ["Chicken rice"]
+    usage = api.get("/me/usage").json()
+    assert [e["kind"] for e in usage["events"]] == ["chat", "chat"]
+
+    assert api.post(f"/me/chats/{thread}/messages/0/web").status_code == 404
+    assert api.post(f"/me/chats/{thread}/messages/5/web").status_code == 404
+    assert api.post("/me/chats/999/messages/1/web").status_code == 404
+    backend.client.replies = []  # the search fails
+    assert api.post(f"/me/chats/{thread}/messages/1/web").status_code == 502

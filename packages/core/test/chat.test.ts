@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest"
 
 import {
-  addWords, chatBlocks, draftTag, headingOf, inlineParts, startReply, toolSummary, usedRecipes, withEvent,
+  addWords, chatBlocks, draftTag, headingOf, importLinkPath, inlineParts, searchedRecipes, startReply, toolSummary,
+  usedRecipes, withEvent,
 } from "../src/chat"
 import { BLANK_RECIPE } from "../src/cookbook"
 import type { ChatReply, RecipeCard } from "../src/types"
@@ -39,6 +40,15 @@ describe("chat", () => {
     expect([...usedRecipes(reply)]).toEqual([["b", 6], ["a", undefined]])
     expect(toolSummary({ name: "search_recipes", arguments: { query: "tofu" }, output: "a\nb" }))
       .toEqual({ icon: "search", text: "Searched “tofu”: 2 recipes matched your filters" })
+  })
+
+  it("offers the web search after a recipe search, and links its pages to the link import", () => {
+    const search = { name: "search_recipes", arguments: {}, output: "" }
+    expect(searchedRecipes({ tool_calls: [search] } as unknown as ChatReply)).toBe(true)
+    expect(searchedRecipes({ tool_calls: [] } as unknown as ChatReply)).toBe(false)
+    expect(searchedRecipes(null)).toBe(false)
+    expect(importLinkPath("https://a.example/x?y=1&z")).toBe(
+      "/recipes/mine/new?method=link&url=https%3A%2F%2Fa.example%2Fx%3Fy%3D1%26z")
   })
 
   it("tags a draft by thread and content", () => {

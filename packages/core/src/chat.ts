@@ -120,6 +120,16 @@ export function usedRecipes(reply: ChatReply | null | undefined): Map<string, nu
   return used
 }
 
+/** A reply that came from a recipe search (with cards or none) offers "Check external sources". */
+export function searchedRecipes(reply: ChatReply | null | undefined): boolean {
+  return !!reply?.tool_calls.some((c) => c.name === "search_recipes")
+}
+
+/** The link the "Save to My recipes" button of a web recipe opens: the link import, started. */
+export function importLinkPath(url: string): string {
+  return `/recipes/mine/new?method=link&url=${encodeURIComponent(url)}`
+}
+
 /**
  * Which draft of which chat a saved recipe came from: the thread and a hash of the draft as the
  * assistant wrote it, so a changed version written later in the chat counts as a new draft.

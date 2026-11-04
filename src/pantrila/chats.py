@@ -68,6 +68,10 @@ class Chats(Protocol):
         """Add messages and replace the history."""
         ...
 
+    def set_message(self, thread_id: int, index: int, message: dict) -> SavedThread | None:
+        """Replace one saved message (the history is unchanged)."""
+        ...
+
     def delete(self, thread_id: int) -> bool: ...
 
 
@@ -117,6 +121,14 @@ class MemoryChats:
                     return None
                 thread.messages = (thread.messages + messages)[-MAX_THREAD_MESSAGES:]
                 thread.history, thread.updated_at = list(history), datetime.now(UTC)
+            return thread
+
+    def set_message(self, thread_id: int, index: int, message: dict) -> SavedThread | None:
+        with self.lock:
+            thread = self.get(thread_id)
+            if thread is None or not 0 <= index < len(thread.messages):
+                return None
+            thread.messages[index] = message
             return thread
 
     def delete(self, thread_id: int) -> bool:
@@ -187,6 +199,16 @@ class DbChats:
                     None if expected_history is None else json.dumps(expected_history),
                     None if expected_history is None else json.dumps(expected_history),
                 ),
+            ).fetchone()
+        return None if row is None else SavedThread(*row)
+
+    def set_message(self, thread_id: int, index: int, message: dict) -> SavedThread | None:
+        with self.conn.transaction():
+            row = self.conn.execute(
+                "update chat_threads set messages = jsonb_set(messages, array[%s::text], %s::jsonb)"
+                " where user_id = %s and id = %s and %s < jsonb_array_length(messages)"
+                f" returning {THREAD_COLUMNS}",
+                (index, json.dumps(message), self.user_id, thread_id, index),
             ).fetchone()
         return None if row is None else SavedThread(*row)
 

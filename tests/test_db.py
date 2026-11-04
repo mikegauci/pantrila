@@ -187,6 +187,10 @@ def test_db_chats_are_per_user_and_keep_history_and_messages(conn):
     assert saved.history == turn and saved.messages == shown
     assert alice.append(first.id, shown[:1], turn).messages == shown + shown[:1]
     assert [(t.id, t.messages) for t in alice.list()] == [(first.id, 3), (second.id, 0)]
+    edited = {"role": "assistant", "text": "Yes!"}
+    assert bob.set_message(first.id, 1, edited) is None
+    assert alice.set_message(first.id, 9, edited) is None
+    assert alice.set_message(first.id, 1, edited).messages[1] == edited
     assert bob.list() == [] and not bob.delete(first.id)
     assert alice.delete(first.id) and [t.id for t in alice.list()] == [second.id]
 

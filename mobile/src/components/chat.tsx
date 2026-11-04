@@ -1,18 +1,26 @@
 import { router } from "expo-router"
 import {
-  BookmarkPlus, Check, PenLine, Refrigerator, Repeat, Scale, Search, Sparkles, Trash2, type LucideIcon,
+  BookmarkPlus, Check, ExternalLink, Globe, PenLine, Refrigerator, Repeat, Scale, Search, Sparkles, Trash2, type LucideIcon,
 } from "lucide-react-native"
-import { Fragment } from "react"
-import { Pressable, ScrollView, Text, View } from "react-native"
+import { Fragment, useState } from "react"
+import { Linking, Pressable, ScrollView, Text, View } from "react-native"
+import { useSWRConfig } from "swr"
 
-import { chatBlocks, draftTag, headingOf, inlineParts, type ToolIcon, toolSummary, usedRecipes } from "@pantrila/core/chat"
+import {
+  chatBlocks, draftTag, headingOf, inlineParts, searchedRecipes, type ToolIcon, toolSummary, usedRecipes,
+} from "@pantrila/core/chat"
 import { ago } from "@pantrila/core/format"
-import type { ChatMessage, ChatThreadSummary, CookbookRecipeIn, RecipeCard } from "@pantrila/core/types"
+import type {
+  ChatMessage, ChatThread, ChatThreadSummary, CookbookRecipeIn, RecipeCard, WebRecipesView,
+} from "@pantrila/core/types"
 
 import { Button, ProblemAlert, RecipeArt } from "@/components/bits"
 import { Icon } from "@/components/icon"
+import { send } from "@/lib/api"
 import { holdChatDraft } from "@/lib/chat-draft"
-import { useCookbook, useRecipe } from "@/lib/hooks"
+import { useCookbook, useMe, useRecipe } from "@/lib/hooks"
+import { askForPro } from "@/lib/pro"
+import { toast } from "@/lib/toast"
 
 /** The assistant's messages on the phone, read like the web's (`@pantrila/core/chat`). */
 
@@ -104,7 +112,75 @@ function RecipeCardView({ id, servings }: { id: string; servings?: number }) {
 
 /** The question asked, or the assistant's reply: its profile check, what the tools did, the text,
  * the recipes it uses and each recipe it wrote, ready to save to My recipes. */
-export function Bubble({ m, thread }: { m: Message; thread: number | null }) {
+/**
+ * "Check external sources" under a reply that searched recipes: one web search for the question
+ * it answered. The pages are not checked yet; saving one runs the link import, which checks it.
+ */
+function WebRecipes({ m, thread, index }: { m: Message; thread: number | null; index: number | null }) {
+  const { mutate } = useSWRConfig()
+  const { mutate: refreshMe } = useMe()
+  const [busy, setBusy] = useState(false)
+  const found = m.reply?.web_recipes
+  if (m.error || !thread || index === null || !searchedRecipes(m.reply)) return null
+
+  async function search() {
+    setBusy(true)
+    try {
+      const view = await send<WebRecipesView>(`/me/chats/${thread}/messages/${index}/web`, "POST")
+      await mutate<ChatThread>(`/me/chats/${thread}`, (t) => t && {
+        ...t,
+        messages: t.messages.map((msg, i) => i === index && msg.reply
+          ? { ...msg, reply: { ...msg.reply, web_recipes: view.recipes } } : msg),
+      }, { revalidate: false })
+    } catch (e) {
+      if (!askForPro(e)) toast.error(e instanceof Error ? e.message : "Could not search the web.")
+    } finally {
+      setBusy(false)
+      refreshMe()
+    }
+  }
+
+  if (found == null) {
+    return (
+      <Button variant="outline" size="sm" icon={Globe} className="self-start" busy={busy}
+              text={busy ? "Searching the web…" : "Check external sources"} onPress={search} />
+    )
+  }
+  if (found.length === 0) {
+    return (
+      <View className="flex-row items-start gap-2 rounded-xl border border-dashed border-border bg-surface-muted px-3 py-2">
+        <Icon icon={Globe} tone="muted-foreground" size={14} />
+        <Text className="flex-1 font-sans text-xs text-muted-foreground">
+          No recipe pages on the web fit this request and your profile.
+        </Text>
+      </View>
+    )
+  }
+  return (
+    <View className="gap-2 rounded-[20px] border border-border bg-surface px-4 py-3">
+      <View className="flex-row items-center gap-2">
+        <Icon icon={Globe} tone="muted-foreground" size={16} />
+        <Text className="font-sans-semibold text-[14px] text-foreground">From the web</Text>
+      </View>
+      <Text className="font-sans text-xs text-muted-foreground">
+        Not checked against your profile yet. Saving one reads the whole recipe and checks it.
+      </Text>
+      {found.map((w) => (
+        <View key={w.url} className="gap-1.5 rounded-[14px] border border-border bg-surface-muted p-3">
+          <Pressable accessibilityRole="link" onPress={() => Linking.openURL(w.url)} className="flex-row items-start gap-1.5">
+            <Text className="flex-1 font-sans-semibold text-[15px] leading-5 text-foreground">{w.title}</Text>
+            <Icon icon={ExternalLink} tone="muted-foreground" size={14} />
+          </Pressable>
+          <Text className="font-sans text-xs text-muted-foreground">{w.site}{w.summary ? ` · ${w.summary}` : ""}</Text>
+          <Button variant="outline" size="sm" icon={BookmarkPlus} className="self-start" text="Save to My recipes"
+                  onPress={() => router.push({ pathname: "/recipes/mine/new", params: { method: "link", url: w.url } })} />
+        </View>
+      ))}
+    </View>
+  )
+}
+
+export function Bubble({ m, thread, index = null }: { m: Message; thread: number | null; index?: number | null }) {
   const { data: cookbook } = useCookbook()
   if (m.role === "user") {
     return (
@@ -144,6 +220,7 @@ export function Bubble({ m, thread }: { m: Message; thread: number | null }) {
           </ScrollView>
         )}
       </View>
+      <WebRecipes m={m} thread={thread} index={index} />
       {r?.drafts?.map((d, i) => {
         const tag = draftTag(thread, d)
         const saved = tag ? cookbook?.find((c) => c.chat_draft === tag) : undefined

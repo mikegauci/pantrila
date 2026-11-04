@@ -48,6 +48,7 @@ export default function Assistant() {
   const scroller = useRef<ScrollViewInstance>(null)
   // A remembered chat that was deleted (here or on another device) means a new chat.
   const current = threadError?.status === 404 ? null : threadId
+  const savedCount = current ? thread?.messages.length ?? 0 : 0
   const messages: Message[] = [...(current ? thread?.messages ?? [] : []), ...pending]
 
   const chatsLeft = me?.limits.chats.left
@@ -173,7 +174,7 @@ export default function Assistant() {
           </View>
         ) : (
           <>
-            {messages.map((m, i) => <Bubble key={i} m={m} thread={current} />)}
+            {messages.map((m, i) => <Bubble key={i} m={m} thread={current} index={i < savedCount ? i : null} />)}
             {busy && live?.text ? (
               <View className="max-w-[92%] rounded-[20px] rounded-bl-md border border-border bg-surface px-4 py-3">
                 <Rich text={live.text} recipes={live.cards} />

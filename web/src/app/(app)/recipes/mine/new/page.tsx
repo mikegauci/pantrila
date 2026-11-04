@@ -115,31 +115,48 @@ function revealOnFocus(e: FocusEvent<HTMLInputElement>) {
   setTimeout(() => field.scrollIntoView({ block: "center", behavior: "smooth" }), 300)
 }
 
-function LinkImport({ onDone }: { onDone: (v: ImportView) => void }) {
+/** The link import. `start` (a page the assistant found on the web) fills the field and reads it at once. */
+function LinkImport({ onDone, start }: { onDone: (v: ImportView) => void; start?: string | null }) {
   const userId = useAuth().session!.user.id
-  const [url, setUrl] = useState("")
+  const [url, setUrl] = useState(start ?? "")
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [estimatedSeconds, setEstimatedSeconds] = useState<number | null>(null)
   const [steps, setSteps] = useState<ImportStep[]>([])
   const { data: timing } = useApi<{ estimated_seconds: number }>("/me/recipes/import/timing")
+  const started = useRef<string | null>(null)
+
+  async function read(link: string) {
+    setBusy(true)
+    setEstimatedSeconds(POST_LINK.test(link) ? timing?.estimated_seconds ?? 105 : IMPORT_SECONDS.link)
+    setSteps([])
+    setError(null)
+    try {
+      onDone(await importRecipe(userId, { kind: "link", url: link }, setSteps))
+    } catch (err) {
+      askForPro(err)
+      setError(err instanceof Error ? err.message : "Could not import that link.")
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  useEffect(() => {
+    if (!start || started.current === start) return
+    started.current = start
+    queueMicrotask(() => {
+      setUrl(start)
+      read(start)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- read each link handed over once
+  }, [start])
+
   return (
     <form
       className="grid gap-3"
-      onSubmit={async (e) => {
+      onSubmit={(e) => {
         e.preventDefault()
-        setBusy(true)
-        setEstimatedSeconds(POST_LINK.test(url.trim()) ? timing?.estimated_seconds ?? 105 : IMPORT_SECONDS.link)
-        setSteps([])
-        setError(null)
-        try {
-          onDone(await importRecipe(userId, { kind: "link", url: url.trim() }, setSteps))
-        } catch (err) {
-          askForPro(err)
-          setError(err instanceof Error ? err.message : "Could not import that link.")
-        } finally {
-          setBusy(false)
-        }
+        read(url.trim())
       }}
     >
       <div className="grid gap-1.5">
@@ -276,6 +293,7 @@ export default function NewRecipePage() {
   const { mutate } = useSWRConfig()
   const { data: me, mutate: refreshMe } = useMe()
   const [method, setMethod] = useState<Method | null>(null)
+  const [linkStart, setLinkStart] = useState<string | null>(null)
   const [draft, setDraftState] = useState<CookbookRecipeIn | null>(null)
   // The form keeps its own copy of the draft, and this page stays mounted while hidden: a new
   // draft gets a fresh form, or a second chat draft would save the first one.
@@ -301,6 +319,7 @@ export default function NewRecipePage() {
     queueMicrotask(() => {
       if (!active) return
       setMethod(null)
+      setLinkStart(null)
       setDraftState(null)
       setFormKey((k) => k + 1)
       setResult(null)
@@ -311,6 +330,9 @@ export default function NewRecipePage() {
       const picked = METHODS.find((m) => m.key === params.get("method"))
       if (picked) {
         window.history.replaceState(null, "", "/recipes/mine/new")
+        // The assistant's "Save to My recipes" on a web page hands over its link (`&url=`).
+        const link = params.get("url")
+        setLinkStart(picked.key === "link" && link && /^https?:\/\//.test(link) ? link : null)
         setMethod(picked.key)
         setDraftState(picked.key === "manual" ? BLANK_RECIPE : null)
         return
@@ -390,6 +412,7 @@ export default function NewRecipePage() {
   }, [method])
 
   const pick = (key: Method) => {
+    setLinkStart(null)
     setResumeError(null)
     setResult(null)
     setFromChat(false)
@@ -457,7 +480,7 @@ export default function NewRecipePage() {
             <Panel>
               <PanelTitle>{IMPORT_TITLE[method as Exclude<Method, "manual">]}</PanelTitle>
               {method === "photo" && <PhotoImport onDone={imported} />}
-              {method === "link" && <LinkImport onDone={imported} />}
+              {method === "link" && <LinkImport onDone={imported} start={linkStart} />}
               {method === "post" && <PostImport onDone={imported} />}
               {me && (
                 <p className="mt-3 text-[12px] text-muted-foreground">

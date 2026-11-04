@@ -4,6 +4,19 @@ Every shipped change, newest first: what changed, where it lives, and the eval n
 after (or why there was no eval run). Moved out of `CLAUDE.md` on 2026-10-26 to keep that file short;
 `CLAUDE.md` keeps a summary of where things stand. Add each new entry at the top.
 
+"Check external sources" in the assistant (web and phone app). A reply that came from a recipe search (with cards or
+none) shows a button that runs one OpenAI web search for the question it answered
+(`src/pantrila/web_recipes.py`, `POST /me/chats/{thread_id}/messages/{index}/web`, counts as a chat). The model gets the
+person's profile and returns up to 5 recipe pages with their listed ingredients; code drops social posts, bad links,
+duplicates and any page whose listed ingredients (resolved to the food table) break an allergy, an ingredient-derived
+diet or an excluded food. The pages are saved on the reply (`ChatReply.web_recipes`, `Chats.set_message`) and shown
+as "From the web" cards marked "Not checked against your profile yet"; "Save to My recipes" opens the link import with
+the page (`/recipes/mine/new?method=link&url=`), which checks the whole recipe in code. New prompt with no change to
+the chat agent, so no assistant eval rerun; live check of 4 requests (fish allergy, vegan, gluten + milk, peanuts):
+18 pages kept, 1 non-vegan page dropped by code, p50/max 7.1/11.5 s, $0.035-0.046 per search (with
+`PANTRILA_PRICE_WEB_SEARCH_PER_CALL=0.025`). Offline tests in `tests/test_web_recipes.py`, `tests/test_api.py`,
+`tests/test_db.py` and `packages/core/test/chat.test.ts`.
+
 Recipes page tidy-up (web and phone app). The web Recipes page drops the "Hybrid search (meaning + keywords) for “…”,
 best match first." line, and the phone app's Recipes tab drops the same line. On web, My recipes puts its title in the
 middle of the header, with the "← Recipes" link on the left and "Add a recipe" on the right. No model call, so no eval rerun.
